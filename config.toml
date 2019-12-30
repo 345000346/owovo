@@ -1,4 +1,4 @@
-baseURL = "https://www.owovo.xyz"
+baseURL = "https://owovo.xyz"
 languageCode = "zh-CN"
 title = "我的个人小站"
 theme = "maupassant"
