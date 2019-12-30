@@ -1,0 +1,83 @@
+baseURL = "https://owovo.xyz"
+languageCode = "zh-CN"
+title = "我的个人小站"
+theme = "maupassant"
+
+
+## 是否禁止URL Path转小写
+disablePathToLower = true
+
+## html 后缀
+uglyurls = true
+
+##Google 分析
+googleAnalytics = "UA-47934503-5"
+
+## 自定义摘要，默认是70
+hasCJKLanguage = true
+summaryLength = 140
+
+[author]
+  name = "owovo"
+
+[params]
+  author = "owovo"
+  subtitle = "分享一些日常、没事无聊的瞎想、一些常用的工具等"
+  keywords = "日常,想法,Android,Windows,手机,电脑"
+  description = "分享一些日常、没事无聊的瞎想、一些常用的工具等"
+  ## 不蒜子博客浏览量
+  busuanzi = true
+  ## 运行时间
+  runtime = "8/22/2019 00:00:00"
+
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ""
+    lineNoStart = 1
+    lineNos = true
+    lineNumbersInTable = true
+    noClasses = true
+    style = "monokai"
+    tabWidth = 4
+
+[[params.mylinks]]
+    name = "微博"
+    url = "https://weibo.com/u/1733321624" 
+    iconid = "icon-sina-weibo"
+[[params.mylinks]]
+    name = "Github"
+    url = "https://github.com/345000346" 
+    iconid = "icon-github"
+   
+[menu]
+  [[menu.main]]
+    identifier = "post"
+    name = "文章"
+    url = "/archives.html"
+    weight = 2
+
+	[[menu.main]]
+    identifier = "categories"
+    name = "分类"
+    url = "/categories.html"
+    weight = 3
+	
+	[[menu.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags.html"
+    weight = 4
+	
+	[[menu.main]]
+    identifier = "ideas"
+    name = "想法"
+    url = "/ideas.html"
+    weight = 5
+	
+    [[menu.main]]
+    identifier = "about"
+    name = "关于"
+    url = "/about.html"
+    weight = 6

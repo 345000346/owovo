@@ -1,0 +1,12 @@
+{{ with .Site.Params.mylinks }}
+<section class="widget">
+    <h3 class="widget-title">我的链接</h3>
+    <ul class="widget-list">
+        {{ range . }}
+        <li>
+            <h4><a target="_blank" href="{{ .url }}" title="{{ .name }}" class="{{ .iconid }}"> {{ .name }}</a></h4>
+        </li>
+        {{ end }}
+    </ul>
+</section>
+{{ end }}
