@@ -64,4 +64,8 @@ toc   : true
 
 2014 年用本域名搭建过一段时间博客，后疏于管理，域名也没有续费...荒废至今...现在重新拾起
 
-本站目前使用 [坚果云](https://www.jianguoyun.com/) 同步相关文件，使用 FreeFileSync 进行网站更新
+~~本站目前使用 [坚果云](https://www.jianguoyun.com/) 同步相关文件，使用 FreeFileSync 进行网站更新~~
+
+2020年1月1日更新：
+
+本站迁移到 Github ，使用 Git 上传，使用 Github Actions 自动编译 Hugo 文件，部署到 Github pages.
