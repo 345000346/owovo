@@ -6,6 +6,10 @@ tags: ["Github","Hugo"]
 categories : ["Hugo"]
 ---
 
+如果你想搭建自己的 Blog，但是又没有自己的 VPS、云服务器等，使用 Github Actions + Hugo + Github Pages搭建博客是最简单的选择。
+
+<!--more-->
+
 ## 一、建立 Github Pages
 
 在你的 Github 账号里新建一个 Repository ，仓库名必须为 [你的用户名]-github.io，必须使用 master 分支，这个就是你建立 Github Pages 的 Repository.
@@ -86,4 +90,40 @@ ssh-keygen -t rsa -b 4096 -C "$(git config user.email)" -f gh-pages -N ""
 ### 3.提交代码
 
 然后，你就可以提交 Hugo文章 到 myBlog 仓库，Push 成功后，打开仓库 Actions，可以查看是否自动编译成功。
+
+## 五、绑定自定义域名
+
+例如我有域名 owovo.xyz，我希望用自己的域名用来访问刚建立的 Blog，需要进行以下操作。
+
+### 1.绑定域名
+
+进入 [你的用户名].github.io 仓库的 setting；
+
+在下面 Github Pages 里 Custom domain 栏填入对应自己的域名，点击 save 保存，
+
+**注：可以打开 Enforce HTTPS ，使用 HTTPS 访问，这是 Github 免费签发的证书。**
+
+保存后，在 master 分支应该可以看到一个名为 CNAME 的文件，内容为自己的域名。
+
+### 2.添加域名解析
+
+到自己域名提供商的控制台添加解析。
+
+添加一条主机记录为 `CNAME` 解析，记录值为 `[你的用户名].github.io`，
+
+解析生效后，就可以通过 `owovo.xyz` 访问自己放在 `Github` 上的个人主页了，并且通过 `[你的用户名].github.io` 访问时，会自动跳转到 `owovo.xyz`.
+
+## 六、注意事项
+
+我们在做完以上流程后，可以用自己的域名访问自己 Blog 了。
+
+但是有一个问题随之出现了，就是我们提交一次 Push 后就再无法使用自己的域名访问了，还需要到 Setting 中重新设置。
+
+出现这个问题的主要原因是 `[你的用户名].github.io` 下的 `CNAME` 文件在 Push 时自动覆盖了，为了解决这个问题，我们可以这样做：
+
+在你的 Hugo 文件 `content` 目录下新建一个 `CNAME` 文件，内容为 你的域名。
+
+**注意，`CANME` 不要有任何后缀！！！**
+
+这样就会在编译时自动将 `CNAME` 文件放到 `[你的用户名].github.io` 根目录，就完美的解决了这个问题。
 
