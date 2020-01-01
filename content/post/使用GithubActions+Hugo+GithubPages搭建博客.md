@@ -1,5 +1,5 @@
 ---
-title: "Github Actions + Hugo + Github Pages搭建博客"
+title: "使用 Github Actions + Hugo + Github Pages搭建博客"
 date: 2020-01-01T13:14:18+08:00
 toc : true
 tags: ["Github","Hugo"]
