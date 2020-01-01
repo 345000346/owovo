@@ -908,6 +908,7 @@ img.alignright {
 
 /* for archive page starts*/
 .post-archive {
+    margin-top: 5em;
     font-size: 15px;
     line-height: 2;
     padding-bottom: .8em; 
