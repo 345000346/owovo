@@ -1,12 +1,12 @@
 ---
 title : "关于我"
-date  : 2019-10-06T13:53:11+08:00
+date  : 2020-04-27T20:53:11+08:00
 toc   : true
 ---
 
 <!--more-->
 
-<font color=red>本文最后更新于 ：2019年10月06日</font>
+<font color=red>本文最后更新于 ：2020年04月27日</font>
 
 ## 基本情况 ##
 
@@ -36,6 +36,7 @@ toc   : true
 |      Apple iPad Air 2      |  2016 至今  |
 |      Apple iPhone 6s       |  2015 至今  |
 | Oneplus Bullets Wireless 2 |  2019 至今  |
+|      Xiaomi Mi 10 Pro      |  2020 至今  |
 |            ...             |             |
 
 ## PC 游戏  ##
