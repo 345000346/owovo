@@ -1,8 +1,6 @@
 <footer id="footer">
     <div class="container">
-        &copy; {{ now.Format "2006" }} <a href="{{ .Site.BaseURL | absURL }}">{{ .Site.Title }} By {{ .Site.Author.name }}</a>
-        <br>
-            <!-- 站点运行时间 -->
+       <!-- 站点运行时间 -->
         {{ if .Site.Params.runtime }}
                 本站已稳定运行
                 <b id="d" style="color:#C40000"></b> 天 <b id="h" style="color:#C40000"></b> 小时 <b id="m" style="color:#C40000"></b> 分 <b id="s" style="color:#C40000"></b> 秒
@@ -31,11 +29,14 @@
                 setInterval(timer, 1000);
             </script>
         {{- end }}
+        <br>
+         &copy; {{ now.Format "2006" }} <a href="{{ .Site.BaseURL | absURL }}">{{ .Site.Title }}</a> By {{ .Site.Author.name }}
         <span>&middot;</span>
         Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
-        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/flysnow-org/maupassant-hugo" target="_blank">maupassant</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/flysnow-org/maupassant-hugo" target="_blank">maupassant</a>
+        <span>&middot;</span>
         {{ if .Site.Params.showHostPage }}
-        Hosted by <a rel="nofollow noreferer noopener" href="https://pages.coding.me" target="_blank">Coding Pages</a>.
+        Hosted by <a rel="nofollow noreferer noopener" href="https://pages.github.com" target="_blank">Github Pages</a>.
         {{ end }}
     </div>
 </footer>
