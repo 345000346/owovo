@@ -43,14 +43,23 @@ summaryLength = 140
     style = "monokai"
     tabWidth = 4
 
+#[[params.mylinks]]
+#    name = "微博"
+#    url = "https://weibo.com/u/1733321624" 
+#    iconid = "icon-sina-weibo"
+#[[params.mylinks]]
+#    name = "Github"
+#    url = "https://github.com/345000346" 
+#    iconid = "icon-github"
+
 [[params.mylinks]]
     name = "微博"
-    url = "https://weibo.com/u/1733321624" 
-    iconid = "icon-sina-weibo"
+   	imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=282c34&labelColor=e71f19&label=%E5%BE%AE%E5%8D%9A&query=%24.data.totalSubs&suffix=%20%E5%85%B3%E6%B3%A8%E8%80%85&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo"
+    url = "https://weibo.com/u/1733321624"
 [[params.mylinks]]
     name = "Github"
-    url = "https://github.com/345000346" 
-    iconid = "icon-github"
+    imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=282c34&labelColor=181717&label=GitHub&query=%24.data.totalSubs&suffix=%20%E5%85%B3%E6%B3%A8%E8%80%85&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github"
+    url = "https://github.com/345000346"
    
 [menu]
   [[menu.main]]
