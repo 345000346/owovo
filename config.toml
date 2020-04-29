@@ -29,6 +29,7 @@ summaryLength = 140
   busuanzi = true
   ## 运行时间
   runtime = "8/22/2019 00:00:00"
+  showHostPage = true
 
 [markup]
   [markup.highlight]
