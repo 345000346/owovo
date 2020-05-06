@@ -1,6 +1,6 @@
 baseURL = "https://owovo.xyz"
 languageCode = "zh-CN"
-title = "我的个人小站"
+title = "LIGT'S"
 theme = "maupassant"
 
 
@@ -18,7 +18,7 @@ hasCJKLanguage = true
 summaryLength = 140
 
 [author]
-  name = "owovo"
+  name = "LIGT"
 
 [params]
   author = "owovo"
