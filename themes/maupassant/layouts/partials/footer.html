@@ -1,40 +1,41 @@
 <footer id="footer">
     <div class="container">
-       <!-- 站点运行时间 -->
+        <!-- 站点运行时间 -->
         {{ if .Site.Params.runtime }}
-                本站已稳定运行
-                <b id="d" style="color:#C40000"></b> 天 <b id="h" style="color:#C40000"></b> 小时 <b id="m" style="color:#C40000"></b> 分 <b id="s" style="color:#C40000"></b> 秒
-            <script>
-                function timer() {
-                    var start = new Date({{ .Site.Params.runtime }});
-                    var t = new Date() - start;
-                    var h = ~~(t / 1000 / 60 / 60 % 24);
-                    if (h < 10) {
-                        h = "0" + h;
-                    }
-                    var m = ~~(t / 1000 / 60 % 60);
-                    if (m < 10) {
-                        m = "0" + m;
-                    }
-                    var s = ~~(t / 1000 % 60);
-                    if (s < 10) {
-                        s = "0" + s;
-                    }
-                    document.getElementById('d').innerHTML = ~~(t / 1000 / 60 / 60 / 24);
-                    document.getElementById('h').innerHTML = h;
-                    document.getElementById('m').innerHTML = m;
-                    document.getElementById('s').innerHTML = s;
+        本站已稳定运行
+        <b id="d" style="color:#C40000"></b> 天 <b id="h" style="color:#C40000"></b> 小时 <b id="m"
+            style="color:#C40000"></b> 分 <b id="s" style="color:#C40000"></b> 秒
+        <script>
+            function timer() {
+                var start = new Date({{ .Site.Params.runtime }});
+            var t = new Date() - start;
+            var h = ~~(t / 1000 / 60 / 60 % 24);
+            if (h < 10) {
+                h = "0" + h;
+            }
+            var m = ~~(t / 1000 / 60 % 60);
+            if (m < 10) {
+                m = "0" + m;
+            }
+            var s = ~~(t / 1000 % 60);
+            if (s < 10) {
+                s = "0" + s;
+            }
+            document.getElementById('d').innerHTML = ~~(t / 1000 / 60 / 60 / 24);
+            document.getElementById('h').innerHTML = h;
+            document.getElementById('m').innerHTML = m;
+            document.getElementById('s').innerHTML = s;
                 }
-                timer();
-                setInterval(timer, 1000);
-            </script>
+            timer();
+            setInterval(timer, 1000);
+        </script>
         {{- end }}
         <br>
-         &copy; {{ now.Format "2006" }} <a href="{{ .Site.BaseURL | absURL }}">{{ .Site.Title }}</a> By {{ .Site.Author.name }}
-        <span>&middot;</span>
+        &copy; {{ now.Format "2006" }} <a href="{{ .Site.BaseURL | absURL }}">{{ .Site.Title }}</a> Designed by
+        {{ .Site.Author.name }}.
         Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
-        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/flysnow-org/maupassant-hugo" target="_blank">maupassant</a>
-        <span>&middot;</span>
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a
+            href="https://github.com/flysnow-org/maupassant-hugo" target="_blank">maupassant</a>.
         {{ if .Site.Params.showHostPage }}
         Hosted by <a rel="nofollow noreferer noopener" href="https://pages.github.com" target="_blank">Github Pages</a>.
         {{ end }}
@@ -42,107 +43,108 @@
 </footer>
 
 {{ if .IsPage }}
-    <!-- graphviz -->
-    {{- if and (or .Params.graphviz.enable (and .Site.Params.graphviz.enable (ne .Params.graphviz.enable false))) (or .IsPage .IsHome) -}}
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/viz.js/1.7.1/viz.js"></script>
-        <script type="text/javascript">
-            (function () {
-                if (!window.Viz) return;
-                var vizPrefix = "language-viz-";
-                var i = 0;
-                Array.prototype.forEach.call(document.querySelectorAll("code[class^=" + vizPrefix + "]"), function (block) {
-                    var engine;
-                    block.getAttribute("class").split(" ").forEach(function (cls) {
-                        if (cls.startsWith(vizPrefix)) {
-                            engine = cls.substr(vizPrefix.length);
-                        }
-                    });
-                    const rootElement = block.parentNode;
-                    var image = new DOMParser().parseFromString(Viz(block.innerText, { format: "svg", engine: engine }), "image/svg+xml");
-                    const container = document.createElement('div');
-                    container.className = 'align-center';
-                    container.setAttribute("style", "overFlow-x:auto");
-                    container.appendChild(image.documentElement);
-                    rootElement.parentNode.replaceChild(container, rootElement);
-                });
-            })();
-        </script>
-    {{- end -}}
-
-    <!-- flowchart -->
-    {{- if and (or .Params.flowchartDiagrams.enable (and .Site.Params.flowchartDiagrams.enable (ne .Params.flowchartDiagrams.enable false))) (or .IsPage .IsHome) -}}
-        <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.2.8/raphael.min.js" crossorigin="anonymous"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/flowchart/1.12.2/flowchart.min.js" crossorigin="anonymous"></script>
-        <script>
-            {{- if .Params.flowchartDiagrams.options -}}
-                window.flowchartDiagramsOptions = {{ .Params.flowchartDiagrams.options | safeJS }};
-            {{- else if .Site.Params.flowchartDiagrams.options -}}
-                window.flowchartDiagramsOptions = {{ .Site.Params.flowchartDiagrams.options | safeJS }};
-            {{- end -}}
-            (function () {
-                if (!window.flowchart) return;
-                const blocks = document.querySelectorAll('pre code.language-flowchart, pre code.language-flow');
-                for (let i = 0; i < blocks.length; i++) {
-                    const block = blocks[i];
-                    const rootElement = block.parentNode;
-                    const container = document.createElement('div');
-                    const id = `js-flowchart-diagrams-${i}`;
-                    container.id = id;
-                    container.className = 'align-center';
-                    container.setAttribute("style", "overFlow-x:auto");
-                    rootElement.parentNode.replaceChild(container, rootElement);
-                    const diagram = flowchart.parse(block.childNodes[0].nodeValue);
-                    diagram.drawSVG(id, window.flowchartDiagramsOptions ? window.flowchartDiagramsOptions : {});
+<!-- graphviz -->
+{{- if and (or .Params.graphviz.enable (and .Site.Params.graphviz.enable (ne .Params.graphviz.enable false))) (or .IsPage .IsHome) -}}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/viz.js/1.7.1/viz.js"></script>
+<script type="text/javascript">
+    (function () {
+        if (!window.Viz) return;
+        var vizPrefix = "language-viz-";
+        var i = 0;
+        Array.prototype.forEach.call(document.querySelectorAll("code[class^=" + vizPrefix + "]"), function (block) {
+            var engine;
+            block.getAttribute("class").split(" ").forEach(function (cls) {
+                if (cls.startsWith(vizPrefix)) {
+                    engine = cls.substr(vizPrefix.length);
                 }
-            })();
-        </script>
-    {{- end -}}
-    
-    <!-- sequence必须要在flow加载之后，否则sequence渲染不成功，原因待分析 -->
-    <!-- js-sequence-diagrams -->
-    {{- if and (or .Params.sequenceDiagrams.enable (and .Site.Params.sequenceDiagrams.enable (ne .Params.sequenceDiagrams.enable false))) (or .IsPage .IsHome) -}}
-        <script src="//cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js" crossorigin="anonymous"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js" crossorigin="anonymous"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js" crossorigin="anonymous"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js" crossorigin="anonymous"></script>
-        <script>
-        {{- if .Params.sequenceDiagrams.options -}}
-            window.sequenceDiagramsOptions = {{ .Params.sequenceDiagrams.options | safeJS }};
-        {{- else if .Site.Params.sequenceDiagrams.options -}}
-            window.sequenceDiagramsOptions = {{ .Site.Params.sequenceDiagrams.options | safeJS }};
-        {{- end -}}
-        (function () {
-            if (!window.Diagram) return;
-            const blocks = document.querySelectorAll('pre code.language-sequence');
-            for (let i = 0; i < blocks.length; i++) {
-                const block = blocks[i];
-                // const rootElement = window.Prism.plugins.lineNumbers ? (window.Prism.plugins.toolbar ? block.parentElement.parentElement : block.parentElement) : block;
-                const rootElement = block.parentNode;
-                const container = document.createElement('div');
-                const id = `js-sequence-diag-${i}`;
-                container.id = id;
-                container.className = 'align-center';
-                container.setAttribute("style", "overFlow-x:auto");
-                rootElement.parentNode.replaceChild(container, rootElement);
+            });
+            const rootElement = block.parentNode;
+            var image = new DOMParser().parseFromString(Viz(block.innerText, { format: "svg", engine: engine }), "image/svg+xml");
+            const container = document.createElement('div');
+            container.className = 'align-center';
+            container.setAttribute("style", "overFlow-x:auto");
+            container.appendChild(image.documentElement);
+            rootElement.parentNode.replaceChild(container, rootElement);
+        });
+    })();
+</script>
+{{- end -}}
 
-                const diagram = Diagram.parse(block.childNodes[0].nodeValue);
-                diagram.drawSVG(id, window.sequenceDiagramsOptions
-                    ? window.sequenceDiagramsOptions
-                    : { theme: 'simple' });
-            }
-        })();
-        </script>
-    {{- end -}}
-    
-    <script type="text/javascript">
-        window.MathJax = {
-            tex2jax: {
-                inlineMath: [['$', '$']],
-                processEscapes: true
-                }
-            };
-    </script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<!-- flowchart -->
+{{- if and (or .Params.flowchartDiagrams.enable (and .Site.Params.flowchartDiagrams.enable (ne .Params.flowchartDiagrams.enable false))) (or .IsPage .IsHome) -}}
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.2.8/raphael.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/flowchart/1.12.2/flowchart.min.js" crossorigin="anonymous"></script>
+<script>
+    { { - if .Params.flowchartDiagrams.options -} }
+    window.flowchartDiagramsOptions = {{ .Params.flowchartDiagrams.options | safeJS }};
+    { { - else if .Site.Params.flowchartDiagrams.options -} }
+    window.flowchartDiagramsOptions = {{ .Site.Params.flowchartDiagrams.options | safeJS }};
+    { { - end -} }
+    (function () {
+        if (!window.flowchart) return;
+        const blocks = document.querySelectorAll('pre code.language-flowchart, pre code.language-flow');
+        for (let i = 0; i < blocks.length; i++) {
+            const block = blocks[i];
+            const rootElement = block.parentNode;
+            const container = document.createElement('div');
+            const id = `js-flowchart-diagrams-${i}`;
+            container.id = id;
+            container.className = 'align-center';
+            container.setAttribute("style", "overFlow-x:auto");
+            rootElement.parentNode.replaceChild(container, rootElement);
+            const diagram = flowchart.parse(block.childNodes[0].nodeValue);
+            diagram.drawSVG(id, window.flowchartDiagramsOptions ? window.flowchartDiagramsOptions : {});
+        }
+    })();
+</script>
+{{- end -}}
+
+<!-- sequence必须要在flow加载之后，否则sequence渲染不成功，原因待分析 -->
+<!-- js-sequence-diagrams -->
+{{- if and (or .Params.sequenceDiagrams.enable (and .Site.Params.sequenceDiagrams.enable (ne .Params.sequenceDiagrams.enable false))) (or .IsPage .IsHome) -}}
+<script src="//cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"
+    crossorigin="anonymous"></script>
+<script>
+    { { - if .Params.sequenceDiagrams.options -} }
+    window.sequenceDiagramsOptions = {{ .Params.sequenceDiagrams.options | safeJS }};
+    { { - else if .Site.Params.sequenceDiagrams.options -} }
+    window.sequenceDiagramsOptions = {{ .Site.Params.sequenceDiagrams.options | safeJS }};
+    { { - end -} }
+    (function () {
+        if (!window.Diagram) return;
+        const blocks = document.querySelectorAll('pre code.language-sequence');
+        for (let i = 0; i < blocks.length; i++) {
+            const block = blocks[i];
+            // const rootElement = window.Prism.plugins.lineNumbers ? (window.Prism.plugins.toolbar ? block.parentElement.parentElement : block.parentElement) : block;
+            const rootElement = block.parentNode;
+            const container = document.createElement('div');
+            const id = `js-sequence-diag-${i}`;
+            container.id = id;
+            container.className = 'align-center';
+            container.setAttribute("style", "overFlow-x:auto");
+            rootElement.parentNode.replaceChild(container, rootElement);
+
+            const diagram = Diagram.parse(block.childNodes[0].nodeValue);
+            diagram.drawSVG(id, window.sequenceDiagramsOptions
+                ? window.sequenceDiagramsOptions
+                : { theme: 'simple' });
+        }
+    })();
+</script>
+{{- end -}}
+
+<script type="text/javascript">
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [['$', '$']],
+            processEscapes: true
+        }
+    };
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
 {{ end }}
 
 <a id="rocket" href="#top"></a>
@@ -150,10 +152,10 @@
 {{ template "_internal/google_analytics_async.html" . }}
 
 {{ if .Site.Params.busuanzi }}
-    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
 {{ end }}
 
 <!-- custom js -->
 {{ range .Site.Params.customJS }}
-    <script src='{{ "/js/" | relURL }}{{ . }}'></script>
+<script src='{{ "/js/" | relURL }}{{ . }}'></script>
 {{ end }}

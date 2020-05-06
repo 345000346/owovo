@@ -1,7 +1,7 @@
 ---
 title: "小米10 Pro简单上手体验"
 date: 2020-03-05T00:55:49+08:00
-tags: ["小米10 Pro","手机"]
+tags: ["小米","手机"]
 categories : ["手机"]
 toc : true
 ---
