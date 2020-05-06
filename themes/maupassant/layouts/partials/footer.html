@@ -3,8 +3,7 @@
         <!-- 站点运行时间 -->
         {{ if .Site.Params.runtime }}
         本站已稳定运行
-        <b id="d" style="color:#C40000"></b> 天 <b id="h" style="color:#C40000"></b> 小时 <b id="m"
-            style="color:#C40000"></b> 分 <b id="s" style="color:#C40000"></b> 秒
+        <b id="d"></b> 天 <b id="h"></b> 小时 <b id="m"></b> 分 <b id="s"></b> 秒
         <script>
             function timer() {
                 var start = new Date({{ .Site.Params.runtime }});
