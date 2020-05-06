@@ -32,7 +32,11 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href='{{ "css/normalize.css" | relURL}}'>
-    <link rel="stylesheet" href='{{ "css/style.css" | relURL }}'>
+    
+    <!-- 切换黑暗模式 -->
+    <!-- <link rel="stylesheet" href='{{ "css/style.css" | relURL }}'> -->
+    <link rel="stylesheet" href='{{ "css/style-dark.css" | relURL }}'>
+
     {{ range .AlternativeOutputFormats -}}
         {{ printf `<link rel="%s" type="%s+%s" href="%s" title="%s" />` .Rel .MediaType.Type .MediaType.Suffix .Permalink $.Site.Title | safeHTML }}
     {{ end -}}
