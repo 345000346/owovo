@@ -1,8 +1,7 @@
 <footer id="footer">
     <div class="container">
         <!-- 站点运行时间 -->
-        {{ if .Site.Params.runtime }}
-        本站已稳定运行
+        {{ if .Site.Params.runtime }} 本站已稳定运行
         <b id="d"></b> 天 <b id="h"></b> 小时 <b id="m"></b> 分 <b id="s"></b> 秒
         <script>
             function timer() {
@@ -24,20 +23,18 @@
             document.getElementById('h').innerHTML = h;
             document.getElementById('m').innerHTML = m;
             document.getElementById('s').innerHTML = s;
-                }
+            }
             timer();
             setInterval(timer, 1000);
         </script>
         {{- end }}
-        <br>
-        &copy; {{ now.Format "2006" }} <a href="{{ .Site.BaseURL | absURL }}">{{ .Site.Title }}</a> Designed by
-        {{ .Site.Author.name }}.
-        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <br> &copy; {{ now.Format "2006" }} <a href="{{ .Site.BaseURL | absURL }}">{{ .Site.Title }}</a> Designed by
+        {{ .Site.Author.name }}. Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io"
+            target="_blank">Hugo</a>.
         <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a
             href="https://github.com/flysnow-org/maupassant-hugo" target="_blank">maupassant</a>.
-        {{ if .Site.Params.showHostPage }}
-        Hosted by <a rel="nofollow noreferer noopener" href="https://pages.github.com" target="_blank">Github Pages</a>.
-        {{ end }}
+        {{ if .Site.Params.showHostPage }} Hosted by <a rel="nofollow noreferer noopener"
+            href="https://pages.github.com" target="_blank">Github Pages</a>. {{ end }}
     </div>
 </footer>
 
@@ -58,7 +55,10 @@
                 }
             });
             const rootElement = block.parentNode;
-            var image = new DOMParser().parseFromString(Viz(block.innerText, { format: "svg", engine: engine }), "image/svg+xml");
+            var image = new DOMParser().parseFromString(Viz(block.innerText, {
+                format: "svg",
+                engine: engine
+            }), "image/svg+xml");
             const container = document.createElement('div');
             container.className = 'align-center';
             container.setAttribute("style", "overFlow-x:auto");
@@ -74,11 +74,29 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.2.8/raphael.min.js" crossorigin="anonymous"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/flowchart/1.12.2/flowchart.min.js" crossorigin="anonymous"></script>
 <script>
-    { { - if .Params.flowchartDiagrams.options -} }
-    window.flowchartDiagramsOptions = {{ .Params.flowchartDiagrams.options | safeJS }};
-    { { - else if .Site.Params.flowchartDiagrams.options -} }
-    window.flowchartDiagramsOptions = {{ .Site.Params.flowchartDiagrams.options | safeJS }};
-    { { - end -} }
+    {
+        {
+            -
+            if .Params.flowchartDiagrams.options -
+        }
+    }
+    window.flowchartDiagramsOptions = {
+        { .Params.flowchartDiagrams.options | safeJS
+    }
+    }; {
+        {
+            -
+            else if .Site.Params.flowchartDiagrams.options -
+        }
+    }
+    window.flowchartDiagramsOptions = {
+        { .Site.Params.flowchartDiagrams.options | safeJS
+    }
+    }; {
+        {
+            -end -
+        }
+    }
     (function () {
         if (!window.flowchart) return;
         const blocks = document.querySelectorAll('pre code.language-flowchart, pre code.language-flow');
@@ -107,11 +125,29 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"
     crossorigin="anonymous"></script>
 <script>
-    { { - if .Params.sequenceDiagrams.options -} }
-    window.sequenceDiagramsOptions = {{ .Params.sequenceDiagrams.options | safeJS }};
-    { { - else if .Site.Params.sequenceDiagrams.options -} }
-    window.sequenceDiagramsOptions = {{ .Site.Params.sequenceDiagrams.options | safeJS }};
-    { { - end -} }
+    {
+        {
+            -
+            if .Params.sequenceDiagrams.options -
+        }
+    }
+    window.sequenceDiagramsOptions = {
+        {.Params.sequenceDiagrams.options | safeJS
+    }
+    }; {
+        {
+            -
+            else if .Site.Params.sequenceDiagrams.options -
+        }
+    }
+    window.sequenceDiagramsOptions = {
+        {.Site.Params.sequenceDiagrams.options | safeJS
+    }
+    }; {
+        {
+            -end -
+        }
+    }
     (function () {
         if (!window.Diagram) return;
         const blocks = document.querySelectorAll('pre code.language-sequence');
@@ -127,9 +163,11 @@
             rootElement.parentNode.replaceChild(container, rootElement);
 
             const diagram = Diagram.parse(block.childNodes[0].nodeValue);
-            diagram.drawSVG(id, window.sequenceDiagramsOptions
-                ? window.sequenceDiagramsOptions
-                : { theme: 'simple' });
+            diagram.drawSVG(id, window.sequenceDiagramsOptions ?
+                window.sequenceDiagramsOptions :
+                {
+                    theme: 'simple'
+                });
         }
     })();
 </script>
@@ -138,7 +176,9 @@
 <script type="text/javascript">
     window.MathJax = {
         tex2jax: {
-            inlineMath: [['$', '$']],
+            inlineMath: [
+                ['$', '$']
+            ],
             processEscapes: true
         }
     };
@@ -148,9 +188,7 @@
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='{{ "js/totop.js?v=0.0.0" | relURL }}' async=""></script>
-{{ template "_internal/google_analytics_async.html" . }}
-
-{{ if .Site.Params.busuanzi }}
+{{ template "_internal/google_analytics_async.html" . }} {{ if .Site.Params.busuanzi }}
 <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
 {{ end }}
 
