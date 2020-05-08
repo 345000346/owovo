@@ -7,7 +7,7 @@
  */
 
 body {
-    background-color: #232222;
+    background-color: #171514;
     font-size: 15px;
     /**
     font-family:"TIBch", "Classic Grotesque W01", "Helvetica Neue", Arial, "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei", SimSun, sans-serif;
@@ -80,9 +80,9 @@ blockquote {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin: 2.5em 0;
-    padding: 0 0 0 50px;
-    color: #555;
-    border-left: none;
+    padding: 10px 10px 10px 33px;
+    background: #111111;
+    border-left: 2px solid #F94135;
 }
 
 blockquote::before {
@@ -91,10 +91,10 @@ blockquote::before {
     font-family: times;
     font-style: normal;
     font-size: 48px;
-    color: #444;
+    color: #B8B8B8;
     font-weight: bold;
     line-height: 30px;
-    margin-left: -50px;
+    margin-left: -30px;
     position: absolute;
 }
 
@@ -433,6 +433,7 @@ textarea {
 }
 
 .post-content p {
+    color: #B8B8B8;
     margin: 0 0 1.1em;
 }
 
