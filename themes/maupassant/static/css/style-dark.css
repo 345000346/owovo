@@ -6,81 +6,8 @@
  * @link http://pickcho.com
  */
 
-@font-face {
-    font-family: 'icomoon';
-    src: url('fonts/icomoon.woff?-i5ysuu') format('woff'), url('fonts/icomoon.ttf?-i5ysuu') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-[class^="icon-"],
-[class*=" icon-"] {
-    font-family: 'icomoon';
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.icon-search:before {
-    content: "\e601";
-}
-
-.icon-air:before {
-    content: "\e602";
-}
-
-.icon-rss:before {
-    content: "\e603";
-}
-
-.icon-list:before {
-    content: "\e604";
-}
-
-.icon-cc-by:before {
-    content: "\e605";
-}
-
-.icon-cc-nc:before {
-    content: "\e606";
-}
-
-.icon-cc-sa:before {
-    content: "\e607";
-}
-
-.icon-github:before {
-    content: "\e608";
-}
-
-.icon-twitter:before {
-    content: "\e609";
-}
-
-.icon-googleplus:before {
-    content: "\e60a";
-}
-
-.icon-qq:before {
-    content: "\e60b";
-}
-
-.icon-instagram:before {
-    content: "\e60c";
-}
-
-.icon-sina-weibo:before {
-    content: "\e60d";
-}
-
 body {
-    background-color: #000;
+    background-color: #232222;
     font-size: 15px;
     /**
     font-family:"TIBch", "Classic Grotesque W01", "Helvetica Neue", Arial, "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei", SimSun, sans-serif;
@@ -338,15 +265,7 @@ textarea {
     width: 100%;
 }
 
-.heardContainer {
-    background: #232222;
-    width: 1150px;
-    padding: 58px 60px 0 60px;
-    margin: 0 auto;
-}
-
 .container {
-    background: #232222;
     width: 1150px;
     padding: 0 60px;
     margin: 0 auto;
@@ -781,9 +700,9 @@ textarea.textarea {
 }
 
 #footer {
-    padding: 0 0 3.6em 0;
+    padding: .8em 0 3.6em;
     line-height: 1.5;
-    color: #B8B8B8;
+    color: #999;
     text-align: center
 }
 
@@ -1149,7 +1068,7 @@ screen and (max-width:500px) {
 .post-archive h2 {
     color: #B8B8B8;
     margin: 0;
-    font: bold 25px / 1.1 "ff-tisa-web-pro", Cambria, "Times New Roman", Georgia, Times, sans-serif;
+    /* font: bold 25px / 1.1 "ff-tisa-web-pro", Cambria, "Times New Roman", Georgia, Times, sans-serif; */
 }
 
 .post-archive .date {
