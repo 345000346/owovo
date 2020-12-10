@@ -112,6 +112,7 @@ pre, code {
     font-size:.92857em;
 }
 pre {
+    white-space: pre-wrap;
     overflow:auto;
     border: 1px solid #ddd;
     display: block;
@@ -645,7 +646,6 @@ textarea.textarea {
 }
 .post-content hr, .comment-content hr {
     margin:2.1em auto;
-    width:200px;
     border:1px solid #ccc;
     border-width:1px 0 0 0;
     position: relative;
