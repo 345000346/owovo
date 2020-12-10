@@ -62,6 +62,7 @@ code {
 }
 
 pre {
+    white-space: pre-wrap;
     overflow: auto;
     border: 1px solid #ddd;
     display: block;
@@ -411,7 +412,7 @@ textarea {
 .post-content h3,
 .post-content h2 {
     margin: 1.4em 0 1.1em;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #FD555A;
     overflow: hidden;
 }
 
@@ -739,7 +740,6 @@ textarea.textarea {
 .post-content hr,
 .comment-content hr {
     margin: 2.1em auto;
-    width: 200px;
     border: 1px solid #ccc;
     border-width: 1px 0 0 0;
     position: relative;
