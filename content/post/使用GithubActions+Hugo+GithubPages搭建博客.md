@@ -47,15 +47,19 @@ jobs:
         with:
           hugo-version: 'latest' # 使用Hugo最新版
           extended: true
+
       - name: Build # 编译
-        run: hugo --minify
+        run: hugo
+
       - name: Deploy # 部署
-        uses: peaceiris/actions-gh-pages@v2
-        env:
-         ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+         DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
          EXTERNAL_REPOSITORY: 你的用户名/你的用户名.github.io
+         CNAME: #添加你的网站域名作CNAME以便解析
          PUBLISH_BRANCH: master
          PUBLISH_DIR: ./public
+         COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 ```
 
 **注：25 行的 你的用户名 填写你的 Github 用户名**
@@ -112,18 +116,4 @@ ssh-keygen -t rsa -b 4096 -C "$(git config user.email)" -f gh-pages -N ""
 添加一条主机记录为 `CNAME` 解析，记录值为 `[你的用户名].github.io`，
 
 解析生效后，就可以通过 `owovo.xyz` 访问自己放在 `Github` 上的个人主页了，并且通过 `[你的用户名].github.io` 访问时，会自动跳转到 `owovo.xyz`.
-
-## 六、注意事项
-
-我们在做完以上流程后，可以用自己的域名访问自己 Blog 了。
-
-但是有一个问题随之出现了，就是我们提交一次 Push 后就再无法使用自己的域名访问了，还需要到 Setting 中重新设置。
-
-出现这个问题的主要原因是 `[你的用户名].github.io` 下的 `CNAME` 文件在 Push 时自动覆盖了，为了解决这个问题，我们可以这样做：
-
-在你的 Hugo 文件 `content` 目录下新建一个 `CNAME` 文件，内容为 你的域名。
-
-**注意，`CANME` 不要有任何后缀！！！**
-
-这样就会在编译时自动将 `CNAME` 文件放到 `[你的用户名].github.io` 根目录，就完美的解决了这个问题。
 
