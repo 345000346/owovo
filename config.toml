@@ -46,12 +46,17 @@ summaryLength = 140
 [[params.mylinks]]
     name = "微博"
     url = "https://weibo.com/u/1733321624"
-    imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=282c34&labelColor=e71f19&label=微博&query=%24.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo"
+    imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=E6162D&labelColor=282c34&label=微博&query=%24.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo"
     
 [[params.mylinks]]
     name = "Github"
     url = "https://github.com/345000346"
-    imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=282c34&labelColor=181717&label=GitHub&query=%24.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github"
+    imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=181717&labelColor=282c34&label=GitHub&query=%24.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github"
+
+[[params.mylinks]]
+    name = "Github"
+    url = "https://www.zhihu.com/people/Hibernate_"
+    imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=0084ff&labelColor=282c34&label=知乎&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3DHibernate_&logo=zhihu"
     
 [menu]
   [[menu.main]]
