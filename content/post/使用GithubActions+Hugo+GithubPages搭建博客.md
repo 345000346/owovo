@@ -62,8 +62,6 @@ jobs:
          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 ```
 
-**注：25 行的 你的用户名 填写你的 Github 用户名**
-
 ## 四、准备部署
 
 我们开发的项目和 Github Pages 是分开的，所以用了两个 Repository，接下来就是要在你将 Hugo文章推到 myBlog 这个 Repository 后，部署到 Github Pages.
