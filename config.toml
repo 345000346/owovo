@@ -53,7 +53,7 @@ summaryLength = 140
   baseName = "rss"
 
 [services.rss]
-  limit = 20
+  limit = 5
 
 [markup]
   defaultMarkdownHandler = "goldmark"
@@ -70,9 +70,9 @@ summaryLength = 140
 
 ## 社交链接
 [social]
-github = "345000346"
-weibo = "1733321624"
-rss = "/rss.xml"
+  github = "345000346"
+  weibo = "1733321624"
+  rss = "/rss.xml"
 
 # [[params.mylinks]]
 #     name = "微博"
