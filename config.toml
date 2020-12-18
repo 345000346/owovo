@@ -1,8 +1,8 @@
 baseURL = "https://owovo.xyz"
 languageCode = "zh-CN"
-title = "LIGT'S"
-theme = "maupassant"
-
+title = "LIGT'S BLOG"
+theme = "echo"
+DefaultContentLanguage = "cn"
 
 ## 是否禁止URL Path转小写
 disablePathToLower = true
@@ -17,23 +17,46 @@ googleAnalytics = "UA-47934503-5"
 hasCJKLanguage = true
 summaryLength = 140
 
+[permalinks]
+  posts = "/:filename"
+
 [author]
+  avatar = "/favicon.ico"
   name = "LIGT"
 
 [params]
+  favicon = "/favicon.ico"
   author = "owovo"
   subtitle = "分享一些日常、没事无聊的瞎想、一些常用的工具等"
   keywords = "日常,想法,Android,Windows,手机,电脑"
   description = "分享一些日常、没事无聊的瞎想、一些常用的工具等"
   ## 不蒜子博客浏览量
   busuanzi = true
+  # toc = true
   ## 运行时间
   runtime = "8/22/2019 00:00:00"
-  showHostPage = true
-  ## 图片点击放大
-  fancybox = true
+  # showHostPage = true
+  # rss 全文输出
+  rssFullContent = true
+  staticCDNPrefix = "https://cdn.bootcss.com/font-awesome/5.11.2"
+  extraHead = '<script async src="https://www.googletagmanager.com/gtag/js?id=UA-xxx"></script>'
+  navItems = [
+    ["首页", "/"],
+    ["文章", "/post.html"],
+    ["想法", "/ideas.html"],
+    ["关于", "/about.html"],
+    ["RSS", "/rss.xml"],
+]
+
+[outputFormats.RSS]
+  mediatype = "application/rss"
+  baseName = "rss"
+
+[services.rss]
+  limit = 20
 
 [markup]
+  defaultMarkdownHandler = "goldmark"
   [markup.highlight]
     codeFences = true
     guessSyntax = false
@@ -42,51 +65,57 @@ summaryLength = 140
     lineNos = true
     lineNumbersInTable = true
     noClasses = true
-    style = "monokai"
-    tabWidth = 4
+    style = "manni"
+    tabWidth = 2
 
-[[params.mylinks]]
-    name = "微博"
-    url = "https://weibo.com/u/1733321624"
-    imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=E6162D&labelColor=282c34&label=微博&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo"
+## 社交链接
+[social]
+github = "345000346"
+weibo = "1733321624"
+rss = "/rss.xml"
+
+# [[params.mylinks]]
+#     name = "微博"
+#     url = "https://weibo.com/u/1733321624"
+#     imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=E6162D&labelColor=282c34&label=微博&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo"
     
-[[params.mylinks]]
-    name = "Github"
-    url = "https://github.com/345000346"
-    imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=181717&labelColor=282c34&label=GitHub&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github"
+# [[params.mylinks]]
+#     name = "Github"
+#     url = "https://github.com/345000346"
+#     imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=181717&labelColor=282c34&label=GitHub&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github"
 
-[[params.mylinks]]
-    name = "Github"
-    url = "https://www.zhihu.com/people/Hibernate_"
-    imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=0084ff&labelColor=282c34&label=知乎&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3DHibernate_&logo=zhihu"
+# [[params.mylinks]]
+#     name = "知乎"
+#     url = "https://www.zhihu.com/people/Hibernate_"
+#     imgUrl = "https://img.shields.io/badge/dynamic/json?style=flat-square&color=0084ff&labelColor=282c34&label=知乎&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3DHibernate_&logo=zhihu"
     
-[menu]
-  [[menu.main]]
-    identifier = "post"
-    name = "文章"
-    url = "/archives.html"
-    weight = 2
+# [menu]
+#   [[menu.main]]
+#     identifier = "post"
+#     name = "文章"
+#     url = "/archives.html"
+#     weight = 2
 
-	[[menu.main]]
-    identifier = "categories"
-    name = "分类"
-    url = "/categories.html"
-    weight = 3
+# 	[[menu.main]]
+#     identifier = "categories"
+#     name = "分类"
+#     url = "/categories.html"
+#     weight = 3
 	
-	[[menu.main]]
-    identifier = "tags"
-    name = "标签"
-    url = "/tags.html"
-    weight = 4
+# 	[[menu.main]]
+#     identifier = "tags"
+#     name = "标签"
+#     url = "/tags.html"
+#     weight = 4
 	
-	[[menu.main]]
-    identifier = "ideas"
-    name = "想法"
-    url = "/ideas.html"
-    weight = 5
+# 	[[menu.main]]
+#     identifier = "ideas"
+#     name = "想法"
+#     url = "/ideas.html"
+#     weight = 5
 	
-    [[menu.main]]
-    identifier = "about"
-    name = "关于"
-    url = "/about.html"
-    weight = 6
+#     [[menu.main]]
+#     identifier = "about"
+#     name = "关于"
+#     url = "/about.html"
+#     weight = 6
