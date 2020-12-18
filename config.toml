@@ -21,7 +21,7 @@ summaryLength = 140
   posts = "/:filename"
 
 [author]
-  avatar = "/favicon.ico"
+  avatar = "/avatar.jpg"
   name = "LIGT"
 
 [params]
