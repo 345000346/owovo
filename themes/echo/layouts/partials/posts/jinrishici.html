@@ -1,0 +1,14 @@
+<h3 class="text-base font-bold py-2 yg:pb-6 text-gray-700">今日诗词</h3>
+<script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+<div id="poem_sentence" class="sticky text-sm" style="top: 6em"></div>
+<br />
+<div id="poem_info"></div>
+<script type="text/javascript">
+  jinrishici.load(function (result) {
+    var sentence = document.querySelector("#poem_sentence");
+    var info = document.querySelector("#poem_info");
+    sentence.innerHTML = result.data.content;
+    info.innerHTML =
+      "【" + result.data.origin.dynasty + "】" + result.data.origin.author + "《" + result.data.origin.title + "》";
+  });
+</script>
