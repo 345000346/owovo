@@ -2,14 +2,14 @@
 <style type="text/css">
     .post-toc {
         position: fixed;
-        /*width: 200px;*/
-        margin-left: -376.5px;
+        width: 200px;
+        margin-left: -210px;
         padding: 5px 10px;
         font-family: Athelas, STHeiti, Microsoft Yahei, serif;
         font-size: 12px;
         border: 1px solid rgba(0, 0, 0, .07);
         border-radius: 5px;
-        background-color:#373737;
+        background-color: #373737;
         background-clip: padding-box;
         -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, .125);
         box-shadow: 1px 1px 2px rgba(0, 0, 0, .125);
@@ -29,7 +29,6 @@
         margin: 0 auto;
         font-size: 20px;
         font-weight: 400;
-        color: #FFFFFF;
         text-transform: uppercase;
         text-align: center;
     }
@@ -72,11 +71,9 @@
         var postToc = $(".post-toc");
         if (postToc.length) {
             var leftPos = $("#main").offset().left;
-            // alert(leftPos);
-            // if(leftPos<220){
-                // postToc.css({"width":leftPos-10,"margin-left":(0-leftPos)})
-                postToc.css({"margin-left":(0-leftPos)})
-            // }
+            if(leftPos<220){
+                postToc.css({"width":leftPos-10,"margin-left":(0-leftPos)})
+            }
 
             var t = postToc.offset().top - 20,
                 a = {
