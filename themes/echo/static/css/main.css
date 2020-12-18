@@ -85,21 +85,26 @@
   font-size: 0.875rem;
 }
 
-::selection {
+/* ::selection {
   background: #e9d8fd;
-  color: #202684;
-  /* WebKit/Blink Browsers */
-}
+  color: #202684; */
+/* WebKit/Blink Browsers */
+/* } */
 
-::-moz-selection {
+/* ::-moz-selection {
   background: #e9d8fd;
-  color: #202684;
-  /* Gecko Browsers */
-}
+  color: #202684; */
+/* Gecko Browsers */
+/* } */
 
-a:focus {
+/* a:focus {
   outline: none;
   background: #e9d8fd;
+} */
+
+a:hover,
+a:active {
+  color: #fd281a;
 }
 
 /* 侧边导航 */
