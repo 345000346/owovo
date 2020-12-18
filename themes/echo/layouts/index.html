@@ -19,14 +19,17 @@
                 <hr class="bg-gray-300 mt-10 mb-6">
             {{ end }}
             <p class="text-center">
-                <a  class="md:text-xl text-gray-700" href="{{ "/post.html" | relLangURL }}{{ if $.Site.Params.uglyURLs }}.html{{ else }}/{{ end }}">↑ 文章归档 ↑</a>
+                <a  class="md:text-xl text-gray-700" href="{{ "/post.html" | relLangURL }}{{ if $.Site.Params.uglyURLs }}{{ else }}/{{ end }}">↑ 文章归档 ↑</a>
             </p>
         </div>
     </section>
 
     <div class="hidden md:block w-full lg:w-1/4 xl:w-1/4 px-6 text-gray-800 leading-normal">
-
         {{ partial "posts/profile.html" . }}
-
+            <div class="flex flex-col justify-between sticky top-0 pt-12 pb-4 -mt-10 text-gray-600">
+                <div class="bg-white shadow rounded p-4 mt-5">
+                    {{ partial "posts/jinrishici.html" . }}
+                </div>
+          </div>
     </div>
 {{ end }}
