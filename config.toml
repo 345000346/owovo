@@ -21,7 +21,7 @@ summaryLength = 140
   posts = "/:filename"
 
 [author]
-  avatar = "/avatar.jpg"
+  avatar = "https://i.loli.net/2020/12/18/71QeDAbT2YlFzrU.jpg"
   name = "LIGT"
 
 [params]
