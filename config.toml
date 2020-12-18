@@ -30,6 +30,8 @@ summaryLength = 140
   ## 运行时间
   runtime = "8/22/2019 00:00:00"
   showHostPage = true
+  ## 图片点击放大
+  fancybox = true
 
 [markup]
   [markup.highlight]
