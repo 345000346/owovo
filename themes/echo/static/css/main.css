@@ -80,9 +80,9 @@
 
 .post-content pre,
 .post-content .highlight {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding: 0.5rem;
   font-size: 0.875rem;
+  background-color: #eee;
 }
 
 /* ::selection {
