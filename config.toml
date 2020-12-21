@@ -56,7 +56,9 @@ summaryLength = 140
   limit = 5
 
 [markup]
-  defaultMarkdownHandler = "goldmark"
+  [markup.goldmark]    
+  [markup.goldmark.renderer]     
+    unsafe = true
   [markup.highlight]
     codeFences = true
     guessSyntax = false
