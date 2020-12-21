@@ -6,7 +6,7 @@ toc   : true
 
 <!--more-->
 
-<font color=red>本文最后更新于 ：2020年04月27日</font>
+<font color=red>本文最后更新于 ：2020年12月21日</font>
 
 ## 基本情况 ##
 
@@ -17,12 +17,12 @@ toc   : true
 - 足球（巴萨）
 - 篮球
 - 电竞（LOL - WE 、PUBG - 4AM）
-- 音乐
-- 阅读
+- 音乐（陈奕迅、周杰伦等）
+- 阅读（也就是看小说啦）
 - 摄影（？瞎拍）
 - 数码产品
 - ~~学习(我自己都不信)~~
-- ~~编程(多年不碰)~~
+- 编程(偶尔)
 
 ## 败家产品 ##
 
@@ -58,6 +58,12 @@ toc   : true
 
 - 和平精英
 - 王者荣耀
+
+## 社交媒体 ##
+
+<a target="_blank" href="https://github.com/345000346" style="display: inline-block;border: none;"><img src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=181717&labelColor=282c34&label=GitHub&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github"></a>
+<a target="_blank" href="https://weibo.com/u/1733321624" style="display: inline-block;border: none;"><img src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=E6162D&labelColor=282c34&label=微博&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo"></a>
+<a target="_blank" href="https://www.zhihu.com/people/Hibernate_" style="display: inline-block;border: none;"><img src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=0084ff&labelColor=282c34&label=知乎&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3DHibernate_&logo=zhihu"></a>
 
 ## 其他 ##
 
