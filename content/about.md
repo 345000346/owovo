@@ -76,3 +76,7 @@ toc   : true
 2020年1月1日更新：
 
 本站迁移到 Github ，使用 Git 上传，使用 Github Actions 自动编译 Hugo 文件，部署到 Github pages.
+
+2021年1月1日更新：
+
+使用`jsDelivr` CDN服务加速部分`js`文件，加速国内访问本网站速度。
