@@ -34,126 +34,125 @@
     <canvas></canvas>
 
     <script>
-            var canvas = document.querySelector("canvas"),
-              ctx = canvas.getContext("2d");
+      var canvas = document.querySelector("canvas"),
+        ctx = canvas.getContext("2d");
 
-            var ww, wh;
+      var ww, wh;
 
-            function onResize() {
-              ww = canvas.width = window.innerWidth;
-              wh = canvas.height = window.innerHeight;
-            }
+      function onResize() {
+        ww = canvas.width = window.innerWidth;
+        wh = canvas.height = window.innerHeight;
+      }
 
-            ctx.strokeStyle = "red";
-            ctx.shadowBlur = 25;
-            ctx.shadowColor = "hsla(0, 100%, 60%,0.5)";
+      ctx.strokeStyle = "red";
+      ctx.shadowBlur = 25;
+      ctx.shadowColor = "hsla(0, 100%, 60%,0.5)";
 
-            var precision = 100;
-            var hearts = [];
-            var mouseMoved = false;
-            function onMove(e) {
-              mouseMoved = true;
-              if (e.type === "touchmove") {
-                hearts.push(new Heart(e.touches[0].clientX, e.touches[0].clientY));
-                hearts.push(new Heart(e.touches[0].clientX, e.touches[0].clientY));
-              } else {
-                hearts.push(new Heart(e.clientX, e.clientY));
-                hearts.push(new Heart(e.clientX, e.clientY));
-              }
-            }
+      var precision = 100;
+      var hearts = [];
+      var mouseMoved = false;
+      function onMove(e) {
+        mouseMoved = true;
+        if (e.type === "touchmove") {
+          hearts.push(new Heart(e.touches[0].clientX, e.touches[0].clientY));
+          hearts.push(new Heart(e.touches[0].clientX, e.touches[0].clientY));
+        } else {
+          hearts.push(new Heart(e.clientX, e.clientY));
+          hearts.push(new Heart(e.clientX, e.clientY));
+        }
+      }
 
-            var Heart = function (x, y) {
-              this.x = x || Math.random() * ww;
-              this.y = y || Math.random() * wh;
-              this.size = Math.random() * 2 + 1;
-              this.shadowBlur = Math.random() * 10;
-              this.speedX = (Math.random() + 0.2 - 0.6) * 8;
-              this.speedY = (Math.random() + 0.2 - 0.6) * 8;
-              this.speedSize = Math.random() * 0.05 + 0.01;
-              this.opacity = 1;
-              this.vertices = [];
-              for (var i = 0; i < precision; i++) {
-                var step = (i / precision - 0.5) * (Math.PI * 2);
-                var vector = {
-                  x: 15 * Math.pow(Math.sin(step), 3),
-                  y: -(13 * Math.cos(step) - 5 * Math.cos(2 * step) - 2 * Math.cos(3 * step) - Math.cos(4 * step)),
-                };
-                this.vertices.push(vector);
-              }
-            };
+      var Heart = function (x, y) {
+        this.x = x || Math.random() * ww;
+        this.y = y || Math.random() * wh;
+        this.size = Math.random() * 2 + 1;
+        this.shadowBlur = Math.random() * 10;
+        this.speedX = (Math.random() + 0.2 - 0.6) * 8;
+        this.speedY = (Math.random() + 0.2 - 0.6) * 8;
+        this.speedSize = Math.random() * 0.05 + 0.01;
+        this.opacity = 1;
+        this.vertices = [];
+        for (var i = 0; i < precision; i++) {
+          var step = (i / precision - 0.5) * (Math.PI * 2);
+          var vector = {
+            x: 15 * Math.pow(Math.sin(step), 3),
+            y: -(13 * Math.cos(step) - 5 * Math.cos(2 * step) - 2 * Math.cos(3 * step) - Math.cos(4 * step)),
+          };
+          this.vertices.push(vector);
+        }
+      };
 
-            Heart.prototype.draw = function () {
-              this.size -= this.speedSize;
-              this.x += this.speedX;
-              this.y += this.speedY;
-              ctx.save();
-              ctx.translate(-1000, this.y);
-              ctx.scale(this.size, this.size);
-              ctx.beginPath();
-              for (var i = 0; i < precision; i++) {
-                var vector = this.vertices[i];
-                ctx.lineTo(vector.x, vector.y);
-              }
-              ctx.globalAlpha = this.size;
-              ctx.shadowBlur = Math.round((3 - this.size) * 10);
-              ctx.shadowColor = "hsla(0, 100%, 60%,0.5)";
-              ctx.shadowOffsetX = this.x + 1000;
-              ctx.globalCompositeOperation = "screen";
-              ctx.closePath();
-              ctx.fill();
-              ctx.restore();
-            };
+      Heart.prototype.draw = function () {
+        this.size -= this.speedSize;
+        this.x += this.speedX;
+        this.y += this.speedY;
+        ctx.save();
+        ctx.translate(-1000, this.y);
+        ctx.scale(this.size, this.size);
+        ctx.beginPath();
+        for (var i = 0; i < precision; i++) {
+          var vector = this.vertices[i];
+          ctx.lineTo(vector.x, vector.y);
+        }
+        ctx.globalAlpha = this.size;
+        ctx.shadowBlur = Math.round((3 - this.size) * 10);
+        ctx.shadowColor = "hsla(0, 100%, 60%,0.5)";
+        ctx.shadowOffsetX = this.x + 1000;
+        ctx.globalCompositeOperation = "screen";
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      };
 
-            function render(a) {
-              requestAnimationFrame(render);
+      function render(a) {
+        requestAnimationFrame(render);
 
-              hearts.push(new Heart());
-              ctx.clearRect(0, 0, ww, wh);
-              for (var i = 0; i < hearts.length; i++) {
-                hearts[i].draw();
-                if (hearts[i].size <= 0) {
-                  hearts.splice(i, 1);
-                  i--;
-                }
-              }
-            }
+        hearts.push(new Heart());
+        ctx.clearRect(0, 0, ww, wh);
+        for (var i = 0; i < hearts.length; i++) {
+          hearts[i].draw();
+          if (hearts[i].size <= 0) {
+            hearts.splice(i, 1);
+            i--;
+          }
+        }
+      }
 
-            onResize();
-            window.addEventListener("mousemove", onMove);
-            window.addEventListener("touchmove", onMove);
-            window.addEventListener("resize", onResize);
-            requestAnimationFrame(render);
+      onResize();
+      window.addEventListener("mousemove", onMove);
+      window.addEventListener("touchmove", onMove);
+      window.addEventListener("resize", onResize);
+      requestAnimationFrame(render);
 
-            window.onload = function starttime() {
-              time(h1, "2021/8/13"); // 在一起的时间
-              ptimer = setTimeout(starttime, 1000); // 添加计时器
-            };
+      window.onload = function starttime() {
+        time(h1, "2021/8/13"); // 在一起的时间
+        ptimer = setTimeout(starttime, 1000); // 添加计时器
+      };
 
-            function time(obj, futimg) {
-              var nowtime = new Date().getTime(); // 现在时间转换为时间戳
-              var futruetime = new Date(futimg).getTime(); // 未来时间转换为时间戳
-              var msec = nowtime - futruetime; // 毫秒 未来时间-现在时间
-              var time = msec / 1000; // 毫秒/1000
-              var day = parseInt(time / 86400); // 天  24*60*60*1000
-              var hour = parseInt(time / 3600) - 24 * day; // 小时 60*60 总小时数-过去的小时数=现在的小时数
-              var minute = parseInt((time % 3600) / 60); // 分 -(day*24) 以60秒为一整份 取余 剩下秒数 秒数/60 就是分钟数
-              var second = parseInt(time % 60); // 以60秒为一整份 取余 剩下秒数
-              console.log(hour + ":" + minute + ":" + second);
-              // alert(hour);
-              obj.innerHTML =
-                "亲爱的猫猫，咱俩已经在一起" +
-                day +
-                "天" +
-                hour +
-                "小时" +
-                minute +
-                "分" +
-                second +
-                "秒" +
-                "了<br><span>在我们相处中，我发现我们是如此的契合，是如此的有默契<br>我好喜欢被你需要的感觉，也好喜欢你的直率与可爱<br>我们俩能互相get到对方的点，大概是因为我足够了解你，你也足够了解我<br>我愿意和你一起“幼稚”，我愿意和你一起玩到老，这样才是幸福的一生呀～<br>一见钟情是浪漫，日久生情是陪伴，我坚信最浪漫的事就是和你一起慢慢变老<br>我们俩共同培养爱情这棵小树苗，然后看着它一点一点的成长，最后长成一棵参天大树<br>从日出到日落，这山山水水的每一处都透露着浪漫的气息，只有我们俩的惬意时光<br>我想和你去更多美好的地方，以爱之名看遍万水千山…<br>真爱来了，我们要好好把握，相信中间的计时器,将永远继续下去<br>今天是2021.11.20，我们在一起的第100天，2400个小时，144000分钟，8640000秒<br>每一天我都没有缺席，每一天都有亲亲，愿我们彼此温暖，互不辜负，人生苦短，有你很甜，好好生活，慢慢爱你</span>";
-
-              return true;
-            }
+      function time(obj, futimg) {
+        var nowtime = new Date().getTime(); // 现在时间转换为时间戳
+        var futruetime = new Date(futimg).getTime(); // 未来时间转换为时间戳
+        var msec = nowtime - futruetime; // 毫秒 未来时间-现在时间
+        var time = msec / 1000; // 毫秒/1000
+        var day = parseInt(time / 86400); // 天  24*60*60*1000
+        var hour = parseInt(time / 3600) - 24 * day; // 小时 60*60 总小时数-过去的小时数=现在的小时数
+        var minute = parseInt((time % 3600) / 60); // 分 -(day*24) 以60秒为一整份 取余 剩下秒数 秒数/60 就是分钟数
+        var second = parseInt(time % 60); // 以60秒为一整份 取余 剩下秒数
+        console.log(hour + ":" + minute + ":" + second);
+        // alert(hour);
+        obj.innerHTML =
+          "亲爱的猫猫，咱俩已经在一起" +
+          day +
+          "天" +
+          hour +
+          "小时" +
+          minute +
+          "分" +
+          second +
+          "秒" +
+          "了<br><span>在我们相处中，我发现我们是如此的契合，是如此的有默契<br>我好喜欢被你需要的感觉，也好喜欢你的直率与可爱<br>我们俩能互相get到对方的点，大概是因为我足够了解你，你也足够了解我<br>我愿意和你一起“幼稚”，我愿意和你一起玩到老，这样才是幸福的一生呀～<br>一见钟情是浪漫，日久生情是陪伴，我坚信最浪漫的事就是和你一起慢慢变老<br>我们俩共同培养爱情这棵小树苗，然后看着它一点一点的成长，最后长成一棵参天大树<br>从日出到日落，这山山水水的每一处都透露着浪漫的气息，只有我们俩的惬意时光<br>我想和你去更多美好的地方，以爱之名看遍万水千山…<br>真爱来了，我们要好好把握，相信中间的计时器,将永远继续下去<br>今天是2021.11.20，我们在一起的第100天，2400个小时，144000分钟，8640000秒<br>每一天我都没有缺席，每一天都有亲亲，愿我们彼此温暖，互不辜负，人生苦短，有你很甜，好好生活，慢慢爱你<br>今天是2022年3月18日，我们在一起的第218天，今天也是你的生日，祝我亲爱的猫猫生日快乐！<br>深情不及久伴，厚爱无需多言，一路走来，我俩有苦有甜，有吵有闹，但我们都走过来了<br>有你陪伴的日子，即使平淡，也觉得浪漫。一辈子很短，希望开始是你，过程是你，结尾也是你</span>";
+        return true;
+      }
     </script>
   </body>
 </html>
