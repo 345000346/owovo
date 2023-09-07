@@ -6,31 +6,51 @@
     <link href="favicon.ico" rel="shortcut icon" />
     <style>
       body {
-        overflow: hidden;
+        overflow: auto;
         margin: 0;
-      }
-
-      h1 {
-        position: fixed;
-        top: 50%;
-        left: 0;
-        width: 100%;
-        text-align: center;
-        transform: translateY(-50%);
-        font-family: "Love Ya Like A Sister", cursive;
-        font-size: 40px;
-        color: #c70012;
-        padding: 0 20px;
-      }
-
-      h1 span {
-        font-size: 20px;
+        padding: 0;
+        overflow-x: hidden;
       }
     </style>
   </head>
 
   <body>
-    <h1 id="h1"></h1>
+    <timenav
+      id="time_text"
+      style="
+        background: white;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 9999;
+        text-align: center;
+        font-size: 40px;
+        height: fit-content;
+        color: #c70012;
+        font-family: Love Ya Like A Sister, cursive;
+        pointer-events: none;
+      "
+    >
+    </timenav>
+
+    <p
+      style="
+        margin-top: 50px;
+        z-index: 9998;
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        font-size: 40px;
+        color: #c70012;
+        font-family: Love Ya Like A Sister, cursive;
+        pointer-events: none;
+      "
+    >
+      在我们相处中，我发现我们是如此的契合，是如此的有默契<br />我好喜欢被你需要的感觉，也好喜欢你的直率与可爱<br />我们俩能互相get到对方的点，大概是因为我足够了解你，你也足够了解我<br />我愿意和你一起“幼稚”，我愿意和你一起玩到老，这样才是幸福的一生呀～<br />一见钟情是浪漫，日久生情是陪伴，我坚信最浪漫的事就是和你一起慢慢变老<br />我们俩共同培养爱情这棵小树苗，然后看着它一点一点的成长，最后长成一棵参天大树<br />从日出到日落，这山山水水的每一处都透露着浪漫的气息，只有我们俩的惬意时光<br />我想和你去更多美好的地方，以爱之名看遍万水千山…<br />真爱来了，我们要好好把握，相信中间的计时器,将永远继续下去<br />今天是2021年11月20日，我们在一起的第100天，2400个小时，144000分钟，8640000秒<br />每一天我都没有缺席，每一天都有亲亲，愿我们彼此温暖，互不辜负，人生苦短，有你很甜，好好生活，慢慢爱你<br />今天是2022年3月18日，我们在一起的第218天，今天也是你的生日，祝我亲爱的猫猫生日快乐！<br />深情不及久伴，厚爱无需多言，一路走来，我俩有苦有甜，有吵有闹，但我们都走过来了<br />有你陪伴的日子，即使平淡，也觉得浪漫。一辈子很短，希望开始是你，过程是你，结尾也是你。<br />今天是2022年8月4日农历七月初七，是我们在一起的357天，今天是七夕耶~七夕快乐！<br />我想和你分享各种无关紧要的小事,有分享欲且愿意分享简直太棒啦！你看，这世界这么多人，我遇到了你，你也遇到了我，真好。<br />今天是我们在一起的第520天，你是我生命中的阳光，让我永远充满活力。我相信我们能一起走过所有的难关，互相陪伴，共度美好的未来。<br />今天是2023年8月13日，我们在一起两年啦，在这两年里，我们经历了无数难忘的瞬间，都成为了我们感情的坚实基础。愿我们的未来充满爱与幸福，继续携手创造更多美好回忆。
+      <br />今天是2023年9月6日，我们领证啦，终于等到了和心爱的人走向婚姻的那一刻，感觉幸福爆棚！我们将共度人生的每一个美好时刻，开启幸福的新生活！
+    </p>
     <canvas></canvas>
 
     <script>
@@ -125,7 +145,7 @@
       requestAnimationFrame(render);
 
       window.onload = function starttime() {
-        time(h1, "2021/8/13"); // 在一起的时间
+        time(document.getElementById("time_text"), "2021/8/13"); // 在一起的时间
         ptimer = setTimeout(starttime, 1000); // 添加计时器
       };
 
@@ -139,9 +159,8 @@
           minute: Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)),
           second: Math.floor((timeDiff % (1000 * 60)) / 1000),
         };
-        var loveContent =
-          "<span>在我们相处中，我发现我们是如此的契合，是如此的有默契<br>我好喜欢被你需要的感觉，也好喜欢你的直率与可爱<br>我们俩能互相get到对方的点，大概是因为我足够了解你，你也足够了解我<br>我愿意和你一起“幼稚”，我愿意和你一起玩到老，这样才是幸福的一生呀～<br>一见钟情是浪漫，日久生情是陪伴，我坚信最浪漫的事就是和你一起慢慢变老<br>我们俩共同培养爱情这棵小树苗，然后看着它一点一点的成长，最后长成一棵参天大树<br>从日出到日落，这山山水水的每一处都透露着浪漫的气息，只有我们俩的惬意时光<br>我想和你去更多美好的地方，以爱之名看遍万水千山…<br>真爱来了，我们要好好把握，相信中间的计时器,将永远继续下去<br>今天是2021.11.20，我们在一起的第100天，2400个小时，144000分钟，8640000秒<br>每一天我都没有缺席，每一天都有亲亲，愿我们彼此温暖，互不辜负，人生苦短，有你很甜，好好生活，慢慢爱你<br>今天是2022年3月18日，我们在一起的第218天，今天也是你的生日，祝我亲爱的猫猫生日快乐！<br>深情不及久伴，厚爱无需多言，一路走来，我俩有苦有甜，有吵有闹，但我们都走过来了<br>有你陪伴的日子，即使平淡，也觉得浪漫。一辈子很短，希望开始是你，过程是你，结尾也是你。<br>今天是2022年8月4日农历七月初七，是我们在一起的357天，今天是七夕耶~七夕快乐！<br>我想和你分享各种无关紧要的小事,有分享欲且愿意分享简直太棒啦！你看，这世界这么多人，我遇到了你，你也遇到了我，真好。<br>今天是我们在一起的第520天，你是我生命中的阳光，让我永远充满活力。我相信我们能一起走过所有的难关，互相陪伴，共度美好的未来。</span>";
-        var message = `亲爱的猫猫，咱俩已经在一起 ${timeUnits.day} 天 ${timeUnits.hour} 小时 ${timeUnits.minute} 分 ${timeUnits.second} 秒了<br> ${loveContent}`;
+
+        var message = `亲爱的猫猫，咱俩已经在一起 ${timeUnits.day} 天 ${timeUnits.hour} 小时 ${timeUnits.minute} 分 ${timeUnits.second} 秒了`;
         obj.innerHTML = message;
         return true;
       }
