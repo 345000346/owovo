@@ -1,109 +1,213 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  <head>
-    <title>Our Love Story</title>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <style type="text/css">
-      @font-face {
-        font-family: digit;
-        src: url("lovefiles/digital-7_mono.ttf") format("truetype");
-      }
-    </style>
-    <link href="lovefiles/css/love.css" type="text/css" rel="stylesheet" />
-    <script type="text/javascript" src="lovefiles/js/jquery.js"></script>
-    <script type="text/javascript" src="lovefiles/js/garden.js"></script>
-    <script type="text/javascript" src="lovefiles/js/functions.js"></script>
-  </head>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Pgq Sxh Love Story</title>
+		<style type="text/css">
+			@font-face {
+				font-family: digit;
+				src: url('lovefiles/digital-7_mono.ttf') format('truetype');
+			}
+		</style>
+		<style>
+			body {
+				overflow: auto;
+				margin: 0;
+				padding: 0;
+				overflow-x: hidden;
+				font-family: Arial, sans-serif; /* 使用系统默认字体或其他Web字体 */
+			}
 
-  <body>
-    <div id="mainDiv">
-      <div id="content">
-        <div id="code">
-          <span class="comments">/**</span><br />
-          <span class="space" /><span class="comments">* We are both Baokang Market Supervisor,</span><br />
-          <span class="space" /><span class="comments">* so I write some code to celebrate.</span><br />
-          <span class="space" /><span class="comments">*/</span><br />
-          Boy i = <span class="keyword">new</span> Boy(<span class="string">"LIGT"</span>);<br />
-          Girl u = <span class="keyword">new</span> Girl(<span class="string">"Diana"</span>);<br />
-          <span class="comments">// Aug 13, 2021, I told you I love you. </span><br />
-          i.love(u);<br />
-          <span class="comments">// Luckily, you accepted and became my girlfriend eversince.</span><br />
-          u.accepted();<br />
-          <span class="comments">// Since then, I miss u every day.</span><br />
-          i.miss(u);<br />
-          <span class="comments">// And take care of u and our love.</span><br />
-          i.takeCareOf(u);<br />
-          <span class="comments">// we will live happily ever after.</span><br />
-          i.liveHappilyWith(u);<br />
-          <!-- <span class="comments">// You say that you won't be so easy to marry me.</span><br />
-          <span class="comments">// So I keep waiting and I have confidence that you will.</span><br />
-          <span class="keyword">boolean</span> isHesitate = <span class="keyword">true</span>;<br />
-          <span class="keyword">while</span> (isHesitate) {<br />
-          <span class="placeholder" />i.waitFor(u);<br />
-          <span class="placeholder" /><span class="comments">// I think it is an important decision</span><br />
-          <span class="placeholder" /><span class="comments">// and you should think it over.</span><br />
-          <span class="placeholder" />isHesitate = u.thinkOver();<br />
-          }<br />
-          <span class="comments">// After a romantic wedding, we will live happily ever after.</span><br />
-          i.marry(u);<br />
-          i.liveHappilyWith(u);<br /> -->
-        </div>
-        <div id="loveHeart">
-          <canvas id="garden"></canvas>
-          <div id="words">
-            <div id="messages">
-              Diana, I have fallen in love with you for
-              <div id="elapseClock"></div>
-            </div>
-            <div id="loveu">
-              Love u forever and ever.<br />
-              <div class="signature">- LIGT</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="copyright">
-        Copyright ©
-        <script type="text/javascript">
-          copyright = new Date(); //取得当前的日期
-          update = copyright.getFullYear(); //取得当前的年份
-          document.write(update);
-        </script>
-        <a href="https://owovo.xyz">owovo.xyz</a>
-      </div>
-    </div>
-    <script type="text/javascript">
-      var offsetX = $("#loveHeart").width() / 2;
-      var offsetY = $("#loveHeart").height() / 2 - 55;
-      var together = new Date();
-      together.setFullYear(2021, 7, 13);
-      together.setHours(0);
-      together.setMinutes(0);
-      together.setSeconds(0);
-      together.setMilliseconds(0);
+			#time_text {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				width: 100%;
+				font-family: 'digit';
+				z-index: 3;
+				color: #c70012;
+				text-align: center;
+				font-size: 30px; /* 调整字体大小 */
+				padding-top: 10px;
+				height: 60px;
+				backdrop-filter: blur(10px); /* 添加背景模糊效果 */
+				background-color: rgba(255, 255, 255, 0.3); /* 背景颜色，可调整透明度 */
+			}
 
-      if (!document.createElement("canvas").getContext) {
-        var msg = document.createElement("div");
-        msg.id = "errorMsg";
-        msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+";
-        document.body.appendChild(msg);
-        $("#code").css("display", "none");
-        $("#copyright").css("position", "absolute");
-        $("#copyright").css("bottom", "10px");
-        document.execCommand("stop");
-      } else {
-        setTimeout(function () {
-          startHeartAnimation();
-        }, 5000);
+			#love_text {
+				margin-top: 80px; /* 调整顶部边距 */
+				z-index: 1;
+				position: relative; /* 使用相对定位，以便文本不重叠 */
+				text-align: center; /* 居中文本 */
+				font-size: 24px; /* 调整字体大小 */
+				color: #c70012;
+			}
 
-        timeElapse(together);
-        setInterval(function () {
-          timeElapse(together);
-        }, 500);
+			#loveTimer {
+				font-size: 18px !important; /* 使用!important来确保覆盖其他样式 */
+    		}
 
-        adjustCodePosition();
-        $("#code").typewriter();
-      }
-    </script>
-  </body>
+			p {
+				margin: 10px 0; /* 调整段落之间的间距 */
+				line-height: 1.5; /* 增加行距 */
+			}
+
+			#animateHeart {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 2;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="time_text">
+			We have been in love for </br>
+			<span id="loveTimer" style="font-size:18px"></span>
+		</div>
+		<div id="love_text">
+			<p>在我们相处中，我发现我们是如此的契合，是如此的有默契</p>
+			<p>我好喜欢被你需要的感觉，也好喜欢你的直率与可爱</p>
+			<p>我们俩能互相get到对方的点，大概是因为我足够了解你，你也足够了解我</p>
+			<p>我愿意和你一起“幼稚”，我愿意和你一起玩到老，这样才是幸福的一生呀～</p>
+			<p>一见钟情是浪漫，日久生情是陪伴，我坚信最浪漫的事就是和你一起慢慢变老</p>
+			<p>我们俩共同培养爱情这棵小树苗，然后看着它一点一点的成长，最后长成一棵参天大树</p>
+			<p>从日出到日落，这山山水水的每一处都透露着浪漫的气息，只有我们俩的惬意时光</p>
+			<p>我想和你去更多美好的地方，以爱之名看遍万水千山…</p>
+			<p>真爱来了，我们要好好把握，相信中间的计时器,将永远继续下去</p>
+			<p>今天是2021年11月20日，我们在一起的第100天，2400个小时，144000分钟，8640000秒</p>
+			<p>每一天我都没有缺席，每一天都有亲亲，愿我们彼此温暖，互不辜负，人生苦短，有你很甜，好好生活，慢慢爱你</p>
+			<p>今天是2022年3月18日，我们在一起的第218天，今天也是你的生日，祝我亲爱的猫猫生日快乐！</p>
+			<p>深情不及久伴，厚爱无需多言，一路走来，我俩有苦有甜，有吵有闹，但我们都走过来了</p>
+			<p>有你陪伴的日子，即使平淡，也觉得浪漫。一辈子很短，希望开始是你，过程是你，结尾也是你。</p>
+			<p>今天是2022年8月4日农历七月初七，是我们在一起的357天，今天是七夕耶~七夕快乐！</p>
+			<p>我想和你分享各种无关紧要的小事,有分享欲且愿意分享简直太棒啦！你看，这世界这么多人，我遇到了你，你也遇到了我，真好。</p>
+			<p>今天是我们在一起的第520天，你是我生命中的阳光，让我永远充满活力。我相信我们能一起走过所有的难关，互相陪伴，共度美好的未来。</p>
+			<p>今天是2023年8月13日，我们在一起两年啦，在这两年里，我们经历了无数难忘的瞬间，都成为了我们感情的坚实基础。愿我们的未来充满爱与幸福，继续携手创造更多美好回忆。</p>
+			<p>今天是2023年9月6日，我们领证啦，终于等到了和心爱的人走向婚姻的那一刻，感觉幸福爆棚！我们将共度人生的每一个美好时刻，开启幸福的新生活！</p>
+		</div>
+
+		<canvas id="animateHeart"></canvas>
+		<script>
+			const canvas = document.getElementById('animateHeart');
+			const ctx = canvas.getContext('2d');
+
+			let ww, wh;
+			const hearts = [];
+			let mouseMoved = false;
+
+			// 窗口大小改变时调整画布尺寸
+			function onResize() {
+				ww = canvas.width = window.innerWidth;
+				wh = canvas.height = window.innerHeight;
+			}
+
+			// 鼠标移动事件处理
+			function onMove(e) {
+				mouseMoved = true;
+				if (e.type === 'touchmove') {
+					hearts.push(new Heart(e.touches[0].clientX, e.touches[0].clientY));
+					hearts.push(new Heart(e.touches[0].clientX, e.touches[0].clientY));
+				} else {
+					hearts.push(new Heart(e.clientX, e.clientY));
+					hearts.push(new Heart(e.clientX, e.clientY));
+				}
+			}
+
+			// 心形对象的定义
+			class Heart {
+				constructor(x, y) {
+					this.x = x || Math.random() * ww;
+					this.y = y || Math.random() * wh;
+					this.size = Math.random() * 2 + 1;
+					this.shadowBlur = Math.random() * 10;
+					this.speedX = (Math.random() + 0.2 - 0.6) * 8;
+					this.speedY = (Math.random() + 0.2 - 0.6) * 8;
+					this.speedSize = Math.random() * 0.05 + 0.01;
+					this.opacity = 1;
+					this.vertices = [];
+					for (let i = 0; i < 100; i++) {
+						const step = (i / 100 - 0.5) * (Math.PI * 2);
+						const vector = {
+							x: 15 * Math.pow(Math.sin(step), 3),
+							y: -(13 * Math.cos(step) - 5 * Math.cos(2 * step) - 2 * Math.cos(3 * step) - Math.cos(4 * step))
+						};
+						this.vertices.push(vector);
+					}
+				}
+
+				draw() {
+					this.size -= this.speedSize;
+					this.x += this.speedX;
+					this.y += this.speedY;
+					ctx.save();
+					ctx.translate(-1000, this.y);
+					ctx.scale(this.size, this.size);
+					ctx.beginPath();
+					for (let i = 0; i < this.vertices.length; i++) {
+						const vector = this.vertices[i];
+						ctx.lineTo(vector.x, vector.y);
+					}
+					ctx.globalAlpha = this.size;
+					ctx.shadowBlur = Math.round((3 - this.size) * 10);
+					ctx.shadowColor = 'hsla(0, 100%, 60%, 0.5)';
+					ctx.shadowOffsetX = this.x + 1000;
+					ctx.globalCompositeOperation = 'screen';
+					ctx.closePath();
+					ctx.fill();
+					ctx.restore();
+				}
+			}
+
+			// 渲染动画
+			function render() {
+				requestAnimationFrame(render);
+
+				hearts.push(new Heart());
+				ctx.clearRect(0, 0, ww, wh);
+
+				for (let i = 0; i < hearts.length; i++) {
+					hearts[i].draw();
+					if (hearts[i].size <= 0) {
+						hearts.splice(i, 1);
+						i--;
+					}
+				}
+			}
+
+			onResize();
+			window.addEventListener('mousemove', onMove);
+			window.addEventListener('touchmove', onMove);
+			window.addEventListener('resize', onResize);
+			window.addEventListener('scroll', onMove);
+			requestAnimationFrame(render);
+
+			// 网页加载时启动时间显示
+			window.onload = function starttime() {
+				time(document.getElementById('loveTimer'), '2021/8/13');
+				ptimer = setTimeout(starttime, 1000);
+			};
+
+			// 显示时间信息
+			function time(obj, futimg) {
+				const nowtime = new Date();
+				const futruetime = new Date(futimg);
+				const timeDiff = nowtime - futruetime;
+				const timeUnits = {
+					day: Math.floor(timeDiff / (1000 * 60 * 60 * 24)),
+					hour: Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+					minute: Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)),
+					second: Math.floor((timeDiff % (1000 * 60)) / 1000)
+				};
+
+				obj.innerHTML = `${timeUnits.day} days ${timeUnits.hour} hours ${timeUnits.minute} minutes ${timeUnits.second} seconds`;
+				return true;
+			}
+		</script>
+	</body>
 </html>
