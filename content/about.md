@@ -1,12 +1,12 @@
 ---
-title: "关于我"
+title: '关于我'
 date: 2020-04-27T20:53:11+08:00
 toc: true
 ---
 
 <!--more-->
 
-<font color=red>本文最后更新于 ：2023 年 1 月 17 日</font>
+<font color=red>本文最后更新于 ：2023 年 11 月 5 日</font>
 
 ## 基本情况
 
@@ -29,14 +29,15 @@ toc: true
 |              名称              |    时间     |
 | :----------------------------: | :---------: |
 |      ~~Xiaomi MionePlus~~      | 2011 - 2013 |
-|        ~~Xiaomi Mi 3~~         | 2013 - 2015 |
-|        ~~Xiaomi Mi 6~~         | 2017 - 2018 |
-|               PC               |  2016 至今  |
+|          ~~Xiaomi 3~~          | 2013 - 2015 |
+|          ~~Xiaomi 6~~          | 2017 - 2018 |
+|          PC(i5-6600K)          |  2016 至今  |
 |       HUAWEI Mate 20 Pro       |  2018 至今  |
 |      ~~Apple iPad Air 2~~      | 2016 - 2023 |
 |        Apple iPhone 6s         |  2015 至今  |
 | ~~Oneplus Bullets Wireless 2~~ | 2019 - 2020 |
-|        Xiaomi Mi 10 Pro        |  2020 至今  |
+|         Xiaomi 10 Pro          |  2020 至今  |
+|           Xiaomi 13            |  2023 至今  |
 |        Xiaomi Pad 5 Pro        |  2022 至今  |
 |              ...               |             |
 
@@ -47,9 +48,8 @@ toc: true
 - ~~跑跑卡丁车~~
 - ~~天龙八部~~
 - 英雄联盟
-- ~~钢铁雄心 2、3~~
 - 钢铁雄心 4
-- 维多利亚 2
+- 维多利亚 3
 - 足球经理 系列
 - 实况足球 系列
 - FIFA 系列
