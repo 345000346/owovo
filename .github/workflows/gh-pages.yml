@@ -1,31 +1,37 @@
 name: Github Pages #自动化的名称
 on:
   push: # push 的时候触发
-     branches: # 那些分支需要触发
+    branches: # 那些分支需要触发
       - master
 jobs:
   build:
     runs-on: ubuntu-latest # 镜像市场
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - name: checkout # 步骤的名称
         uses: actions/checkout@master #软件市场的名称
-        # with: # 参数
-         # submodules: true
+        with:
+          submodules: true # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+
       - name: Setup Hugo # 安装 Hugo
-        uses: peaceiris/actions-hugo@v2
+        uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: latest # 使用 Hugo 最新版
           extended: true
-        
+
       - name: Build # 编译
         run: hugo --minify
-        
+
       - name: Deploy # 部署
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
-         DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-         EXTERNAL_REPOSITORY: 345000346/345000346.github.io
-         CNAME: owovo.xyz
-         PUBLISH_BRANCH: master
-         PUBLISH_DIR: ./public
-         commit_message: ${{ github.event.head_commit.message }}
+          DEPLOY_KEY: ${{ secrets.PERSONAL_TOKEN }}
+          EXTERNAL_REPOSITORY: 345000346/345000346.github.io
+          CNAME: owovo.xyz
+          PUBLISH_BRANCH: master
+          PUBLISH_DIR: ./public
+          commit_message: ${{ github.event.head_commit.message }}
