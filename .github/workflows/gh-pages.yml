@@ -29,7 +29,7 @@ jobs:
       - name: Deploy # 部署
         uses: peaceiris/actions-gh-pages@v4
         with:
-          DEPLOY_KEY: ${{ secrets.PERSONAL_TOKEN }}
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
           EXTERNAL_REPOSITORY: 345000346/345000346.github.io
           CNAME: owovo.xyz
           PUBLISH_BRANCH: master
