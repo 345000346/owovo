@@ -54,7 +54,7 @@
         <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
         {{ end }}
         <!-- split -->
-        {{ if .Site.DisqusShortname }}
+        {{ if .Site.Params.DisqusShortname }}
         <div class="">
             {{ partial "posts/comments.html" . }}
         </div>

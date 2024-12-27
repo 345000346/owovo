@@ -1,0 +1,71 @@
+baseURL: "https://owovo.xyz"
+languageCode: "zh-CN"
+title: "LIGT'S BLOG"
+theme: "echo"
+DefaultContentLanguage: "cn"
+disablePathToLower: true
+uglyurls: true
+googleAnalytics: "G-ND67DP0RT5"
+hasCJKLanguage: true
+summaryLength: 140
+
+permalinks:
+  posts: "/:filename"
+
+params:
+  author:
+    avatar: "https://i.loli.net/2020/12/18/71QeDAbT2YlFzrU.jpg"
+    name: "LIGT"
+  social:
+    github: "345000346"
+    weibo: "1733321624"
+    rss: "/rss.xml"
+  disqusShortname: "owovo"
+  mainSections:
+    - post
+  favicon: "/favicon.ico"
+  subtitle: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
+  keywords: "日常,想法,Android,Windows,手机,电脑"
+  description: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
+  busuanzi: true
+  runtime: "8/22/2019 00:00:00"
+  extraHead: |
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ND67DP0RT5" defer></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ND67DP0RT5');
+    </script>
+  rssFullContent: true
+  staticCDNPrefix: "https://cdn.bootcss.com/font-awesome/5.11.2"
+  navItems:
+    - ["首页", "/"]
+    - ["文章", "/post.html"]
+    - ["想法", "/ideas.html"]
+    - ["关于", "/about.html"]
+    - ["RSS", "/rss.xml"]
+
+outputFormats:
+  RSS:
+    mediatype: "application/rss"
+    baseName: "rss"
+
+services:
+  rss:
+    limit: 5
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    codeFences: true
+    guessSyntax: false
+    hl_Lines: ""
+    lineNoStart: 1
+    lineNos: true
+    lineNumbersInTable: true
+    noClasses: true
+    style: "manni"
+    tabWidth: 2
