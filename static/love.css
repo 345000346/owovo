@@ -1,0 +1,74 @@
+@font-face {
+  font-family: digit;
+  src: url('lovefiles/digital-7_mono.ttf') format('truetype');
+}
+
+body {
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}
+
+#time_text {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  font-family: 'digit';
+  z-index: 3;
+  color: #c70012;
+  text-align: center;
+  font-size: 30px;
+  padding-top: 10px;
+  height: 60px;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+#love_text {
+  margin-top: 80px;
+  z-index: 1;
+  position: relative;
+  text-align: center;
+  font-size: 24px;
+  color: #c70012;
+  padding: 0 20px;
+}
+
+#loveTimer {
+  font-size: 18px !important;
+}
+
+p {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+#animateHeart {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/* 移动端样式 */
+@media (max-width: 768px) {
+  #time_text {
+    font-size: 24px;
+    height: 50px;
+  }
+
+  #love_text {
+    margin-top: 60px;
+    font-size: 18px;
+  }
+
+  #loveTimer {
+    font-size: 16px !important;
+  }
+}
