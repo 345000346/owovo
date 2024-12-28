@@ -20,7 +20,6 @@ params:
     github: "345000346"
     weibo: "1733321624"
     rss: "/rss.xml"
-  disqusShortname: "owovo"
   mainSections:
     - post
   favicon: "/favicon.ico"
