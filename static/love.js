@@ -1,88 +1,4 @@
-class Heart {
-  constructor(x, y) {
-    this.x = x || Math.random() * ww;
-    this.y = y || Math.random() * wh;
-    this.size = Math.random() * 2 + 1;
-    this.shadowBlur = Math.random() * 10;
-    this.speedX = (Math.random() + 0.2 - 0.6) * 8;
-    this.speedY = (Math.random() + 0.2 - 0.6) * 8;
-    this.speedSize = Math.random() * 0.05 + 0.01;
-    this.opacity = 1;
-    this.vertices = [];
-    for (let i = 0; i < 100; i++) {
-      const step = (i / 100 - 0.5) * (Math.PI * 2);
-      const vector = {
-        x: 15 * Math.pow(Math.sin(step), 3),
-        y: -(13 * Math.cos(step) - 5 * Math.cos(2 * step) - 2 * Math.cos(3 * step) - Math.cos(4 * step))
-      };
-      this.vertices.push(vector);
-    }
-  }
-
-  draw() {
-    this.size -= this.speedSize;
-    this.x += this.speedX;
-    this.y += this.speedY;
-    ctx.save();
-    ctx.translate(-1000, this.y);
-    ctx.scale(this.size, this.size);
-    ctx.beginPath();
-    for (let i = 0; i < this.vertices.length; i++) {
-      const vector = this.vertices[i];
-      ctx.lineTo(vector.x, vector.y);
-    }
-    ctx.globalAlpha = this.size;
-    ctx.shadowBlur = Math.round((3 - this.size) * 10);
-    ctx.shadowColor = 'hsla(0, 100%, 60%, 0.5)';
-    ctx.shadowOffsetX = this.x + 1000;
-    ctx.globalCompositeOperation = 'screen';
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-  }
-}
-
-const canvas = document.getElementById('animateHeart');
-const ctx = canvas.getContext('2d');
-let ww, wh;
-const hearts = [];
-let mouseMoved = false;
-
-function onResize() {
-  ww = canvas.width = window.innerWidth;
-  wh = canvas.height = window.innerHeight;
-}
-
-function onMove(e) {
-  mouseMoved = true;
-  const x = e.touches ? e.touches[0].clientX : e.clientX;
-  const y = e.touches ? e.touches[0].clientY : e.clientY;
-  hearts.push(new Heart(x, y));
-  hearts.push(new Heart(x, y));
-}
-
-let lastTime = 0;
-const frameRate = 60; // 提高帧率到60fps
-const frameInterval = 1000 / frameRate;
-
-function render(timestamp) {
-  if (timestamp - lastTime >= frameInterval) {
-    lastTime = timestamp;
-    
-    hearts.push(new Heart());
-    ctx.clearRect(0, 0, ww, wh);
-
-    for (let i = 0; i < hearts.length; i++) {
-      hearts[i].draw();
-      if (hearts[i].size <= 0) {
-        hearts.splice(i, 1);
-        i--;
-      }
-    }
-  }
-  requestAnimationFrame(render);
-}
-
+// 计时器功能
 function starttime() {
   time(document.getElementById('loveTimer'), '2021/8/13');
   setTimeout(starttime, 1000);
@@ -99,14 +15,102 @@ function time(obj, futimg) {
     second: Math.floor((timeDiff % (1000 * 60)) / 1000)
   };
 
-  obj.innerHTML = `${timeUnits.day} days ${timeUnits.hour} hours ${timeUnits.minute} minutes ${timeUnits.second} seconds`;
+  obj.innerHTML = `${timeUnits.day} 天 ${timeUnits.hour} 小时 ${timeUnits.minute} 分钟 ${timeUnits.second} 秒`;
+}
+
+// 背景粒子效果
+class Particle {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.particles = [];
+    this.init();
+    this.canvas.style.position = 'fixed';
+    this.canvas.style.top = '0';
+    this.canvas.style.left = '0';
+    this.canvas.style.zIndex = window.innerWidth >= 768 ? '5' : '-1';
+    this.canvas.style.pointerEvents = 'none';
+  }
+
+  init() {
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+    this.animate();
+  }
+
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+
+  createParticle() {
+    const x = Math.random() * this.canvas.width;
+    const y = Math.random() * this.canvas.height;
+    const size = Math.random() * 10 + 5;
+    const speedX = (Math.random() - 0.5) * 0.5;
+    const speedY = (Math.random() - 0.5) * 0.5;
+    const color = `rgba(231, 76, 60, ${Math.random() * 0.5 + 0.2})`;
+
+    this.particles.push({ x, y, size, speedX, speedY, color });
+  }
+
+  animate() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    const maxParticles = window.innerWidth < 768 ? 50 : 80;
+    if (this.particles.length < maxParticles) {
+      this.createParticle();
+    }
+
+    this.particles.forEach((particle, index) => {
+      particle.x += particle.speedX;
+      particle.y += particle.speedY;
+
+      if (particle.x < 0 || particle.x > this.canvas.width ||
+          particle.y < 0 || particle.y > this.canvas.height) {
+        this.particles.splice(index, 1);
+      }
+
+      this.ctx.beginPath();
+      for (let i = 0; i < 100; i++) {
+        const step = (i / 100 - 0.5) * (Math.PI * 2);
+        const x = 15 * Math.pow(Math.sin(step), 3);
+        const y = -(13 * Math.cos(step) - 5 * Math.cos(2 * step) - 2 * Math.cos(3 * step) - Math.cos(4 * step));
+        this.ctx.lineTo(particle.x + x * particle.size / 15, particle.y + y * particle.size / 15);
+      }
+      this.ctx.fillStyle = particle.color;
+      this.ctx.shadowBlur = 5;
+      this.ctx.shadowColor = particle.color;
+      this.ctx.fill();
+    });
+
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+// 更新当前日期和时间
+function updateDateTime() {
+  const now = new Date();
+  const options = { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  };
+  document.getElementById('currentDateTime').textContent = now.toLocaleString('zh-CN', options);
+  document.querySelector('.copyright').innerHTML = `Copyright © ${now.getFullYear()} | Design by PGQ`;
 }
 
 // 初始化
-onResize();
-window.addEventListener('mousemove', onMove);
-window.addEventListener('touchmove', onMove);
-window.addEventListener('resize', onResize);
-window.addEventListener('scroll', onMove);
-window.addEventListener('load', starttime);
-requestAnimationFrame(render);
+window.addEventListener('load', () => {
+  starttime();
+  const canvas = document.createElement('canvas');
+  canvas.classList.add('particles');
+  document.body.appendChild(canvas);
+  new Particle(canvas);
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+});
