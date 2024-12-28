@@ -34,14 +34,12 @@
             </div>
         {{ end }}
 
-         <!-- Counter busuanzi -->
-        {{ if .Site.Params.busuanzi }}
+            <!-- Vercount - 替换不蒜子统计，显示文章阅读次数 -->
+            {{ if .Site.Params.vercount }}
             <p class="text-gray-500 text-sm text-right pt-1">
-                <span id="busuanzi_container_page_pv">
-                    本文有 <span id="busuanzi_value_page_pv"></span> 次阅读
-                </span>
+                本文有 <span id="vercount_value_page_pv">Loading</span> 次阅读
             </p>
-        {{ end }}
+            {{ end }}
 
     </div>
     <!--/Card-->

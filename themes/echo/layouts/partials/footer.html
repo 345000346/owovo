@@ -43,11 +43,12 @@
                 <a href="https://github.com/forecho/hugo-theme-echo" class="text-gray-700" target="_blank">Echo.</a>
             </p>
 
-            {{ if .Site.Params.busuanzi -}}
-            <span id="busuanzi_container">
-                访客数：<span id="busuanzi_value_site_uv"></span> | 访问量 <span id="busuanzi_value_site_pv"></span>
-            </span>
-            {{- end }}
+            <!-- Vercount - 替换不蒜子统计，显示站点访问数据 -->
+            {{ if .Site.Params.vercount }}
+            <div id="vercount-container">
+                访客数：<span id="vercount_value_site_pv">Loading</span> | 访问量 <span id="vercount_value_site_uv">Loading</span>
+            </div>
+            {{ end }}
         </div>
     </div>
 </footer>

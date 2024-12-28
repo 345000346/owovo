@@ -108,7 +108,7 @@ navItems = [
 # rss 全文输出
 rssFullContent = true
 uglyURLs = true
-busuanzi = true # 是否使用不蒜子统计站点访问量
+vercount = true # 是否使用Vercount统计站点访问量
 staticCDNPrefix = "https://cdn.bootcss.com/font-awesome/5.11.2"
 extraHead = '<script async src="https://www.googletagmanager.com/gtag/js?id=UA-xxx"></script>'
 postAds = ""
