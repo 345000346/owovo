@@ -1,64 +1,74 @@
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     {{ hugo.Generator }}
-
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content="Saber v0.11.2">
-    {{ if .Site.Params.Author.name }}<meta name="author" content="{{ .Site.Params.Author.name }}" />{{end}}
-    {{ if .Site.Params.keywords }}<meta name="keywords" content="{{ .Site.Params.keywords }}" />{{ end }}
-    <meta name="og:site_name" content="{{ .Site.Title }}" />
-
-    {{- if .IsHome -}}
-
-    <meta property="og:type" content="website" />
-    <meta property="title" content="{{ .Site.Title }}">
-    <meta property="og:title" content="{{ .Site.Title }}">
-    <meta property="twitter:title" content="{{ .Site.Title }}">
-    <meta name="description" content="{{ .Site.Params.description }}">
-    <meta property="og:description" content="{{ .Site.Params.description }}">
-    <meta property="twitter:description" content="{{ .Site.Params.description }}">
-    <meta property="og:type" content="website">
-    <title>{{ .Site.Title }}</title>
-
-    {{- else -}}
-
-    <meta property="og:type" content="article" />
-    <meta property="title" content="{{ .Title }} - {{ .Site.Title }}">
-    <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">
-    <meta property="twitter:title" content="{{ .Title }} - {{ .Site.Title }}">
-    <meta name="description" content="{{ default .Summary .Description }}">
-    <meta property="og:description" content="{{ default .Summary .Description }}">
-    <meta property="twitter:description" content="{{ default .Summary .Description }}">
-    <meta property="og:type" content="article">
-    <title>{{ .Title }} - {{ .Site.Title }}</title>
-
-    {{- end }}
-
-    <meta property="og:url" content="{{ .Permalink }}" />
-
-    {{ if .Site.Params.Author.avatar }}
-    <meta property="og:image" content="{{ .Site.Params.Author.avatar }}">
-    <meta property="twitter:image" content="{{ .Site.Params.Author.avatar }}">
-    {{end}}
-
-    {{- if .Site.Params.favicon -}}
-    <link rel="shortcut icon" href="{{ .Site.Params.favicon }}" type="image/x-png" />
-    {{- end -}}
-
-
-    <!-- <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" /> -->
-    <!-- 使用CDN加速 -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ .Site.Params.staticPrefix }}{{ "/css/main.css" | relURL }}" />
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_1607597_jhmihcvh0tm.css" />
-    <link href="{{ .Site.Params.staticPrefix }}{{ "index.xml" | relURL }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}">
     
-    <!-- Vercount - 替换不蒜子统计，使用Vercount技术进行站点访问统计 -->
+    <!-- 基础meta信息 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- 作者信息 -->
+    {{ with .Site.Params.Author }}
+    <meta name="author" content="{{ .name }}">
+    {{ end }}
+    
+    <!-- 关键词 -->
+    {{ with .Site.Params.keywords }}
+    <meta name="keywords" content="{{ . }}">
+    {{ end }}
+    
+    <!-- 网站信息 -->
+    <meta name="og:site_name" content="{{ .Site.Title }}">
+    
+    {{ if .IsHome }}
+        <!-- 首页meta信息 -->
+        <meta property="og:type" content="website">
+        <meta property="title" content="{{ .Site.Title }}">
+        <meta property="og:title" content="{{ .Site.Title }}">
+        <meta property="twitter:title" content="{{ .Site.Title }}">
+        <meta name="description" content="{{ .Site.Params.description }}">
+        <meta property="og:description" content="{{ .Site.Params.description }}">
+        <meta property="twitter:description" content="{{ .Site.Params.description }}">
+        <title>{{ .Site.Title }}</title>
+    {{ else }}
+        <!-- 文章页meta信息 -->
+        <meta property="og:type" content="article">
+        <meta property="title" content="{{ .Title }} - {{ .Site.Title }}">
+        <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">
+        <meta property="twitter:title" content="{{ .Title }} - {{ .Site.Title }}">
+        <meta name="description" content="{{ default .Summary .Description }}">
+        <meta property="og:description" content="{{ default .Summary .Description }}">
+        <meta property="twitter:description" content="{{ default .Summary .Description }}">
+        <title>{{ .Title }} - {{ .Site.Title }}</title>
+    {{ end }}
+    
+    <!-- 页面URL -->
+    <meta property="og:url" content="{{ .Permalink }}">
+    
+    <!-- 作者头像 -->
+    {{ with .Site.Params.Author.avatar }}
+    <meta property="og:image" content="{{ . }}">
+    <meta property="twitter:image" content="{{ . }}">
+    {{ end }}
+    
+    <!-- 网站图标 -->
+    {{ with .Site.Params.favicon }}
+    <link rel="shortcut icon" href="{{ . }}" type="image/x-png">
+    {{ end }}
+    
+    <!-- 使用CDN加速的Tailwind CSS框架 -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- 网站主样式表 -->
+    <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
+    
+    <!-- 阿里巴巴矢量图标库 -->
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1607597_jhmihcvh0tm.css">
+    
+    <!-- Vercount统计 -->
     {{ if .Site.Params.vercount }}
     <script defer src="https://cn.vercount.one/js"></script>
     {{ end }}
-
+    
+    <!-- 额外head内容 -->
     {{ .Site.Params.extraHead | safeHTML }}
 </head>
