@@ -2,7 +2,7 @@
     <section class="w-full lg:w-3/4 xl:w-3/4">
 
     <!--Card-->
-        <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow bg-white">
+        <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow" style="background-color: var(--bg-color);">
             {{ if .Data.Term }}
                 <p class="text-gray-900 font-bold text-3xl pb-2">标签: {{.Data.Term}}</p>
             {{ else }}
@@ -21,7 +21,7 @@
                             <p class="text-gray-600 text-sm  xl:hidden">{{ .Date.Format "2006-01-02 15:04:05 MST" }}</p>
                             <p class="text-gray-600 text-sm">
                                 {{ range .Params.tags }}
-                                    <a class="pr-2 hover:text-gray-800" href="{{ $.Site.BaseURL }}/tags/{{ . | urlize }}{{ if $.Site.Params.uglyURLs }}{{ end }}.html">#{{ . }}</a>
+                                    <a class="pr-2 hover:text-gray-800" href="{{ $.Site.BaseURL }}/tags/{{ . | urlize }}{{ if $.Site.Params.uglyURLs }}{{ end }}.html" style="color: var(--text-color);">#{{ . }}</a>
                                 {{ end }}
                             </p>
                         </div>
@@ -32,7 +32,7 @@
         </div>
     </section>
 
-    <div class="hidden md:block w-full lg:w-1/4 xl:w-1/4 px-6 text-gray-800 leading-normal">
+    <div class="hidden md:block w-full lg:w-1/4 xl:w-1/4 px-6 leading-normal" style="color: var(--text-color);">
 
         {{ partial "posts/profile.html" . }}
     </div>

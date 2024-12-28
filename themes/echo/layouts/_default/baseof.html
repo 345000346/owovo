@@ -2,18 +2,35 @@
 <html lang="{{ $.Site.LanguageCode }}">
 
 {{ partial "head.html" . }}
+<script>
+  // 在页面加载时立即应用主题
+  const htmlElement = document.documentElement;
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  htmlElement.setAttribute('data-theme', savedTheme);
+</script>
 
-<body class="bg-gray-100 text-gray-900 tracking-wider leading-normal">
+<body class="text-gray-900 tracking-wider leading-normal" style="background-color: var(--bg-color);">
 
     {{ partial "header.html" . }}
 
-    <div id="container" class="container w-full flex flex-wrap mx-auto px-2 lg:pt-12 mt-10">
+    <div id="container" class="container w-full flex flex-wrap mx-auto px-2 lg:pt-12 mt-10" style="color: var(--text-color);">
 
     {{- block "main" . }}{{- end }}
 
     </div>
     
-    {{ partial "footer.html" . }} {{ partial "scripts.html" . }}
+    {{ partial "footer.html" . }}
+    <script>
+      const themeToggle = document.getElementById('theme-toggle');
+      themeToggle.addEventListener('click', () => {
+        const htmlElement = document.documentElement;
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+      });
+    </script>
+    {{ partial "scripts.html" . }}
 </body>
 
 </html>

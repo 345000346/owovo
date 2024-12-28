@@ -1,5 +1,5 @@
 <!-- Pin to top right corner -->
-<footer class="bg-white border-t border-gray-400 shadow mt-10">
+<footer class="border-t border-gray-400 shadow mt-10" style="background-color: var(--bg-color);">
     <div class="container mx-auto flex py-8">
         <div class="w-full text-center text-gray-600">
             <!-- 站点运行时间 -->
@@ -32,15 +32,15 @@
             {{- end }}
             <p>
                 &copy; {{ now.Format "2006" }}
-                <a class="text-gray-700" href="{{ .Site.BaseURL | absURL }}"
+                <a style="color: var(--text-color);" href="{{ .Site.BaseURL | absURL }}"
                     >{{ .Site.Title }} By {{ .Site.Params.Author.name }} .</a
                 >
                 Powered by
-                <a rel="nofollow noreferer noopener" href="https://gohugo.io/" class="text-gray-700" target="_blank"
+                <a rel="nofollow noreferer noopener" href="https://gohugo.io/" style="color: var(--text-color);" target="_blank"
                     >Hugo.</a
                 >
                 Theme based on
-                <a href="https://github.com/forecho/hugo-theme-echo" class="text-gray-700" target="_blank">Echo.</a>
+                <a href="https://github.com/forecho/hugo-theme-echo" style="color: var(--text-color);" target="_blank">Echo.</a>
             </p>
 
             <!-- Vercount - 替换不蒜子统计，显示站点访问数据 -->

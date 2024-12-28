@@ -26,6 +26,20 @@
     });
   };
 
+  // 自动切换深色模式
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+
+  // 检测系统主题
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  applyTheme(prefersDark.matches ? 'dark' : 'light');
+
+  // 监听系统主题变化
+  prefersDark.addEventListener('change', (e) => {
+    applyTheme(e.matches ? 'dark' : 'light');
+  });
+
   /* Progress bar */
   //Source: https://alligator.io/js/progress-bar-javascript-css-variables/
   var h = document.documentElement,
