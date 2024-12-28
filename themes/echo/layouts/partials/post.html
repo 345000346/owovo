@@ -1,5 +1,6 @@
 <!-- 文章主体部分 -->
-<section class="w-full lg:w-3/4 xl:w-3/4 px-8 py-6 mt-6 lg:mt-0 leading-normal rounded shadow" style="background-color: var(--bg-color);">
+<section class="w-full lg:w-3/4 xl:w-3/4">
+    <div class="px-8 py-6 mt-6 lg:mt-0 leading-normal rounded shadow" style="background-color: var(--bg-color);">
     <!-- 移动端目录 -->
     {{ partial "posts/title.html" . }}
 
@@ -17,9 +18,9 @@
 
     <!-- 标签部分 -->
     {{ with .Params.tags -}}
-    <div class="text-base md:text-sm text-gray-500 pt-6">
+    <div class="text-base md:text-sm text-color-secondary pt-6">
         {{ range . -}}
-        <a class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 hover:bg-gray-300"
+        <a class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-color-primary mr-2 hover:bg-gray-300"
             href="{{ $.Site.BaseURL }}/tags/{{ . | urlize }}{{ if $.Site.Params.uglyURLs }}{{ end }}.html">
             #{{ . }}
         </a>
@@ -29,7 +30,7 @@
 
     <!-- 阅读次数统计 -->
     {{ if .Site.Params.vercount }}
-    <p class="text-gray-500 text-sm text-right pt-1">
+    <p class="text-color-secondary text-sm text-right pt-1">
         本文有 <span id="vercount_value_page_pv">Loading</span> 次阅读
     </p>
     {{ end }}
@@ -43,10 +44,11 @@
         {{ end }}
         {{ partial "posts/related.html" . }}
     {{ end }}
+    </div>
 </section>
 
 <!-- 侧边栏部分 -->
-<div class="specific-container hidden xl:text-sm xl:block xl:w-1/4 xl:px-6">
+<div class="hidden md:block w-full lg:w-1/4 xl:w-1/4 px-6 text-gray-800 leading-normal">
     {{ partial "posts/profile.html" . }}
 
     <div class="flex flex-col justify-between sticky top-0 pt-12 pb-4 -mt-10 text-gray-600">
