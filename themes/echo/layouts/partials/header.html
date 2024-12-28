@@ -1,7 +1,7 @@
 <nav id="header" class="fixed w-full z-10 top-0 shadow" style="background-color: var(--bg-color);">
 
   <!-- 页面滚动进度条 -->
-  <div id="progress" class="h-1 z-20 top-0" style="background:linear-gradient(to right, var(--primary-color) var(--scroll), transparent 0);"></div>
+  <div id="progress" class="h-1 z-20 top-0" style="background:linear-gradient(to right, var(--scroll-color) var(--scroll), transparent 0);"></div>
 
   <div class="w-full container mx-auto flex flex-wrap items-center justify-between my-1">
       <!-- 网站标题 -->
@@ -22,7 +22,6 @@
       <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block mt-2 lg:mt-0 md:bg-transparent z-20" id="nav-content" style="background-color: var(--bg-color);">
           <ul class="list-reset lg:flex justify-end flex-1 items-center">
               {{- range $item := $.Site.Params.NavItems }}
-              <!-- 主题切换按钮 -->
               <li class="mr-3">
                   <a href="{{ index $item 1 }}" class="inline-block py-2 px-2 font-bold no-underline" style="color: var(--text-color);">{{ index $item 0 }}</a>
               </li>
