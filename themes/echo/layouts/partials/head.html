@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content="Saber v0.11.2">
-    {{ if .Site.Author.name }}<meta name="author" content="{{ .Site.Author.name }}" />{{end}}
+    {{ if .Site.Params.Author.name }}<meta name="author" content="{{ .Site.Params.Author.name }}" />{{end}}
     {{ if .Site.Params.keywords }}<meta name="keywords" content="{{ .Site.Params.keywords }}" />{{ end }}
     <meta name="og:site_name" content="{{ .Site.Title }}" />
 
@@ -38,9 +38,9 @@
 
     <meta property="og:url" content="{{ .Permalink }}" />
 
-    {{ if .Site.Author.avatar }}
-    <meta property="og:image" content="{{ .Site.Author.avatar }}">
-    <meta property="twitter:image" content="{{ .Site.Author.avatar }}">
+    {{ if .Site.Params.Author.avatar }}
+    <meta property="og:image" content="{{ .Site.Params.Author.avatar }}">
+    <meta property="twitter:image" content="{{ .Site.Params.Author.avatar }}">
     {{end}}
 
     {{- if .Site.Params.favicon -}}
