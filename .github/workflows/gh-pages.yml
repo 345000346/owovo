@@ -12,7 +12,7 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - name: checkout # 步骤的名称
-        uses: actions/checkout@master #软件市场的名称
+        uses: actions/checkout@v4 #软件市场的名称
         with:
           submodules: true # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
@@ -30,8 +30,8 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          EXTERNAL_REPOSITORY: 345000346/345000346.github.io
-          CNAME: owovo.xyz
-          PUBLISH_BRANCH: master
-          PUBLISH_DIR: ./public
+          external_repository: 345000346/345000346.github.io
+          cname: owovo.xyz
+          publish_branch: master
+          publish_dir: ./public
           commit_message: ${{ github.event.head_commit.message }}
