@@ -27,23 +27,6 @@
   --card-bg-color: var(--card-dark-bg-color);
 }
 
-.theme-toggle {
-  cursor: pointer;
-  padding: 0;
-  background: none;
-  border: none;
-  font-size: 1rem;
-  color: var(--text-color);
-}
-
-.theme-toggle::before {
-  content: "🌙";
-}
-
-[data-theme="dark"] .theme-toggle::before {
-  content: "☀️";
-}
-
 .post-content {
   line-height: 1.625;
   color: var(--text-color);
