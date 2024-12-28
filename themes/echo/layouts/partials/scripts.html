@@ -1,73 +1,40 @@
 <script>
-  // 初始化页面功能
-  window.onload = function() {
-    // 导航切换功能 - 显示/隐藏导航菜单
-    document.getElementById("nav-toggle").onclick = function() {
-      document.getElementById("nav-content").classList.toggle("hidden");
-    };
+  // 深色模式处理 - 根据系统主题设置页面主题
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const applyTheme = (theme) => document.documentElement.setAttribute('data-theme', theme);
+  applyTheme(prefersDark.matches ? 'dark' : 'light');
+  prefersDark.addEventListener('change', (e) => applyTheme(e.matches ? 'dark' : 'light'));
 
-    // 捐赠按钮功能 - 显示捐赠二维码
-    var donate = document.getElementById("btn-donate");
-    if (donate) {
-      donate.onclick = function() {
-        document.getElementById("donate-image").classList.remove("hidden");
-        donate.classList.add("hidden");
-      };
-    }
+  // 页面初始化 - 在DOM加载完成后执行
+  document.addEventListener('DOMContentLoaded', () => {
+    const hostname = window.location.hostname;
+    const navContent = document.getElementById('nav-content');
+    const progressBar = document.querySelector('#progress');
 
-    // 外部链接处理 - 为外部链接添加 target="_blank"
-    var hostname = window.location.hostname;
-    var divs = document.querySelectorAll('a[href^="http"]');
-    [].forEach.call(divs, function(div) {
-      url = div.getAttribute("href");
-      var domain = url
-        .replace("http://", "")
-        .replace("https://", "")
-        .split(/[/?#:]/)[0];
-      if (domain !== hostname) {
-        div.setAttribute("target", "_blank");
+    // 事件委托处理 - 导航切换
+    document.body.addEventListener('click', (e) => {
+      if (e.target.matches('#nav-toggle')) {
+        navContent.classList.toggle('hidden');
       }
     });
-  };
 
-  // 自动切换深色模式
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-  }
+    // 处理外部链接 - 为外部链接添加 target="_blank"
+    document.querySelectorAll('a[href^="http"]').forEach(link => {
+      if (new URL(link.href).hostname !== hostname) {
+        link.target = '_blank';
+      }
+    });
 
-  // 检测系统主题
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-  applyTheme(prefersDark.matches ? 'dark' : 'light');
-
-  // 监听系统主题变化
-  prefersDark.addEventListener('change', (e) => {
-    applyTheme(e.matches ? 'dark' : 'light');
-  });
-
-  /* 页面滚动进度条 - 根据滚动位置更新进度条宽度 */
-  //Source: https://alligator.io/js/progress-bar-javascript-css-variables/
-  var h = document.documentElement,
-    b = document.body,
-    st = "scrollTop",
-    sh = "scrollHeight",
-    progress = document.querySelector("#progress"),
-    scroll;
-  var scrollpos = window.scrollY;
-  var header = document.getElementById("header");
-  var navcontent = document.getElementById("nav-content");
-
-  document.addEventListener("scroll", function() {
-    /*Refresh scroll % width*/
-    scroll = ((h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight)) * 100;
-    progress.style.setProperty("--scroll", scroll + "%");
-
-    /*Apply classes for slide in bar*/
-    scrollpos = window.scrollY;
-
-    if (scrollpos > 10) {
-      navcontent.classList.remove("bg-gray-100");
-    } else {
-      navcontent.classList.add("bg-gray-100");
-    }
+    // 滚动处理 - 更新进度条和导航栏背景
+    document.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      
+      // 更新进度条宽度
+      progressBar.style.setProperty('--scroll', `${(scrollY / scrollHeight) * 100}%`);
+      
+      // 根据滚动位置切换导航栏背景
+      navContent.classList.toggle('bg-gray-100', scrollY <= 10);
+    });
   });
 </script>
