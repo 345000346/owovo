@@ -20,16 +20,6 @@
     </div>
     
     {{ partial "footer.html" . }}
-    <script>
-      const themeToggle = document.getElementById('theme-toggle');
-      themeToggle.addEventListener('click', () => {
-        const htmlElement = document.documentElement;
-        const currentTheme = htmlElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        htmlElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-      });
-    </script>
     {{ partial "scripts.html" . }}
 </body>
 
