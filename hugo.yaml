@@ -13,7 +13,7 @@ permalinks:
 
 params:
   author:
-    avatar: "https://i.loli.net/2020/12/18/71QeDAbT2YlFzrU.jpg"
+    avatar: "/images/avatar.webp"
     name: "LIGT"
   social:
     github: "345000346"
