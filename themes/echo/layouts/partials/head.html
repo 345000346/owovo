@@ -68,14 +68,14 @@
     </script>
     {{ end }}
 
-    <!-- 使用CDN加速的Tailwind CSS框架 -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <!-- 使用本地Tailwind CSS框架 -->
+    <link href="{{ "css/tailwind.min.css" | relURL }}" rel="stylesheet">
     
     <!-- 网站主样式表 - 加载自定义的 CSS 文件 -->
     <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
     
-    <!-- 阿里巴巴矢量图标库 - 加载图标字体 -->
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_1607597_jhmihcvh0tm.css">
+    <!-- 本地阿里巴巴矢量图标库 - 加载图标字体 -->
+    <link rel="stylesheet" href="{{ "css/iconfont.css" | relURL }}">
     
     <!-- Vercount统计 -->
     {{ if .Site.Params.vercount }}
