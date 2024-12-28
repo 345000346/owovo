@@ -30,6 +30,7 @@
                 setInterval(timer, 1000);
             </script>
             {{- end }}
+            <!-- 版权信息 -->
             <p>
                 &copy; {{ now.Format "2006" }}
                 <a style="color: var(--text-color);" href="{{ .Site.BaseURL | absURL }}"
@@ -53,4 +54,3 @@
     </div>
 </footer>
 
-{{ template "_internal/google_analytics.html" . }}

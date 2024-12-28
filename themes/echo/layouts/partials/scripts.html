@@ -1,9 +1,12 @@
 <script>
+  // 初始化页面功能
   window.onload = function() {
+    // 导航切换功能 - 显示/隐藏导航菜单
     document.getElementById("nav-toggle").onclick = function() {
       document.getElementById("nav-content").classList.toggle("hidden");
     };
 
+    // 捐赠按钮功能 - 显示捐赠二维码
     var donate = document.getElementById("btn-donate");
     if (donate) {
       donate.onclick = function() {
@@ -12,6 +15,7 @@
       };
     }
 
+    // 外部链接处理 - 为外部链接添加 target="_blank"
     var hostname = window.location.hostname;
     var divs = document.querySelectorAll('a[href^="http"]');
     [].forEach.call(divs, function(div) {
@@ -40,7 +44,7 @@
     applyTheme(e.matches ? 'dark' : 'light');
   });
 
-  /* Progress bar */
+  /* 页面滚动进度条 - 根据滚动位置更新进度条宽度 */
   //Source: https://alligator.io/js/progress-bar-javascript-css-variables/
   var h = document.documentElement,
     b = document.body,
