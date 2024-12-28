@@ -1,3 +1,4 @@
+/* 定义全局颜色变量 */
 :root {
   --primary-color: #805ad5;
   --secondary-color: #9e9e9e;
@@ -8,6 +9,13 @@
   --card-bg-color: #f5f5fa;
   --card-dark-bg-color: #424242;
   --border-color: #ccc;
+  
+  /* 定义常用尺寸变量 */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
 }
 
 [data-theme="dark"] {
@@ -87,9 +95,13 @@
   margin: 0.5rem 0 1rem;
 }
 
+/* 优化图片加载 */
 .post-content img {
   box-shadow: 0 1px 3px 0 var(--border-color), 0 1px 2px 0 var(--border-color);
   margin: 1.5rem auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .post-content a {
@@ -100,6 +112,30 @@
 .post-content a:hover {
   color: var(--text-color);
   border-color: var(--accent-color);
+}
+
+/* 可访问性改进 */
+.post-content a:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.post-content img {
+  box-shadow: 0 1px 3px 0 var(--border-color), 0 1px 2px 0 var(--border-color);
+  margin: 1.5rem auto;
+}
+
+.post-content img[alt] {
+  border: 1px solid var(--border-color);
+}
+
+.post-content img:not([alt]) {
+  border: 1px dashed var(--accent-color);
+}
+
+.post-content button {
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .post-content blockquote {
@@ -155,38 +191,41 @@ a:active {
   -moz-osx-font-smoothing: grayscale;
 }
 
-[data-theme="dark"] .text-gray-800,
-[data-theme="dark"] .text-gray-500,
-[data-theme="dark"] .text-gray-400,
-[data-theme="dark"] .hover\:text-gray-700:hover {
-  color: var(--text-color);
-}
+/* 暗色主题下的样式 */
+[data-theme="dark"] {
+  .text-gray-800,
+  .text-gray-500,
+  .text-gray-400,
+  .hover\:text-gray-700:hover {
+    color: var(--text-color);
+  }
 
-[data-theme="dark"] .shadow {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-}
+  .shadow {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  }
 
-[data-theme="dark"] .rounded,
-[data-theme="dark"] .overflow-hidden,
-[data-theme="dark"] .border {
-  border-color: var(--border-color);
-}
+  .rounded,
+  .overflow-hidden,
+  .border {
+    border-color: var(--border-color);
+  }
 
-[data-theme="dark"] .bg-white {
-  background-color: var(--bg-color-light);
-}
+  .bg-white {
+    background-color: var(--bg-color-light);
+  }
 
-[data-theme="dark"] .bg-gray-100,
-[data-theme="dark"] .hover\:bg-gray-200:hover {
-  background-color: var(--bg-color-lighter);
-}
+  .bg-gray-100,
+  .hover\:bg-gray-200:hover {
+    background-color: var(--bg-color-lighter);
+  }
 
-[data-theme="dark"] .bg-gray-800 {
-  background-color: var(--bg-color-dark);
-}
+  .bg-gray-800 {
+    background-color: var(--bg-color-dark);
+  }
 
-[data-theme="dark"] .bg-gray-900 {
-  background-color: var(--bg-color-darker);
+  .bg-gray-900 {
+    background-color: var(--bg-color-darker);
+  }
 }
 
 .specific-container {
@@ -211,9 +250,12 @@ a:active {
   justify-content: space-between;
 }
 
+/* 性能优化 */
 .specific-container .sticky {
   position: sticky;
   z-index: 10;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .specific-container .top-0 {
@@ -234,6 +276,26 @@ a:active {
 
 .specific-container .text-gray-600 {
   color: #4b5563;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .post-content {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .post-content h2 {
+    font-size: 120%;
+  }
+
+  .post-content h3 {
+    font-size: 110%;
+  }
+
+  .specific-container {
+    margin-left: var(--space-sm);
+  }
 }
 
 table tr th,
