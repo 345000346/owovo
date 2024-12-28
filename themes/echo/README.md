@@ -66,12 +66,6 @@ hasCJKLanguage = true
 uglyURLs = true
 googleAnalytics = ""      # UA-XXXXXXXX-X
 
-## 评论系统
-changyanAppid = "" # Changyan app id             # 畅言
-changyanAppkey = "" # Changyan app key
-disqusShortname = "forecho-blog" # disqus account name
-livereUID = "" # LiveRe UID                  # 来必力
-
 [markup.highlight]
 codeFences = true # 高亮markdown的代码块
 guessSyntax = true # 高亮markdown中没有标注语言的代码块
@@ -132,38 +126,6 @@ enable = true
 title = "打赏"
 wechat = "https://blog-1251237404.cos.ap-guangzhou.myqcloud.com/20190424153510.png" # 微信二维码
 alipay = "https://blog-1251237404.cos.ap-guangzhou.myqcloud.com/20190424153431.png" # 支付宝二维码
-
-############## 评论系统  start ##############
-[params.gitment] # Gitment is a comment system based on GitHub issues. see https://github.com/imsun/gitment
-owner = "" # Your GitHub ID
-repo = "" # The repo to store comments
-clientId = "" # Your client ID
-clientSecret = "" # Your client secret
-
-[params.utterances] # https://utteranc.es/
-owner = "" # Your GitHub ID
-repo = "" # The repo to store comments
-
-[params.gitalk] # Gitalk is a comment system based on GitHub issues. see https://github.com/gitalk/gitalk
-owner = "" # Your GitHub ID
-repo = "" # The repo to store comments
-clientId = "" # Your client ID
-clientSecret = "" # Your client secret
-
-# Valine.
-# You can get your appid and appkey from https://leancloud.cn
-# more info please open https://valine.js.org
-[params.valine]
-enable = false
-appId = '你的appId'
-appKey = '你的appKey'
-notify = false # mail notifier , https://github.com/xCss/Valine/wiki
-verify = false # Verification code
-avatar = 'mm'
-placeholder = '说点什么吧...'
-visitor = false
-
-############ 评论系统  end ##############
 ## 社交链接
 [social]
 github = "forecho"
