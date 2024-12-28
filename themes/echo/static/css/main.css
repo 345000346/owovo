@@ -4,14 +4,16 @@
   --accent-color: #fd281a;
   --text-color: #424242;
   --text-color-primary: #424242;
-  --bg-color: #eee;
+  --bg-color: #f5f5fa;
+  --card-bg-color: #f5f5fa;
+  --card-dark-bg-color: #424242;
   --border-color: #ccc;
 }
 
 [data-theme="dark"] {
   --text-color: #e2e8f0;
   --text-color-primary: #e2e8f0;
-  --bg-color: #1a202c;
+  --bg-color: #303030;
   --border-color: #4a5568;
   --shadow-color: rgba(0, 0, 0, 0.7);
   --shadow-color-light: rgba(0, 0, 0, 0.5);
@@ -22,6 +24,7 @@
   --text-color-tertiary: #718096;
   --bg-color-dark: #1a202c;
   --bg-color-darker: #171923;
+  --card-bg-color: var(--card-dark-bg-color);
 }
 
 .theme-toggle {

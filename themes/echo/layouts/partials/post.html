@@ -1,6 +1,6 @@
 <!-- 文章主体部分 -->
 <section class="w-full lg:w-3/4 xl:w-3/4">
-    <div class="px-8 py-6 mt-6 lg:mt-0 leading-normal rounded shadow" style="background-color: var(--bg-color);">
+    <div class="px-8 py-6 mt-6 lg:mt-0 leading-normal rounded shadow" style="background-color: var(--card-bg-color);">
     <!-- 移动端目录 -->
     {{ partial "posts/title.html" . }}
 
@@ -53,12 +53,12 @@
 
     <div class="flex flex-col justify-between sticky top-0 pt-12 pb-4 -mt-10 text-gray-600">
         {{ if or .Params.toc (and .Site.Params.toc (ne .Params.toc false)) }}
-        <div class="shadow rounded p-4 mt-5" style="background-color: var(--bg-color);">
+        <div class="shadow rounded p-4 mt-5" style="background-color: var(--card-bg-color);">
             {{ partial "posts/toc.html" . }}
         </div>
         {{ end }}
 
-        <div class="shadow rounded p-4 mt-5" style="background-color: var(--bg-color);">
+        <div class="shadow rounded p-4 mt-5" style="background-color: var(--card-bg-color);">
             {{ partial "posts/jinrishici.html" . }}
         </div>
     </div>
