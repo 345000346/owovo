@@ -55,6 +55,18 @@
     <link rel="shortcut icon" href="{{ . }}" type="image/x-png">
     {{ end }}
     
+    {{ if .Site.Params.googleAnalytics }}
+    <!-- Google Analytics 跟踪代码 -->
+    <!-- 请确保在hugo配置文件中设置googleAnalytics参数 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ .Site.Params.googleAnalytics }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ .Site.Params.googleAnalytics }}');
+    </script>
+    {{ end }}
+
     <!-- 使用CDN加速的Tailwind CSS框架 -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     
@@ -68,7 +80,4 @@
     {{ if .Site.Params.vercount }}
     <script defer src="https://cn.vercount.one/js"></script>
     {{ end }}
-    
-    <!-- 额外head内容 -->
-    {{ .Site.Params.extraHead | safeHTML }}
 </head>
