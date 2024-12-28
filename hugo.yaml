@@ -5,7 +5,6 @@ theme: "echo"
 DefaultContentLanguage: "cn"
 disablePathToLower: true
 uglyurls: true
-googleAnalytics: "G-ND67DP0RT5"
 hasCJKLanguage: true
 summaryLength: 140
 
@@ -28,14 +27,6 @@ params:
   description: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
   vercount: true
   runtime: "8/22/2019 00:00:00"
-  extraHead: |
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ND67DP0RT5" defer></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ND67DP0RT5');
-    </script>
   rssFullContent: true
   staticCDNPrefix: "https://cdn.bootcss.com/font-awesome/5.11.2"
   navItems:
