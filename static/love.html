@@ -5,27 +5,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我们的爱情故事</title>
+  
   <!-- 引入Google字体 -->
-  <link rel="stylesheet" href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&amp;display=swap">
+  
   <!-- 引入自定义样式 -->
   <link rel="stylesheet" href="love/love.css">
 </head>
+
 <body>
-  <!-- 背景粒子效果 -->
+  <!-- 背景粒子效果容器 -->
   <div class="background"></div>
   
-  <!-- 主要内容容器 -->
-  <div class="container">
-    <!-- 头部区域 -->
-    <div class="header">
+  <!-- 主内容区域 -->
+  <main class="container">
+    <!-- 头部 -->
+    <header class="header">
       <h1>我们的爱情故事</h1>
       <div class="timer">
         <span id="loveTimer"></span>
       </div>
-    </div>
+    </header>
 
     <!-- 内容卡片 -->
-    <div class="content">
+    <article class="content">
       <div class="card">
         <div class="card-content">
           <!-- 爱情故事内容 -->
@@ -51,14 +54,14 @@
           <p>今天是2024年9月6日，我们结婚一周年啦！这一年里，我们一起经历了许多美好的时光，每一天都充满了幸福和快乐，期待我们未来的每一个周年纪念日！</p>
         </div>
       </div>
-    </div>
-  </div>
+    </article>
+  </main>
 
   <!-- 页脚 -->
-  <div class="footer">
+  <footer class="footer">
     <div id="currentDateTime"></div>
     <div class="copyright"></div>
-  </div>
+  </footer>
 
   <!-- 引入JavaScript文件 -->
   <script src="love/love.js"></script>
