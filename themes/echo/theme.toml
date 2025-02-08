@@ -4,12 +4,35 @@
 name = "Echo"
 license = "MIT"
 licenselink = "https://github.com/forecho/hugo-theme-echo/blob/master/LICENSE"
-description = "A super concise theme for Hugo"
+description = "一个简洁优雅的 Hugo 博客主题，支持深色模式，针对中文排版优化"
 homepage = "https://github.com/forecho/hugo-theme-echo"
-tags = ["responsive", "blog", "simple", "clean", "tailwindcss", "syntax highlighting"]
-features = ["responsive", "blog", "simple", "clean", "tailwindcss", "syntax highlighting"]
-min_version = "0.1.0"
+tags = [
+    "responsive",
+    "blog",
+    "simple",
+    "clean",
+    "tailwindcss",
+    "syntax highlighting",
+    "dark mode",
+    "chinese",
+    "minimal",
+    "fast"
+]
+features = [
+    "responsive",
+    "blog",
+    "simple",
+    "clean",
+    "tailwindcss",
+    "syntax highlighting",
+    "dark mode",
+    "SEO optimized",
+    "mobile friendly",
+    "chinese typography"
+]
+min_version = "0.80.0"
 
 [author]
   name = "forecho"
-  homepage = ""
+  homepage = "https://blog.forecho.com"
+  github = "https://github.com/forecho"
