@@ -13,13 +13,16 @@
 
     {{ partial "header.html" . }}
 
-    <div id="container" class="container w-full flex flex-wrap mx-auto px-2 pt-16 lg:pt-20 text-main">
+    <main id="swup" class="transition-fade">
+      <div id="container" class="container w-full flex flex-wrap mx-auto px-2 pt-16 lg:pt-20 text-main">
 
-    {{- block "main" . }}{{- end }}
+      {{- block "main" . }}{{- end }}
 
-    </div>
+      </div>
     
-    {{ partial "footer.html" . }}
+      {{ partial "footer.html" . }}
+    </main>
+    
     {{ partial "scripts.html" . }}
 </body>
 
