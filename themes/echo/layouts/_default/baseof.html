@@ -9,11 +9,11 @@
   htmlElement.setAttribute('data-theme', savedTheme);
 </script>
 
-<body class="text-gray-900 tracking-wider leading-normal" style="background-color: var(--bg-color);">
+<body class="text-gray-900 tracking-wider leading-normal bg-main">
 
     {{ partial "header.html" . }}
 
-    <div id="container" class="container w-full flex flex-wrap mx-auto px-2 pt-16 lg:pt-20" style="color: var(--text-color);">
+    <div id="container" class="container w-full flex flex-wrap mx-auto px-2 pt-16 lg:pt-20 text-main">
 
     {{- block "main" . }}{{- end }}
 
