@@ -2,31 +2,40 @@
 
 /* 统一颜色变量 */
 :root {
-  --bg-color: #f8f9fa;
-  --card-bg-color: #ffffff;
-  --text-color: #212529;
-  --text-color-secondary: #6c757d;
-  --border-color: #dee2e6;
-  --scroll-color: #007bff;
-  --accent-color: #007bff; /* 主要强调色 */
-  --hover-color: #0056b3;  /* 悬停颜色 */
+  /* Refined Palette - Light Mode */
+  --bg-color: #FDFEFE;              /* Page background - Softer off-white */
+  --card-bg-color: #FFFFFF;           /* Card, code block background - Pure white */
+  --text-color: #212F3D;              /* Main text - Dark slate blue */
+  --text-color-secondary: #5D6D7E;      /* Secondary text - Cool gray */
+  --border-color: #EAEDED;            /* Borders - Lighter, more subtle */
+  --accent-color: #3498DB;            /* Links, interactive elements - Vivid blue */
+  --hover-color: #2E86C1;             /* Hover state for links - Deeper blue */
+  --code-bg-color: #F4F6F7;           /* Inline code background - Light gray */
+  --code-text-color: #B03A2E;         /* Inline code text - Muted red */
+  --scroll-color: var(--accent-color);
+  --shadow-color: rgba(44, 62, 80, 0.1); /* Shadow color for images and blocks */
 }
 
 [data-theme='dark'] {
-  --bg-color: #121212;
-  --card-bg-color: #1e1e1e;
-  --text-color: #e0e0e0;
-  --text-color-secondary: #a0a0a0;
-  --border-color: #333333;
-  --scroll-color: #1e88e5;
-  --accent-color: #1e88e5; /* 主要强调色 */
-  --hover-color: #42a5f5;  /* 悬停颜色 */
+  /* Refined Palette - Dark Mode */
+  --bg-color: #0D1117;                /* Page background - Midnight blue, GitHub-inspired */
+  --card-bg-color: #161B22;             /* Card, code block background - Darker gray */
+  --text-color: #C9D1D9;                /* Main text - Soft off-white */
+  --text-color-secondary: #8B949E;        /* Secondary text - Lighter gray */
+  --border-color: #21262D;              /* Borders - More subtle */
+  --accent-color: #58A6FF;              /* Links, interactive elements - Brighter, saturated blue */
+  --hover-color: #82B3FF;               /* Hover state for links - Even lighter blue */
+  --code-bg-color: #1A1A1A;             /* Inline code background - Very dark gray */
+  --code-text-color: #F07178;           /* Inline code text - Soft red */
+  --scroll-color: var(--accent-color);
+  --shadow-color: rgba(0, 0, 0, 0.4); /* Darker shadow for dark mode */
 }
 
 .bg-main { background-color: var(--bg-color); }
 .bg-card { background-color: var(--card-bg-color); }
 .text-main { color: var(--text-color); }
 .text-secondary { color: var(--text-color-secondary); }
+.text-accent { color: var(--accent-color); }
 
 /* 全局字体和过渡效果 */
 body {
@@ -96,10 +105,10 @@ body {
 
 .post-content p code,
 .post-content li code {
-  background-color: var(--card-bg-color);
+  background-color: var(--code-bg-color);
   padding: 0.2em 0.4em;
   border-radius: 4px; /* 增加圆角 */
-  color: var(--accent-color);
+  color: var(--code-text-color);
   border: 1px solid var(--border-color);
   font-size: 0.9em;
 }
@@ -109,7 +118,7 @@ body {
 }
 
 .post-content img {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 柔和的阴影 */
+  box-shadow: 0 4px 8px var(--shadow-color); /* 柔和的阴影 */
   margin: 2rem auto;
   max-width: 100%;
   max-height: 600px;
@@ -156,17 +165,17 @@ body {
   overflow-x: auto;
   border-radius: 8px;
   border: 1px solid var(--border-color);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 /* 代码块深色模式优化 */
 [data-theme='dark'] .highlight {
-    background: #1e1e1e !important; /* 覆盖内联样式 */
-    color: #e0e0e0;
+    background: var(--code-bg-color) !important; /* 覆盖内联样式 */
+    color: var(--text-color);
 }
 
 [data-theme='dark'] .highlight .ln {
-    color: #a0a0a0 !important;
+    color: var(--text-color-secondary) !important;
 }
 
 a:hover,

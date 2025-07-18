@@ -11,16 +11,16 @@
     <!-- 文章内容部分 -->
     <div class="post-content">
         {{ .Content }}
-        <hr class="bg-gray-300 mt-8">
+        <hr class="mt-8" style="background-color: var(--border-color);">
         {{ partial "posts/reward.html" . }}
         {{ partial "posts/copyright.html" . }}
     </div>
 
     <!-- 标签部分 -->
     {{ with .Params.tags -}}
-    <div class="text-base md:text-sm text-color-secondary pt-6">
+    <div class="text-base md:text-sm text-secondary pt-6">
         {{ range . -}}
-        <a class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-color-primary mr-2 hover:bg-gray-300"
+        <a class="inline-block bg-main rounded-full px-3 py-1 text-sm font-semibold text-main mr-2 hover:opacity-80"
             href="{{ $.Site.BaseURL }}/tags/{{ . | urlize }}{{ if $.Site.Params.uglyURLs }}{{ end }}.html">
             #{{ . }}
         </a>
@@ -30,12 +30,12 @@
 
     <!-- 阅读次数统计 -->
     {{ if .Site.Params.vercount }}
-    <p class="text-color-secondary text-sm text-right pt-1">
+    <p class="text-secondary text-sm text-right pt-1">
         本文有 <span id="vercount_value_page_pv">Loading</span> 次阅读
     </p>
     {{ end }}
 
-    <hr class="bg-gray-300 my-10">
+    <hr class="my-10" style="background-color: var(--border-color);">
 
     <!-- 相关文章部分 -->
     {{ if in (slice "post" "posts") .Type }}

@@ -50,7 +50,13 @@
       const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       
       progressBar.style.setProperty('--scroll', `${(scrollY / scrollHeight) * 100}%`);
-      navContent.classList.toggle('bg-gray-100', scrollY <= 10);
+      
+      // 当滚动到顶部时，确保导航栏背景与页面背景一致
+      if (scrollY <= 10) {
+        navContent.classList.add('bg-main');
+      } else {
+        navContent.classList.remove('bg-main');
+      }
     });
   });
 </script>
