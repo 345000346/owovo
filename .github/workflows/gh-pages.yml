@@ -1,121 +1,40 @@
-name: Deploy Hugo Site to GitHub Pages
-
+name: Github Pages #自动化的名称
 on:
-  # 触发条件：推送到 master 分支
-  push:
-    branches: [master]
-    paths-ignore:
-      - 'README.md'
-      - '.gitignore'
-      - 'LICENSE'
-  
-  # 触发条件：PR 到 master 分支（仅测试构建）
-  pull_request:
-    branches: [master]
-    paths-ignore:
-      - 'README.md'
-      - '.gitignore'
-      - 'LICENSE'
-  
-  # 手动触发
-  workflow_dispatch:
-
-# 权限设置
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# 并发设置：取消进行中的冗余构建
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
+  push: # push 的时候触发
+    branches: # 那些分支需要触发
+      - master
 jobs:
-  # 构建任务
   build:
+<<<<<<< HEAD
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
       HUGO_VERSION: 0.148.1
     
+=======
+    runs-on: ubuntu-latest # 镜像市场
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+>>>>>>> parent of 96b8a97 (重构：更新gh-pages.yml工作流，优化构建和部署步骤，添加环境变量和权限设置，增强GitHub Pages部署功能)
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: checkout # 步骤的名称
+        uses: actions/checkout@v4 #软件市场的名称
         with:
-          submodules: recursive
-          fetch-depth: 0
+          submodules: true # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Setup Hugo
+      - name: Setup Hugo # 安装 Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: ${{ env.HUGO_VERSION }}
+          hugo-version: latest # 使用 Hugo 最新版
           extended: true
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-        if: hashFiles('package.json') != ''
+      - name: Build # 编译
+        run: hugo --minify
 
-      - name: Install dependencies
-        run: npm ci
-        if: hashFiles('package.json') != ''
-
-      - name: Cache Hugo modules
-        uses: actions/cache@v4
-        with:
-          path: /tmp/hugo_cache
-          key: ${{ runner.os }}-hugo-${{ hashFiles('go.mod', 'go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-hugo-
-
-      - name: Build with Hugo
-        run: |
-          hugo --minify --gc --cleanDestinationDir
-        env:
-          HUGO_ENVIRONMENT: production
-          HUGO_ENV: production
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        if: github.event_name == 'pull_request'
-        with:
-          name: hugo-site
-          path: public/
-          retention-days: 1
-
-  # 部署任务（仅在 push 到 master 时执行）
-  deploy:
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v3
-        with:
-          hugo-version: ${{ env.HUGO_VERSION }}
-          extended: true
-
-      - name: Build with Hugo
-        run: |
-          hugo --minify --gc --cleanDestinationDir
-        env:
-          HUGO_ENVIRONMENT: production
-          HUGO_ENV: production
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy # 部署
         uses: peaceiris/actions-gh-pages@v4
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
@@ -123,6 +42,4 @@ jobs:
           cname: owovo.xyz
           publish_branch: master
           publish_dir: ./public
-          commit_message: "Deploy from ${{ github.sha }} - ${{ github.event.head_commit.message }}"
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: ${{ github.event.head_commit.message }}
