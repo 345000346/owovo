@@ -32,7 +32,7 @@ params:
   staticCDNPrefix: "https://cdn.bootcss.com/font-awesome/5.11.2"
   navItems:
     - ["首页", "/"]
-    - ["文章", "/post.html"]
+    - ["文章", "/achieve.html"]
     - ["想法", "/ideas.html"]
     - ["关于", "/about.html"]
     - ["RSS", "/rss.xml"]

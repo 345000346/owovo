@@ -76,13 +76,13 @@
     {{ end }}
 
     <!-- 使用本地Tailwind CSS框架 -->
-    <link href="{{ "css/tailwind.min.css" | relURL }}" rel="stylesheet">
+    <link href="{{ "css/tailwind.min.css" | absURL }}" rel="stylesheet">
     
     <!-- 网站主样式表 - 加载自定义的 CSS 文件 -->
-    <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
+    <link rel="stylesheet" href="{{ "css/main.css" | absURL }}">
     
     <!-- 本地阿里巴巴矢量图标库 - 加载图标字体 -->
-    <link rel="stylesheet" href="{{ "css/iconfont.css" | relURL }}">
+    <link rel="stylesheet" href="{{ "css/iconfont.css" | absURL }}">
     
     <!-- Vercount统计 -->
     {{ if .Site.Params.vercount }}
