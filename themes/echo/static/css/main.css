@@ -23,6 +23,11 @@
   --hover-color: #42a5f5;  /* 悬停颜色 */
 }
 
+.bg-main { background-color: var(--bg-color); }
+.bg-card { background-color: var(--card-bg-color); }
+.text-main { color: var(--text-color); }
+.text-secondary { color: var(--text-color-secondary); }
+
 /* 全局字体和过渡效果 */
 body {
   font-family: 'Noto Sans SC', sans-serif;
@@ -33,6 +38,9 @@ body {
   line-height: 1.8; /* 增加行高以提高可读性 */
   color: var(--text-color);
   margin-bottom: 2rem;
+  max-width: 800px; /* 限制最大宽度 */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .post-content h1,
@@ -267,9 +275,22 @@ table tr:nth-child(2n) {
 }
 
 
-/* 修复移动端导航栏展开时，背景色不一致的问题 */
 @media (max-width: 1023px) {
     #nav-content {
         background-color: var(--bg-color) !important;
     }
+
+    #container {
+        flex-direction: column;
+    }
+
+    main, aside {
+        width: 100%;
+    }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
