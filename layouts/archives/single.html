@@ -1,0 +1,36 @@
+{{ define "main" }}
+    <section class="w-full lg:w-3/4 xl:w-3/4">
+
+    <!--Card-->
+        <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow" style="background-color: var(--card-bg-color);">
+            <p class="font-bold text-3xl pb-2" style="color: var(--text-color);">{{ .Title }}</p>
+
+            {{ $pages := where .Site.RegularPages "Type" "in" (slice "post" "posts") }}
+
+            {{ range sort ($pages.GroupByDate "2006") "Key" "desc" }}
+            <p class="font-bold text-2xl hidden xl:inline-block pt-2" style="color: var(--text-color);">{{ .Key }}</p>
+                {{ range .Pages.ByDate.Reverse }}
+                    <div class="p-1 flex flex-row border-b border-dotted border-gray-400">
+                        <div class="xl:w-1/10 pr-10 pt-3 hidden xl:inline-block" title="{{ .Date.Format "2006-01-02 15:04:05 MST" }}" style="color: var(--text-color);">{{ .Date.Format "01-02"}}</div>
+                        <div class="xl:w-auto py-3">
+                            <p class="text-xl">
+                                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                            </p>
+                            <p class="text-sm xl:hidden" style="color: var(--text-color);">{{ .Date.Format "2006-01-02 15:04:05 MST" }}</p>
+                            <p class="text-sm" style="color: var(--text-color);">
+                                {{ range .Params.tags }}
+                                    <a class="pr-2 hover:text-gray-800" href="{{ `tags/${ . | urlize }` | relURL }}" style="color: var(--text-color);">#{{ . }}</a>
+                                {{ end }}
+                            </p>
+                        </div>
+                    </div>
+
+                {{ end }}
+            {{ end }}
+        </div>
+    </section>
+
+    <div class="hidden md:block w-full lg:w-1/4 xl:w-1/4 px-6 leading-normal" style="color: var(--text-color);">
+        {{ partial "posts/profile.html" . }}
+    </div>
+{{ end }}
