@@ -1,32 +1,24 @@
-/* 定义全局颜色变量 */
+/* themes/echo/static/css/main.css */
+
+/* 统一颜色变量 */
 :root {
-  --scroll-color: #8a63d2;
-  --secondary-color: #a8a8a8;
-  --accent-color: #ff7f50;
-  --text-color: #555555;
-  --text-color-primary: #555555;
-  --bg-color: #f5f5fa;
-  --card-bg-color: #f5f5fa;
-  --border-color: #ccc;
-  --light-purple: #e9d8fd;
-  --dark-purple: #5e3d9e;
+  --bg-color: #ffffff;
+  --card-bg-color: #f7fafc;
+  --text-color: #2d3748;
+  --text-color-secondary: #718096;
+  --border-color: #e2e8f0;
+  --scroll-color: #f56565;
+  --accent-color: #ed8936; /* 新增：用于链接和强调 */
 }
 
-[data-theme="dark"] {
-  --text-color: #f3f4f6;
-  --text-color-primary: #f3f4f6;
-  --bg-color: #303030;
-  --border-color: #4a5568;
-  --shadow-color: rgba(0, 0, 0, 0.7);
-  --shadow-color-light: rgba(0, 0, 0, 0.5);
-  --bg-color-light: #2d3748;
-  --bg-color-lighter: #3c4657;
-  --bg-color-lightest: #4a5568;
+[data-theme='dark'] {
+  --bg-color: #1a202c;
+  --card-bg-color: #2d3748;
+  --text-color: #e2e8f0;
   --text-color-secondary: #a0aec0;
-  --text-color-tertiary: #718096;
-  --bg-color-dark: #1a202c;
-  --bg-color-darker: #171923;
-  --card-bg-color: var(--card-dark-bg-color);
+  --border-color: #4a5568;
+  --scroll-color: #ed8936;
+  --accent-color: #f56565; /* 新增：用于链接和强调 */
 }
 
 .post-content {
@@ -39,6 +31,7 @@
 .post-content h3 {
   margin: 2rem 0 0.3rem;
   font-weight: 700;
+  color: var(--text-color);
 }
 
 .post-content h2 {
@@ -80,17 +73,17 @@
 
 .post-content p code,
 .post-content li code {
-  background-color: var(--bg-color);
+  background-color: var(--card-bg-color);
   padding: 0.2em 0.4em;
   border-radius: 3px;
-  color: var(--scroll-color);
+  color: var(--accent-color);
+  border: 1px solid var(--border-color);
 }
 
 .post-content p {
   margin: 0.5rem 0 1rem;
 }
 
-/* 优化图片加载 */
 .post-content img {
   box-shadow: 0 1px 3px 0 var(--border-color), 0 1px 2px 0 var(--border-color);
   margin: 1.5rem auto;
@@ -99,59 +92,47 @@
   height: auto;
   display: block;
   object-fit: contain;
+  border-radius: 8px;
 }
 
 .post-content a {
-  padding: 0.25rem 0;
-  border-bottom: 2px solid var(--scroll-color);
+  padding-bottom: 1px;
+  border-bottom: 1px solid var(--accent-color);
   transition: border-bottom-width 0.2s ease, color 0.2s ease;
-  color: var(--dark-purple);
+  color: var(--accent-color);
+  text-decoration: none;
 }
 
-/* 可访问性改进 */
-.post-content a:focus {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
-}
-
-.post-content img[alt] {
-  border: 1px solid var(--border-color);
-}
-
-.post-content img:not([alt]) {
-  border: 1px dashed var(--accent-color);
-}
-
-.post-content button {
-  min-width: 44px;
-  min-height: 44px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-  background-color: var(--light-purple);
-  color: var(--dark-purple);
-  border: 1px solid var(--scroll-color);
-}
-
-.post-content button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  background-color: var(--scroll-color);
-  color: white;
+.post-content a:hover {
+  border-bottom-width: 2px;
 }
 
 .post-content blockquote {
-  background-color: var(--bg-color);
+  background-color: var(--card-bg-color);
   padding: 1rem;
   border-left-width: 4px;
   border-color: var(--accent-color);
+  border-radius: 0 4px 4px 0;
 }
 
 .post-content pre,
 .post-content .highlight {
-  padding: 0.5rem;
+  padding: 1rem;
   font-size: 0.875rem;
-  background-color: var(--bg-color);
+  background-color: var(--card-bg-color);
   overflow-x: auto;
-  white-space: pre-wrap;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+/* 代码块深色模式优化 */
+[data-theme='dark'] .highlight {
+    background: #2d3748 !important; /* 覆盖内联样式 */
+    color: #e2e8f0;
+}
+
+[data-theme='dark'] .highlight .ln {
+    color: #a0aec0 !important;
 }
 
 a:hover,
@@ -179,6 +160,8 @@ a:active {
 
 #TableOfContents a {
   transition: all 0.2s ease !important;
+  border-bottom: none;
+  color: var(--text-color-secondary);
 }
 
 #TableOfContents a:hover {
@@ -193,92 +176,6 @@ a:active {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 暗色主题下的样式 */
-[data-theme="dark"] {
-  .text-gray-800,
-  .text-gray-500,
-  .text-gray-400,
-  .hover\:text-gray-700:hover {
-    color: var(--text-color);
-  }
-
-  .shadow {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  }
-
-  .rounded,
-  .overflow-hidden,
-  .border {
-    border-color: var(--border-color);
-  }
-
-  .bg-white {
-    background-color: var(--bg-color-light);
-  }
-
-  .bg-gray-100,
-  .hover\:bg-gray-200:hover {
-    background-color: var(--bg-color-lighter);
-  }
-
-  .bg-gray-800 {
-    background-color: var(--bg-color-dark);
-  }
-
-  .bg-gray-900 {
-    background-color: var(--bg-color-darker);
-  }
-}
-
-.specific-container {
-  position: relative;
-  margin-left: 1.5rem;
-}
-
-.specific-container .flex {
-  display: flex;
-  min-height: 0;
-  width: 100%;
-  margin-top: 1rem;
-  padding: 1rem;
-  z-index: 1;
-}
-
-.specific-container .flex-col {
-  flex-direction: column;
-}
-
-.specific-container .justify-between {
-  justify-content: space-between;
-}
-
-/* 性能优化 */
-.specific-container .sticky {
-  position: sticky;
-  z-index: 10;
-}
-
-.specific-container .top-0 {
-  top: 0;
-}
-
-.specific-container .pt-12 {
-  padding-top: 3rem;
-}
-
-.specific-container .pb-4 {
-  padding-bottom: 1rem;
-}
-
-.specific-container .-mt-10 {
-  margin-top: -2.5rem;
-}
-
-.specific-container .text-gray-600 {
-  color: #4b5563;
-}
-
-/* 响应式设计 */
 @media (max-width: 768px) {
   .post-content {
     font-size: 0.9rem;
@@ -296,14 +193,10 @@ a:active {
     margin: 1.2rem 0 0.3rem;
   }
 
-  .specific-container {
-    margin-left: 0;
-    padding: 0 1rem;
-  }
-
   pre, .highlight {
     margin: 0 -1rem;
     padding: 0.5rem 1rem;
+    border-radius: 0;
   }
 
   table {
@@ -316,6 +209,9 @@ table {
     overflow-x: auto;
     display: block;
     white-space: nowrap;
+    border-collapse: collapse;
+    margin: 1em 0;
+    border: 1px solid var(--border-color);
 }
 
 table tr th,
@@ -329,10 +225,15 @@ table tr td {
 
 table tr th {
     font-weight: bold;
-    padding: 5px 10px;
-    background-color: var(--bg-color);
+    background-color: var(--card-bg-color);
 }
 
 table tr:nth-child(2n) {
-    background: var(--bg-color);
+    background: var(--card-bg-color);
+}
+
+/* 为主题切换按钮添加对键盘友好的自定义聚焦样式 */
+#theme-toggle:focus-visible {
+    outline: none;
+    box-shadow: none;
 }
