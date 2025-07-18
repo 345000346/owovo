@@ -1,5 +1,12 @@
 <head>
     <meta charset="utf-8">
+    <script>
+      // 立即执行以防止主题闪烁
+      (function() {
+        const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
     <!-- Hugo Generator -->
     {{ hugo.Generator }}
     
