@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      HUGO_VERSION: 0.140.2
+      HUGO_VERSION: 0.148.1
     
     steps:
       - name: Checkout
