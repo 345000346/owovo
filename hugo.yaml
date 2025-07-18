@@ -1,10 +1,10 @@
-baseURL: "https://owovo.xyz"
+# baseURL: "https://owovo.xyz"
 languageCode: "zh-CN"
 defaultContentLanguage: "cn"
 title: "LIGT'S BLOG"
 theme: "echo"
 disablePathToLower: true
-uglyurls: true
+# uglyurls: true
 hasCJKLanguage: true
 summaryLength: 140
 
@@ -32,9 +32,9 @@ params:
   staticCDNPrefix: "https://cdn.bootcss.com/font-awesome/5.11.2"
   navItems:
     - ["首页", "/"]
-    - ["文章", "/achieve.html"]
-    - ["想法", "/ideas.html"]
-    - ["关于", "/about.html"]
+    - ["文章", "/archives/"]
+    - ["想法", "/ideas/"]
+    - ["关于", "/about/"]
     - ["RSS", "/rss.xml"]
 
 outputFormats:
@@ -57,6 +57,11 @@ markup:
     lineNoStart: 1
     lineNos: true
     lineNumbersInTable: true
-    noClasses: true
+    noClasses: false
     style: "manni"
     tabWidth: 2
+  renderHooks:
+    link:
+      enable: true
+      template: |
+        <a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>
