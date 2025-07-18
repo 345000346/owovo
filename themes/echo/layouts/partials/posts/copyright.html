@@ -4,7 +4,7 @@
         <ul class="list-none">
             <li>
                 <strong>原文作者：</strong>
-                <a rel="author" href="{{ .Site.BaseURL}}">{{ if isset .Site.Params.Author "name" }}{{.Site.Params.Author.name}}{{ else }}{{.Site.Title}}{{ end }}</a>
+                <a rel="author" href="{{ .Site.BaseURL | absURL }}">{{ if isset .Site.Params.Author "name" }}{{.Site.Params.Author.name}}{{ else }}{{.Site.Title}}{{ end }}</a>
             </li>
             <li style="word-break:break-all">
                 <strong>原文链接：</strong>
