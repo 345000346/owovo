@@ -9,7 +9,7 @@ hasCJKLanguage: true
 summaryLength: 140
 
 permalinks:
-  posts: "/:filename"
+  posts: "/:contentbasename"
 
 params:
   author:
