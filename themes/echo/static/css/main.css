@@ -7,18 +7,9 @@
   --text-color-primary: #555555;
   --bg-color: #f5f5fa;
   --card-bg-color: #f5f5fa;
-  --card-dark-bg-color: #424242;
-  --scroll-color-light: #b39ddb;
   --border-color: #ccc;
   --light-purple: #e9d8fd;
   --dark-purple: #5e3d9e;
-  
-  /* 定义常用尺寸变量 */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
 }
 
 [data-theme="dark"] {
@@ -44,10 +35,10 @@
   margin-bottom: 2rem;
 }
 
-.post-content h2 {
-  font-size: 1.25rem;
-  font-weight: 800;
-  margin: 2.5rem 0 0.5rem;
+.post-content h2,
+.post-content h3 {
+  margin: 2rem 0 0.3rem;
+  font-weight: 700;
 }
 
 .post-content h2 {
@@ -56,12 +47,6 @@
 
 .post-content h3 {
   font-size: 120%;
-}
-
-.post-content h2,
-.post-content h3 {
-  margin: 2rem 0 0.3rem;
-  font-weight: 700;
 }
 
 .post-content h2:target,
@@ -123,25 +108,10 @@
   color: var(--dark-purple);
 }
 
-.post-content a:hover {
-  border-bottom-width: 3px;
-  color: var(--scroll-color);
-}
-
-.post-content a:hover {
-  color: var(--text-color);
-  border-color: var(--accent-color);
-}
-
 /* 可访问性改进 */
 .post-content a:focus {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
-}
-
-.post-content img {
-  box-shadow: 0 1px 3px 0 var(--border-color), 0 1px 2px 0 var(--border-color);
-  margin: 1.5rem auto;
 }
 
 .post-content img[alt] {
@@ -190,7 +160,7 @@ a:active {
 }
 
 #menu-content > ul {
-  padding: none;
+  padding: 0;
 }
 
 #TableOfContents > ul {
@@ -286,8 +256,6 @@ a:active {
 .specific-container .sticky {
   position: sticky;
   z-index: 10;
-  will-change: transform;
-  backface-visibility: hidden;
 }
 
 .specific-container .top-0 {
