@@ -5,19 +5,11 @@ on:
       - master
 jobs:
   build:
-<<<<<<< HEAD
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    env:
-      HUGO_VERSION: 0.148.1
-    
-=======
     runs-on: ubuntu-latest # 镜像市场
     permissions:
       contents: write
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
->>>>>>> parent of 96b8a97 (重构：更新gh-pages.yml工作流，优化构建和部署步骤，添加环境变量和权限设置，增强GitHub Pages部署功能)
     steps:
       - name: checkout # 步骤的名称
         uses: actions/checkout@v4 #软件市场的名称
