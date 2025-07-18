@@ -2,44 +2,59 @@
 
 /* 统一颜色变量 */
 :root {
-  --bg-color: #ffffff;
-  --card-bg-color: #f7fafc;
-  --text-color: #2d3748;
-  --text-color-secondary: #718096;
-  --border-color: #e2e8f0;
-  --scroll-color: #f56565;
-  --accent-color: #ed8936; /* 新增：用于链接和强调 */
+  --bg-color: #f8f9fa;
+  --card-bg-color: #ffffff;
+  --text-color: #212529;
+  --text-color-secondary: #6c757d;
+  --border-color: #dee2e6;
+  --scroll-color: #007bff;
+  --accent-color: #007bff; /* 主要强调色 */
+  --hover-color: #0056b3;  /* 悬停颜色 */
 }
 
 [data-theme='dark'] {
-  --bg-color: #1a202c;
-  --card-bg-color: #2d3748;
-  --text-color: #e2e8f0;
-  --text-color-secondary: #a0aec0;
-  --border-color: #4a5568;
-  --scroll-color: #ed8936;
-  --accent-color: #f56565; /* 新增：用于链接和强调 */
+  --bg-color: #121212;
+  --card-bg-color: #1e1e1e;
+  --text-color: #e0e0e0;
+  --text-color-secondary: #a0a0a0;
+  --border-color: #333333;
+  --scroll-color: #1e88e5;
+  --accent-color: #1e88e5; /* 主要强调色 */
+  --hover-color: #42a5f5;  /* 悬停颜色 */
+}
+
+/* 全局字体和过渡效果 */
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .post-content {
-  line-height: 1.75;
+  line-height: 1.8; /* 增加行高以提高可读性 */
   color: var(--text-color);
   margin-bottom: 2rem;
 }
 
+.post-content h1,
 .post-content h2,
-.post-content h3 {
-  margin: 2rem 0 0.3rem;
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
+  font-family: 'Noto Serif SC', serif;
+  margin: 2.5rem 0 1rem; /* 调整标题边距 */
   font-weight: 700;
   color: var(--text-color);
 }
 
 .post-content h2 {
-  font-size: 140%;
+  font-size: 1.75rem;
+  border-bottom: 1px solid var(--border-color); /* 为H2添加下划线 */
+  padding-bottom: 0.5rem;
 }
 
 .post-content h3 {
-  font-size: 120%;
+  font-size: 1.5rem;
 }
 
 .post-content h2:target,
@@ -75,69 +90,80 @@
 .post-content li code {
   background-color: var(--card-bg-color);
   padding: 0.2em 0.4em;
-  border-radius: 3px;
+  border-radius: 4px; /* 增加圆角 */
   color: var(--accent-color);
   border: 1px solid var(--border-color);
+  font-size: 0.9em;
 }
 
 .post-content p {
-  margin: 0.5rem 0 1rem;
+  margin: 0.5rem 0 1.25rem; /* 调整段落间距 */
 }
 
 .post-content img {
-  box-shadow: 0 1px 3px 0 var(--border-color), 0 1px 2px 0 var(--border-color);
-  margin: 1.5rem auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 柔和的阴影 */
+  margin: 2rem auto;
   max-width: 100%;
   max-height: 600px;
   height: auto;
   display: block;
   object-fit: contain;
   border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.post-content img:hover {
+    transform: scale(1.02); /* 图片悬停放大效果 */
 }
 
 .post-content a {
   padding-bottom: 1px;
   border-bottom: 1px solid var(--accent-color);
-  transition: border-bottom-width 0.2s ease, color 0.2s ease;
+  transition: all 0.3s ease; /* 平滑过渡效果 */
   color: var(--accent-color);
   text-decoration: none;
+  font-weight: 600; /* 链接加粗 */
 }
 
 .post-content a:hover {
-  border-bottom-width: 2px;
+  color: var(--hover-color);
+  border-bottom-color: var(--hover-color);
+  text-decoration: none;
 }
 
 .post-content blockquote {
   background-color: var(--card-bg-color);
-  padding: 1rem;
-  border-left-width: 4px;
+  padding: 1.5rem; /* 增加内边距 */
+  border-left-width: 5px;
   border-color: var(--accent-color);
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
 }
 
 .post-content pre,
 .post-content .highlight {
-  padding: 1rem;
-  font-size: 0.875rem;
+  padding: 1.5rem; /* 增加内边距 */
+  font-size: 0.9rem;
   background-color: var(--card-bg-color);
   overflow-x: auto;
   border-radius: 8px;
   border: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* 代码块深色模式优化 */
 [data-theme='dark'] .highlight {
-    background: #2d3748 !important; /* 覆盖内联样式 */
-    color: #e2e8f0;
+    background: #1e1e1e !important; /* 覆盖内联样式 */
+    color: #e0e0e0;
 }
 
 [data-theme='dark'] .highlight .ln {
-    color: #a0aec0 !important;
+    color: #a0a0a0 !important;
 }
 
 a:hover,
 a:active {
-  color: var(--accent-color);
+  color: var(--hover-color); /* 统一悬停颜色 */
 }
 
 #menu-content > ul {
@@ -166,7 +192,7 @@ a:active {
 
 #TableOfContents a:hover {
   color: var(--text-color) !important;
-  transform: translateX(2px) !important;
+  transform: translateX(4px) !important; /* 增加悬停位移 */
 }
 
 .my-iconfont {
@@ -178,24 +204,24 @@ a:active {
 
 @media (max-width: 768px) {
   .post-content {
-    font-size: 0.9rem;
-    line-height: 1.6;
+    font-size: 1rem; /* 在移动端稍微增大字体 */
+    line-height: 1.7;
     padding: 0 1rem;
   }
 
   .post-content h2 {
-    font-size: 1.2rem;
-    margin: 1.5rem 0 0.5rem;
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem;
   }
 
   .post-content h3 {
-    font-size: 1.1rem;
-    margin: 1.2rem 0 0.3rem;
+    font-size: 1.25rem;
+    margin: 1.5rem 0 0.5rem;
   }
 
   pre, .highlight {
     margin: 0 -1rem;
-    padding: 0.5rem 1rem;
+    padding: 1rem;
     border-radius: 0;
   }
 
@@ -210,14 +236,15 @@ table {
     display: block;
     white-space: nowrap;
     border-collapse: collapse;
-    margin: 1em 0;
+    margin: 1.5em 0;
     border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 table tr th,
 table tr td {
     border: 1px solid var(--border-color);
-    padding: 0.5em 1em;
+    padding: 0.75em 1.25em; /* 增加单元格内边距 */
     max-width: 300px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -234,6 +261,15 @@ table tr:nth-child(2n) {
 
 /* 为主题切换按钮添加对键盘友好的自定义聚焦样式 */
 #theme-toggle:focus-visible {
-    outline: none;
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
     box-shadow: none;
+}
+
+
+/* 修复移动端导航栏展开时，背景色不一致的问题 */
+@media (max-width: 1023px) {
+    #nav-content {
+        background-color: var(--bg-color) !important;
+    }
 }
