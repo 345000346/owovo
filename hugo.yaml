@@ -1,8 +1,8 @@
 baseURL: "https://owovo.xyz"
 languageCode: "zh-CN"
+defaultContentLanguage: "cn"
 title: "LIGT'S BLOG"
 theme: "echo"
-DefaultContentLanguage: "cn"
 disablePathToLower: true
 uglyurls: true
 hasCJKLanguage: true
