@@ -1,0 +1,29 @@
+{{ define "main" }}
+    <section class="w-full lg:w-2/3 xl:w-2/3 bg-card">
+        <div class="px-8 py-6 mt-6 lg:mt-0 leading-normal rounded shadow">
+            
+            {{- $paginator := .Paginate (where .Site.RegularPages "Type" "in" (slice "post" "posts")) }}
+                {{ range $index,$data := $paginator.Pages }}
+                <article >
+                    <!--Title-->
+                    {{ partial "posts/title.html" . }}
+                    
+                    <div class="post-content">
+                        {{ .Summary }}
+                    </div>
+                    <p class="text-sm font-semibold pt-5 text-secondary ">
+                        <a href="{{ .Permalink }}" class="px-5 py-2 inline-block bg-card rounded hover:opacity-80">阅读全文</a>
+                    </p>
+                </article>
+
+                <hr class="bg-main mt-10 mb-6">
+            {{ end }}
+            <p class="text-center">
+                <!-- prettier-ignore -->
+                <a  class="md:text-xl text-secondary" href="{{ "/achieve.html" | relLangURL }}{{ if $.Site.Params.uglyURLs }}{{ else }}{{ end }}">↑ 文章归档 ↑</a>
+            </p>
+        </div>
+    </section>
+
+    {{ partial "sidebar.html" . }}
+{{ end }}

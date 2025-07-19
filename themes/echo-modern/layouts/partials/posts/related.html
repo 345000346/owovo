@@ -1,0 +1,17 @@
+{{ $related := (where site.RegularPages "Type" "in" (slice "post"
+"posts")).Related . | first 5 }} {{ with $related }}
+
+<div
+  class="mt-6 rounded p-8 shadow lg:mt-0"
+  style="background-color: var(--card-bg-color)"
+>
+  <h2 class="text-main break-normal px-2 pb-3 font-sans text-xl font-bold">
+    相关文章
+  </h2>
+  {{ range . }}
+  <li>
+    <a href="{{ .RelPermalink }}" class="text-accent underline">{{ .Title }}</a>
+  </li>
+  {{ end }}
+</div>
+{{ end }}

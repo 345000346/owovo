@@ -9,7 +9,7 @@ defaultContentLanguage: "cn"
 title: "LIGT'S BLOG"
 
 # 使用的主题
-theme: "echo"
+theme: "echo-modern"
 
 # 禁止将 URL 转换为小写，保留原始大小写
 disablePathToLower: true
@@ -38,7 +38,6 @@ params:
   social:
     github: "345000346"
     weibo: "1733321624"
-    rss: "/rss.xml"
 
   # 指定哪些 section 的文章会出现在首页文章列表中
   mainSections:
@@ -100,7 +99,7 @@ markup:
   highlight:
     codeFences: true # 启用代码围栏
     guessSyntax: false # 禁止自动猜测语法
-    hl_Lines: "" # ���亮特定行的配置
+    hl_Lines: "" # 高亮特定行的配置
     lineNoStart: 1 # 行号起始数字
     lineNos: true # 显示行号
     lineNumbersInTable: true # 使用表格方式显示行号，避免复制时选中行号
@@ -115,3 +114,9 @@ markup:
       # Hugo 模板：如果链接以 http 开头，则在新标签页中打开
       template: |
         <a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>
+
+# 构建配置
+build:
+  # 将工作目录设置为主题目录，以便 Hugo 可以找到 node_modules
+  writeStats: true
+  workDir: themes/echo-modern

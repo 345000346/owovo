@@ -1,0 +1,28 @@
+{
+  "name": "echo-modern",
+  "version": "1.0.0",
+  "description": "A modern, decoupled Hugo theme.",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "postcss assets/css/main.css -o static/css/style.css --minify",
+    "dev": "postcss assets/css/main.css -o static/css/style.css --watch",
+    "format": "prettier --write \"./**/*.{css,js,json}\""
+  },
+  "keywords": [
+    "hugo",
+    "theme",
+    "tailwind"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "postcss-cli": "^11.0.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-go-template": "^0.0.15",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "swup": "^4.0.0",
+    "tailwindcss": "^3.4.3"
+  }
+}

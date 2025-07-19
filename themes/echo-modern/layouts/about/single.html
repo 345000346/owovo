@@ -1,0 +1,8 @@
+{{ define "main" }}
+<section class="w-full lg:w-2/3 xl:w-2/3">
+  <div class="bg-card mt-6 rounded p-8 leading-normal shadow lg:mt-0">
+    <h1 class="text-main pb-2 text-3xl font-bold">{{ .Title }}</h1>
+    <div class="post-content">{{ .Content }}</div>
+  </div>
+</section>
+{{ partial "sidebar.html" . }} {{ end }}

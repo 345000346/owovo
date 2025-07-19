@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="{{ $.Site.LanguageCode }}">
+  {{ partial "head.html" . }}
+  <script>
+    // 在页面加载时立即应用主题
+    const htmlElement = document.documentElement
+    const savedTheme = localStorage.getItem('theme') || 'light'
+    htmlElement.setAttribute('data-theme', savedTheme)
+  </script>
+
+  <body class="text-main bg-main leading-normal tracking-wider">
+    <div
+      id="overlay"
+      class="fixed inset-0 z-30 hidden bg-black bg-opacity-50"
+    ></div>
+
+    {{ partial "header.html" . }}
+
+    <main id="swup" class="transition-fade">
+      <div
+        id="container"
+        class="text-main container mx-auto flex w-full flex-wrap px-2 pt-16 lg:pt-20"
+      >
+        {{- block "main" . }}{{- end }}
+      </div>
+
+      {{ partial "footer.html" . }}
+    </main>
+
+    {{ partial "scripts.html" . }}
+  </body>
+</html>

@@ -1,0 +1,42 @@
+{{ if or .Params.reward (and .Site.Params.reward.enable (ne .Params.reward
+false)) -}} {{ $qrCode := .Site.Params.reward }}
+<div class="pt-4">
+  <p class="text-center">
+    <button
+      id="btn-donate"
+      class="inline-block rounded bg-red-400 px-5 py-2 text-white hover:bg-red-600"
+      for="reward"
+    >
+      {{ $qrCode.title }}
+    </button>
+  </p>
+  <div class="mx-2 mt-2 flex hidden flex-auto" id="donate-image">
+    <!-- Item -->
+    {{ with $qrCode.wechat -}}
+    <div class="my-2 w-full px-2">
+      <div style="background-color: var(--bg-color)">
+        <img
+          class="mx-auto h-48 w-auto object-cover shadow"
+          loading="lazy"
+          src="{{ . }}"
+          alt="微信打赏"
+        />
+        <div class="text-secondary text-center">微信打赏</div>
+      </div>
+    </div>
+    {{- end }} {{ with $qrCode.alipay -}}
+    <div class="my-2 w-full px-2">
+      <div style="background-color: var(--bg-color)">
+        <img
+          class="mx-auto h-48 w-auto object-cover shadow"
+          loading="lazy"
+          src="{{ . }}"
+          alt="支付宝打赏"
+        />
+        <div class="text-secondary text-center">支付宝打赏</div>
+      </div>
+    </div>
+    {{- end }}
+  </div>
+</div>
+{{- end }}
