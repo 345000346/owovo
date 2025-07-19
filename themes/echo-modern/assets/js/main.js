@@ -86,14 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  // System color scheme listener
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-  mediaQuery.addEventListener('change', (e) => {
-    if (!localStorage.getItem('theme')) {
-      const newTheme = e.matches ? 'dark' : 'light'
-      document.documentElement.setAttribute('data-theme', newTheme)
-    }
-  })
+  
 
   // Scroll listener
   document.addEventListener('scroll', handleScroll)
