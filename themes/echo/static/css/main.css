@@ -286,7 +286,18 @@ table tr:nth-child(2n) {
 
 @media (max-width: 1023px) {
     #nav-content {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 75%;
+        max-width: 300px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         background-color: var(--bg-color) !important;
+    }
+
+    #nav-content.is-open {
+        transform: translateX(0);
     }
 
     #container {
@@ -295,6 +306,44 @@ table tr:nth-child(2n) {
 
     main, aside {
         width: 100%;
+    }
+    
+    #nav-content {
+      background-color: var(--bg-color);
+    }
+
+    .mobile-nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .mobile-nav-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
+    .mobile-nav-list {
+      padding: 1rem;
+    }
+
+    .mobile-nav-list li {
+      margin: 0;
+    }
+
+    .mobile-nav-list a {
+      display: block;
+      padding: 0.75rem 1rem;
+      font-size: 1.1rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .mobile-nav-list a:hover {
+      background-color: var(--code-bg-color);
     }
 }
 
@@ -329,12 +378,7 @@ table tr:nth-child(2n) {
   z-index: 1000;
 }
 
-/* 确保在小屏幕上导航栏背景正确 */
-@media (max-width: 1023px) {
-  #nav-content {
-    background-color: var(--bg-color);
-  }
-}
+
 
 /* 确保在滚动时导航栏背景正确 */
 .scrolled #nav-content {
@@ -349,4 +393,11 @@ table tr:nth-child(2n) {
 
 html.is-animating .transition-fade {
   opacity: 0;
+}
+
+/* 中等屏幕的响应式调整 */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .post-content {
+    padding: 0 2rem; /* 为平板设备增加一些内边距 */
+  }
 }
