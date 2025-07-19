@@ -1,34 +1,62 @@
+{{/*
+  自定义归档页面模板
+  功能:
+  1. 获取所有类型为 'post' 或 'posts' 的文章。
+  2. 按年份进行分组。
+  3. 在每个年份内，按日期降序（从新到旧）排列文章。
+  4. 最终按年份降序（从新到旧）展示所有文章。
+*/}}
 {{ define "main" }}
-    <section class="w-full lg:w-2/3 xl:w-2/3">
+<section class="w-full lg:w-2/3 xl:w-2/3">
+    <!-- 卡片容器 -->
+    <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow bg-card">
+        <!-- 页面标题 -->
+        <p class="font-bold text-3xl pb-2 text-main">{{ .Title }}</p>
 
-    <!--Card-->
-        <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow bg-card">
-            <p class="font-bold text-3xl pb-2 text-main">{{ .Title }}</p>
+        {{/* 
+          获取所有常规页面，并筛选出类型为 "post" 或 "posts" 的文章
+          .Site.RegularPages 是 Hugo 的一个变量，包含所有可被渲染的单个页面
+        */}}
+        {{ $pages := where .Site.RegularPages "Type" "in" (slice "post" "posts") }}
 
-            {{ $pages := where .Site.RegularPages "Type" "in" (slice "post" "posts") }}
-
-            {{ range sort ($pages.GroupByDate "2006") "Key" "desc" }}
+        {{/* 
+          按年份对文章进行分组 (格式 "2006" 是 Go 语言中表示年份的特殊格式)
+          然后对年份这个 Key 本身进行降序排序，确保最新的年份在最前面
+        */}}
+        {{ range sort ($pages.GroupByDate "2006") "Key" "desc" }}
+            <!-- 显示年份 -->
             <p class="font-bold text-2xl hidden xl:inline-block pt-2 text-main">{{ .Key }}</p>
-                {{ range .Pages.ByDate.Reverse }}
-                    <div class="p-1 flex flex-row border-b border-dotted border-gray-400">
-                        <div class="xl:w-1/10 pr-10 pt-3 hidden xl:inline-block text-main" title="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">{{ .Date.Format "01-02"}}</div>
-                        <div class="xl:w-auto py-3">
-                            <p class="text-xl">
-                                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-                            </p>
-                            <p class="text-sm xl:hidden text-main">{{ .Date.Format "2006-01-02 15:04:05 MST" }}</p>
-                            <p class="text-sm text-main">
-                                {{ range .Params.tags }}
-                                    <a class="pr-2 hover:text-gray-800 text-main" href="{{ `tags/${ . | urlize }` | relURL }}">#{{ . }}</a>
-                                {{ end }}
-                            </p>
-                        </div>
+            
+            {{/* 
+              遍历该年份下的所有文章
+              使用 .Pages.ByDate.Reverse 来确保文章按日期从新到旧排序
+            */}}
+            {{ range .Pages.ByDate.Reverse }}
+                <div class="p-1 flex flex-row border-b border-dotted border-gray-400">
+                    <!-- 日期（桌面端显示） -->
+                    <div class="xl:w-1/10 pr-10 pt-3 hidden xl:inline-block text-main" title="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">
+                        {{ .Date.Format "01-02"}}
                     </div>
-
-                {{ end }}
+                    <div class="xl:w-auto py-3">
+                        <!-- 文章标题和链接 -->
+                        <p class="text-xl">
+                            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                        </p>
+                        <!-- 日期（移动端显示） -->
+                        <p class="text-sm xl:hidden text-main">{{ .Date.Format "2006-01-02 15:04:05 MST" }}</p>
+                        <!-- 标签 -->
+                        <p class="text-sm text-main">
+                            {{ range .Params.tags }}
+                                <a class="pr-2 hover:text-gray-800 text-main" href="{{ `tags/${ . | urlize }` | relURL }}">#{{ . }}</a>
+                            {{ end }}
+                        </p>
+                    </div>
+                </div>
             {{ end }}
-        </div>
-    </section>
+        {{ end }}
+    </div>
+</section>
 
-    {{ partial "sidebar.html" . }}
+{{/* 引入侧边栏 */}}
+{{ partial "sidebar.html" . }}
 {{ end }}

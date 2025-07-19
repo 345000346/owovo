@@ -1,35 +1,75 @@
+# 网站的根 URL，建议取消注释并设置为您的域名
 # baseURL: "https://owovo.xyz"
+
+# 网站默认语言
 languageCode: "zh-CN"
 defaultContentLanguage: "cn"
+
+# 网站标题
 title: "LIGT'S BLOG"
+
+# 使用的主题
 theme: "echo"
+
+# 禁止将 URL 转换为小写，保留原始大小写
 disablePathToLower: true
-# uglyurls: true
+
+# uglyurls: true # 如果取消注释，URL 将变为 /filename.html 的形式，默认为 false
+
+# 启用 CJK（中日韩）语言支持，自动统计字数
 hasCJKLanguage: true
+
+# 自动摘要的长度（字符数）
 summaryLength: 140
 
+# 自定义文章的永久链接格式
+# /:contentbasename 表示使用 content/post/下的文件名（不含扩展名）作为 URL
 permalinks:
   posts: "/:contentbasename"
 
+# 主题和网站的自定义参数
 params:
+  # 作者信息
   author:
-    avatar: "/images/avatar.webp"
-    name: "LIGT"
+    avatar: "/images/avatar.webp" # 头像路径
+    name: "LIGT" # 作者名
+
+  # 社交链接
   social:
     github: "345000346"
     weibo: "1733321624"
     rss: "/rss.xml"
+
+  # 指定哪些 section 的文章会出现在首页文章列表中
   mainSections:
     - post
+
+  # 网站图标
   favicon: "/favicon.ico"
+
+  # 网站副标题，同时用作 meta description
   subtitle: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
+  # 网站关键词
   keywords: "日常,想法,Android,Windows,手机,电脑"
+  # 网站描述，目前与副标题内容相同
   description: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
+
+  # 是否在页脚显示字数统计
   vercount: true
+
+  # Google Analytics 配置
   googleAnalytics: "G-ND67DP0RT5"
+
+  # 网站建立时间，用于计算已运行时间
   runtime: "2019-08-22T00:00:00+08:00"
+
+  # RSS 输出是否包含全文
   rssFullContent: true
+
+  # Font Awesome 的静态资源 CDN 前缀
   staticCDNPrefix: "https://cdn.bootcss.com/font-awesome/5.11.2"
+
+  # 导航栏菜单项
   navItems:
     - ["首页", "/"]
     - ["文章", "/archives/"]
@@ -37,31 +77,41 @@ params:
     - ["关于", "/about/"]
     - ["RSS", "/rss.xml"]
 
+# 输出格式定义
 outputFormats:
   RSS:
     mediatype: "application/rss"
     baseName: "rss"
 
+# 服务配置
 services:
+  # RSS 服务的特定配置
   rss:
-    limit: 5
+    limit: 5 # RSS 输出的文章数量
 
+# Markdown 渲染配置
 markup:
+  # Goldmark 渲染器配置
   goldmark:
     renderer:
+      # 允许在 Markdown 中使用原始 HTML
       unsafe: true
+  # 代码高亮配置
   highlight:
-    codeFences: true
-    guessSyntax: false
-    hl_Lines: ""
-    lineNoStart: 1
-    lineNos: true
-    lineNumbersInTable: true
-    noClasses: false
-    style: "manni"
-    tabWidth: 2
+    codeFences: true # 启用代码围栏
+    guessSyntax: false # 禁止自动猜测语法
+    hl_Lines: "" # ���亮特定行的配置
+    lineNoStart: 1 # 行号起始数字
+    lineNos: true # 显示行号
+    lineNumbersInTable: true # 使用表格方式显示行号，避免复制时选中行号
+    noClasses: false # 是否不使用 CSS class 进行高亮
+    style: "manni" # 高亮主题样式
+    tabWidth: 2 # Tab 宽度
+  # 渲染钩子（Render Hooks）配置
   renderHooks:
+    # 自定义链接的渲染方式
     link:
       enable: true
+      # Hugo 模板：如果链接以 http 开头，则在新标签页中打开
       template: |
         <a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>
