@@ -1,34 +1,37 @@
 <head>
     <meta charset="utf-8">
     <script>
-      // 立即执行以防止主题闪烁
+      // 立即执行的 JavaScript (IIFE)，用于在页面加载前应用主题，防止闪烁
       (function() {
+        // 从 localStorage 获取已保存的主题，若无则根据系统偏好设置
         const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        // 将主题设置到 HTML 根元素的 data-theme 属性上
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>
-    <!-- Hugo Generator -->
+    <!-- Hugo 生成器信息 -->
     {{ hugo.Generator }}
     
-    <!-- 基础meta信息 -->
+    <!-- 基础 SEO 和兼容性 Meta 标签 -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <!-- 作者信息 -->
+    <!-- 作者信息 (从 hugo.yaml 读取) -->
     {{ with .Site.Params.Author }}
     <meta name="author" content="{{ .name }}">
     {{ end }}
     
-    <!-- 关键词 -->
+    <!-- 页面关键词 (从 hugo.yaml 读取) -->
     {{ with .Site.Params.keywords }}
     <meta name="keywords" content="{{ . }}">
     {{ end }}
     
-    <!-- 网站信息 -->
+    <!-- Open Graph 协议的站点名称 -->
     <meta name="og:site_name" content="{{ .Site.Title }}">
     
+    {{/* 根据页面类型（首页 vs. 其他页面）设置不同的标题和描述 */}}
     {{ if .IsHome }}
-        <!-- 首页meta信息 -->
+        <!-- 首页的 Meta 信息 -->
         <meta property="og:type" content="website">
         <meta property="title" content="{{ .Site.Title }}">
         <meta property="og:title" content="{{ .Site.Title }}">
@@ -38,34 +41,34 @@
         <meta property="twitter:description" content="{{ .Site.Params.description }}">
         <title>{{ .Site.Title }}</title>
     {{ else }}
-        <!-- 文章页meta信息 -->
+        <!-- 其他页面的 Meta 信息 -->
         <meta property="og:type" content="article">
         <meta property="title" content="{{ .Title }} - {{ .Site.Title }}">
         <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">
         <meta property="twitter:title" content="{{ .Title }} - {{ .Site.Title }}">
+        {{/* 优先使用页面的 .Description，如果为空则使用 .Summary 作为描述 */}}
         <meta name="description" content="{{ default .Summary .Description }}">
         <meta property="og:description" content="{{ default .Summary .Description }}">
         <meta property="twitter:description" content="{{ default .Summary .Description }}">
         <title>{{ .Title }} - {{ .Site.Title }}</title>
     {{ end }}
     
-    <!-- 页面URL -->
+    <!-- 页面的永久链接 -->
     <meta property="og:url" content="{{ .Permalink }}">
     
-    <!-- 作者头像 -->
+    <!-- 作者头像，用于社交分享预览 -->
     {{ with .Site.Params.Author.avatar }}
-    <meta property="og:image" content="{{ . }}">
-    <meta property="twitter:image" content="{{ . }}">
+    <meta property="og:image" content="{{ . | absURL }}">
+    <meta property="twitter:image" content="{{ . | absURL }}">
     {{ end }}
     
-    <!-- 网站图标 -->
+    <!-- 网站图标 (Favicon) -->
     {{ with .Site.Params.favicon }}
-    <link rel="shortcut icon" href="{{ . }}" type="image/x-png">
+    <link rel="shortcut icon" href="{{ . | absURL }}" type="image/x-png">
     {{ end }}
     
+    {{/* Google Analytics (GA) 跟踪代码 */}}
     {{ if .Site.Params.googleAnalytics }}
-    <!-- Google Analytics 跟踪代码 -->
-    <!-- 请确保在hugo配置文件中设置googleAnalytics参数 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ .Site.Params.googleAnalytics }}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -75,22 +78,20 @@
     </script>
     {{ end }}
 
-    <!-- 使用本地Tailwind CSS框架 -->
+    <!-- 加载 CSS 样式表 -->
     <link href="{{ "css/tailwind.min.css" | absURL }}" rel="stylesheet">
-    
-    <!-- 网站主样式表 - 加载自定义的 CSS 文件 -->
     <link rel="stylesheet" href="{{ "css/main.css" | absURL }}">
     <link rel="stylesheet" href="{{ "css/custom.css" | absURL }}">
 
-    <!-- Google Fonts -->
+    <!-- 加载在线字体 (Google Fonts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
     
-    <!-- 本地阿里巴巴矢量图标库 - 加载图标字体 -->
+    <!-- 加载本地图标字体 (Iconfont) -->
     <link rel="stylesheet" href="{{ "css/iconfont.css" | absURL }}">
     
-    <!-- Vercount统计 -->
+    <!-- Vercount 网站统计脚本 -->
     {{ if .Site.Params.vercount }}
     <script defer src="https://cn.vercount.one/js"></script>
     {{ end }}
