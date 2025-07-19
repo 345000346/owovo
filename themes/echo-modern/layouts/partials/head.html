@@ -69,9 +69,8 @@
     
     
 
-    <link rel="stylesheet" href="{{ `css/style.css` | relURL }}">
-    <link rel="stylesheet" href="{{ `css/iconfont.css` | relURL }}">
-    <link rel="stylesheet" href="{{ `css/custom.css` | relURL }}">
+    {{- $styles := slice (resources.Get "css/style.css") (resources.Get "css/iconfont.css") (resources.Get "css/custom.css") | resources.Concat "css/main.css" | resources.Minify -}}
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}">
 
     <!-- 加载在线字体 (Google Fonts) -->
     <link rel="preconnect" href="https://fonts.loli.net">
