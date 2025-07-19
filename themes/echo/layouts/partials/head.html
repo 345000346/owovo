@@ -78,9 +78,10 @@
     </script>
     {{ end }}
 
-    <link rel="stylesheet" href="{{ `css/style.css` | relURL }}">
-    <link rel="stylesheet" href="{{ `css/iconfont.css` | relURL }}">
-    <link rel="stylesheet" href="{{ `css/custom.css` | relURL }}">
+    <!-- 加载 CSS 样式表 -->
+    <link href="{{ "css/tailwind.min.css" | absURL }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ "css/main.css" | absURL }}">
+    <link rel="stylesheet" href="{{ "css/custom.css" | absURL }}">
 
     <!-- 加载在线字体 (Google Fonts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -88,7 +89,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
     
     <!-- 加载本地图标字体 (Iconfont) -->
-    <!-- prettier-ignore -->
     <link rel="stylesheet" href="{{ "css/iconfont.css" | absURL }}">
     
     <!-- Vercount 网站统计脚本 -->

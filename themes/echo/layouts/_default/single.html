@@ -1,0 +1,17 @@
+{{/*
+  默认单页模板 (Single Page)
+  
+  这是一个分发器 (dispatcher) 模板。
+  它的作用是根据文章元数据中的 `type` 参数来决定加载哪个局部模板 (partial)。
+  
+  - 如果 `type` 设置为 "about" (例如在 `about.md` 的 front matter 中), 
+    它会加载 `partials/about.html`。
+  - 对于所有其他页面, 它会默认加载 `partials/post.html` 来渲染标准文章。
+*/}}
+{{ define "main" }}
+    {{- if eq .Params.type "about" -}}
+        {{ partial "about.html" . }} 
+    {{ else -}} 
+        {{ partial "post.html" . }} 
+    {{ end -}}
+{{ end }}
