@@ -1,0 +1,15 @@
+<aside class="w-full px-6 text-main leading-normal">
+    {{ partial "posts/profile.html" . }}
+
+    <div class="flex flex-col justify-between sticky top-20 pb-4">
+        {{ if or .Params.toc (and .Site.Params.toc (ne .Params.toc false)) }}
+        <div class="shadow rounded p-4 mt-5 bg-card">
+            {{ partial "posts/toc.html" . }}
+        </div>
+        {{ end }}
+
+        <div class="shadow rounded p-4 mt-5 bg-card">
+            {{ partial "posts/jinrishici.html" . }}
+        </div>
+    </div>
+</aside>
