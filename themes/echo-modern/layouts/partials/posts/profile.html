@@ -1,0 +1,46 @@
+<div class="mx-auto items-center justify-between lg:w-full">
+  <div
+    class="overflow-hidden rounded shadow"
+    style="background-color: var(--card-bg-color)"
+  >
+    <div
+      class="mx-auto mt-5 h-32 w-32 rounded-full bg-auto bg-cover"
+      style="background-image: url('{{ site.Params.author.avatar }}')"
+    ></div>
+
+    <div class="p-4">
+      <p class="pb-2 text-center text-2xl" style="color: var(--text-color)">
+        {{ site.Params.author.name }}
+      </p>
+      <p class="text-center text-sm" style="color: var(--text-color)">
+        {{ site.Params.subtitle }}
+      </p>
+    </div>
+    
+    <div
+      class="text-main flex p-4 text-sm"
+      style="border-color: var(--border-color)"
+    >
+      <div class="flex-1 border-r" style="border-color: var(--border-color)">
+        <p class="text-center" style="color: var(--text-color)">
+          文章
+          <span class="font-bold" style="color: var(--text-color)"
+            >{{ len (where site.RegularPages "Type" "in" (slice "post"
+            "posts")) }}</span
+          >
+        </p>
+      </div>
+      <div class="flex-1 text-center">
+        <p class="text-center" style="color: var(--text-color)">
+          标签
+          <span class="font-bold" style="color: var(--text-color)"
+            >{{ if isset site.Taxonomies "tags" }} {{ len site.Taxonomies.tags
+            }} {{ else }} 0 {{ end }}</span
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ partial "posts/popular.html" . }}
