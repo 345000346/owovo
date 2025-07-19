@@ -94,7 +94,7 @@ markup:
   goldmark:
     renderer:
       # 允许在 Markdown 中使用原始 HTML
-      unsafe: true
+      unsafe: false
   # 代码高亮配置
   highlight:
     codeFences: true # 启用代码围栏
@@ -113,7 +113,7 @@ markup:
       enable: true
       # Hugo 模板：如果链接以 http 开头，则在新标签页中打开
       template: |
-        <a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>
+        <a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text }}</a>
 
 # 构建配置
 build:
