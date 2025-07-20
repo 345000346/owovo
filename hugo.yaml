@@ -114,9 +114,3 @@ markup:
       # Hugo 模板：如果链接以 http 开头，则在新标签页中打开
       template: |
         <a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text }}</a>
-
-# 构建配置
-build:
-  # 将工作目录设置为主题目录，以便 Hugo 可以找到 node_modules
-  writeStats: true
-  workDir: themes/echo-modern
