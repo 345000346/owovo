@@ -17,19 +17,21 @@
   <div id="poem_sentence" class="sticky text-sm" style="top: 6em"></div>
   <br />
   <div id="poem_info"></div>
-  <script type="text/javascript">
-    jinrishici.load(function (result) {
-      var sentence = document.querySelector('#poem_sentence')
-      var info = document.querySelector('#poem_info')
-      sentence.innerHTML = result.data.content
-      info.innerHTML =
-        '【' +
-        result.data.origin.dynasty +
-        '】' +
-        result.data.origin.author +
-        '《' +
-        result.data.origin.title +
-        '》'
-    })
+  <script type="text/javascript" defer>
+    document.addEventListener("DOMContentLoaded", function() {
+      jinrishici.load(function (result) {
+        var sentence = document.querySelector('#poem_sentence')
+        var info = document.querySelector('#poem_info')
+        sentence.innerHTML = result.data.content
+        info.innerHTML =
+          '【' +
+          result.data.origin.dynasty +
+          '】' +
+          result.data.origin.author +
+          '《' +
+          result.data.origin.title +
+          '》'
+      })
+    });
   </script>
 </div>

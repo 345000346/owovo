@@ -67,17 +67,13 @@
     <link rel="shortcut icon" href="{{ . | absURL }}" type="image/x-png">
     {{ end }}
     
-    {{/* Google Analytics (GA) 跟踪代码 */}}
-    {{ if .Site.Params.googleAnalytics }}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ .Site.Params.googleAnalytics }}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '{{ .Site.Params.googleAnalytics }}');
-    </script>
+    {{ if hugo.IsProduction }}
+    {{ template "_internal/google_analytics.html" . }}
     {{ end }}
 
+    <link rel="preload" href="{{ `css/style.css` | relURL }}" as="style">
+    <link rel="preload" href="{{ `css/iconfont.css` | relURL }}" as="style">
+    <link rel="preload" href="{{ `css/custom.css` | relURL }}" as="style">
     <link rel="stylesheet" href="{{ `css/style.css` | relURL }}">
     <link rel="stylesheet" href="{{ `css/iconfont.css` | relURL }}">
     <link rel="stylesheet" href="{{ `css/custom.css` | relURL }}">
@@ -86,10 +82,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
-    
-    <!-- 加载本地图标字体 (Iconfont) -->
-    <!-- prettier-ignore -->
-    <link rel="stylesheet" href="{{ "css/iconfont.css" | absURL }}">
     
     <!-- Vercount 网站统计脚本 -->
     {{ if .Site.Params.vercount }}
