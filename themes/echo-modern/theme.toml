@@ -4,7 +4,7 @@ licenselink = "https://github.com/your-username/echo-modern/blob/main/LICENSE"
 description = "A modern, clean, and content-focused Hugo theme."
 homepage = "https://github.com/your-username/echo-modern"
 tags = ["blog", "clean", "dark mode", "responsive", "tailwind"]
-features = ["tailwind", "dark mode", "hugo pipes", "swup"]
+features = ["tailwind", "dark mode", "hugo pipes"]
 min_version = "0.91.0"
 
 [author]

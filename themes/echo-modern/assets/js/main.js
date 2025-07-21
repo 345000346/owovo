@@ -90,34 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Scroll listener
   document.addEventListener('scroll', handleScroll)
-})
 
-// --- 3. INITIALIZE SWUP ---
-const swup = new Swup()
-
-// Helper to apply theme instantly
-const applyTheme = () => {
-  const theme =
-    localStorage.getItem('theme') ||
-    (window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light')
-  document.documentElement.setAttribute('data-theme', theme)
-}
-
-// --- 4. RUN CONTENT-SPECIFIC CODE ON LOAD & PAGE VIEW ---
-const runPageScripts = () => {
+  // --- 3. RUN PAGE-SPECIFIC SCRIPTS ---
   handleExternalLinks()
   handleAccordion()
-}
-
-// Initial load
-runPageScripts()
-// After Swup navigation
-swup.hooks.on('page:view', runPageScripts)
-
-// --- 5. SWUP NAV HOOK ---
-swup.hooks.on('visit:start', () => {
-  applyTheme()
-  closeNav()
 })

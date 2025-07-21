@@ -7,7 +7,6 @@ A modern, clean, and content-focused Hugo theme. This theme is a refactored and 
 - **Modern Asset Pipeline:** Uses Hugo Pipes to process CSS and JS.
 - **Tailwind CSS:** A utility-first CSS framework for rapid UI development.
 - **Dark Mode:** Switch between light and dark mode.
-- **Page Transitions:** Smooth page transitions with Swup.
 - **Decoupled:** Theme and content are fully decoupled.
 
 ## Installation
@@ -52,9 +51,6 @@ params:
 
   # Enable word count in the footer
   vercount: true
-
-  # Google Analytics ID
-  googleAnalytics: "G-XXXXXXXXXX"
 
   # Site creation date for the runtime counter
   runtime: "2024-01-01T00:00:00+08:00"
