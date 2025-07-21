@@ -20,6 +20,21 @@ const handleThemeToggle = () => {
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
   htmlElement.setAttribute('data-theme', newTheme)
   localStorage.setItem('theme', newTheme)
+  updateBadgeThemes()
+}
+
+// Badge theme helper
+const updateBadgeThemes = () => {
+  const currentTheme = document.documentElement.getAttribute('data-theme')
+  document.querySelectorAll('.themed-badge').forEach((badge) => {
+    const lightSrc = badge.getAttribute('data-light-src')
+    const darkSrc = badge.getAttribute('data-dark-src')
+    if (currentTheme === 'dark') {
+      badge.src = darkSrc
+    } else {
+      badge.src = lightSrc
+    }
+  })
 }
 
 // Scroll helper
@@ -94,4 +109,5 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 3. RUN PAGE-SPECIFIC SCRIPTS ---
   handleExternalLinks()
   handleAccordion()
+  updateBadgeThemes()
 })

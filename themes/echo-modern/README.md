@@ -1,6 +1,6 @@
 # Echo Modern Hugo Theme
 
-A modern, clean, and content-focused Hugo theme. This theme is a refactored and decoupled version of the original Echo theme, utilizing Hugo Pipes, Tailwind CSS, and Swup for a fast and modern experience.
+A modern, clean, and content-focused Hugo theme. This theme is a refactored and decoupled version of the original Echo theme, utilizing Hugo Pipes and Tailwind CSS for a fast and modern experience.
 
 ## Features
 
