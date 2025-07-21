@@ -35,10 +35,17 @@ outputFormats:
     mediaType: "application/rss+xml" # 使用了更标准的 mediatype
     baseName: "rss"
 
+# 确保首页输出包含RSS
+outputs:
+  home: ["HTML", "RSS"]
+  section: ["HTML", "RSS"]
+  taxonomy: ["HTML", "RSS"]
+  term: ["HTML", "RSS"]
+
 # 服务配置
 services:
   rss:
-    limit: 5 # RSS 输出的文章数量
+    limit: 20 # RSS 输出的文章数量
 
 build:
   writeStats: true

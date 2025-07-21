@@ -61,9 +61,6 @@
 /* 全局字体和过渡效果 */
 body {
   font-family: 'Noto Sans SC', sans-serif;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
 }
 
 .post-content {
