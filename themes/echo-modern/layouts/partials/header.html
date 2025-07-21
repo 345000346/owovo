@@ -38,12 +38,12 @@
       id="nav-content-desktop"
     >
       <ul class="list-reset flex-1 items-center justify-end lg:flex">
-        {{- range $item := $.Site.Params.NavItems }}
+        {{- range .Site.Menus.main }}
         <li class="mr-3">
           <a
-            href="{{ index $item 1 }}"
+            href="{{ .URL }}"
             class="nav-text inline-block px-4 py-2 font-bold no-underline"
-            >{{ index $item 0 }}</a
+            >{{ .Name }}</a
           >
         </li>
         {{- end }}
@@ -110,10 +110,10 @@
   </button>
   <div class="nav-links">
     <ul class="list-reset text-center">
-      {{- range $item := $.Site.Params.NavItems }}
+      {{- range .Site.Menus.main }}
       <li class="my-4">
-        <a href="{{ index $item 1 }}" class="nav-text text-2xl font-bold"
-          >{{ index $item 0 }}</a
+        <a href="{{ .URL }}" class="nav-text text-2xl font-bold"
+          >{{ .Name }}</a
         >
       </li>
       {{- end }}

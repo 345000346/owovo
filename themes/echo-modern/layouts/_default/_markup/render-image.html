@@ -1,1 +1,21 @@
-<img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" {{ with .Title}} title="{{ . }}"{{ end }} loading="lazy" decoding="async">
+{{ $src := .Destination }}
+{{ $alt := .Text }}
+{{ $title := .Title }}
+
+{{ if strings.HasPrefix $src "http" }}
+  <img src="{{ $src | safeURL }}" alt="{{ $alt }}" {{ with $title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async">
+{{ else }}
+  {{ $image := "" }}
+  {{ if .Page.Resources.GetMatch $src }}
+    {{ $image = .Page.Resources.GetMatch $src }}
+  {{ else }}
+    {{ $image = resources.Get $src }}
+  {{ end }}
+
+  {{ if $image }}
+    {{ $processed := $image.Process "webp q75" }}
+    <img src="{{ $processed.RelPermalink }}" width="{{ $processed.Width }}" height="{{ $processed.Height }}" alt="{{ $alt }}" {{ with $title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async">
+  {{ else }}
+    <img src="{{ $src | safeURL }}" alt="{{ $alt }}" {{ with $title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async">
+  {{ end }}
+{{ end }}
