@@ -71,17 +71,21 @@
     {{ template "_internal/google_analytics.html" . }}
     {{ end }}
 
-    <link rel="preload" href="{{ `css/style.css` | relURL }}" as="style">
-    <link rel="preload" href="{{ `css/iconfont.css` | relURL }}" as="style">
-    <link rel="preload" href="{{ `css/custom.css` | relURL }}" as="style">
-    <link rel="stylesheet" href="{{ `css/style.css` | relURL }}">
-    <link rel="stylesheet" href="{{ `css/iconfont.css` | relURL }}">
-    <link rel="stylesheet" href="{{ `css/custom.css` | relURL }}">
+    {{ $gh_repo := .Site.Params.cdn.jsdelivr.github }}
+    {{ $style_css := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/themes/echo-modern/static/css/style.css" $gh_repo) (`css/style.css` | relURL) }}
+    {{ $iconfont_css := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/themes/echo-modern/static/css/iconfont.css" $gh_repo) (`css/iconfont.css` | relURL) }}
+    {{ $custom_css := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/themes/echo-modern/static/css/custom.css" $gh_repo) (`css/custom.css` | relURL) }}
 
-    <!-- 加载在线字体 (Google Fonts) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+    <link rel="preload" href="{{ $style_css }}" as="style">
+    <link rel="preload" href="{{ $iconfont_css }}" as="style">
+    <link rel="preload" href="{{ $custom_css }}" as="style">
+    <link rel="stylesheet" href="{{ $style_css }}">
+    <link rel="stylesheet" href="{{ $iconfont_css }}">
+    <link rel="stylesheet" href="{{ $custom_css }}">
+
+    <!-- 加载在线字体 (Google Fonts)，已替换为国内镜像 -->
+    <link rel="preconnect" href="https://fonts.loli.net">
+    <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
     
     <!-- Vercount 网站统计脚本 -->
     {{ if .Site.Params.vercount }}
