@@ -1,2 +1,6 @@
-<script src="{{ `js/swup.js` | relURL }}"></script>
-<script src="{{ `js/main.js` | relURL }}"></script>
+{{ $gh_repo := .Site.Params.cdn.jsdelivr.github }}
+{{ $swup_js := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/themes/echo-modern/static/js/swup.js" $gh_repo) (`js/swup.js` | relURL) }}
+{{ $main_js := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/themes/echo-modern/static/js/main.js" $gh_repo) (`js/main.js` | relURL) }}
+
+<script src="{{ $swup_js }}"></script>
+<script src="{{ $main_js }}"></script>
