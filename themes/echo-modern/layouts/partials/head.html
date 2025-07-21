@@ -7,6 +7,8 @@
         const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         // 将主题设置到 HTML 根元素的 data-theme 属性上
         document.documentElement.setAttribute('data-theme', theme);
+        // 添加一个样式来防止过渡动画导致的闪烁
+        document.documentElement.style.setProperty('transition', 'none', 'important');
       })();
     </script>
     <!-- Hugo 生成器信息 -->
@@ -65,6 +67,11 @@
     <!-- 网站图标 (Favicon) -->
     {{ with .Site.Params.favicon }}
     <link rel="shortcut icon" href="{{ . | absURL }}" type="image/x-png">
+    {{ end }}
+    
+    <!-- RSS Feed Discovery -->
+    {{ range .AlternativeOutputFormats }}
+    <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | absURL }}" title="{{ $.Site.Title }}">
     {{ end }}
     
 
