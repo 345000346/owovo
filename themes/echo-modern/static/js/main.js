@@ -99,10 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('scroll', handleScroll)
 })
 
-// --- 3. INITIALIZE SWUP ---
-const swup = new Swup()
-
-// --- 4. RUN CONTENT-SPECIFIC CODE ON LOAD & PAGE VIEW ---
+// --- 3. RUN PAGE-SPECIFIC SCRIPTS ---
 const runPageScripts = () => {
   handleExternalLinks()
   handleAccordion()
@@ -110,8 +107,3 @@ const runPageScripts = () => {
 
 // Initial load
 runPageScripts()
-// After Swup navigation
-swup.hooks.on('page:view', runPageScripts)
-
-// --- 5. SWUP NAV HOOK ---
-swup.hooks.on('visit:start', closeNav)
