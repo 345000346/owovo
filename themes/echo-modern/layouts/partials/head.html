@@ -67,9 +67,6 @@
     <link rel="shortcut icon" href="{{ . | absURL }}" type="image/x-png">
     {{ end }}
     
-    {{ if hugo.IsProduction }}
-    {{ template "_internal/google_analytics.html" . }}
-    {{ end }}
 
     {{ $gh_repo := .Site.Params.cdn.jsdelivr.github }}
     {{ $style_css := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/css/style.css" $gh_repo) (`css/style.css` | relURL) }}

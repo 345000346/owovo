@@ -40,5 +40,3 @@ outputFormats:
 services:
   rss:
     limit: 5 # RSS 输出的文章数量
-  googleAnalytics:
-    id: "G-ND67DP0RT5" # 使用了 Hugo v0.120+ 的标准配置方式
