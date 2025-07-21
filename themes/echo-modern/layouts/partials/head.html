@@ -68,17 +68,7 @@
     {{ end }}
     
 
-    {{ $gh_repo := .Site.Params.cdn.jsdelivr.github }}
-    {{ $style_css := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/css/style.css" $gh_repo) (`css/style.css` | relURL) }}
-    {{ $iconfont_css := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/css/iconfont.css" $gh_repo) (`css/iconfont.css` | relURL) }}
-    {{ $custom_css := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/css/custom.css" $gh_repo) (`css/custom.css` | relURL) }}
-
-    <link rel="preload" href="{{ $style_css }}" as="style">
-    <link rel="preload" href="{{ $iconfont_css }}" as="style">
-    <link rel="preload" href="{{ $custom_css }}" as="style">
-    <link rel="stylesheet" href="{{ $style_css }}">
-    <link rel="stylesheet" href="{{ $iconfont_css }}">
-    <link rel="stylesheet" href="{{ $custom_css }}">
+    <link rel="stylesheet" href="{{ `css/style.css` | relURL }}">
 
     <!-- 加载在线字体 (Google Fonts)，已替换为国内镜像 -->
     <link rel="preconnect" href="https://fonts.loli.net">

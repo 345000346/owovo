@@ -40,3 +40,13 @@ outputFormats:
 services:
   rss:
     limit: 5 # RSS 输出的文章数量
+
+build:
+  writeStats: true
+  use: postcss
+
+security:
+  exec:
+    allow:
+      - "^npx$"
+      - "^postcss$"
