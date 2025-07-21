@@ -2,7 +2,5 @@
 # 将此文件放置在主题的根目录，Hugo 会自动加载
 # see: https://gohugo.io/getting-started/configuration/#theme-configuration-folders
 build:
-  # 生成 hugo_stats.json，用于 PostCSS 等工具清除无用样式
-  writeStats: true
   # 将工作目录设置为当前主题目录，以便 Hugo 的 Pipes 功能能找到 node_modules
   workDir: .

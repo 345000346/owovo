@@ -15,7 +15,9 @@ title: "LIGT'S BLOG"
 
 # 使用的主题
 # 注意：在后续步骤中，我们建议使用 Hugo Modules 来管理主题，届时此项会更新
-theme: "echo-modern"
+module:
+  imports:
+    - path: themes/echo-modern
 
 # 禁止将 URL 转换为小写，保留原始大小写
 disablePathToLower: true
@@ -50,3 +52,4 @@ security:
     allow:
       - "^npx$"
       - "^postcss$"
+      - "^go$"
