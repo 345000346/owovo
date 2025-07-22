@@ -8,7 +8,7 @@ function formatTimeDiff(timeDiff) {
   };
 }
 
-// 计时器功能
+// 启动爱情计时器
 function startTimer() {
   updateTimer();
   setTimeout(startTimer, 1000);
@@ -24,7 +24,7 @@ function updateTimer() {
     `${timeUnits.day} 天 ${timeUnits.hour} 小时 ${timeUnits.minute} 分钟 ${timeUnits.second} 秒`;
 }
 
-// 背景粒子效果类
+// 背景粒子效果系统
 class ParticleSystem {
   constructor(canvas) {
     this.canvas = canvas;
@@ -103,7 +103,7 @@ class ParticleSystem {
   }
 }
 
-// 更新当前日期和时间
+// 更新页面日期时间和版权信息
 function updateDateTime() {
   const now = new Date();
   const options = { 
@@ -119,7 +119,7 @@ function updateDateTime() {
   document.querySelector('.copyright').innerHTML = `Copyright © ${now.getFullYear()} | Design by PGQ`;
 }
 
-// 页面初始化
+// 初始化页面功能
 function initPage() {
   startTimer();
   
@@ -132,5 +132,5 @@ function initPage() {
   setInterval(updateDateTime, 1000);
 }
 
-// 页面加载完成后初始化
+// 页面加载完成后执行初始化
 window.addEventListener('load', initPage);
