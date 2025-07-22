@@ -82,7 +82,7 @@ const handleExternalLinks = () => {
 
 // --- 2. ADD PERSISTENT LISTENERS ONCE ---
 document.addEventListener('DOMContentLoaded', () => {
-  // Nav click listener
+  // Nav and theme click listener
   document.body.addEventListener('click', (e) => {
     if (e.target.closest('#nav-toggle')) {
       openNav()
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ) {
       closeNav()
     }
-    // Theme toggle is also handled here since it's a click on the body
+    
     if (
       e.target.closest('#theme-toggle') ||
       e.target.closest('#theme-toggle-mobile')
@@ -101,7 +101,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  
+  // System color scheme listener
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  mediaQuery.addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      const newTheme = e.matches ? 'dark' : 'light'
+      document.documentElement.setAttribute('data-theme', newTheme)
+      updateBadgeThemes() // Also update badges on system theme change
+    }
+  })
 
   // Scroll listener
   document.addEventListener('scroll', handleScroll)
@@ -109,5 +117,28 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 3. RUN PAGE-SPECIFIC SCRIPTS ---
   handleExternalLinks()
   handleAccordion()
-  updateBadgeThemes()
+  updateBadgeThemes() // Initial badge check
 })
+
+  // Code block folding
+  const handleCodeFolding = () => {
+    document.querySelectorAll('.highlight').forEach((el) => {
+      const pre = el.querySelector('pre')
+      if (pre.scrollHeight > 200) {
+        pre.style.maxHeight = '200px'
+        const toggleBtn = document.createElement('div')
+        toggleBtn.className = 'code-toggle'
+        toggleBtn.innerHTML =
+          '<span class="code-toggle-text">展开</span><i class="iconfont icon-arrow-down"></i>'
+        toggleBtn.onclick = () => {
+          const isExpanded = pre.style.maxHeight !== '200px'
+          pre.style.maxHeight = isExpanded ? '200px' : 'none'
+          toggleBtn.querySelector('.code-toggle-text').textContent = isExpanded
+            ? '展开'
+            : '收起'
+        }
+        el.insertBefore(toggleBtn, pre)
+      }
+    })
+  }
+  handleCodeFolding()
