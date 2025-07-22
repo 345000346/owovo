@@ -1,9 +1,5 @@
 {{ define "main" }}
   {{/* Mobile sidebar - shown only on small screens, appears before content */}}
-  <div class="lg:hidden w-full px-2">
-    {{ partial "sidebar-mobile.html" . }}
-  </div>
-
   {{/* Main content */}}
   <section class="w-full lg:w-2/3 xl:w-2/3">
     <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow bg-card">
@@ -39,8 +35,6 @@
     </div>
   </section>
 
-  {{/* Desktop sidebar - shown only on large screens, appears after content */}}
-  <div class="hidden lg:block w-full lg:w-1/3 xl:w-1/3">
-    {{ partial "sidebar-desktop.html" . }}
-  </div>
+  {{/* Sidebar */}}
+  {{ partial "sidebar.html" . }}
 {{ end }}

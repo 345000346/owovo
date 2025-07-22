@@ -1,4 +1,4 @@
 {{ $gh_repo := .Site.Params.cdn.jsdelivr.github }}
-{{ $main_js := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/js/main.js" $gh_repo) (`js/main.js` | relURL) }}
+{{ $main_js := cond (isset .Site.Params.cdn.jsdelivr "github") (printf "https://cdn.jsdelivr.net/gh/%s/js/main.min.js" $gh_repo) (`js/main.min.js` | relURL) }}
 
 <script src="{{ $main_js }}"></script>

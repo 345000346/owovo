@@ -44,15 +44,3 @@
   </div>
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const accordionHeader = document.querySelector('.sidebar-accordion-header')
-    if (accordionHeader) {
-      accordionHeader.addEventListener('click', function () {
-        const accordionContent = this.nextElementSibling
-        accordionContent.style.display =
-          accordionContent.style.display === 'block' ? 'none' : 'block'
-      })
-    }
-  })
-</script>

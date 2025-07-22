@@ -4,8 +4,12 @@
   "description": "A modern, decoupled Hugo theme.",
   "main": "index.js",
   "scripts": {
+    "build": "npm run build:css && npm run build:js",
     "build:css": "postcss assets/css/main.css -o static/css/style.css --minify",
-    "dev": "postcss assets/css/main.css -o static/css/style.css --watch",
+    "build:js": "terser assets/js/main.js -o static/js/main.min.js --compress --mangle",
+    "dev": "npm run dev:css && npm run dev:js",
+    "dev:css": "postcss assets/css/main.css -o static/css/style.css --watch",
+    "dev:js": "terser assets/js/main.js -o static/js/main.min.js --watch",
     "format": "prettier --write \"./**/*.{css,js,json}\""
   },
   "keywords": [
@@ -23,6 +27,7 @@
     "prettier": "^3.6.2",
     "prettier-plugin-go-template": "^0.0.15",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "tailwindcss": "^3.4.3"
+    "tailwindcss": "^3.4.3",
+    "terser": "^5.43.1"
   }
 }
