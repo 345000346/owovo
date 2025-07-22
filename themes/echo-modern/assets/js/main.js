@@ -118,6 +118,11 @@ document.addEventListener('DOMContentLoaded', () => {
   handleExternalLinks()
   handleAccordion()
   updateBadgeThemes() // Initial badge check
+
+  // Re-enable transitions after the initial load
+  setTimeout(() => {
+    document.documentElement.style.removeProperty('transition')
+  }, 0)
 })
 
   // Code block folding
