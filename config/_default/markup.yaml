@@ -1,3 +1,5 @@
+# Goldmark 配置
 goldmark:
   renderer:
+    # 允许在 Markdown 中使用原始 HTML
     unsafe: true

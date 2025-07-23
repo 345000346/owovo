@@ -1,25 +1,35 @@
+{{/* 定义主内容区域 */}}
 {{ define "main" }}
 <section class="w-full lg:w-2/3 xl:w-2/3">
     <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow bg-card">
+        {{/* 显示页面标题 */}}
         <p class="font-bold text-3xl pb-2 text-main">{{ .Title }}</p>
 
+        {{/* 获取所有主要内容区的常规页面 */}}
         {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
 
+        {{/* 按年份对页面进行分组，并按年份降序排序 */}}
         {{ range sort ($pages.GroupByDate "2006") "Key" "desc" }}
+            {{/* 显示年份标题 */}}
             <p class="font-bold text-2xl hidden xl:inline-block pt-2 text-main">{{ .Key }}</p>
             
+            {{/* 遍历该年份下的所有文章，并按日期倒序排列 */}}
             {{ range .Pages.ByDate.Reverse }}
                 <div class="p-1 flex flex-row border-b border-dotted border-gray-400">
-                    <!-- prettier-ignore -->
+                    {{/*  prettier-ignore */}}
+                    {{/* 在大屏幕上显示月-日，鼠标悬停时显示完整日期 */}}
                     <div class="xl:w-1/10 pr-10 pt-3 hidden xl:inline-block text-main" title="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">
                         {{ .Date.Format "01-02"}}
                     </div>
                     <div class="xl:w-auto py-3">
                         <p class="text-xl">
+                            {{/* 显示文章标题和链接 */}}
                             <a href="{{ .RelPermalink }}">{{ .Title }}</a>
                         </p>
+                        {{/* 在小屏幕上显示完整日期 */}}
                         <p class="text-sm xl:hidden text-main">{{ .Date.Format "2006-01-02 15:04:05 MST" }}</p>
                         <p class="text-sm text-main">
+                            {{/* 遍历并显示文章标签 */}}
                             {{ range .Params.tags }}
                                 <a class="pr-2 hover:text-gray-800 text-main" href="{{ `tags/${ . | urlize }` | relURL }}">#{{ . }}</a>
                             {{ end }}
@@ -31,5 +41,6 @@
     </div>
 </section>
 
+{{/* 引入侧边栏 */}}
 {{ partial "sidebar.html" . }}
 {{ end }}

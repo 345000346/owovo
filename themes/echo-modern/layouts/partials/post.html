@@ -1,49 +1,57 @@
-<!-- 文章主体区域 -->
+<!-- Article Main Area -->
 <section class="w-full lg:w-2/3 xl:w-2/3">
-  <div class="bg-card mt-6 rounded px-8 py-6 leading-normal shadow lg:mt-0">
-    <!-- 文章标题 -->
-    {{ partial "posts/title.html" . }}
+  <article class="bg-card mt-6 rounded px-8 py-6 leading-normal shadow lg:mt-0">
+    <!-- Article Title -->
+    <header>
+      {{ partial "posts/title.html" . }}
+    </header>
 
-    <!-- 移动端显示的目录 (Table of Contents) -->
+    <!-- Table of Contents (Mobile) -->
     <div class="md:hidden">{{ partial "posts/toc.html" . }}</div>
 
-    <!-- 文章正文 -->
+    <!-- Article Content -->
     <div class="post-content">
       {{ .Content }}
       <hr class="mt-8" style="background-color: var(--border-color)" />
 
-      <!-- 打赏和版权声明 -->
-      {{ partial "posts/reward.html" . }} {{ partial "posts/copyright.html" . }}
+      <!-- Reward and Copyright -->
+      {{ partial "posts/reward.html" . }} 
+      {{ partial "posts/copyright.html" . }}
     </div>
 
-    <!-- 文章标签 -->
-    {{ with .Params.tags -}}
-    <div class="text-secondary pt-6 text-base md:text-sm">
-      {{ range . -}}
-      <a
-        class="bg-main text-main mr-2 inline-block rounded-full px-3 py-1 text-sm font-semibold hover:opacity-80"
-        href="{{ `tags/` | relLangURL }}{{ . | urlize }}"
-      >
-        #{{ . }}
-      </a>
+    <!-- Article Tags -->
+    <footer class="mt-6">
+      {{ with .Params.tags -}}
+      <div class="text-secondary pt-6 text-base md:text-sm">
+        {{ range . -}}
+        <a
+          class="bg-main text-main mr-2 inline-block rounded-full px-3 py-1 text-sm font-semibold hover:opacity-80"
+          href="{{ `tags/` | relLangURL }}{{ . | urlize }}"
+        >
+          #{{ . }}
+        </a>
+        {{ end }}
+      </div>
       {{ end }}
-    </div>
-    {{ end }}
 
-    <!-- 阅读次数统计 -->
-    {{ if .Site.Params.vercount }}
-    <p class="text-secondary pt-1 text-right text-sm">
-      本文有 <span id="vercount_value_page_pv">Loading</span> 次阅读
-    </p>
-    {{ end }}
+      <!-- View Count -->
+      {{ if .Site.Params.vercount }}
+      <p class="text-secondary pt-1 text-right text-sm">
+        本文有 <span id="vercount_value_page_pv">Loading</span> 次阅读
+      </p>
+      {{ end }}
+    </footer>
 
     <hr class="my-10" style="background-color: var(--border-color)" />
 
-    <!-- 相关文章 -->
-    {{ if in (slice "post" "posts") .Type }} {{ if .Site.Params.postAds }}
-    <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
-    {{ end }} {{ partial "posts/related.html" . }} {{ end }}
-  </div>
+    <!-- Related Articles -->
+    {{ if in (slice "post" "posts") .Type }}
+      {{ if .Site.Params.postAds }}
+        <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
+      {{ end }}
+      {{ partial "posts/related.html" . }}
+    {{ end }}
+  </article>
 </section>
 
 <!-- 侧边栏 -->

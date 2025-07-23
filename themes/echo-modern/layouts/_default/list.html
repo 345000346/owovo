@@ -1,28 +1,37 @@
 {{ define "main" }}
-  {{/* Mobile sidebar - shown only on small screens, appears before content */}}
-  {{/* Main content */}}
+  {{/* 移动端侧边栏 - 仅在小屏幕上显示，出现在内容之前 */}}
+  {{/* 主内容区 */}}
   <section class="w-full lg:w-2/3 xl:w-2/3">
     <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow bg-card">
         {{ if .Data.Term }}
+            {{/* 如果是标签归档页，显示标签名 */}}
             <p class="font-bold text-3xl pb-2 text-main">标签: {{.Data.Term}}</p>
         {{ else }}
+            {{/* 否则，显示“文章归档” */}}
             <p class="font-bold text-3xl pb-2 text-main">文章归档</p>
         {{ end }}
 
+        {{/* 按年份对文章进行分组 */}}
         {{ range (where .Data.Pages "Type" "in" (slice "post" "posts")).GroupByDate "2006" -}}
+            {{/* 显示年份标题 */}}
             <p class="font-bold text-2xl hidden xl:inline-block pt-2 text-main">{{ .Key }}</p>
             
+            {{/* 遍历该年份下的所有文章 */}}
             {{ range .Pages }}
                 <div class="p-1 flex flex-row border-b border-dotted" style="border-color: var(--border-color);">
                     <!-- prettier-ignore -->
+                    {{/* 在桌面端显示月-日 */}}
                     <div class="xl:w-1/10 pr-10 pt-3 hidden xl:inline-block text-main" title="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">
                         {{ .Date.Format "01-02"}}
                     </div>
                     <div class="xl:w-auto py-3">
+                        {{/* 文章标题和链接 */}}
                         <p class="text-xl">
                             <a href="{{ .RelPermalink }}">{{ .Title }}</a>
                         </p>
+                        {{/* 在移动端显示完整日期 */}}
                         <p class="text-sm xl:hidden text-main">{{ .Date.Format "2006-01-02 15:04:05 MST" }}</p>
+                        {{/* 文章标签 */}}
                         <p class="text-sm text-main">
                             {{ range .Params.tags }}
                                 <a class="pr-2 hover:text-main text-secondary" href="{{ `tags/${ . | urlize }` | relURL }}">#{{ . }}</a>
@@ -35,6 +44,6 @@
     </div>
   </section>
 
-  {{/* Sidebar */}}
+  {{/* 侧边栏 */}}
   {{ partial "sidebar.html" . }}
 {{ end }}
