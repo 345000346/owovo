@@ -1,6 +1,6 @@
-// --- 1. DEFINE ALL HELPERS ---
+// --- 1. 定义所有辅助函数 ---
 
-// Nav helpers
+// 导航辅助函数
 const closeNav = () => {
   const navContent = document.getElementById('nav-content-mobile')
   if (navContent) navContent.classList.add('hidden')
@@ -13,7 +13,7 @@ const openNav = () => {
   document.body.classList.add('overflow-hidden')
 }
 
-// Theme helper
+// 主题辅助函数
 const handleThemeToggle = () => {
   const htmlElement = document.documentElement
   const currentTheme = htmlElement.getAttribute('data-theme')
@@ -23,7 +23,7 @@ const handleThemeToggle = () => {
   updateBadgeThemes()
 }
 
-// Badge theme helper
+// 徽章主题辅助函数
 const updateBadgeThemes = () => {
   const currentTheme = document.documentElement.getAttribute('data-theme')
   document.querySelectorAll('.themed-badge').forEach((badge) => {
@@ -37,7 +37,7 @@ const updateBadgeThemes = () => {
   })
 }
 
-// Scroll helper
+// 滚动辅助函数
 const handleScroll = () => {
   const progressBar = document.querySelector('#progress')
   const scrollY = window.scrollY
@@ -53,7 +53,7 @@ const handleScroll = () => {
   }
 }
 
-// Accordion helper
+// 手风琴辅助函数
 const handleAccordion = () => {
   document.querySelectorAll('.sidebar-accordion-header').forEach((header) => {
     header.addEventListener('click', () => {
@@ -70,7 +70,7 @@ const handleAccordion = () => {
   })
 }
 
-// Content-specific helper
+// 内容特定辅助函数
 const handleExternalLinks = () => {
   const hostname = window.location.hostname
   document.querySelectorAll('a[href^="http"]').forEach((link) => {
@@ -80,9 +80,9 @@ const handleExternalLinks = () => {
   })
 }
 
-// --- 2. ADD PERSISTENT LISTENERS ONCE ---
+// --- 2. 添加持久化的事件监听器 ---
 document.addEventListener('DOMContentLoaded', () => {
-  // Nav and theme click listener
+  // 导航和主题切换的点击事件监听
   document.body.addEventListener('click', (e) => {
     if (e.target.closest('#nav-toggle')) {
       openNav()
@@ -101,31 +101,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  // System color scheme listener
+  // 监听系统颜色方案的变化
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
   mediaQuery.addEventListener('change', (e) => {
+    // 如果用户未手动设置主题，则跟随系统主题
     if (!localStorage.getItem('theme')) {
       const newTheme = e.matches ? 'dark' : 'light'
       document.documentElement.setAttribute('data-theme', newTheme)
-      updateBadgeThemes() // Also update badges on system theme change
+      updateBadgeThemes() // 同时更新徽章主题
     }
   })
 
-  // Scroll listener
+  // 滚动事件监听
   document.addEventListener('scroll', handleScroll)
 
-  // --- 3. RUN PAGE-SPECIFIC SCRIPTS ---
+  // --- 3. 运行页面特定的初始化脚本 ---
   handleExternalLinks()
   handleAccordion()
-  updateBadgeThemes() // Initial badge check
+  updateBadgeThemes() // 页面加载时初始化徽章主题
 
-  // Re-enable transitions after the initial load
+  // 初始加载后重新启用过渡效果，防止页面加载时出现闪烁
   setTimeout(() => {
     document.documentElement.style.removeProperty('transition')
   }, 0)
 })
 
-  // Code block folding
+  // 代码块折叠功能
   const handleCodeFolding = () => {
     document.querySelectorAll('.highlight').forEach((el) => {
       const pre = el.querySelector('pre')

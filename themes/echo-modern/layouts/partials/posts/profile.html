@@ -1,22 +1,27 @@
+{{/* 作者个人信息展示 */}}
 <div class="mx-auto items-center justify-between lg:w-full">
   <div
     class="overflow-hidden rounded shadow"
     style="background-color: var(--card-bg-color)"
   >
+    {{/* 作者头像 */}}
     <div
       class="mx-auto mt-5 h-32 w-32 rounded-full bg-auto bg-cover"
       style="background-image: url('{{ site.Params.author.avatar }}')"
     ></div>
 
     <div class="p-4">
+      {{/* 作者姓名 */}}
       <p class="pb-2 text-center text-2xl" style="color: var(--text-color)">
         {{ site.Params.author.name }}
       </p>
+      {{/* 网站副标题 */}}
       <p class="text-center text-sm" style="color: var(--text-color)">
         {{ site.Params.subtitle }}
       </p>
     </div>
     
+    {{/* 文章和标签统计 */}}
     <div
       class="text-main flex p-4 text-sm"
       style="border-color: var(--border-color)"
@@ -24,6 +29,7 @@
       <div class="flex-1 border-r" style="border-color: var(--border-color)">
         <p class="text-center" style="color: var(--text-color)">
           文章
+          {{/* 统计文章数量 */}}
           <span class="font-bold" style="color: var(--text-color)"
             >{{ len (where site.RegularPages "Type" "in" (slice "post"
             "posts")) }}</span
@@ -33,6 +39,7 @@
       <div class="flex-1 text-center">
         <p class="text-center" style="color: var(--text-color)">
           标签
+          {{/* 统计标签数量 */}}
           <span class="font-bold" style="color: var(--text-color)"
             >{{ if isset site.Taxonomies "tags" }} {{ len site.Taxonomies.tags
             }} {{ else }} 0 {{ end }}</span
@@ -43,4 +50,5 @@
   </div>
 </div>
 
+{{/* 引入热门文章模块 */}}
 {{ partial "posts/popular.html" . }}

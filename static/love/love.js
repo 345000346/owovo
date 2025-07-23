@@ -8,12 +8,13 @@ function formatTimeDiff(timeDiff) {
   };
 }
 
-// 启动爱情计时器
+// 启动并持续更新爱情计时器
 function startTimer() {
-  updateTimer();
-  setTimeout(startTimer, 1000);
+  updateTimer(); // 立即更新一次
+  setInterval(updateTimer, 1000); // 然后每秒更新
 }
 
+// 更新计时器显示的内容
 function updateTimer() {
   const now = new Date();
   const startDate = new Date('2021/8/13');
@@ -24,7 +25,7 @@ function updateTimer() {
     `${timeUnits.day} 天 ${timeUnits.hour} 小时 ${timeUnits.minute} 分钟 ${timeUnits.second} 秒`;
 }
 
-// 背景粒子效果系统
+// 背景爱心粒子效果系统
 class ParticleSystem {
   constructor(canvas) {
     this.canvas = canvas;
@@ -34,6 +35,7 @@ class ParticleSystem {
     this.init();
   }
 
+  // 初始化Canvas样式
   initCanvasStyle() {
     this.canvas.style.position = 'fixed';
     this.canvas.style.top = '0';
@@ -42,17 +44,20 @@ class ParticleSystem {
     this.canvas.style.pointerEvents = 'none';
   }
 
+  // 初始化系统，设置监听器并启动动画
   init() {
     this.resize();
     window.addEventListener('resize', () => this.resize());
     this.animate();
   }
 
+  // 响应窗口大小变化，调整Canvas尺寸
   resize() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
   }
 
+  // 创建单个爱心粒子
   createParticle() {
     return {
       x: Math.random() * this.canvas.width,
@@ -64,9 +69,11 @@ class ParticleSystem {
     };
   }
 
+  // 动画循环
   animate() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+    // 根据屏幕宽度调整粒子数量
     const maxParticles = window.innerWidth < 768 ? 50 : 80;
     if (this.particles.length < maxParticles) {
       this.particles.push(this.createParticle());
@@ -76,6 +83,7 @@ class ParticleSystem {
       particle.x += particle.speedX;
       particle.y += particle.speedY;
 
+      // 如果粒子移出画布，则移除
       if (particle.x < 0 || particle.x > this.canvas.width ||
           particle.y < 0 || particle.y > this.canvas.height) {
         this.particles.splice(index, 1);
@@ -88,6 +96,7 @@ class ParticleSystem {
     requestAnimationFrame(() => this.animate());
   }
 
+  // 绘制单个爱心
   drawHeart(particle) {
     this.ctx.beginPath();
     for (let i = 0; i < 100; i++) {
@@ -103,7 +112,7 @@ class ParticleSystem {
   }
 }
 
-// 更新页面日期时间和版权信息
+// 更新页面页脚的日期时间和版权信息
 function updateDateTime() {
   const now = new Date();
   const options = { 
@@ -119,7 +128,7 @@ function updateDateTime() {
   document.querySelector('.copyright').innerHTML = `Copyright © ${now.getFullYear()} | Design by PGQ`;
 }
 
-// 初始化页面功能
+// 初始化页面所有功能
 function initPage() {
   startTimer();
   
