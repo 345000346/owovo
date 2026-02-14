@@ -1,87 +1,123 @@
 <head>
-    <meta charset="utf-8">
-    <script>
-      // 立即执行的 JavaScript (IIFE)，用于在页面加载前应用主题，防止闪烁
-      (function() {
-        // 从 localStorage 获取已保存的主题，若无则根据系统偏好设置
-        const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        // 将主题设置到 HTML 根元素的 data-theme 属性上
-        document.documentElement.setAttribute('data-theme', theme);
-        // 添加一个样式来防止过渡动画导致的闪烁
-      })();
-    </script>
-    <!-- Hugo 生成器信息 -->
-    {{ hugo.Generator }}
-    
-    <!-- 基础 SEO 和兼容性 Meta 标签 -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- 作者信息 (从 hugo.yaml 读取) -->
-    {{ with .Site.Params.Author }}
-    <meta name="author" content="{{ .name }}">
-    {{ end }}
-    
-    <!-- 页面关键词 (从 hugo.yaml 读取) -->
-    {{ with .Site.Params.keywords }}
-    <meta name="keywords" content="{{ . }}">
-    {{ end }}
-    
-    <!-- Open Graph 协议的站点名称 -->
-    <meta name="og:site_name" content="{{ .Site.Title }}">
-    
-    {{/* 根据页面类型（首页 vs. 其他页面）设置不同的标题和描述 */}}
-    {{ if .IsHome }}
-        <!-- 首页的 Meta 信息 -->
-        <meta property="og:type" content="website">
-        <meta property="title" content="{{ .Site.Title }}">
-        <meta property="og:title" content="{{ .Site.Title }}">
-        <meta property="twitter:title" content="{{ .Site.Title }}">
-        <meta name="description" content="{{ .Site.Params.description }}">
-        <meta property="og:description" content="{{ .Site.Params.description }}">
-        <meta property="twitter:description" content="{{ .Site.Params.description }}">
-        <title>{{ .Site.Title }}</title>
+  <meta charset="utf-8" />
+  <script>
+    // 立即执行的 JavaScript (IIFE)，用于在页面加载前应用主题，防止闪烁
+    (function () {
+      // 从 localStorage 获取已保存的主题，若无则根据系统偏好设置
+      const theme =
+        localStorage.getItem("theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light");
+      // 将主题设置到 HTML 根元素的 data-theme 属性上
+      document.documentElement.setAttribute("data-theme", theme);
+      // 添加一个样式来防止过渡动画导致的闪烁
+    })();
+  </script>
+  <!-- Hugo 生成器信息 -->
+  {{ hugo.Generator }}
+
+  <!-- 基础 SEO 和兼容性 Meta 标签 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- 作者信息 (从 hugo.yaml 读取) -->
+  {{ with .Site.Params.Author }}
+  <meta name="author" content="{{ .name }}" />
+  {{ end }}
+
+  <!-- 页面关键词 (从 hugo.yaml 读取) -->
+  {{ with .Site.Params.keywords }}
+  <meta name="keywords" content="{{ . }}" />
+  {{ end }}
+
+  <!-- Open Graph 协议的站点名称 -->
+  <meta property="og:site_name" content="{{ .Site.Title }}" />
+
+  {{ $page_title := .Site.Title }}
+  {{ if not .IsHome }}
+    {{ $page_title = printf "%s - %s" .Title .Site.Title }}
+  {{ end }}
+  {{ $page_desc := .Site.Params.description }}
+  {{ if not .IsHome }}
+    {{ $page_desc = default .Summary .Description }}
+  {{ end }}
+  {{ $page_desc = $page_desc | plainify | htmlUnescape | chomp }}
+
+  {{ $og_type := "website" }}
+  {{ if .IsPage }}
+    {{ $og_type = "article" }}
+  {{ end }}
+
+  {{ $share_image := "" }}
+  {{ if .IsPage }}
+    {{ with .Params.image }}
+      {{ $share_image = . | absURL }}
     {{ else }}
-        <!-- 其他页面的 Meta 信息 -->
-        <meta property="og:type" content="article">
-        <meta property="title" content="{{ .Title }} - {{ .Site.Title }}">
-        <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">
-        <meta property="twitter:title" content="{{ .Title }} - {{ .Site.Title }}">
-        {{/* 优先使用页面的 .Description，如果为空则使用 .Summary 作为描述 */}}
-        <meta name="description" content="{{ default .Summary .Description }}">
-        <meta property="og:description" content="{{ default .Summary .Description }}">
-        <meta property="twitter:description" content="{{ default .Summary .Description }}">
-        <title>{{ .Title }} - {{ .Site.Title }}</title>
+      {{ with .Resources.ByType "image" }}
+        {{ $share_image = (index . 0).Permalink }}
+      {{ end }}
     {{ end }}
-    
-    <!-- 页面的永久链接 -->
-    <meta property="og:url" content="{{ .Permalink }}">
-    
-    <!-- 作者头像，用于社交分享预览 -->
-    {{ with .Site.Params.Author.avatar }}
-    <meta property="og:image" content="{{ . | absURL }}">
-    <meta property="twitter:image" content="{{ . | absURL }}">
+  {{ end }}
+  {{ if eq $share_image "" }}
+    {{ with .Site.Params.author.avatar }}
+      {{ $share_image = . | absURL }}
     {{ end }}
-    
-    <!-- 网站图标 (Favicon) -->
-    {{ with .Site.Params.favicon }}
-    <link rel="shortcut icon" href="{{ . | absURL }}" type="image/x-png">
-    {{ end }}
-    
-    <!-- RSS Feed Discovery -->
-    {{ range .AlternativeOutputFormats }}
-    <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | absURL }}" title="{{ $.Site.Title }}">
-    {{ end }}
-    
+  {{ end }}
 
-    <link rel="stylesheet" href="{{ `css/style.css` | relURL }}">
+  <meta property="og:type" content="{{ $og_type }}" />
+  <meta name="title" content="{{ $page_title }}" />
+  <meta property="og:title" content="{{ $page_title }}" />
+  <meta name="twitter:title" content="{{ $page_title }}" />
+  <meta name="description" content="{{ $page_desc }}" />
+  <meta property="og:description" content="{{ $page_desc }}" />
+  <meta name="twitter:description" content="{{ $page_desc }}" />
+  <title>{{ $page_title }}</title>
 
-    <!-- 加载在线字体 (Google Fonts)，已替换为国内镜像 -->
-    <link rel="preconnect" href="https://fonts.loli.net">
-    <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
-    
-    <!-- Vercount 网站统计脚本 -->
-    {{ if .Site.Params.vercount }}
-    <script defer src="https://cn.vercount.one/js"></script>
-    {{ end }}
+  <!-- 页面的永久链接 -->
+  <meta property="og:url" content="{{ .Permalink }}" />
+
+  <!-- 社交分享预览图 -->
+  {{ with $share_image }}
+  <meta property="og:image" content="{{ . }}" />
+  <meta name="twitter:image" content="{{ . }}" />
+  {{ end }}
+
+  <!-- 网站图标 (Favicon) -->
+  {{ with .Site.Params.favicon }}
+  <link rel="shortcut icon" href="{{ . | absURL }}" type="image/x-png" />
+  {{ end }}
+
+  <!-- RSS Feed Discovery -->
+  {{ range .AlternativeOutputFormats }}
+  <link
+    rel="{{ .Rel }}"
+    type="{{ .MediaType.Type }}"
+    href="{{ .Permalink | absURL }}"
+    title="{{ $.Site.Title }}"
+  />
+  {{ end }}
+
+  <link rel="canonical" href="{{ .Permalink }}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  {{ if .IsPage }}
+  <meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" />
+  <meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" />
+  {{ end }}
+
+  {{ partial "seo.html" . }}
+
+  <link rel="stylesheet" href="{{ `css/style.css` | relURL }}" />
+
+  <!-- 加载在线字体 (Google Fonts)，已替换为国内镜像 -->
+  <link rel="preconnect" href="https://fonts.loli.net" />
+  <link
+    href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Vercount 网站统计脚本 -->
+  {{ if .Site.Params.vercount }}
+  <script defer src="https://cn.vercount.one/js"></script>
+  {{ end }}
 </head>

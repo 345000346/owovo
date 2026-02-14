@@ -6,7 +6,7 @@
     "build": "npm run build:css && npm run build:js",
     "build:css": "postcss assets/css/main.css -o static/css/style.css",
     "build:js": "terser assets/js/main.js -o static/js/main.min.js --compress --mangle",
-    "dev": "npm run dev:css & npm run dev:js",
+    "dev": "concurrently \"npm:dev:css\" \"npm:dev:js\"",
     "dev:css": "postcss assets/css/main.css -o static/css/style.css --watch",
     "dev:js": "terser assets/js/main.js -o static/js/main.min.js --watch",
     "format": "prettier --write \"./**/*.{css,js,json}\""
@@ -20,6 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^10.4.19",
+    "concurrently": "^9.2.1",
     "postcss": "^8.4.38",
     "postcss-cli": "^11.0.0",
     "postcss-import": "^16.1.1",
