@@ -12,5 +12,5 @@ main:
     pageRef: "/about/"
     weight: 40
   - name: "RSS"
-    pageRef: "/rss.xml"
+    url: "/rss.xml"
     weight: 50

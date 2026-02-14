@@ -1,9 +1,9 @@
 ---
 title: "批量去除文件名中的空格、批量重命名"
 date: 2019-10-10T08:41:03+08:00
-toc : true
+toc: true
 tags: ["Windows","脚本"]
-categories : ["脚本"]
+categories: ["脚本"]
 
 ---
 

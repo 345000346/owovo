@@ -1,9 +1,9 @@
 ---
 title: "Flash去区域限制"
 date: 2019-12-30T02:35:38+08:00
-toc : true
+toc: true
 tags: ["工具"]
-categories : ["工具"]
+categories: ["工具"]
 ---
 
 本以为国区最多也就在安装包添加几个推广勾选的，现在看来是彻底没法用了。

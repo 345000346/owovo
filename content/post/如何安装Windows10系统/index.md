@@ -1,9 +1,9 @@
 ---
-title : "如何安装Windows10系统"
-date : 2019-09-04T18:21:39+08:00
-categories : ["Windows"]
-tags : ["Windows","系统","工具"]
-toc : true
+title: "如何安装Windows10系统"
+date: 2019-09-04T18:21:39+08:00
+categories: ["Windows"]
+tags: ["Windows","系统","工具"]
+toc: true
 ---
 
 本文讲述如何安装一个干净的`Windows10`系统。
