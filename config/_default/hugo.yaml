@@ -51,9 +51,31 @@ build:
   writeStats: true
   use: postcss
 
+# 时区配置
+timeZone: "Asia/Shanghai"
+
+# 构建超时时间
+timeout: "120s"
+
+# 启用 robots.txt 生成
+enableRobotsTXT: true
+
+# 缓存配置
+caches:
+  getresource:
+    dir: ":cacheDir/:project"
+    maxAge: "12h"
+  getjson:
+    dir: ":cacheDir/:project"
+    maxAge: "12h"
+  images:
+    dir: ":cacheDir/:project"
+    maxAge: "24h"
+
 security:
   exec:
     allow:
       - "^npx$"
       - "^postcss$"
       - "^go$"
+      - "^node$"
