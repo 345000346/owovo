@@ -2,8 +2,8 @@
 title: "使用今日诗词API"
 date: 2019-08-28T11:39:45+08:00
 tags: ["今日诗词","API"]
-categories : ["API"]
-toc : true
+categories: ["API"]
+toc: true
 ---
 
 今日诗词 API 是一个可以返回一句古诗词名句的接口。它可以通过图片和 JSON 格式调用。今日诗词 API 根据不同地点、时间、节日、季节、天气、景观、城市进行智能推荐。

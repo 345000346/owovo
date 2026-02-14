@@ -1,9 +1,9 @@
 ---
 title: "（转载）男生真的可以爱一个女生很久吗"
 date: 2019-09-05T14:19:55+08:00
-toc : true
+toc: true
 tags: ["情感"]
-categories : ["情感"]
+categories: ["情感"]
 ---
 
 本文转载自 —— [男生真的可以爱一个女生很久很久吗？ - 宏桑的回答 - 知乎](https://www.zhihu.com/question/317944434/answer/664843990)

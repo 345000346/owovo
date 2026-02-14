@@ -1,9 +1,9 @@
 ---
 title: "使用 Github Actions + Hugo + Github Pages搭建博客"
 date: 2020-01-01T13:14:18+08:00
-toc : true
+toc: true
 tags: ["Github","Hugo"]
-categories : ["Hugo"]
+categories: ["Hugo"]
 ---
 
 如果你想搭建自己的 Blog，但是又没有自己的 VPS、云服务器等，使用 Github Actions + Hugo + Github Pages搭建博客是最简单的选择。

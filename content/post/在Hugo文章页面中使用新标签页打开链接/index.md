@@ -2,8 +2,8 @@
 title: "在 Hugo 文章页面中使用新标签页打开链接"
 date: 2019-09-05T12:55:49+08:00
 tags: ["Hugo"]
-categories : ["Hugo"]
-toc : true
+categories: ["Hugo"]
+toc: true
 ---
 
 `Hugo` 使用 `Markdown` 格式来编写文章，但是在 `Markdown` 中没有编写新标签页打开网址链接的方法，造成了诸多不便
