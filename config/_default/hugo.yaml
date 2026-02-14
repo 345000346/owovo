@@ -14,7 +14,7 @@ languages:
 title: "LIGT'S BLOG"
 
 # 使用的主题
-theme: echo-modern
+theme: echo
 
 # 禁止将 URL 转换为小写，保留原始大小写
 disablePathToLower: true
