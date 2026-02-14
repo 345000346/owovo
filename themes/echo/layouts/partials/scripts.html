@@ -1,0 +1,162 @@
+<script>
+  window.onload = function() {
+    document.getElementById("nav-toggle").onclick = function() {
+      document.getElementById("nav-content").classList.toggle("hidden");
+    };
+
+    var donate = document.getElementById("btn-donate");
+    if (donate) {
+      donate.onclick = function() {
+        document.getElementById("donate-image").classList.remove("hidden");
+        donate.classList.add("hidden");
+      };
+    }
+
+    var hostname = window.location.hostname;
+    var divs = document.querySelectorAll('a[href^="http"]');
+    [].forEach.call(divs, function(div) {
+      url = div.getAttribute("href");
+      var domain = url
+        .replace("http://", "")
+        .replace("https://", "")
+        .split(/[/?#:]/)[0];
+      if (domain !== hostname) {
+        div.setAttribute("target", "_blank");
+      }
+    });
+  };
+
+  /* Progress bar */
+  //Source: https://alligator.io/js/progress-bar-javascript-css-variables/
+  var h = document.documentElement,
+    b = document.body,
+    st = "scrollTop",
+    sh = "scrollHeight",
+    progress = document.querySelector("#progress"),
+    scroll;
+  var scrollpos = window.scrollY;
+  var header = document.getElementById("header");
+  var navcontent = document.getElementById("nav-content");
+
+  document.addEventListener("scroll", function() {
+    /*Refresh scroll % width*/
+    scroll = ((h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight)) * 100;
+    progress.style.setProperty("--scroll", scroll + "%");
+
+    /*Apply classes for slide in bar*/
+    scrollpos = window.scrollY;
+
+    if (scrollpos > 10) {
+      navcontent.classList.remove("bg-gray-100");
+    } else {
+      navcontent.classList.add("bg-gray-100");
+    }
+  });
+
+  
+  // 暗色模式初始化函数
+  function initTheme() {
+    var lightIcon = document.getElementById("light-icon");
+    var darkIcon = document.getElementById("dark-icon");
+    
+    if (localStorage.theme === 'dark' || (!'theme' in localStorage && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.querySelector('html').classList.add('dark');
+      localStorage.theme = 'dark';
+      lightIcon.classList.add("hidden");
+      darkIcon.classList.remove("hidden");
+    } else {
+      document.querySelector('html').classList.remove('dark');
+      localStorage.theme = 'light';
+      lightIcon.classList.remove("hidden");
+      darkIcon.classList.add("hidden");
+    }
+  }
+
+  // 页面加载时初始化主题
+  initTheme();
+
+  // 暗色模式切换事件
+  document.getElementById('switchTheme').addEventListener('click', function() {
+    let htmlClasses = document.querySelector('html').classList;
+    var lightIcon = document.getElementById("light-icon");
+    var darkIcon = document.getElementById("dark-icon");
+    
+    if (localStorage.theme === 'dark') {
+      // 切换到亮色模式
+      htmlClasses.remove('dark');
+      localStorage.theme = 'light';
+      darkIcon.classList.add("hidden");
+      lightIcon.classList.remove("hidden");
+    } else {
+      // 切换到暗色模式
+      htmlClasses.add('dark');
+      localStorage.theme = 'dark';
+      lightIcon.classList.add("hidden");
+      darkIcon.classList.remove("hidden");
+    }
+  });
+
+  // 智能图片处理函数
+  function processImages() {
+    const images = document.querySelectorAll('.post-content img');
+    
+    images.forEach(img => {
+      // 等待图片加载完成
+      if (img.complete) {
+        applyImageStyle(img);
+      } else {
+        img.addEventListener('load', () => applyImageStyle(img));
+      }
+    });
+  }
+
+  // 应用图片样式
+  function applyImageStyle(img) {
+    const aspectRatio = img.naturalWidth / img.naturalHeight;
+    
+    // 移除之前的样式类
+    img.classList.remove('wide-image', 'narrow-image', 'tall-image');
+    
+    if (aspectRatio > 1) {
+      // 宽长方形图片 (宽高比 > 1)
+      img.classList.add('wide-image');
+    } else {
+      // 窄长方形图片 (0.7 <= 宽高比 <= 1.5)
+      img.classList.add('narrow-image');
+    }
+  }
+
+  // 页面加载完成后处理图片
+  window.addEventListener('load', processImages);
+  
+  // 如果页面使用了Turbo或其他SPA框架，也需要监听内容变化
+  if (typeof Turbo !== 'undefined') {
+    document.addEventListener('turbo:load', processImages);
+  }
+  
+  // 监听动态内容变化
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            const images = node.querySelectorAll ? node.querySelectorAll('.post-content img') : [];
+            images.forEach(img => {
+              if (img.complete) {
+                applyImageStyle(img);
+              } else {
+                img.addEventListener('load', () => applyImageStyle(img));
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+  
+  // 开始观察
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+</script>

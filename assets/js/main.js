@@ -1,0 +1,139 @@
+// --- 1. 定义所有辅助函数 ---
+
+// 导航辅助函数
+const closeNav = () => {
+  const navContent = document.getElementById('nav-content-mobile')
+  if (navContent) navContent.classList.add('hidden')
+  document.body.classList.remove('overflow-hidden')
+}
+
+const openNav = () => {
+  const navContent = document.getElementById('nav-content-mobile')
+  if (navContent) navContent.classList.remove('hidden')
+  document.body.classList.add('overflow-hidden')
+}
+
+// 主题辅助函数
+const handleThemeToggle = () => {
+  const htmlElement = document.documentElement
+  const currentTheme = htmlElement.getAttribute('data-theme')
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
+  htmlElement.setAttribute('data-theme', newTheme)
+  localStorage.setItem('theme', newTheme)
+  updateBadgeThemes()
+}
+
+// 徽章主题辅助函数
+const updateBadgeThemes = () => {
+  const currentTheme = document.documentElement.getAttribute('data-theme')
+  document.querySelectorAll('.themed-badge').forEach((badge) => {
+    const lightSrc = badge.getAttribute('data-light-src')
+    const darkSrc = badge.getAttribute('data-dark-src')
+    if (currentTheme === 'dark') {
+      badge.src = darkSrc
+    } else {
+      badge.src = lightSrc
+    }
+  })
+}
+
+// 滚动辅助函数
+const handleScroll = () => {
+  const progressBar = document.querySelector('#progress')
+  const scrollY = window.scrollY
+  const scrollHeight =
+    document.documentElement.scrollHeight -
+    document.documentElement.clientHeight
+
+  if (progressBar) {
+    progressBar.style.setProperty(
+      '--scroll',
+      `${(scrollY / scrollHeight) * 100}%`
+    )
+  }
+}
+
+// 手风琴辅助函数
+const handleAccordion = () => {
+  document.querySelectorAll('.sidebar-accordion-header').forEach((header) => {
+    header.addEventListener('click', () => {
+      const content = header.nextElementSibling
+      const arrow = header.querySelector('.accordion-arrow')
+      if (content.style.display === 'block') {
+        content.style.display = 'none'
+        arrow.style.transform = 'rotate(0deg)'
+      } else {
+        content.style.display = 'block'
+        arrow.style.transform = 'rotate(180deg)'
+      }
+    })
+  })
+}
+
+// --- 2. 添加持久化的事件监听器 ---
+document.addEventListener('DOMContentLoaded', () => {
+  // 导航和主题切换的点击事件监听
+  document.body.addEventListener('click', (e) => {
+    if (e.target.closest('#nav-toggle')) {
+      openNav()
+    } else if (
+      e.target.closest('#nav-close') ||
+      e.target.closest('#nav-content-mobile a')
+    ) {
+      closeNav()
+    }
+    
+    if (
+      e.target.closest('#theme-toggle') ||
+      e.target.closest('#theme-toggle-mobile')
+    ) {
+      handleThemeToggle()
+    }
+  })
+
+  // 监听系统颜色方案的变化
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  mediaQuery.addEventListener('change', (e) => {
+    // 如果用户未手动设置主题，则跟随系统主题
+    if (!localStorage.getItem('theme')) {
+      const newTheme = e.matches ? 'dark' : 'light'
+      document.documentElement.setAttribute('data-theme', newTheme)
+      updateBadgeThemes() // 同时更新徽章主题
+    }
+  })
+
+  // 滚动事件监听
+  document.addEventListener('scroll', handleScroll)
+
+  // --- 3. 运行页面特定的初始化脚本 ---
+  handleAccordion()
+  updateBadgeThemes() // 页面加载时初始化徽章主题
+
+  // 初始加载后重新启用过渡效果，防止页面加载时出现闪烁
+  setTimeout(() => {
+    document.documentElement.style.removeProperty('transition')
+  }, 0)
+})
+
+  // 代码块折叠功能
+  const handleCodeFolding = () => {
+    document.querySelectorAll('.highlight').forEach((el) => {
+      const pre = el.querySelector('pre')
+      if (pre.scrollHeight > 200) {
+        pre.style.maxHeight = '200px'
+        const toggleBtn = document.createElement('div')
+        toggleBtn.className = 'code-toggle'
+        toggleBtn.innerHTML =
+          '<span class="code-toggle-text">展开</span><i class="iconfont icon-arrow-down"></i>'
+        toggleBtn.onclick = () => {
+          const isExpanded = pre.style.maxHeight !== '200px'
+          pre.style.maxHeight = isExpanded ? '200px' : 'none'
+          toggleBtn.querySelector('.code-toggle-text').textContent = isExpanded
+            ? '展开'
+            : '收起'
+        }
+        el.insertBefore(toggleBtn, pre)
+      }
+    })
+  }
+  handleCodeFolding()
