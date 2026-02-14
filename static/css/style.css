@@ -812,6 +812,18 @@ video {
   }
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 .fixed {
   position: fixed;
 }
@@ -1507,7 +1519,7 @@ video {
   ); /* Shadow color for images and blocks */
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   /* Refined Palette - Dark Mode */
   --bg-color: #0d1117; /* Page background - Midnight blue, GitHub-inspired */
   --card-bg-color: #161b22; /* Card, code block background - Darker gray */
@@ -1545,7 +1557,17 @@ video {
 /* 全局字体和过渡效果 */
 
 body {
-  font-family: 'Noto Sans SC', sans-serif;
+  font-family:
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    "WenQuanYi Micro Hei",
+    "Noto Sans CJK SC",
+    "Source Han Sans SC",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
 }
 
 .post-content {
@@ -1563,7 +1585,9 @@ body {
 .post-content h4,
 .post-content h5,
 .post-content h6 {
-  font-family: 'Noto Serif SC', serif;
+  font-family:
+    "Songti SC", "STSong", "SimSun", "Noto Serif CJK SC", "Source Han Serif SC",
+    serif;
   margin: 2.5rem 0 1rem; /* 调整标题边距 */
   font-weight: 700;
   color: var(--text-color);
@@ -1676,12 +1700,12 @@ body {
 
 /* 代码块深色模式优化 */
 
-[data-theme='dark'] .highlight {
+[data-theme="dark"] .highlight {
   background: var(--code-bg-color) !important; /* 覆盖内联样式 */
   color: var(--text-color);
 }
 
-[data-theme='dark'] .highlight .ln {
+[data-theme="dark"] .highlight .ln {
   color: var(--text-color-secondary) !important;
 }
 
@@ -1720,7 +1744,7 @@ a:active {
 }
 
 .my-iconfont {
-  font-family: 'iconfont' !important;
+  font-family: "iconfont" !important;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -1801,23 +1825,23 @@ table tr:nth-child(2n) {
 
 /* Theme toggle icon visibility */
 
-[data-theme='light'] #theme-toggle-light-icon,
-[data-theme='light'] #theme-toggle-light-icon-mobile {
+[data-theme="light"] #theme-toggle-light-icon,
+[data-theme="light"] #theme-toggle-light-icon-mobile {
   display: none;
 }
 
-[data-theme='light'] #theme-toggle-dark-icon,
-[data-theme='light'] #theme-toggle-dark-icon-mobile {
+[data-theme="light"] #theme-toggle-dark-icon,
+[data-theme="light"] #theme-toggle-dark-icon-mobile {
   display: block;
 }
 
-[data-theme='dark'] #theme-toggle-light-icon,
-[data-theme='dark'] #theme-toggle-light-icon-mobile {
+[data-theme="dark"] #theme-toggle-light-icon,
+[data-theme="dark"] #theme-toggle-light-icon-mobile {
   display: block;
 }
 
-[data-theme='dark'] #theme-toggle-dark-icon,
-[data-theme='dark'] #theme-toggle-dark-icon-mobile {
+[data-theme="dark"] #theme-toggle-dark-icon,
+[data-theme="dark"] #theme-toggle-dark-icon-mobile {
   display: none;
 }
 

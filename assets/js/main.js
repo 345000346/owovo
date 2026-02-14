@@ -3,13 +3,17 @@
 // 导航辅助函数
 const closeNav = () => {
   const navContent = document.getElementById("nav-content-mobile");
+  const navToggle = document.getElementById("nav-toggle");
   if (navContent) navContent.classList.add("hidden");
+  if (navToggle) navToggle.setAttribute("aria-expanded", "false");
   document.body.classList.remove("overflow-hidden");
 };
 
 const openNav = () => {
   const navContent = document.getElementById("nav-content-mobile");
+  const navToggle = document.getElementById("nav-toggle");
   if (navContent) navContent.classList.remove("hidden");
+  if (navToggle) navToggle.setAttribute("aria-expanded", "true");
   document.body.classList.add("overflow-hidden");
 };
 

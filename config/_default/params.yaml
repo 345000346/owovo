@@ -25,6 +25,10 @@ description: "分享一些日常、没事无聊的瞎想、一些常用的工具
 # 是否在页脚显示字数统计
 vercount: true
 
+# 性能特性开关（面向中国大陆访问优化）
+features:
+  defer_stats: true
+
 # 网站建立时间，用于计算已运行时间
 runtime: "2019-08-22T00:00:00+08:00"
 
@@ -41,5 +45,5 @@ cdn:
 
 # 知识共享许可协议 (Creative Commons) 配置
 cc:
- name: "CC BY-NC-SA 4.0"
- link: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+  name: "CC BY-NC-SA 4.0"
+  link: "https://creativecommons.org/licenses/by-nc-sa/4.0/"

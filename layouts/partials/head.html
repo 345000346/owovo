@@ -36,13 +36,21 @@
 
   {{ $page_title := .Site.Title }}
   {{ if not .IsHome }}
-    {{ $page_title = printf "%s - %s" .Title .Site.Title }}
+    {{ if .Title }}
+      {{ $page_title = printf "%s - %s" .Title .Site.Title }}
+    {{ end }}
   {{ end }}
   {{ $page_desc := .Site.Params.description }}
   {{ if not .IsHome }}
     {{ $page_desc = default .Summary .Description }}
   {{ end }}
   {{ $page_desc = $page_desc | plainify | htmlUnescape | chomp }}
+  {{ if and (not .IsHome) (lt (len $page_desc) 20) }}
+    {{ $page_desc = .Summary | plainify | htmlUnescape | chomp }}
+  {{ end }}
+  {{ if lt (len $page_desc) 1 }}
+    {{ $page_desc = .Site.Params.description }}
+  {{ end }}
 
   {{ $og_type := "website" }}
   {{ if .IsPage }}
@@ -109,15 +117,27 @@
 
   <link rel="stylesheet" href="{{ `css/style.css` | relURL }}" />
 
-  <!-- 加载在线字体 (Google Fonts)，已替换为国内镜像 -->
-  <link rel="preconnect" href="https://fonts.loli.net" />
-  <link
-    href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@700&display=swap"
-    rel="stylesheet"
-  />
-
   <!-- Vercount 网站统计脚本 -->
   {{ if .Site.Params.vercount }}
-  <script defer src="https://cn.vercount.one/js"></script>
+    {{ if .Site.Params.features.defer_stats }}
+    <script>
+      (function () {
+        var load_stats = function () {
+          var script = document.createElement("script");
+          script.src = "https://cn.vercount.one/js";
+          script.defer = true;
+          document.head.appendChild(script);
+        };
+
+        if ("requestIdleCallback" in window) {
+          window.requestIdleCallback(load_stats, { timeout: 3000 });
+        } else {
+          window.addEventListener("load", load_stats, { once: true });
+        }
+      })();
+    </script>
+    {{ else }}
+    <script defer src="https://cn.vercount.one/js"></script>
+    {{ end }}
   {{ end }}
 </head>

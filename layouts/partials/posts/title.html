@@ -1,23 +1,31 @@
+{{ $page := .page }}
+{{ $heading_level := default "h1" .heading_level }}
 <div>
+    {{ if eq $heading_level "h2" }}
+    <h2 class="font-bold break-normal pt-2 pb-2 text-2xl lg:text-3xl" style="color: var(--text-color);">
+        <a href="{{ $page.Permalink }}" title="{{ $page.Title }}">{{ $page.Title }}</a>
+    </h2>
+    {{ else }}
     <h1 class="font-bold break-normal pt-2 pb-2 text-2xl lg:text-3xl" style="color: var(--text-color);">
-        <a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a>
+        <a href="{{ $page.Permalink }}" title="{{ $page.Title }}">{{ $page.Title }}</a>
     </h1>
+    {{ end }}
     <p class="mb-1 text-sm text-secondary">
         <!-- prettier-ignore -->
-        <span title="{{ .Date.Format " 2006-01-02 15:04:05 MST" }}">
-            <i class="iconfont icon-calendar" aria-hidden="true"></i>  {{ .Date.Year }}年{{ printf "%d" .Date.Month }}月{{ .Date.Day }}日
+        <span title="{{ $page.Date.Format " 2006-01-02 15:04:05 MST" }}">
+            <i class="iconfont icon-calendar" aria-hidden="true"></i>  {{ $page.Date.Year }}年{{ printf "%d" $page.Date.Month }}月{{ $page.Date.Day }}日
         </span>
 
         <span class="hidden xl:inline-block">
             |
             <i class="iconfont icon-book"></i>
-            {{  .WordCount }} 字
+            {{  $page.WordCount }} 字
         </span>
 
         <span class="hidden xl:inline-block">
             |
             <i class="iconfont icon-clock-o"></i>
-            {{  .ReadingTime }} 分钟读完
+            {{  $page.ReadingTime }} 分钟读完
         </span>
     </p>
 </div>

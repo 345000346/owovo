@@ -19,6 +19,9 @@
     <div class="block pr-4 lg:hidden">
       <button
         id="nav-toggle"
+        aria-label="打开导航菜单"
+        aria-controls="nav-content-mobile"
+        aria-expanded="false"
         class="nav-toggle-button flex appearance-none items-center rounded border px-3 py-2 focus:outline-none"
       >
         <svg
@@ -50,6 +53,7 @@
         <li class="mr-3">
           <button
             id="theme-toggle"
+            aria-label="切换深色模式"
             class="nav-text inline-block cursor-pointer border-none bg-transparent px-2 py-2 font-bold no-underline"
           >
             <svg
@@ -85,7 +89,11 @@
 
 <!-- 全屏移动端导航 -->
 <div id="nav-content-mobile" class="bg-main fixed inset-0 z-50 hidden">
-  <button id="nav-close" class="absolute right-0 top-0 mr-4 mt-4">
+  <button
+    id="nav-close"
+    aria-label="关闭导航菜单"
+    class="absolute right-0 top-0 mr-4 mt-4"
+  >
     <svg
       class="nav-text h-6 w-6"
       viewBox="0 0 24 24"
@@ -112,9 +120,7 @@
     <ul class="list-reset text-center">
       {{- range .Site.Menus.main }}
       <li class="my-4">
-        <a href="{{ .URL }}" class="nav-text text-2xl font-bold"
-          >{{ .Name }}</a
-        >
+        <a href="{{ .URL }}" class="nav-text text-2xl font-bold">{{ .Name }}</a>
       </li>
       {{- end }}
     </ul>
@@ -122,6 +128,7 @@
   <div class="theme-toggle-container">
     <button
       id="theme-toggle-mobile"
+      aria-label="切换深色模式"
       class="nav-text inline-block cursor-pointer border-none bg-transparent px-2 py-2 font-bold no-underline"
     >
       <svg

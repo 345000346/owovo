@@ -1,17 +1,20 @@
 {{ $desc := .Site.Params.description }} {{ if not .IsHome }} {{ $desc = default
 .Summary .Description }} {{ end }} {{ $desc = $desc | plainify | htmlUnescape |
-chomp }} {{ $share_image := "" }} {{ if .IsPage }} {{ with .Params.image }} {{
-$share_image = . | absURL }} {{ else }} {{ with .Resources.ByType "image" }} {{
-$share_image = (index . 0).Permalink }} {{ end }} {{ end }} {{ end }} {{ if eq
-$share_image "" }} {{ with .Site.Params.author.avatar }} {{ $share_image = . |
-absURL }} {{ end }} {{ end }} {{ $json := dict "@context" "https://schema.org"
-"@type" (cond .IsHome "WebSite" "BlogPosting") "name" (cond .IsHome .Site.Title
-.Title) "headline" (cond .IsHome .Site.Title .Title) "description" $desc
-"inLanguage" .Site.LanguageCode "url" .Permalink "image" $share_image "author"
-(dict "@type" "Person" "name" .Site.Params.author.name) "publisher" (dict
-"@type" "Person" "name" .Site.Params.author.name) }} {{ if not .IsHome }} {{
-$json = merge $json (dict "mainEntityOfPage" (dict "@type" "WebPage" "@id"
-.Permalink) "articleSection" .Section "datePublished" (.Date.Format
+chomp }} {{ if and (not .IsHome) (lt (len $desc) 20) }} {{ $desc = .Summary |
+plainify | htmlUnescape | chomp }} {{ end }} {{ if lt (len $desc) 1 }} {{ $desc
+= .Site.Params.description }} {{ end }} {{ $share_image := "" }} {{ if .IsPage
+}} {{ with .Params.image }} {{ $share_image = . | absURL }} {{ else }} {{ with
+.Resources.ByType "image" }} {{ $share_image = (index . 0).Permalink }} {{ end
+}} {{ end }} {{ end }} {{ if eq $share_image "" }} {{ with
+.Site.Params.author.avatar }} {{ $share_image = . | absURL }} {{ end }} {{ end
+}} {{ $json := dict "@context" "https://schema.org" "@type" (cond .IsHome
+"WebSite" "BlogPosting") "name" (cond .IsHome .Site.Title .Title) "headline"
+(cond .IsHome .Site.Title .Title) "description" $desc "inLanguage"
+.Site.LanguageCode "url" .Permalink "image" $share_image "author" (dict "@type"
+"Person" "name" .Site.Params.author.name) "publisher" (dict "@type" "Person"
+"name" .Site.Params.author.name) }} {{ if not .IsHome }} {{ $json = merge $json
+(dict "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+"articleSection" .Section "datePublished" (.Date.Format
 "2006-01-02T15:04:05Z07:00") "dateModified" (.Lastmod.Format
 "2006-01-02T15:04:05Z07:00") "keywords" (default (slice) .Params.tags) ) }} {{
 end }}
