@@ -3,7 +3,7 @@
   <article class="bg-card mt-6 rounded px-8 py-6 leading-normal shadow lg:mt-0">
     <!-- Article Title -->
     <header>
-      {{ partial "posts/title.html" . }}
+      {{ partial "posts/title.html" (dict "page" . "heading_level" "h1") }}
     </header>
 
     <!-- Table of Contents (Mobile) -->
@@ -15,8 +15,7 @@
       <hr class="mt-8" style="background-color: var(--border-color)" />
 
       <!-- Reward and Copyright -->
-      {{ partial "posts/reward.html" . }} 
-      {{ partial "posts/copyright.html" . }}
+      {{ partial "posts/reward.html" . }} {{ partial "posts/copyright.html" . }}
     </div>
 
     <!-- Article Tags -->
@@ -45,12 +44,9 @@
     <hr class="my-10" style="background-color: var(--border-color)" />
 
     <!-- Related Articles -->
-    {{ if in (slice "post" "posts") .Type }}
-      {{ if .Site.Params.postAds }}
-        <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
-      {{ end }}
-      {{ partial "posts/related.html" . }}
-    {{ end }}
+    {{ if in (slice "post" "posts") .Type }} {{ if .Site.Params.postAds }}
+    <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
+    {{ end }} {{ partial "posts/related.html" . }} {{ end }}
   </article>
 </section>
 

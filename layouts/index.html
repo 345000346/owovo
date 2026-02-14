@@ -1,12 +1,13 @@
 {{ define "main" }}
     <section class="w-full lg:w-2/3 xl:w-2/3 bg-card">
         <div class="px-8 py-6 mt-6 lg:mt-0 leading-normal rounded shadow">
+            <h1 class="sr-only">{{ .Site.Title }}</h1>
             
-            {{- $paginator := .Paginate (where .Site.RegularPages "Type" "in" (slice "post" "posts")) }}
+            {{- $paginator := .Paginate (where .Site.RegularPages "Type" "in" (slice "post" "posts")) 6 }}
                 {{ range $index,$data := $paginator.Pages }}
                 <article >
                     <!--Title-->
-                    {{ partial "posts/title.html" . }}
+                    {{ partial "posts/title.html" (dict "page" . "heading_level" "h2") }}
                     
                     <div class="post-content">
                         {{ .Summary }}

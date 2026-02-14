@@ -31,7 +31,7 @@
                         <p class="text-sm text-main">
                             {{/* 遍历并显示文章标签 */}}
                             {{ range .Params.tags }}
-                                <a class="pr-2 hover:text-gray-800 text-main" href="{{ `tags/${ . | urlize }` | relURL }}">#{{ . }}</a>
+                                <a class="pr-2 hover:text-gray-800 text-main" href="{{ (printf "tags/%s" (. | urlize)) | relURL }}">#{{ . }}</a>
                             {{ end }}
                         </p>
                     </div>
