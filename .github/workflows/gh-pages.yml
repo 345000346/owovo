@@ -48,14 +48,6 @@ jobs:
         run: npm ci
         working-directory: ./themes/echo
 
-      - name: Build CSS
-        run: npm run build:css
-        working-directory: ./themes/echo
-
-      - name: Build JS
-        run: npm run build:js
-        working-directory: ./themes/echo
-
       - name: Build
         run: hugo --minify
 
