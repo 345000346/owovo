@@ -59,12 +59,19 @@ const handleAccordion = () => {
     header.addEventListener("click", () => {
       const content = header.nextElementSibling;
       const arrow = header.querySelector(".accordion-arrow");
+      if (!content) {
+        return;
+      }
       if (content.style.display === "block") {
         content.style.display = "none";
-        arrow.style.transform = "rotate(0deg)";
+        if (arrow) {
+          arrow.style.transform = "rotate(0deg)";
+        }
       } else {
         content.style.display = "block";
-        arrow.style.transform = "rotate(180deg)";
+        if (arrow) {
+          arrow.style.transform = "rotate(180deg)";
+        }
       }
     });
   });

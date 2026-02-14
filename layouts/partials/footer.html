@@ -13,7 +13,11 @@
       </p>
       <p>
         Powered by
-        <a href="https://gohugo.io/" class="footer-link" target="_blank"
+        <a
+          href="https://gohugo.io/"
+          class="footer-link"
+          target="_blank"
+          rel="noopener noreferrer"
           >Hugo</a
         >
         &
@@ -21,6 +25,7 @@
           href="https://github.com/forecho/hugo-theme-echo"
           class="footer-link"
           target="_blank"
+          rel="noopener noreferrer"
           >Echo</a
         >
       </p>
@@ -48,33 +53,33 @@
         // 动态计算网站已运行时间的脚本
         function timer() {
           // 从 hugo.yaml 的 .Site.Params.runtime 获取建站时间
-          var start = new Date('{{ .Site.Params.runtime }}')
-          var t = new Date() - start
+          var start = new Date("{{ .Site.Params.runtime }}");
+          var t = new Date() - start;
 
           // 计算天、时、分、秒
-          var h = ~~((t / 1000 / 60 / 60) % 24)
+          var h = ~~((t / 1000 / 60 / 60) % 24);
           if (h < 10) {
-            h = '0' + h
+            h = "0" + h;
           }
-          var m = ~~((t / 1000 / 60) % 60)
+          var m = ~~((t / 1000 / 60) % 60);
           if (m < 10) {
-            m = '0' + m
+            m = "0" + m;
           }
-          var s = ~~((t / 1000) % 60)
+          var s = ~~((t / 1000) % 60);
           if (s < 10) {
-            s = '0' + s
+            s = "0" + s;
           }
 
           // 将计算结果更新到 HTML 元素中
-          document.getElementById('d').innerHTML = ~~(t / 1000 / 60 / 60 / 24)
-          document.getElementById('h').innerHTML = h
-          document.getElementById('m').innerHTML = m
-          document.getElementById('s').innerHTML = s
+          document.getElementById("d").innerHTML = ~~(t / 1000 / 60 / 60 / 24);
+          document.getElementById("h").innerHTML = h;
+          document.getElementById("m").innerHTML = m;
+          document.getElementById("s").innerHTML = s;
         }
         // 页面加载时立即执行一次
-        timer()
+        timer();
         // 每秒钟更新一次
-        setInterval(timer, 1000)
+        setInterval(timer, 1000);
       </script>
       {{- end }}
     </div>

@@ -1,7 +1,7 @@
 <div
   class="poem-card"
   style="
-    background-color: var(--card-background);
+    background-color: var(--card-bg-color);
     padding: 1rem;
     border-radius: 0.5rem;
   "
@@ -9,29 +9,61 @@
   <h3 class="yg:pb-6 py-2 text-base font-bold" style="color: var(--text-color)">
     今日诗词
   </h3>
-  <script
-    src="https://sdk.jinrishici.com/v2/browser/jinrishici.js"
-    charset="utf-8"
-    defer
-  ></script>
-  <div id="poem_sentence" class="sticky text-sm" style="top: 6em"></div>
+  <div class="poem-sentence sticky text-sm" style="top: 6em"></div>
   <br />
-  <div id="poem_info"></div>
+  <div class="poem-info"></div>
   <script type="text/javascript" defer>
-    document.addEventListener("DOMContentLoaded", function() {
-      jinrishici.load(function (result) {
-        var sentence = document.querySelector('#poem_sentence')
-        var info = document.querySelector('#poem_info')
-        sentence.innerHTML = result.data.content
-        info.innerHTML =
-          '【' +
+    document.addEventListener("DOMContentLoaded", function () {
+      var card = document.currentScript.closest(".poem-card");
+      if (!card) {
+        return;
+      }
+
+      var sentence = card.querySelector(".poem-sentence");
+      var info = card.querySelector(".poem-info");
+      if (!sentence || !info) {
+        return;
+      }
+
+      function renderPoem(result) {
+        sentence.textContent = result.data.content;
+        info.textContent =
+          "【" +
           result.data.origin.dynasty +
-          '】' +
+          "】" +
           result.data.origin.author +
-          '《' +
+          "《" +
           result.data.origin.title +
-          '》'
-      })
+          "》";
+      }
+
+      function loadPoem() {
+        if (!window.jinrishici || !window.jinrishici.load) {
+          return;
+        }
+        window.jinrishici.load(function (result) {
+          renderPoem(result);
+        });
+      }
+
+      if (window.jinrishici && window.jinrishici.load) {
+        loadPoem();
+        return;
+      }
+
+      if (!window.__jinrishici_script_loading) {
+        window.__jinrishici_script_loading = true;
+        var sdk = document.createElement("script");
+        sdk.src = "https://sdk.jinrishici.com/v2/browser/jinrishici.js";
+        sdk.charset = "utf-8";
+        sdk.defer = true;
+        sdk.onload = function () {
+          document.dispatchEvent(new Event("jinrishici:ready"));
+        };
+        document.head.appendChild(sdk);
+      }
+
+      document.addEventListener("jinrishici:ready", loadPoem, { once: true });
     });
   </script>
 </div>
