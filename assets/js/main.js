@@ -99,6 +99,114 @@ const handleCodeFolding = () => {
   });
 };
 
+// 今日诗词辅助函数
+const renderPoemFallback = (card) => {
+  const sentence = card.querySelector(".poem-sentence");
+  const info = card.querySelector(".poem-info");
+  if (!sentence || !info) {
+    return;
+  }
+  sentence.textContent = "今日诗词加载失败";
+  info.textContent = "";
+};
+
+const renderPoem = (card, result) => {
+  const sentence = card.querySelector(".poem-sentence");
+  const info = card.querySelector(".poem-info");
+  if (!sentence || !info) {
+    return;
+  }
+
+  if (!result || !result.data || !result.data.origin) {
+    renderPoemFallback(card);
+    return;
+  }
+
+  sentence.textContent = result.data.content;
+  info.textContent =
+    "【" +
+    result.data.origin.dynasty +
+    "】" +
+    result.data.origin.author +
+    "《" +
+    result.data.origin.title +
+    "》";
+};
+
+const loadPoemForCard = (card) => {
+  if (!window.jinrishici || !window.jinrishici.load) {
+    return;
+  }
+
+  window.jinrishici.load((result) => {
+    try {
+      renderPoem(card, result);
+    } catch (error) {
+      renderPoemFallback(card);
+    }
+  });
+};
+
+const loadPoemSdkOnce = () => {
+  if (window.jinrishici && window.jinrishici.load) {
+    document.dispatchEvent(new Event("jinrishici:ready"));
+    return;
+  }
+
+  if (window.__jinrishici_script_loading) {
+    return;
+  }
+
+  window.__jinrishici_script_loading = true;
+  const sdk = document.createElement("script");
+  sdk.src = "https://sdk.jinrishici.com/v2/browser/jinrishici.js";
+  sdk.charset = "utf-8";
+  sdk.defer = true;
+  sdk.onload = () => {
+    document.dispatchEvent(new Event("jinrishici:ready"));
+  };
+  sdk.onerror = () => {
+    document.dispatchEvent(new Event("jinrishici:error"));
+  };
+  document.head.appendChild(sdk);
+};
+
+const initPoemCards = () => {
+  const cards = document.querySelectorAll(".poem-card");
+  if (!cards.length) {
+    return;
+  }
+
+  const pendingCards = [];
+  cards.forEach((card) => {
+    if (card.dataset.jinrishiciInit === "1") {
+      return;
+    }
+    card.dataset.jinrishiciInit = "1";
+    pendingCards.push(card);
+  });
+
+  if (!pendingCards.length) {
+    return;
+  }
+
+  const onReady = () => {
+    pendingCards.forEach((card) => {
+      loadPoemForCard(card);
+    });
+  };
+
+  const onError = () => {
+    pendingCards.forEach((card) => {
+      renderPoemFallback(card);
+    });
+  };
+
+  document.addEventListener("jinrishici:ready", onReady, { once: true });
+  document.addEventListener("jinrishici:error", onError, { once: true });
+  loadPoemSdkOnce();
+};
+
 // --- 2. 添加持久化的事件监听器 ---
 document.addEventListener("DOMContentLoaded", () => {
   // 导航和主题切换的点击事件监听
@@ -145,4 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 代码块折叠功能
   handleCodeFolding();
+
+  // 今日诗词卡片加载
+  initPoemCards();
 });
