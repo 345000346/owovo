@@ -1,0 +1,9 @@
+{{ if or .Params.toc (and .Site.Params.toc (ne .Params.toc false)) }}
+<div class="bg-card mt-5 rounded p-4 shadow">
+  {{ partial "posts/toc.html" . }}
+</div>
+{{ end }} {{ if .Site.Params.features.jinrishici.enable }}
+<div class="bg-card mt-5 rounded p-4 shadow">
+  {{ partial "custom/jinrishici.html" . }}
+</div>
+{{ end }}

@@ -1,26 +1,17 @@
 <!doctype html>
-<html lang="{{ $.Site.LanguageCode }}">
+<html lang="{{ $.Site.LanguageCode }}" class="{{ $.Site.Params.htmlClass }}">
   {{ partial "head.html" . }}
 
-  <body class="text-main bg-main leading-normal tracking-wider">
-    <div
-      id="overlay"
-      class="fixed inset-0 z-30 hidden bg-black bg-opacity-50"
-    ></div>
-
+  <body class="bg-main text-main leading-normal tracking-wider">
     {{ partial "header.html" . }}
 
-    <main>
-      <div
-        id="container"
-        class="text-main container mx-auto flex w-full flex-wrap px-2 pt-16 lg:pt-20"
-      >
-        {{- block "main" . }}{{- end }}
-      </div>
+    <div
+      id="container"
+      class="container mx-auto mt-10 flex w-full flex-wrap px-2 text-main lg:pt-12"
+    >
+      {{- block "main" . }}{{- end }}
+    </div>
 
-      {{ partial "footer.html" . }}
-    </main>
-
-    {{ partial "scripts.html" . }}
+    {{ partial "footer.html" . }} {{ partial "scripts.html" . }}
   </body>
 </html>

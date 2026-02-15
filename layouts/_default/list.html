@@ -1,7 +1,5 @@
 {{ define "main" }}
-  {{/* 移动端侧边栏 - 仅在小屏幕上显示，出现在内容之前 */}}
-  {{/* 主内容区 */}}
-  <section class="w-full lg:w-2/3 xl:w-2/3">
+  <section class="w-full lg:w-3/4 xl:w-3/4">
     <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow bg-card">
         {{ if .Data.Term }}
             {{/* 如果是标签归档页，显示标签名 */}}
@@ -44,6 +42,5 @@
     </div>
   </section>
 
-  {{/* 侧边栏 */}}
   {{ partial "sidebar.html" . }}
 {{ end }}

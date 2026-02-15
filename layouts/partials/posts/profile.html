@@ -15,12 +15,13 @@
       <p class="pb-2 text-center text-2xl" style="color: var(--text-color)">
         {{ site.Params.author.name }}
       </p>
-      {{/* 网站副标题 */}}
+      {{/* 个人简介优先，未配置时回退到网站副标题 */}}
       <p class="text-center text-sm" style="color: var(--text-color)">
-        {{ site.Params.subtitle }}
+        {{ with site.Author.bio }}{{ . }}{{ else }}{{ site.Params.subtitle }}{{
+        end }}
       </p>
     </div>
-    
+
     {{/* 文章和标签统计 */}}
     <div
       class="text-main flex p-4 text-sm"
@@ -28,18 +29,16 @@
     >
       <div class="flex-1 border-r" style="border-color: var(--border-color)">
         <p class="text-center" style="color: var(--text-color)">
-          文章
-          {{/* 统计文章数量 */}}
+          文章 {{/* 统计文章数量 */}}
           <span class="font-bold" style="color: var(--text-color)"
-            >{{ len (where site.RegularPages "Type" "in" (slice "post"
-            "posts")) }}</span
+            >{{ len (where site.RegularPages "Type" "in" (slice "post" "posts"))
+            }}</span
           >
         </p>
       </div>
       <div class="flex-1 text-center">
         <p class="text-center" style="color: var(--text-color)">
-          标签
-          {{/* 统计标签数量 */}}
+          标签 {{/* 统计标签数量 */}}
           <span class="font-bold" style="color: var(--text-color)"
             >{{ if isset site.Taxonomies "tags" }} {{ len site.Taxonomies.tags
             }} {{ else }} 0 {{ end }}</span
@@ -50,5 +49,4 @@
   </div>
 </div>
 
-{{/* 引入热门文章模块 */}}
-{{ partial "posts/popular.html" . }}
+{{/* 引入热门文章模块 */}} {{ partial "posts/popular.html" . }}

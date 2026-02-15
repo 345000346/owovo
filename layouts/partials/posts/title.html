@@ -13,7 +13,12 @@
     <p class="mb-1 text-sm text-secondary">
         <!-- prettier-ignore -->
         <span title="{{ $page.Date.Format " 2006-01-02 15:04:05 MST" }}">
-            <i class="iconfont icon-calendar" aria-hidden="true"></i>  {{ $page.Date.Year }}年{{ printf "%d" $page.Date.Month }}月{{ $page.Date.Day }}日
+            <i class="iconfont icon-calendar" aria-hidden="true"></i>
+            {{ with site.Params.dateFormat }}
+              {{ $page.Date.Format . }}
+            {{ else }}
+              {{ $page.Date.Year }}年{{ printf "%d" $page.Date.Month }}月{{ $page.Date.Day }}日
+            {{ end }}
         </span>
 
         <span class="hidden xl:inline-block">

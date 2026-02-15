@@ -1,2 +1,2 @@
-{{/* 默认单页模板：统一使用 partials/post.html 渲染页面内容 */}} {{ define
-"main" }} {{ partial "post.html" . }} {{ end }}
+{{ define "main" }} {{- if eq .Params.type "about" -}} {{ partial "about.html" .
+}} {{- else -}} {{ partial "post.html" . }} {{- end -}} {{ end }}

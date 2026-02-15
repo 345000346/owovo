@@ -1,4 +1,11 @@
-<script src="{{ `js/main.min.js` | relURL }}"></script>
+{{ $scripts := resources.Get "js/main.js" }} {{ if hugo.IsServer }}
+<script src="{{ $scripts.RelPermalink }}"></script>
+{{ else }} {{ $scripts := $scripts | minify | fingerprint }}
+<script
+  src="{{ $scripts.RelPermalink }}"
+  integrity="{{ $scripts.Data.Integrity }}"
+></script>
+{{ end }}
 <script
   src="//instant.page/5.2.0"
   type="module"

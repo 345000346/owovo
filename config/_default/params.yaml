@@ -28,6 +28,9 @@ vercount: true
 # 性能特性开关（面向中国大陆访问优化）
 features:
   defer_stats: true
+  jinrishici:
+    enable: true
+    position: "sidebar"
 
 # 网站建立时间，用于计算已运行时间
 runtime: "2019-08-22T00:00:00+08:00"
