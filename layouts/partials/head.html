@@ -40,53 +40,26 @@
       {{ $page_title = printf "%s - %s" .Title .Site.Title }}
     {{ end }}
   {{ end }}
-  {{ $page_desc := .Site.Params.description }}
-  {{ if not .IsHome }}
-    {{ $page_desc = default .Summary .Description }}
-  {{ end }}
-  {{ $page_desc = $page_desc | plainify | htmlUnescape | chomp }}
-  {{ if and (not .IsHome) (lt (len $page_desc) 20) }}
-    {{ $page_desc = .Summary | plainify | htmlUnescape | chomp }}
-  {{ end }}
-  {{ if lt (len $page_desc) 1 }}
-    {{ $page_desc = .Site.Params.description }}
-  {{ end }}
-
+  {{ $meta := partial "internal/get-page-meta.html" . }}
   {{ $og_type := "website" }}
   {{ if .IsPage }}
     {{ $og_type = "article" }}
-  {{ end }}
-
-  {{ $share_image := "" }}
-  {{ if .IsPage }}
-    {{ with .Params.image }}
-      {{ $share_image = . | absURL }}
-    {{ else }}
-      {{ with .Resources.ByType "image" }}
-        {{ $share_image = (index . 0).Permalink }}
-      {{ end }}
-    {{ end }}
-  {{ end }}
-  {{ if eq $share_image "" }}
-    {{ with .Site.Params.author.avatar }}
-      {{ $share_image = . | absURL }}
-    {{ end }}
   {{ end }}
 
   <meta property="og:type" content="{{ $og_type }}" />
   <meta name="title" content="{{ $page_title }}" />
   <meta property="og:title" content="{{ $page_title }}" />
   <meta name="twitter:title" content="{{ $page_title }}" />
-  <meta name="description" content="{{ $page_desc }}" />
-  <meta property="og:description" content="{{ $page_desc }}" />
-  <meta name="twitter:description" content="{{ $page_desc }}" />
+  <meta name="description" content="{{ $meta.desc }}" />
+  <meta property="og:description" content="{{ $meta.desc }}" />
+  <meta name="twitter:description" content="{{ $meta.desc }}" />
   <title>{{ $page_title }}</title>
 
   <!-- 页面的永久链接 -->
   <meta property="og:url" content="{{ .Permalink }}" />
 
   <!-- 社交分享预览图 -->
-  {{ with $share_image }}
+  {{ with $meta.image }}
   <meta property="og:image" content="{{ . }}" />
   <meta name="twitter:image" content="{{ . }}" />
   {{ end }}
