@@ -2,19 +2,17 @@
 
 // 导航辅助函数
 const closeNav = () => {
-  const navContent = document.getElementById("nav-content-mobile");
+  const navContent = document.getElementById("nav-content");
   const navToggle = document.getElementById("nav-toggle");
   if (navContent) navContent.classList.add("hidden");
   if (navToggle) navToggle.setAttribute("aria-expanded", "false");
-  document.body.classList.remove("overflow-hidden");
 };
 
 const openNav = () => {
-  const navContent = document.getElementById("nav-content-mobile");
+  const navContent = document.getElementById("nav-content");
   const navToggle = document.getElementById("nav-toggle");
   if (navContent) navContent.classList.remove("hidden");
   if (navToggle) navToggle.setAttribute("aria-expanded", "true");
-  document.body.classList.add("overflow-hidden");
 };
 
 // 主题辅助函数
@@ -55,30 +53,6 @@ const handleScroll = () => {
       `${(scrollY / scrollHeight) * 100}%`,
     );
   }
-};
-
-// 手风琴辅助函数
-const handleAccordion = () => {
-  document.querySelectorAll(".sidebar-accordion-header").forEach((header) => {
-    header.addEventListener("click", () => {
-      const content = header.nextElementSibling;
-      const arrow = header.querySelector(".accordion-arrow");
-      if (!content) {
-        return;
-      }
-      if (content.style.display === "block") {
-        content.style.display = "none";
-        if (arrow) {
-          arrow.style.transform = "rotate(0deg)";
-        }
-      } else {
-        content.style.display = "block";
-        if (arrow) {
-          arrow.style.transform = "rotate(180deg)";
-        }
-      }
-    });
-  });
 };
 
 // 代码块折叠辅助函数
@@ -216,18 +190,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // 导航和主题切换的点击事件监听
   document.body.addEventListener("click", (e) => {
     if (e.target.closest("#nav-toggle")) {
-      openNav();
-    } else if (
-      e.target.closest("#nav-close") ||
-      e.target.closest("#nav-content-mobile a")
-    ) {
+      const navContent = document.getElementById("nav-content");
+      if (navContent && navContent.classList.contains("hidden")) {
+        openNav();
+      } else {
+        closeNav();
+      }
+    } else if (e.target.closest("#nav-content a")) {
       closeNav();
     }
 
-    if (
-      e.target.closest("#theme-toggle") ||
-      e.target.closest("#theme-toggle-mobile")
-    ) {
+    if (e.target.closest("#switchTheme")) {
       handleThemeToggle();
     }
   });
@@ -247,7 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("scroll", handleScroll);
 
   // --- 3. 运行页面特定的初始化脚本 ---
-  handleAccordion();
   updateBadgeThemes(); // 页面加载时初始化徽章主题
 
   // 初始加载后重新启用过渡效果，防止页面加载时出现闪烁

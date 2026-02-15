@@ -1,9 +1,0 @@
-<!-- 
-  该文件是 Hugo 的链接渲染钩子（Render Hook），用于自定义 Markdown 中链接的渲染方式。
-  .Destination: 链接的 URL
-  .Title: 链接的标题
-  .Text: 链接的文本
-  strings.HasPrefix .Destination "http": 判断链接是否以 "http" 开头，即是否为外部链接
-  target="_blank" rel="noopener": 如果是外部链接，则在新标签页中打开，并增加安全性
--->
-<a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text }}</a>
