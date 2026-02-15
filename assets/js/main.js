@@ -15,43 +15,90 @@ const openNav = () => {
   if (navToggle) navToggle.setAttribute("aria-expanded", "true");
 };
 
-// 主题辅助函数
+// 主题辅助函数（与原主题机制保持一致：使用 html.dark）
+const applyThemeIcons = (isDark) => {
+  const lightIcon = document.getElementById("light-icon");
+  const darkIcon = document.getElementById("dark-icon");
+  if (!lightIcon || !darkIcon) {
+    return;
+  }
+
+  if (isDark) {
+    lightIcon.classList.add("hidden");
+    darkIcon.classList.remove("hidden");
+  } else {
+    lightIcon.classList.remove("hidden");
+    darkIcon.classList.add("hidden");
+  }
+};
+
+const initTheme = () => {
+  const htmlElement = document.documentElement;
+  const isDark =
+    localStorage.theme === "dark" ||
+    (!("theme" in localStorage) &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  if (isDark) {
+    htmlElement.classList.add("dark");
+    localStorage.theme = "dark";
+  } else {
+    htmlElement.classList.remove("dark");
+    localStorage.theme = "light";
+  }
+
+  applyThemeIcons(isDark);
+  updateBadgeThemes(isDark);
+};
+
 const handleThemeToggle = () => {
   const htmlElement = document.documentElement;
-  const currentTheme = htmlElement.getAttribute("data-theme");
-  const newTheme = currentTheme === "dark" ? "light" : "dark";
-  htmlElement.setAttribute("data-theme", newTheme);
-  localStorage.setItem("theme", newTheme);
-  updateBadgeThemes();
+  const isDark = htmlElement.classList.contains("dark");
+  const nextDark = !isDark;
+
+  if (nextDark) {
+    htmlElement.classList.add("dark");
+    localStorage.theme = "dark";
+  } else {
+    htmlElement.classList.remove("dark");
+    localStorage.theme = "light";
+  }
+
+  applyThemeIcons(nextDark);
+  updateBadgeThemes(nextDark);
 };
 
 // 徽章主题辅助函数
-const updateBadgeThemes = () => {
-  const currentTheme = document.documentElement.getAttribute("data-theme");
+const updateBadgeThemes = (isDark = document.documentElement.classList.contains("dark")) => {
   document.querySelectorAll(".themed-badge").forEach((badge) => {
     const lightSrc = badge.getAttribute("data-light-src");
     const darkSrc = badge.getAttribute("data-dark-src");
-    if (currentTheme === "dark") {
-      badge.src = darkSrc;
-    } else {
-      badge.src = lightSrc;
-    }
+    badge.src = isDark ? darkSrc : lightSrc;
   });
 };
 
 // 滚动辅助函数
 const handleScroll = () => {
   const progressBar = document.querySelector("#progress");
+  const navcontent = document.getElementById("nav-content");
   const scrollY = window.scrollY;
   const scrollHeight =
     document.documentElement.scrollHeight -
     document.documentElement.clientHeight;
 
-  if (progressBar) {
+  if (progressBar && scrollHeight > 0) {
     progressBar.style.setProperty(
       "--scroll",
       `${(scrollY / scrollHeight) * 100}%`,
     );
+  }
+
+  if (navcontent) {
+    if (scrollY > 10) {
+      navcontent.classList.remove("bg-gray-100");
+    } else {
+      navcontent.classList.add("bg-gray-100");
+    }
   }
 };
 
@@ -230,9 +277,14 @@ document.addEventListener("DOMContentLoaded", () => {
   mediaQuery.addEventListener("change", (e) => {
     // 如果用户未手动设置主题，则跟随系统主题
     if (!localStorage.getItem("theme")) {
-      const newTheme = e.matches ? "dark" : "light";
-      document.documentElement.setAttribute("data-theme", newTheme);
-      updateBadgeThemes(); // 同时更新徽章主题
+      const isDark = e.matches;
+      if (isDark) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+      applyThemeIcons(isDark);
+      updateBadgeThemes(isDark);
     }
   });
 
@@ -240,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("scroll", handleScroll);
 
   // --- 3. 运行页面特定的初始化脚本 ---
-  updateBadgeThemes(); // 页面加载时初始化徽章主题
+  initTheme(); // 页面加载时初始化主题与徽章
 
   // 初始加载后重新启用过渡效果，防止页面加载时出现闪烁
   setTimeout(() => {
@@ -252,4 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 今日诗词卡片加载
   initPoemCards();
+
+  // 初始化滚动进度和导航背景
+  handleScroll();
 });
