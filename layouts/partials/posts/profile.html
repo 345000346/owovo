@@ -2,13 +2,15 @@
   <div class="bg-white shadow rounded overflow-hidden dark:bg-gray-800">
     <div
       class="bg-cover mx-auto w-32 h-32 mt-5 rounded-full"
-      style="background-image: url('{{ .Site.Author.avatar }}')"
+      style="background-image: url('{{ default .Site.Author.avatar .Site.Params.author.avatar }}')"
     ></div>
 
     <div class="p-4">
-      <p class="text-2xl text-center pb-2">{{ .Site.Author.name }}</p>
+      <p class="text-2xl text-center pb-2">
+        {{ default .Site.Author.name .Site.Params.author.name }}
+      </p>
       <p class="text-sm text-center text-gray-700 dark:text-gray-300">
-        {{ .Site.Author.bio }}
+        {{ default .Site.Author.bio .Site.Params.author.bio }}
       </p>
     </div>
     <div
@@ -227,6 +229,12 @@
   </div>
 </div>
 
-{{ partial "posts/popular.html" . }} {{ if .Site.Params.profileAds }}
+{{ if and .Site.Params.features.jinrishici.enable (eq
+.Site.Params.features.jinrishici.position "sidebar") }}
+<div class="poem-card bg-white shadow rounded p-4 mt-5 dark:bg-gray-800">
+  <p class="poem-sentence">今日诗词加载中...</p>
+  <p class="poem-info text-sm text-gray-500 mt-2"></p>
+</div>
+{{ end }} {{ partial "posts/popular.html" . }} {{ if .Site.Params.profileAds }}
 <div class="profile-ads">{{ .Site.Params.profileAds | safeHTML }}</div>
 {{ end }}
