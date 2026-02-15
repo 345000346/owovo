@@ -1,46 +1,68 @@
 {{ define "main" }}
-  <section class="w-full lg:w-3/4 xl:w-3/4">
-    <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow bg-card">
-        {{ if .Data.Term }}
-            {{/* 如果是标签归档页，显示标签名 */}}
-            <p class="font-bold text-3xl pb-2 text-main">标签: {{.Data.Term}}</p>
-        {{ else }}
-            {{/* 否则，显示“文章归档” */}}
-            <p class="font-bold text-3xl pb-2 text-main">文章归档</p>
-        {{ end }}
+    <section class="w-full lg:w-3/4 xl:w-3/4">
 
-        {{/* 按年份对文章进行分组 */}}
-        {{ range (where .Data.Pages "Type" "in" (slice "post" "posts")).GroupByDate "2006" -}}
-            {{/* 显示年份标题 */}}
-            <p class="font-bold text-2xl hidden xl:inline-block pt-2 text-main">{{ .Key }}</p>
-            
-            {{/* 遍历该年份下的所有文章 */}}
-            {{ range .Pages }}
-                <div class="p-1 flex flex-row border-b border-dotted" style="border-color: var(--border-color);">
-                    <!-- prettier-ignore -->
-                    {{/* 在桌面端显示月-日 */}}
-                    <div class="xl:w-1/10 pr-10 pt-3 hidden xl:inline-block text-main" title="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">
-                        {{ .Date.Format "01-02"}}
-                    </div>
-                    <div class="xl:w-auto py-3">
-                        {{/* 文章标题和链接 */}}
-                        <p class="text-xl">
-                            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-                        </p>
-                        {{/* 在移动端显示完整日期 */}}
-                        <p class="text-sm xl:hidden text-main">{{ .Date.Format "2006-01-02 15:04:05 MST" }}</p>
-                        {{/* 文章标签 */}}
-                        <p class="text-sm text-main">
-                            {{ range .Params.tags }}
-                                <a class="pr-2 hover:text-main text-secondary" href="{{ (printf "tags/%s" (. | urlize)) | relURL }}">#{{ . }}</a>
-                            {{ end }}
-                        </p>
-                    </div>
-                </div>
+    <!--Card-->
+        <div class="p-8 mt-6 lg:mt-0 leading-normal rounded shadow bg-white dark:bg-gray-800 dark:text-gray-200">
+            {{ if .Data.Term }}
+                <p class="font-bold text-3xl pb-2">标签：{{.Data.Term}}</p>
+            {{ else }}
+                
+                <p class="font-bold text-3xl pb-2">那年今天</p>
+                {{ $review := false }}
+                {{ range where .Data.Pages "Type" "in" (slice "post" "posts") }}
+                    {{ if eq (.Date.Format "01-02") (now.Format "01-02")}}
+                        <div class="p-1 flex flex-row border-b border-dotted border-gray-400">
+                            <div class="text-gray-600 dark:text-gray-300 xl:w-1/10 pr-10 pt-3 hidden xl:inline-block" title="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">{{ .Date.Format "01-02"}}</div>
+                            <div class="xl:w-auto py-3">
+                                <p class="text-xl">
+                                    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                                </p>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm  xl:hidden">{{ .Date.Format "2006-01-02 15:04:05 MST" }}</p>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">
+                                    {{ range .Params.tags }}
+                                        <a class="pr-2 hover:text-gray-800 dark:hover:text-gray-200" href="{{ $.Site.BaseURL }}/tags/{{ . | urlize }}{{ if $.Site.Params.uglyURLs }}.html{{ end }}">#{{ . }}</a>
+                                    {{ end }}
+                                </p>
+                            </div>
+                        </div>
+                        {{ $review = true}}
+                    {{ end }}
+                   
+                {{ end }}
+                {{ if not $review }}
+                    <p class="text-gray-600 text-sm">无</p>
+                {{ end }}
+                <p class="font-bold text-3xl pb-2 pt-4">文章归档</p>
+
             {{ end }}
-        {{ end }}
-    </div>
-  </section>
 
-  {{ partial "sidebar.html" . }}
+            {{ range (where .Data.Pages "Type" "in" (slice "post" "posts")).GroupByDate "2006" -}}
+            <div>
+                <p class="font-bold text-2xl hidden xl:inline-block bg-white dark:bg-gray-800 sticky pt-2" style="top:2em;">{{ .Key }}</p>
+                {{ range .Pages }}
+                    <div class="p-1 flex flex-row border-b border-dotted border-gray-400">
+                        <div class="text-gray-600 dark:text-gray-300 xl:w-1/10 pr-10 pt-3 hidden xl:inline-block" title="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">{{ .Date.Format "01-02"}}</div>
+                        <div class="xl:w-auto py-3">
+                            <p class="text-xl">
+                                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                            </p>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm  xl:hidden">{{ .Date.Format "2006-01-02 15:04:05 MST" }}</p>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">
+                                {{ range .Params.tags }}
+                                    <a class="pr-2 hover:text-gray-800 dark:hover:text-gray-200" href="{{ $.Site.BaseURL }}/tags/{{ . | urlize }}{{ if $.Site.Params.uglyURLs }}.html{{ end }}">#{{ . }}</a>
+                                {{ end }}
+                            </p>
+                        </div>
+                    </div>
+
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+    </section>
+
+    <div class="hidden md:block w-full lg:w-1/4 xl:w-1/4 px-6 leading-normal">
+
+        {{ partial "posts/profile.html" . }}
+    </div>
 {{ end }}

@@ -39,3 +39,84 @@
 #overlay {
   transition: opacity 0.3s ease-in-out;
 }
+
+/* 主题切换按钮焦点样式 */
+#switchTheme:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* 主题图标显示控制 */
+[data-theme="light"] #light-icon {
+  display: none;
+}
+
+[data-theme="light"] #dark-icon {
+  display: block;
+}
+
+[data-theme="dark"] #light-icon {
+  display: block;
+}
+
+[data-theme="dark"] #dark-icon {
+  display: none;
+}
+
+/* 顶部阅读进度条 */
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    var(--scroll-color) var(--scroll, 0),
+    transparent 0
+  );
+  z-index: 1000;
+}
+
+/* 页面切换淡入淡出动画 */
+.transition-fade {
+  opacity: 1;
+  transition: opacity 0.25s ease-in-out;
+}
+
+html.is-animating .transition-fade {
+  opacity: 0;
+}
+
+/* 中等屏幕调整 */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .post-content {
+    padding: 0 2rem;
+  }
+}
+
+/* 移动端布局 */
+@media (max-width: 1023px) {
+  #container {
+    flex-direction: column;
+  }
+
+  main,
+  aside {
+    width: 100%;
+  }
+}
+
+/* 桌面端布局 */
+@media (min-width: 1024px) {
+  #nav-toggle {
+    display: none;
+  }
+}
