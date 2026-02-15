@@ -23,5 +23,8 @@ Thumbs.db
 *.swp
 *.swo
 
+# OpenCode runtime
+.omc/
+
 # Logs
 *.log
