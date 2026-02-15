@@ -80,9 +80,6 @@ body {
   line-height: 1.8; /* 增加行高以提高可读性 */
   color: var(--text-color);
   margin-bottom: 2rem;
-  max-width: 800px; /* 限制最大宽度 */
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .post-content h1,
