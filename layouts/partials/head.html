@@ -70,7 +70,7 @@
 
   {{ partial "seo.html" . }}
 
-  {{ $styles := resources.Get "css/main.css" | postCSS (dict "config" "./assets/css/postcss.config.js") }}
+  {{ $styles := resources.Get "css/main.css" | postCSS (dict "config" "./postcss.config.js") }}
   {{ if hugo.IsServer }}
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" />
   {{ else }}
