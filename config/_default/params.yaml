@@ -44,7 +44,7 @@ staticCDNPrefix: "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.1
 # CDN 加速配置
 cdn:
   jsdelivr:
-    github: "345000346/345000346.github.io@master" # 请替换为您的 GitHub 用户名/仓库名@分支名
+    github: "345000346/345000346.github.io@master"
 
 # 知识共享许可协议 (Creative Commons) 配置
 cc:

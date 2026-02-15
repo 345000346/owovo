@@ -13,7 +13,6 @@
   {{ hugo.Generator }}
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="generator" content="Saber v0.11.2" />
   {{ if .Site.Params.author.name }}
   <meta name="author" content="{{ .Site.Params.author.name }}" />
   {{ end }} {{ if .Site.Params.keywords }}
@@ -78,7 +77,6 @@
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" />
   {{ end }}
 
-  <link rel="stylesheet" href="https://at.alicdn.com/t/font_1607597_jhmihcvh0tm.css" />
   <link href="{{ "index.xml" | relURL }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
 
   {{ if .Site.Params.vercount }} {{ if .Site.Params.features.defer_stats }}
