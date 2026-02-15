@@ -70,7 +70,7 @@
 
   {{ partial "seo.html" . }}
 
-  {{ $styles := resources.Get "css/main.css" | postCSS (dict "config" "./themes/echo/assets/css/postcss.config.js") }}
+  {{ $styles := resources.Get "css/main.css" | postCSS (dict "config" "./assets/css/postcss.config.js") }}
   {{ if hugo.IsServer }}
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" />
   {{ else }}
@@ -78,8 +78,10 @@
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" />
   {{ end }}
 
+  {{ $static_prefix := .Site.Params.staticPrefix }}
+  {{ if not $static_prefix }}{{ $static_prefix = .Site.Params.staticCDNPrefix }}{{ end }}
   <link rel="stylesheet" href="//at.alicdn.com/t/font_1607597_jhmihcvh0tm.css" />
-  <link href="{{ .Site.Params.staticPrefix }}{{ "index.xml" | relURL }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
+  <link href="{{ $static_prefix }}{{ "index.xml" | relURL }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
 
   {{ if .Site.Params.vercount }} {{ if .Site.Params.features.defer_stats }}
   <script>

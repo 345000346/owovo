@@ -1,10 +1,15 @@
-@import "iconfont.css";
-@import "custom.css";
+/* 基础入口：保持 Tailwind 三层不变 */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* themes/echo/static/css/main.css */
+/* 兼容上游图标字体 */
+@import "iconfont.css";
+
+/* 本地自定义补丁（个性化样式集中在此） */
+@import "custom.css";
+
+/* === 本地主题扩展（保持现有视觉行为） === */
 
 /* 统一颜色变量 */
 :root {
@@ -307,82 +312,4 @@ table tr th {
 
 table tr:nth-child(2n) {
   background: var(--card-bg-color);
-}
-
-/* 为主题切换按钮添加对键盘友好的自定义聚焦样式 */
-#switchTheme:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
-  box-shadow: none;
-}
-
-/* 滚动条美化 */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-/* Theme toggle icon visibility */
-[data-theme="light"] #light-icon {
-  display: none;
-}
-[data-theme="light"] #dark-icon {
-  display: block;
-}
-[data-theme="dark"] #light-icon {
-  display: block;
-}
-[data-theme="dark"] #dark-icon {
-  display: none;
-}
-
-/* 进度条 */
-#progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(
-    to right,
-    var(--scroll-color) var(--scroll, 0),
-    transparent 0
-  );
-  z-index: 1000;
-}
-
-/* Swup 动画 */
-.transition-fade {
-  opacity: 1;
-  transition: opacity 0.25s ease-in-out;
-}
-
-html.is-animating .transition-fade {
-  opacity: 0;
-}
-
-/* 中等屏幕的响应式调整 */
-@media (min-width: 769px) and (max-width: 1023px) {
-  .post-content {
-    padding: 0 2rem; /* 为平板设备增加一些内边距 */
-  }
-}
-
-/* 移动端布局 */
-@media (max-width: 1023px) {
-  #container {
-    flex-direction: column;
-  }
-
-  main,
-  aside {
-    width: 100%;
-  }
-}
-
-/* 桌面端布局 */
-@media (min-width: 1024px) {
-  #nav-toggle {
-    display: none;
-  }
 }

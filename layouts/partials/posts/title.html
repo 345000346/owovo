@@ -1,36 +1,22 @@
-{{ $page := .page }}
-{{ $heading_level := default "h1" .heading_level }}
 <div>
-    {{ if eq $heading_level "h2" }}
-    <h2 class="font-bold break-normal pt-2 pb-2 text-2xl lg:text-3xl" style="color: var(--text-color);">
-        <a href="{{ $page.Permalink }}" title="{{ $page.Title }}">{{ $page.Title }}</a>
-    </h2>
-    {{ else }}
-    <h1 class="font-bold break-normal pt-2 pb-2 text-2xl lg:text-3xl" style="color: var(--text-color);">
-        <a href="{{ $page.Permalink }}" title="{{ $page.Title }}">{{ $page.Title }}</a>
+    <h1 class="font-bold break-normal text-gray-800 pt-2 pb-2 text-2xl lg:text-3xl dark:text-gray-200">
+        <a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a>
     </h1>
-    {{ end }}
-    <p class="mb-1 text-sm text-secondary">
-        <!-- prettier-ignore -->
-        <span title="{{ $page.Date.Format " 2006-01-02 15:04:05 MST" }}">
-            <i class="iconfont icon-calendar" aria-hidden="true"></i>
-            {{ with site.Params.dateFormat }}
-              {{ $page.Date.Format . }}
-            {{ else }}
-              {{ $page.Date.Year }}年{{ printf "%d" $page.Date.Month }}月{{ $page.Date.Day }}日
-            {{ end }}
+    <p class="mb-1 text-sm text-gray-500 dark:text-gray-200">
+        <span title="{{ .Date.Format " 2006-01-02 15:04:05 MST" }}">
+            <i class="iconfont icon-calendar" aria-hidden="true"></i> {{ .Date.Format "02 Jan 2006" }}
         </span>
 
         <span class="hidden xl:inline-block">
             |
             <i class="iconfont icon-book"></i>
-            {{  $page.WordCount }} 字
+            {{  .WordCount }} 字
         </span>
 
         <span class="hidden xl:inline-block">
             |
             <i class="iconfont icon-clock-o"></i>
-            {{  $page.ReadingTime }} 分钟读完
+            {{  .ReadingTime }} 分钟读完
         </span>
     </p>
 </div>

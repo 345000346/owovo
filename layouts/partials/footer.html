@@ -1,84 +1,68 @@
-<!-- 页脚 -->
-<footer class="footer-container mt-10 border-t border-gray-400 shadow">
-  <div
-    class="text-secondary container mx-auto flex flex-col items-center justify-between py-8 md:flex-row"
-  >
-    <!-- 左侧区域: 版权和技术栈 -->
-    <div class="mb-4 w-full text-center md:mb-0 md:w-1/3 md:text-left">
+<footer class="bg-white dark:bg-gray-800 border-gray-400 shadow mt-10">
+  <div class="container mx-auto flex py-8">
+    <div class="w-full text-center text-gray-600 dark:text-gray-400">
       <p>
         &copy; {{ now.Format "2006" }}
-        <a href="{{ .Site.BaseURL | absURL }}" class="footer-link"
+        <a
+          class="text-gray-700 dark:text-gray-300 font-semibold"
+          href="{{ .Site.BaseURL | absURL }}"
           >{{ .Site.Title }}</a
         >
+        By {{ .Site.Params.author.name }}
       </p>
-      <p>
+
+      <p class="pt-1">
         Powered by
         <a
+          rel="nofollow noreferer noopener"
           href="https://gohugo.io/"
-          class="footer-link"
+          class="text-gray-700 dark:text-gray-300 font-semibold"
           target="_blank"
-          rel="noopener noreferrer"
           >Hugo</a
         >
-        &
+        Theme based on
         <a
           href="https://github.com/forecho/hugo-theme-echo"
-          class="footer-link"
+          class="text-gray-700 dark:text-gray-300 font-semibold"
           target="_blank"
-          rel="noopener noreferrer"
           >Echo</a
         >
       </p>
-    </div>
 
-    <!-- 中间区域: 网站统计和社交链接 -->
-    <div class="mb-4 w-full text-center md:mb-0 md:w-1/3">
       {{ if .Site.Params.vercount }}
-      <div id="vercount-container" class="mb-2">
-        <span id="vercount_value_site_pv">Loading</span> Visitors |
-        <span id="vercount_value_site_uv">Loading</span> Views
-      </div>
-      {{ end }}
-    </div>
-
-    <!-- 右侧区域: 网站运行时间 -->
-    <div class="w-full text-center md:w-1/3 md:text-right">
-      {{/* 检查是否在 hugo.yaml 中配置了 runtime 参数 */}} {{ if
-      .Site.Params.runtime }}
-      <p>
+      <p class="pt-1">
+        <span id="vercount_value_site_uv">Loading</span> Visitors |
+        <span id="vercount_value_site_pv">Loading</span> Views
+      </p>
+      {{ else if .Site.Params.busuanzi -}}
+      <span id="busuanzi_container">
+        访客数：<span id="busuanzi_value_site_uv"></span> | 访问量
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+      {{- end }} {{ if .Site.Params.runtime }}
+      <p class="pt-1">
         Running for <b id="d"></b>d <b id="h"></b>h <b id="m"></b>m
         <b id="s"></b>s
       </p>
       <script>
-        // 动态计算网站已运行时间的脚本
         function timer() {
-          // 从 hugo.yaml 的 .Site.Params.runtime 获取建站时间
           var start = new Date("{{ .Site.Params.runtime }}");
           var t = new Date() - start;
 
-          // 计算天、时、分、秒
           var h = ~~((t / 1000 / 60 / 60) % 24);
-          if (h < 10) {
-            h = "0" + h;
-          }
+          if (h < 10) h = "0" + h;
           var m = ~~((t / 1000 / 60) % 60);
-          if (m < 10) {
-            m = "0" + m;
-          }
+          if (m < 10) m = "0" + m;
           var s = ~~((t / 1000) % 60);
-          if (s < 10) {
-            s = "0" + s;
-          }
+          if (s < 10) s = "0" + s;
 
-          // 将计算结果更新到 HTML 元素中
           document.getElementById("d").innerHTML = ~~(t / 1000 / 60 / 60 / 24);
           document.getElementById("h").innerHTML = h;
           document.getElementById("m").innerHTML = m;
           document.getElementById("s").innerHTML = s;
         }
-        // 页面加载时立即执行一次
+
         timer();
-        // 每秒钟更新一次
         setInterval(timer, 1000);
       </script>
       {{- end }}

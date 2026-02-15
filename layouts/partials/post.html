@@ -1,54 +1,72 @@
-<!-- Section container -->
+<!--Section container-->
 <section class="w-full lg:w-3/4 xl:w-3/4">
-  <!-- Card -->
-  <article class="bg-card mt-6 rounded px-8 py-6 leading-normal shadow lg:mt-0">
-    <!-- Article Title -->
-    <header>
-      {{ partial "posts/title.html" (dict "page" . "heading_level" "h1") }}
-    </header>
+  <!--Card-->
+  <div
+    class="px-8 py-6 mt-6 lg:mt-0 leading-normal rounded shadow bg-white dark:bg-gray-800"
+  >
+    <!--Title-->
+    {{ partial "posts/title.html" . }}
 
-    <!-- Table of Contents (Mobile) -->
-    <div class="md:hidden">{{ partial "posts/toc.html" . }}</div>
+    <div class="md:hidden dark:text-gray-100">
+      {{ partial "posts/toc.html" . }}
+    </div>
 
-    <!-- Article Content -->
-    <div class="post-content">
+    <div class="post-content dark:text-gray-300">
       {{ .Content }}
-      <hr class="mt-8" style="background-color: var(--border-color)" />
 
-      <!-- Reward and Copyright -->
+      <hr class="bg-gray-300 mt-8" />
+
       {{ partial "posts/reward.html" . }} {{ partial "posts/copyright.html" . }}
     </div>
 
-    <!-- Article Tags -->
-    <footer class="mt-6">
-      {{ with .Params.tags -}}
-      <div class="text-secondary pt-6 text-base md:text-sm">
-        {{ range . -}}
-        <a
-          class="bg-main text-main mr-2 inline-block rounded-full px-3 py-1 text-sm font-semibold hover:opacity-80"
-          href="{{ `tags/` | relLangURL }}{{ . | urlize }}"
-        >
-          #{{ . }}
-        </a>
-        {{ end }}
-      </div>
+    <!--Tags -->
+    {{ with .Params.tags -}}
+    <div class="text-base md:text-sm text-gray-500 pt-6">
+      {{ range . -}}
+      <a
+        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 hover:bg-gray-300"
+        href="{{ $.Site.BaseURL }}/tags/{{ . | urlize }}{{ if $.Site.Params.uglyURLs }}.html{{ end }}"
+      >
+        #{{ . }}
+      </a>
       {{ end }}
+    </div>
+    {{ end }}
 
-      <!-- View Count -->
-      {{ if .Site.Params.vercount }}
-      <p class="text-secondary pt-1 text-right text-sm">
-        本文有 <span id="vercount_value_page_pv">Loading</span> 次阅读
-      </p>
-      {{ end }}
-    </footer>
+    <!-- Counter busuanzi -->
+    {{ if .Site.Params.busuanzi }}
+    <p class="text-gray-500 text-sm text-right pt-1">
+      <span id="busuanzi_container_page_pv">
+        本文有 <span id="busuanzi_value_page_pv"></span> 次阅读
+      </span>
+    </p>
+    {{ end }}
+  </div>
+  <!--/Card-->
 
-    <hr class="my-10" style="background-color: var(--border-color)" />
+  <!--divider-->
+  <hr class="bg-gray-300 dark:bg-gray-300 my-10" />
 
-    <!-- Related Articles -->
-    {{ if in (slice "post" "posts") .Type }} {{ if .Site.Params.postAds }}
-    <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
-    {{ end }} {{ partial "posts/related.html" . }} {{ end }}
-  </article>
+  {{ if in (slice "post" "posts") .Type }} {{ if .Site.Params.postAds }}
+  <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
+  {{ end }}
+  <!-- split -->
+  <div class="comments">{{ partial "posts/comments.html" . }}</div>
+
+  <div class="related my-5">{{ partial "posts/related.html" . }}</div>
+
+  {{ end }}
 </section>
+<!--/Section container-->
 
-{{ partial "sidebar.html" . }}
+<div class="hidden xl:text-sm xl:block xl:w-1/4 xl:px-6">
+  {{ partial "posts/profile.html" . }}
+
+  <div
+    class="flex flex-col justify-between sticky top-0 pt-12 pb-4 -mt-10 text-gray-600 dark:text-gray-400"
+  >
+    <div class="bg-white shadow rounded p-4 mt-5 dark:bg-gray-800">
+      {{ partial "posts/toc.html" . }}
+    </div>
+  </div>
+</div>
