@@ -9,7 +9,7 @@
     "dev": "concurrently \"npm:dev:css\" \"npm:dev:js\"",
     "dev:css": "postcss assets/css/main.css -o static/css/style.css --watch",
     "dev:js": "terser assets/js/main.js -o static/js/main.min.js --watch",
-    "format": "prettier --write \"./**/*.{css,js,json}\""
+    "format": "prettier --write \"./**/*.{html,css,js,json,md}\""
   },
   "keywords": [
     "hugo",
