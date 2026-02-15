@@ -1,13 +1,11 @@
 /* 基础入口：保持 Tailwind 三层不变 */
+/* 兼容上游图标字体 */
+@import "iconfont.css";
+/* 本地自定义补丁（个性化样式集中在此） */
+@import "custom.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* 兼容上游图标字体 */
-@import "iconfont.css";
-
-/* 本地自定义补丁（个性化样式集中在此） */
-@import "custom.css";
 
 /* === 本地主题扩展（保持现有视觉行为） === */
 
