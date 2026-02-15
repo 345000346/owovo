@@ -52,7 +52,7 @@ jobs:
       - name: Build frontend assets
         run: npm run build
 
-      - name: Install Node.js dependencies
+      - name: Install theme dependencies
         run: npm ci
         working-directory: ./themes/echo
 

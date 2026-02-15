@@ -128,7 +128,7 @@ body {
 
 .post-content ul ul ul {
   list-style-type: square;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .post-content ul.list-none {
@@ -201,11 +201,13 @@ body {
 }
 
 /* 代码块深色模式优化 */
+/* 使用 !important 覆盖 Hugo Chroma 生成的内联样式，这是必要的使用场景 */
 [data-theme="dark"] .highlight {
-  background: var(--code-bg-color) !important; /* 覆盖内联样式 */
+  background: var(--code-bg-color) !important;
   color: var(--text-color);
 }
 
+/* 行号颜色覆盖，同样需要 !important 以覆盖 Chroma 内联样式 */
 [data-theme="dark"] .highlight .ln {
   color: var(--text-color-secondary) !important;
 }
