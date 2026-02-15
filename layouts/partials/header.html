@@ -1,38 +1,29 @@
-<nav id="header" class="fixed top-0 z-10 w-full bg-card shadow">
+<nav id="header" class="bg-white dark:bg-gray-800 fixed w-full z-10 top-0 shadow">
   <div
     id="progress"
-    class="top-0 z-20 h-1"
-    style="
-      background: linear-gradient(
-        to right,
-        var(--scroll-color) var(--scroll),
-        transparent 0
-      );
-    "
+    class="h-1 z-20 top-0"
+    style="background: linear-gradient(to right, #4dc0b5 var(--scroll), transparent 0);"
   ></div>
 
   <div
-    class="container mx-auto my-1 flex w-full flex-wrap items-center justify-between"
+    class="w-full container mx-auto flex flex-wrap items-center justify-between my-1"
   >
     <div class="pl-4">
-      <a
-        class="text-main text-base font-bold no-underline hover:no-underline"
-        href="/"
-      >
+      <a class="text-base no-underline hover:no-underline font-bold" href="/">
         {{ $.Site.Title }}
       </a>
     </div>
 
-    <div class="block pr-4 lg:hidden">
+    <div class="block lg:hidden pr-4">
       <button
         id="nav-toggle"
         aria-label="切换导航菜单"
         aria-controls="nav-content"
         aria-expanded="false"
-        class="text-secondary border-main hover:text-main hover:border-accent flex appearance-none items-center rounded border px-3 py-2 focus:outline-none"
+        class="flex items-center px-3 py-2 border rounded text-gray-500 border-gray-600 hover:text-gray-900 hover:border-teal-500 appearance-none focus:outline-none"
       >
         <svg
-          class="h-3 w-3 fill-current"
+          class="fill-current h-3 w-3"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -43,31 +34,31 @@
     </div>
 
     <div
-      class="bg-main z-20 mt-2 hidden w-full flex-grow lg:mt-0 lg:flex lg:w-auto lg:items-center md:bg-transparent"
+      class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-2 lg:mt-0 bg-gray-100 dark:bg-gray-800 md:bg-transparent z-20"
       id="nav-content"
     >
-      <ul class="list-none flex-1 items-center justify-end lg:flex">
+      <ul class="list-none lg:flex justify-end flex-1 items-center">
         {{- range .Site.Menus.main }}
         <li class="mr-3">
           <a
             href="{{ .URL }}"
-            class="text-secondary hover:text-main inline-block px-2 py-2 font-bold no-underline"
+            class="inline-block py-2 px-2 text-gray-700 dark:text-gray-300 font-bold no-underline"
             >{{ .Name }}</a
           >
         </li>
         {{- end }}
         <button
           id="switchTheme"
-          class="flex h-10 w-10 items-center justify-center focus:outline-none"
+          class="h-10 w-10 flex justify-center items-center focus:outline-none"
           aria-label="切换主题"
         >
-          <div id="dark-icon">
+          <div id="dark-icon" class="hidden">
             <svg
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
+              class="w-6 h-6"
             >
               <title>Dark Mode</title>
               <path
@@ -84,7 +75,7 @@
               stroke="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
+              class="w-6 h-6"
             >
               <title>Light Mode</title>
               <path
