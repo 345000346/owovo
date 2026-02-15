@@ -1,0 +1,26 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.15/schema.json",
+  "files": {
+    "includes": ["assets/js/**/*.js", "assets/css/**/*.css"]
+  },
+  "formatter": {
+    "enabled": false
+  },
+  "linter": {
+    "rules": {
+      "a11y": {
+        "useGenericFontNames": "off"
+      },
+      "suspicious": {
+        "noUnknownAtRules": "off",
+        "noUselessEscapeInString": "off"
+      },
+      "correctness": {
+        "noInvalidPositionAtImportRule": "off"
+      },
+      "complexity": {
+        "noImportantStyles": "off"
+      }
+    }
+  }
+}

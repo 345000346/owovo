@@ -119,14 +119,14 @@ const loadPoemForCard = (card) => {
   window.jinrishici.load((result) => {
     try {
       renderPoem(card, result);
-    } catch (error) {
+    } catch (_error) {
       renderPoemFallback(card);
     }
   });
 };
 
 const loadPoemSdkOnce = () => {
-  if (window.jinrishici && window.jinrishici.load) {
+  if (window.jinrishici?.load) {
     document.dispatchEvent(new Event("jinrishici:ready"));
     return;
   }
@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("click", (e) => {
     if (e.target.closest("#nav-toggle")) {
       const navContent = document.getElementById("nav-content");
-      if (navContent && navContent.classList.contains("hidden")) {
+      if (navContent?.classList.contains("hidden")) {
         openNav();
       } else {
         closeNav();
