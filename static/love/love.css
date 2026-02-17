@@ -1,9 +1,9 @@
 :root {
   /* 定义颜色变量 */
   --primary-color: #e74c3c;
-  --secondary-color: #e67e22;
+  --secondary-color: #8a4300;
   --background-color: #f8f8f8;
-  --text-color: #333;
+  --text-color: #2f2f2f;
   --card-bg: #fff;
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -112,11 +112,11 @@ body {
 .copyright {
   margin-top: 0.5rem;
   font-size: 0.8rem;
-  color: #666;
+  color: #555;
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .container {
     padding: 0.5rem;
     width: 100%;
