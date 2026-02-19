@@ -26,5 +26,8 @@ Thumbs.db
 *.swp
 *.swo
 
+# OMC Runtime
+.omc/
+
 # Logs
 *.log
