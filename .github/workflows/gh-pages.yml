@@ -49,13 +49,6 @@ jobs:
       - name: Install root dependencies
         run: npm ci
 
-      - name: Build frontend assets
-        run: npm run build
-
-      - name: Install theme dependencies
-        run: npm ci
-        working-directory: ./themes/echo
-
       - name: Build
         run: hugo --minify
 
