@@ -51,21 +51,76 @@ const initTheme = () => {
   updateBadgeThemes(isDark);
 };
 
-const handleThemeToggle = () => {
+const animateThemeButton = () => {
+  const button = document.getElementById("switchTheme");
+  if (!button) {
+    return;
+  }
+
+  button.classList.remove("theme-animating");
+  void button.offsetWidth;
+  button.classList.add("theme-animating");
+};
+
+const handleThemeToggle = (event) => {
   const htmlElement = document.documentElement;
   const isDark = htmlElement.classList.contains("dark");
   const nextDark = !isDark;
 
-  if (nextDark) {
-    htmlElement.classList.add("dark");
-    localStorage.theme = "dark";
-  } else {
-    htmlElement.classList.remove("dark");
-    localStorage.theme = "light";
+  if (!htmlElement.classList.contains("theme-ready")) {
+    htmlElement.classList.add("theme-ready");
   }
 
-  applyThemeIcons(nextDark);
-  updateBadgeThemes(nextDark);
+  const applyTheme = () => {
+    if (nextDark) {
+      htmlElement.classList.add("dark");
+      localStorage.theme = "dark";
+    } else {
+      htmlElement.classList.remove("dark");
+      localStorage.theme = "light";
+    }
+
+    applyThemeIcons(nextDark);
+    updateBadgeThemes(nextDark);
+  };
+
+  animateThemeButton();
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!document.startViewTransition || prefersReducedMotion) {
+    applyTheme();
+    return;
+  }
+
+  const clickX = event?.clientX ?? window.innerWidth - 40;
+  const clickY = event?.clientY ?? 40;
+  const endRadius = Math.hypot(
+    Math.max(clickX, window.innerWidth - clickX),
+    Math.max(clickY, window.innerHeight - clickY),
+  );
+
+  htmlElement.style.setProperty("--theme-switch-x", `${clickX}px`);
+  htmlElement.style.setProperty("--theme-switch-y", `${clickY}px`);
+
+  const transition = document.startViewTransition(() => {
+    applyTheme();
+  });
+
+  transition.ready.then(() => {
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at ${clickX}px ${clickY}px)`,
+          `circle(${endRadius}px at ${clickX}px ${clickY}px)`,
+        ],
+      },
+      {
+        duration: 640,
+        easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+        pseudoElement: "::view-transition-new(root)",
+      },
+    );
+  });
 };
 
 // 徽章主题辅助函数
@@ -268,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (e.target.closest("#switchTheme")) {
-      handleThemeToggle();
+      handleThemeToggle(e);
     }
   });
 
@@ -294,10 +349,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- 3. 运行页面特定的初始化脚本 ---
   initTheme(); // 页面加载时初始化主题与徽章
 
-  // 初始加载后重新启用过渡效果，防止页面加载时出现闪烁
-  setTimeout(() => {
-    document.documentElement.style.removeProperty("transition");
-  }, 0);
+  // 初始化完成后允许主题过渡动画
+  requestAnimationFrame(() => {
+    document.documentElement.classList.add("theme-ready");
+  });
 
   // 代码块折叠功能
   handleCodeFolding();

@@ -306,3 +306,74 @@ a:focus {
     font-size: 0.8rem;
   }
 }
+
+/* 主题切换过渡：首屏完成后再启用，避免初始闪烁 */
+html.theme-ready body,
+html.theme-ready #header,
+html.theme-ready #nav-content,
+html.theme-ready footer,
+html.theme-ready .read-more-btn,
+html.theme-ready .post-content a,
+html.theme-ready .post-content p code,
+html.theme-ready .post-content li code,
+html.theme-ready .post-content table th {
+  transition-property: background-color, color, border-color, box-shadow;
+  transition-duration: 280ms;
+  transition-timing-function: ease;
+}
+
+#switchTheme {
+  position: relative;
+  overflow: hidden;
+}
+
+#switchTheme.theme-animating {
+  animation: theme-button-pop 0.56s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#switchTheme::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1.5px solid currentColor;
+  opacity: 0;
+  transform: scale(0.65);
+  pointer-events: none;
+}
+
+#switchTheme.theme-animating::after {
+  animation: theme-ring 0.68s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes theme-button-pop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  35% {
+    transform: scale(0.78) rotate(-16deg);
+  }
+  68% {
+    transform: scale(1.08) rotate(6deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes theme-ring {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.56);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
