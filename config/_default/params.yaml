@@ -22,6 +22,14 @@ keywords: "日常,想法,Android,Windows,手机,电脑"
 # 网站描述，目前与副标题内容相同
 description: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
 
+# 顶部导航（源主题 header 使用 .Site.Params.NavItems）
+NavItems:
+  - ["首页", "/"]
+  - ["文章", "/archives/"]
+  - ["想法", "/ideas/"]
+  - ["关于", "/about/"]
+  - ["RSS", "/rss.xml"]
+
 # 是否在页脚显示字数统计
 vercount: true
 

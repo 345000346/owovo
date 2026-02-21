@@ -18,8 +18,9 @@
   {{ hugo.Generator }}
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  {{ if .Site.Params.author.name }}
-  <meta name="author" content="{{ .Site.Params.author.name }}" />
+  {{ $authorName := default .Site.Author.name .Site.Params.author.name }}
+  {{ if $authorName }}
+  <meta name="author" content="{{ $authorName }}" />
   {{ end }} {{ if .Site.Params.keywords }}
   <meta name="keywords" content="{{ .Site.Params.keywords }}" />
   {{ end }}
@@ -82,7 +83,8 @@
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" />
   {{ end }}
 
-  <link href="{{ "index.xml" | relURL }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1607597_jhmihcvh0tm.css" />
+  <link href="{{ .Site.Params.staticPrefix }}{{ "index.xml" | relURL }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
 
   {{ if .Site.Params.vercount }} {{ if .Site.Params.features.defer_stats }}
   <script>
