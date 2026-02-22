@@ -1,7 +1,7 @@
 ---
 title: "文章归档"
 type: "archives"
-url: "/achieve.html"
+url: "/posts/"
 outputs:
   - HTML
 ---
