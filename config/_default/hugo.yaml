@@ -13,6 +13,14 @@ languages:
 # 网站标题
 title: "LIGT'S BLOG"
 
+author:
+  name: "LIGT"
+  avatar: "/images/avatar.webp"
+
+social:
+  github: "345000346"
+  weibo: "1733321624"
+
 # 使用的主题
 theme: echo
 

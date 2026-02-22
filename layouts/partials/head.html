@@ -25,7 +25,7 @@
   {{ hugo.Generator }}
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  {{ $authorName := default .Site.Author.name .Site.Params.author.name }}
+  {{ $authorName := .Site.Params.author.name }}
   {{ if $authorName }}
   <meta name="author" content="{{ $authorName }}" />
   {{ end }} {{ if .Site.Params.keywords }}
@@ -100,11 +100,15 @@
   </style>
 
   {{ $styles := resources.Get "css/main.css" | postCSS (dict "config" "./postcss.config.js") }}
+  {{ $customStyles := resources.Get "css/custom-overrides.css" | postCSS (dict "config" "./postcss.config.js") }}
   {{ if hugo.IsServer }}
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" />
+  <link rel="stylesheet" href="{{ $customStyles.RelPermalink }}" />
   {{ else }}
   {{ $styles := $styles | minify | fingerprint | resources.PostProcess }}
+  {{ $customStyles := $customStyles | minify | fingerprint | resources.PostProcess }}
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" />
+  <link rel="stylesheet" href="{{ $customStyles.RelPermalink }}" integrity="{{ $customStyles.Data.Integrity }}" />
   {{ end }}
 
   <link rel="stylesheet" href="//at.alicdn.com/t/font_1607597_jhmihcvh0tm.css" />

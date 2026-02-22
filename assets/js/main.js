@@ -187,6 +187,38 @@ const updateBadgeThemes = (isDark = document.documentElement.classList.contains(
   });
 };
 
+// 头部可访问性补丁（用于复用主题默认 header 模板）
+const applyHeaderA11y = () => {
+  const navToggle = document.getElementById("nav-toggle");
+  if (navToggle) {
+    navToggle.setAttribute("type", "button");
+    navToggle.setAttribute("aria-label", "切换导航菜单");
+    navToggle.setAttribute("aria-controls", "nav-content");
+    navToggle.setAttribute(
+      "aria-expanded",
+      String(!document.getElementById("nav-content")?.classList.contains("hidden")),
+    );
+  }
+
+  const switchThemeButton = document.getElementById("switchTheme");
+  if (switchThemeButton) {
+    switchThemeButton.setAttribute("type", "button");
+    switchThemeButton.setAttribute("aria-pressed", "false");
+    if (!switchThemeButton.getAttribute("aria-label")) {
+      switchThemeButton.setAttribute("aria-label", "切换为深色模式");
+    }
+  }
+
+  const lightIcon = document.getElementById("light-icon");
+  const darkIcon = document.getElementById("dark-icon");
+  if (lightIcon) {
+    lightIcon.setAttribute("aria-hidden", "true");
+  }
+  if (darkIcon) {
+    darkIcon.setAttribute("aria-hidden", "true");
+  }
+};
+
 // 滚动辅助函数
 const handleScroll = () => {
   const progressBar = document.querySelector("#progress");
@@ -398,8 +430,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("scroll", handleScroll);
 
   // --- 3. 运行页面特定的初始化脚本 ---
+  applyHeaderA11y();
   initTheme(); // 页面加载时初始化主题与徽章
-
 
   // 代码块折叠功能
   handleCodeFolding();

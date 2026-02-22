@@ -6,7 +6,7 @@
                 <p class="text-sm text-gray-600 dark:text-gray-300">
                     &copy; {{ now.Format "2006" }}
                     <a class="font-semibold text-gray-800 transition hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400" href="{{ .Site.BaseURL | absURL }}">{{ .Site.Title }}</a>
-                    · 由 {{ default .Site.Author.name .Site.Params.author.name }} 维护
+                    · 由 {{ .Site.Params.author.name }} 维护
                 </p>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
                     Powered by <a rel="nofollow noreferrer noopener" href="https://gohugo.io/" class="font-medium text-gray-700 transition hover:text-emerald-600 dark:text-gray-200 dark:hover:text-emerald-400" target="_blank">Hugo</a>
