@@ -71,6 +71,13 @@
 
     {{ partial "posts/profile.html" . }}
 
+    {{ if and .Site.Params.features.jinrishici.enable (eq .Site.Params.features.jinrishici.position "sidebar") }}
+    <div class="poem-card bg-white shadow rounded p-4 mt-5 dark:bg-gray-800">
+        <p class="poem-sentence">今日诗词加载中...</p>
+        <p class="poem-info text-sm text-gray-500 mt-2"></p>
+    </div>
+    {{ end }}
+
     <div class="flex flex-col justify-between sticky top-0 pt-12 pb-4 -mt-10 text-gray-600 dark:text-gray-400">
         <div class="bg-white shadow rounded p-4 mt-5 dark:bg-gray-800">
             {{ partial "posts/toc.html" . }}
