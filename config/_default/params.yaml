@@ -22,14 +22,6 @@ keywords: "日常,想法,Android,Windows,手机,电脑"
 # 网站描述，目前与副标题内容相同
 description: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
 
-# 顶部导航（源主题 header 使用 .Site.Params.NavItems）
-NavItems:
-  - ["首页", "/"]
-  - ["文章", "/posts/"]
-  - ["想法", "/ideas/"]
-  - ["关于", "/about/"]
-  - ["RSS", "/rss.xml"]
-
 # 是否在页脚显示字数统计
 vercount: true
 
@@ -58,3 +50,58 @@ cdn:
 cc:
   name: "CC BY-NC-SA 4.0"
   link: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+
+# meme 文章版权声明（用于 post-copyright 组件）
+enablePostCopyright: true
+displayPostCopyright: true
+original: true
+
+# meme 主题 404 海报图（留空表示不指定）
+fofPoster: ""
+
+# meme 列表页日期格式与位置
+listDateFormat: "1 月 2 日"
+# 可选：left/right
+listDatePosition: "right"
+
+# meme 首页与基础布局开关
+homeLayout: "posts"
+headerLayout: "flex"
+headerBackground: "linear-gradient(90deg, #f795331a 0, #f370551a 15%, #ef4e7b1a 30%, #a166ab1a 44%, #5073b81a 58%, #1098ad1a 72%, #07b39b1a 86%, #6dba821a 100%)"
+siteBrandFontSize: 1
+siteBrandFontColor: "var(--color-contrast-high)"
+fontFamilySiteBrand: ""
+fontFamilyMenu: ""
+fontFamilyTitle: "'Noto Serif SC', serif"
+fontFamilyHeadings: "'Noto Serif SC', serif"
+fontFamilyCode: "'Source Code Pro', 'Noto Serif SC', monospace"
+fontFamilyQuote: ""
+fontFamilyTOC: ""
+fontFamilyCaption: ""
+fontFamilyFooter: ""
+fontFamilyBody: "'Noto Serif SC', serif"
+fontsLink: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+fontSize: 18
+lineHeight: 2
+enableHeader: true
+displayHeaderInHome: true
+enableMenu: true
+displayMenuInHome: true
+enableDarkMode: true
+defaultTheme: "light"
+overrideSystemPreferences: false
+enableLunrSearch: true
+enableFooter: true
+displayFooter: true
+displayFooterInHome: true
+displayCopyleftSymbol: false
+displayCopyrightSymbol: true
+displaySiteCreatedYear: true
+siteCreatedTime: "2019-08-22T00:00:00+08:00"
+iconBetweenYearAndAuthor: "heart"
+iconColor: "#f06292"
+iconAnimation: true
+displaySiteAuthorName: true
+displayPoweredBy: true
+displaySiteCopyright: false
+customFooter: ""

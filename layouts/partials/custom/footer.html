@@ -1,0 +1,36 @@
+{{ if .Site.Params.vercount }}
+<div class="busuanzi-site-uv-and-pv">
+  <span>访客</span>&nbsp;<span id="vercount_value_site_uv">Loading</span>
+  {{- print "&nbsp;|&nbsp;" | safeHTML -}}
+  <span>访问量</span>&nbsp;<span id="vercount_value_site_pv">Loading</span>
+</div>
+{{ end }}
+
+{{ if .Site.Params.runtime }}
+<div class="site-info">
+  已稳定运行
+  <span id="runtime-d"></span>d
+  <span id="runtime-h"></span>h
+  <span id="runtime-m"></span>m
+  <span id="runtime-s"></span>s
+</div>
+{{ end }}
+
+{{ with .Site.Params.author }}
+  {{ if or .avatar .name }}
+<div class="site-info">
+  {{ with .avatar }}
+  <img src="{{ . | relURL }}" alt="{{ $.Site.Params.author.name }}" width="22" height="22" style="border-radius:9999px;vertical-align:middle;margin-right:0.4rem;" />
+  {{ end }}
+  {{ with .name }}
+  <span>{{ . }}</span>
+  {{ end }}
+  {{ with $.Site.Params.social.github }}
+  {{- print "&nbsp;|&nbsp;" | safeHTML -}}<a href="https://github.com/{{ . }}" target="_blank" rel="noopener">GitHub</a>
+  {{ end }}
+  {{ with $.Site.Params.social.weibo }}
+  {{- print "&nbsp;|&nbsp;" | safeHTML -}}<a href="https://weibo.com/{{ . }}" target="_blank" rel="noopener">微博</a>
+  {{ end }}
+</div>
+  {{ end }}
+{{ end }}
