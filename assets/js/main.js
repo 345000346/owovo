@@ -16,9 +16,31 @@ const openNav = () => {
 };
 
 // 主题辅助函数（与原主题机制保持一致：使用 html.dark）
+const getStoredThemePreference = () => {
+  const storedTheme = localStorage.getItem("theme");
+  if (storedTheme === "light" || storedTheme === "dark") {
+    return storedTheme;
+  }
+  if (storedTheme !== null) {
+    localStorage.removeItem("theme");
+  }
+  return null;
+};
+
+const applyRootThemeState = (isDark) => {
+  const htmlElement = document.documentElement;
+  htmlElement.classList.toggle("dark", isDark);
+  htmlElement.dataset.theme = isDark ? "dark" : "light";
+  htmlElement.style.colorScheme = isDark ? "dark" : "light";
+  htmlElement.style.setProperty("--theme-bg", isDark ? "#374151" : "#f3f4f6");
+  htmlElement.style.setProperty("--theme-fg", isDark ? "#f3f4f6" : "#111827");
+  htmlElement.style.setProperty("--theme-surface", isDark ? "#1f2937" : "#ffffff");
+};
+
 const applyThemeIcons = (isDark) => {
   const lightIcon = document.getElementById("light-icon");
   const darkIcon = document.getElementById("dark-icon");
+  const switchThemeButton = document.getElementById("switchTheme");
   if (!lightIcon || !darkIcon) {
     return;
   }
@@ -30,23 +52,24 @@ const applyThemeIcons = (isDark) => {
     lightIcon.classList.remove("hidden");
     darkIcon.classList.add("hidden");
   }
+
+  if (switchThemeButton) {
+    switchThemeButton.setAttribute("aria-pressed", String(isDark));
+    switchThemeButton.setAttribute(
+      "aria-label",
+      isDark ? "切换为浅色模式" : "切换为深色模式",
+    );
+  }
 };
 
 const initTheme = () => {
-  const htmlElement = document.documentElement;
+  const storedTheme = getStoredThemePreference();
   const isDark =
-    localStorage.theme === "dark" ||
-    (!("theme" in localStorage) &&
+    storedTheme === "dark" ||
+    (storedTheme === null &&
       window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-  if (isDark) {
-    htmlElement.classList.add("dark");
-    localStorage.theme = "dark";
-  } else {
-    htmlElement.classList.remove("dark");
-    localStorage.theme = "light";
-  }
-
+  applyRootThemeState(isDark);
   applyThemeIcons(isDark);
   updateBadgeThemes(isDark);
 };
@@ -62,6 +85,42 @@ const animateThemeButton = () => {
   button.classList.add("theme-animating");
 };
 
+let themeToastElement;
+let themeToastTimer;
+
+const ensureThemeToast = () => {
+  if (themeToastElement) {
+    return themeToastElement;
+  }
+
+  const toast = document.createElement("div");
+  toast.id = "theme-toast";
+  toast.setAttribute("role", "status");
+  toast.setAttribute("aria-live", "polite");
+  toast.setAttribute("aria-atomic", "true");
+  document.body.appendChild(toast);
+
+  themeToastElement = toast;
+  return toast;
+};
+
+const showThemeToast = (isDark) => {
+  const toast = ensureThemeToast();
+  toast.textContent = isDark ? "已切换为深色模式" : "已切换为浅色模式";
+
+  toast.classList.remove("is-visible");
+  void toast.offsetWidth;
+  toast.classList.add("is-visible");
+
+  if (themeToastTimer) {
+    window.clearTimeout(themeToastTimer);
+  }
+
+  themeToastTimer = window.setTimeout(() => {
+    toast.classList.remove("is-visible");
+  }, 1500);
+};
+
 const handleThemeToggle = (event) => {
   const htmlElement = document.documentElement;
   const isDark = htmlElement.classList.contains("dark");
@@ -72,16 +131,12 @@ const handleThemeToggle = (event) => {
   }
 
   const applyTheme = () => {
-    if (nextDark) {
-      htmlElement.classList.add("dark");
-      localStorage.theme = "dark";
-    } else {
-      htmlElement.classList.remove("dark");
-      localStorage.theme = "light";
-    }
+    applyRootThemeState(nextDark);
+    localStorage.theme = nextDark ? "dark" : "light";
 
     applyThemeIcons(nextDark);
     updateBadgeThemes(nextDark);
+    showThemeToast(nextDark);
   };
 
   animateThemeButton();
@@ -330,14 +385,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // 监听系统颜色方案的变化
   const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
   mediaQuery.addEventListener("change", (e) => {
-    // 如果用户未手动设置主题，则跟随系统主题
-    if (!localStorage.getItem("theme")) {
+    // 如果用户未手动设置有效主题，则跟随系统主题
+    if (getStoredThemePreference() === null) {
       const isDark = e.matches;
-      if (isDark) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
+      applyRootThemeState(isDark);
       applyThemeIcons(isDark);
       updateBadgeThemes(isDark);
     }
@@ -349,10 +400,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- 3. 运行页面特定的初始化脚本 ---
   initTheme(); // 页面加载时初始化主题与徽章
 
-  // 初始化完成后允许主题过渡动画
-  requestAnimationFrame(() => {
-    document.documentElement.classList.add("theme-ready");
-  });
 
   // 代码块折叠功能
   handleCodeFolding();

@@ -2,17 +2,24 @@
   <meta charset="UTF-8" />
   <script>
     (function () {
-      const theme =
-        localStorage.getItem("theme") ||
-        (window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light");
-      const html = document.documentElement;
-      if (theme === "dark") {
-        html.classList.add("dark");
-      } else {
-        html.classList.remove("dark");
+      const storedTheme = localStorage.getItem("theme");
+      const hasValidStoredTheme =
+        storedTheme === "light" || storedTheme === "dark";
+      if (!hasValidStoredTheme && storedTheme !== null) {
+        localStorage.removeItem("theme");
       }
+
+      const isDark = hasValidStoredTheme
+        ? storedTheme === "dark"
+        : window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+      const html = document.documentElement;
+      html.classList.toggle("dark", isDark);
+      html.dataset.theme = isDark ? "dark" : "light";
+      html.style.colorScheme = isDark ? "dark" : "light";
+      html.style.setProperty("--theme-bg", isDark ? "#374151" : "#f3f4f6");
+      html.style.setProperty("--theme-fg", isDark ? "#f3f4f6" : "#111827");
+      html.style.setProperty("--theme-surface", isDark ? "#1f2937" : "#ffffff");
     })();
   </script>
   {{ hugo.Generator }}
@@ -74,6 +81,23 @@
   {{- end -}}
 
   {{ partial "seo.html" . }}
+
+  <style>
+    html {
+      background-color: var(--theme-bg, #f3f4f6);
+      color: var(--theme-fg, #111827);
+      color-scheme: light;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+    }
+
+    body {
+      background-color: var(--theme-bg, #f3f4f6);
+      color: var(--theme-fg, #111827);
+    }
+  </style>
 
   {{ $styles := resources.Get "css/main.css" | postCSS (dict "config" "./postcss.config.js") }}
   {{ if hugo.IsServer }}
