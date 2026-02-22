@@ -377,3 +377,44 @@ html.theme-ready .post-content table th {
   animation: none;
   mix-blend-mode: normal;
 }
+
+#theme-toast {
+  position: fixed;
+  right: clamp(0.875rem, 2vw, 1.25rem);
+  top: clamp(1rem, 2.5vw, 1.5rem);
+  z-index: 60;
+  pointer-events: none;
+  max-width: min(80vw, 18rem);
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.625rem;
+  border: 1px solid rgb(15 23 42 / 12%);
+  background: rgb(15 23 42 / 92%);
+  color: #f8fafc;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  box-shadow: 0 8px 20px rgb(2 6 23 / 24%);
+  opacity: 0;
+  transform: translateY(-0.5rem);
+  transition:
+    opacity 180ms ease,
+    transform 220ms ease;
+}
+
+#theme-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dark #theme-toast {
+  border-color: rgb(148 163 184 / 35%);
+  background: rgb(248 250 252 / 94%);
+  color: #0f172a;
+  box-shadow: 0 10px 24px rgb(15 23 42 / 35%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #theme-toast {
+    transform: none;
+    transition: opacity 120ms linear;
+  }
+}
