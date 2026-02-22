@@ -1,55 +1,71 @@
-<!-- Pin to top right corner -->
-<footer class="bg-white dark:bg-gray-800 border-gray-400 shadow mt-10">
-    <div class="container mx-auto flex py-8">
-        <div class="w-full text-center text-gray-600 dark:text-gray-400">
-            <p>
-                &copy; {{ now.Format "2006" }}
-                <a class="text-gray-700 dark:text-gray-300 font-semibold" href="{{ .Site.BaseURL | absURL }}">{{ .Site.Title }}</a>
-                By {{ default .Site.Author.name .Site.Params.author.name }}
-            </p>
+<footer class="mt-14 border-t border-gray-200/80 bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:border-gray-700/70 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950">
+    <div class="container mx-auto px-4 py-10">
+        <div class="grid gap-8 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] md:items-end">
+            <div class="space-y-3 text-center md:text-left">
+                <p class="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">{{ .Site.Title }}</p>
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                    &copy; {{ now.Format "2006" }}
+                    <a class="font-semibold text-gray-800 transition hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400" href="{{ .Site.BaseURL | absURL }}">{{ .Site.Title }}</a>
+                    · 由 {{ default .Site.Author.name .Site.Params.author.name }} 维护
+                </p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Powered by <a rel="nofollow noreferrer noopener" href="https://gohugo.io/" class="font-medium text-gray-700 transition hover:text-emerald-600 dark:text-gray-200 dark:hover:text-emerald-400" target="_blank">Hugo</a>
+                    and inspired by <a href="https://github.com/forecho/hugo-theme-echo" class="font-medium text-gray-700 transition hover:text-emerald-600 dark:text-gray-200 dark:hover:text-emerald-400" target="_blank">Echo</a>
+                </p>
+            </div>
 
-            <p class="pt-1">
-                Powered by <a rel="nofollow noreferrer noopener" href="https://gohugo.io/" class="text-gray-700 dark:text-gray-300 font-semibold" target="_blank">Hugo</a>
-                Theme based on <a href="https://github.com/forecho/hugo-theme-echo" class="text-gray-700 dark:text-gray-300 font-semibold" target="_blank">Echo</a>
-            </p>
+            <div class="space-y-3 text-center md:text-right">
+                {{ if .Site.Params.vercount }}
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                    <span class="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800/80 dark:ring-gray-700">
+                        <span>访客</span>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100" id="vercount_value_site_uv">Loading</span>
+                    </span>
+                    <span class="mx-2 text-gray-300 dark:text-gray-600">|</span>
+                    <span class="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800/80 dark:ring-gray-700">
+                        <span>访问量</span>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100" id="vercount_value_site_pv">Loading</span>
+                    </span>
+                </p>
+                {{ else if .Site.Params.busuanzi -}}
+                <p id="busuanzi_container" class="text-sm text-gray-600 dark:text-gray-300">
+                    访客数：<span class="font-semibold text-gray-800 dark:text-gray-100" id="busuanzi_value_site_uv"></span>
+                    <span class="mx-2 text-gray-300 dark:text-gray-600">|</span>
+                    访问量：<span class="font-semibold text-gray-800 dark:text-gray-100" id="busuanzi_value_site_pv"></span>
+                </p>
+                {{- end }}
 
-            {{ if .Site.Params.vercount }}
-            <p class="pt-1">
-                <span id="vercount_value_site_uv">Loading</span> Visitors |
-                <span id="vercount_value_site_pv">Loading</span> Views
-            </p>
-            {{ else if .Site.Params.busuanzi -}}
-            <span id="busuanzi_container">
-              访客数：<span id="busuanzi_value_site_uv"></span> | 访问量 <span id="busuanzi_value_site_pv"></span>
-            </span>
-            {{- end }}
+                {{ if .Site.Params.runtime }}
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                    已稳定运行
+                    <b id="runtime-d" class="text-gray-900 dark:text-white"></b>d
+                    <b id="runtime-h" class="text-gray-900 dark:text-white"></b>h
+                    <b id="runtime-m" class="text-gray-900 dark:text-white"></b>m
+                    <b id="runtime-s" class="text-gray-900 dark:text-white"></b>s
+                </p>
+                <script>
+                    function footerTimer() {
+                        var start = new Date("{{ .Site.Params.runtime }}");
+                        var t = new Date() - start;
 
-            {{ if .Site.Params.runtime }}
-            <p class="pt-1">
-                Running for <b id="d"></b>d <b id="h"></b>h <b id="m"></b>m <b id="s"></b>s
-            </p>
-            <script>
-                function timer() {
-                    var start = new Date("{{ .Site.Params.runtime }}");
-                    var t = new Date() - start;
+                        var h = ~~((t / 1000 / 60 / 60) % 24);
+                        if (h < 10) h = "0" + h;
+                        var m = ~~((t / 1000 / 60) % 60);
+                        if (m < 10) m = "0" + m;
+                        var s = ~~((t / 1000) % 60);
+                        if (s < 10) s = "0" + s;
 
-                    var h = ~~((t / 1000 / 60 / 60) % 24);
-                    if (h < 10) h = "0" + h;
-                    var m = ~~((t / 1000 / 60) % 60);
-                    if (m < 10) m = "0" + m;
-                    var s = ~~((t / 1000) % 60);
-                    if (s < 10) s = "0" + s;
+                        document.getElementById("runtime-d").innerHTML = ~~(t / 1000 / 60 / 60 / 24);
+                        document.getElementById("runtime-h").innerHTML = h;
+                        document.getElementById("runtime-m").innerHTML = m;
+                        document.getElementById("runtime-s").innerHTML = s;
+                    }
 
-                    document.getElementById("d").innerHTML = ~~(t / 1000 / 60 / 60 / 24);
-                    document.getElementById("h").innerHTML = h;
-                    document.getElementById("m").innerHTML = m;
-                    document.getElementById("s").innerHTML = s;
-                }
-
-                timer();
-                setInterval(timer, 1000);
-            </script>
-            {{- end }}
+                    footerTimer();
+                    setInterval(footerTimer, 1000);
+                </script>
+                {{- end }}
+            </div>
         </div>
     </div>
 </footer>
