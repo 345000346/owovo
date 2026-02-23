@@ -23,12 +23,6 @@ description: "分享一些日常、没事无聊的瞎想、一些常用的工具
 # meme 原生描述字段（用于 head/RSS 等）
 siteDescription: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
 
-# 性能特性开关（面向中国大陆访问优化）
-features:
-  jinrishici:
-    enable: true
-    position: "sidebar"
-
 # 知识共享许可协议 (Creative Commons) 配置
 cc:
   name: "CC BY-NC-SA 4.0"
