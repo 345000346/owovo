@@ -33,14 +33,6 @@ features:
 # RSS 输出是否包含全文（meme 原生字段）
 includeContent: true
 
-# Font Awesome 的静态资源 CDN 前缀
-staticCDNPrefix: "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/"
-
-# CDN 加速配置
-cdn:
-  jsdelivr:
-    github: "345000346/345000346.github.io@master"
-
 # 知识共享许可协议 (Creative Commons) 配置
 cc:
   name: "CC BY-NC-SA 4.0"
