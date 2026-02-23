@@ -29,6 +29,9 @@ Thumbs.db
 # Runtime state
 .omc/
 
+# Claude local workspace
+.claude/
+
 # Claude Code local files
 CLAUDE.md
 
