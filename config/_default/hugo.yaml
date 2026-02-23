@@ -46,15 +46,11 @@ menu:
 # 网站标题
 title: "LIGT'S BLOG"
 
-copyright: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。"
+copyright: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)"
 
 author:
   name: "LIGT"
   avatar: "/images/avatar.webp"
-
-social:
-  github: "345000346"
-  weibo: "1733321624"
 
 # 使用的主题
 theme: meme
@@ -73,20 +69,27 @@ permalinks:
   post: "/post/:slug/"
 
 # 输出格式定义
+mediaTypes:
+  application/atom+xml:
+    suffixes: ["xml"]
+
 outputFormats:
-  RSS:
-    mediaType: "application/rss+xml" # 使用了更标准的 mediatype
+  SectionsAtom:
+    mediaType: "application/atom+xml"
+    baseName: "atom"
+  SectionsRSS:
+    mediaType: "application/rss+xml"
     baseName: "rss"
   SearchIndex:
     mediaType: "application/json"
     baseName: "search"
 
-# 确保首页输出包含 RSS 与搜索索引
+# 首页输出使用主题示例的 SectionsAtom/SectionsRSS 组合（并保留搜索索引）
 outputs:
-  home: ["HTML", "RSS", "SearchIndex"]
-  section: ["HTML", "RSS"]
-  taxonomy: ["HTML", "RSS"]
-  term: ["HTML", "RSS"]
+  home: ["HTML", "SectionsAtom", "SectionsRSS", "SearchIndex"]
+  section: ["HTML"]
+  taxonomy: ["HTML"]
+  term: ["HTML"]
 
 # 服务配置
 services:

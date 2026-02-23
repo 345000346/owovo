@@ -1,0 +1,20 @@
+[[socials]]
+id = "rss"
+url = "/rss.xml"
+icon = "rss"
+title = "RSS"
+weight = 1
+
+[[socials]]
+id = "github"
+url = "https://github.com/345000346"
+icon = "github"
+title = "GitHub"
+weight = 2
+
+[[socials]]
+id = "weibo"
+url = "https://weibo.com/1733321624"
+icon = "weibo"
+title = "微博"
+weight = 3
