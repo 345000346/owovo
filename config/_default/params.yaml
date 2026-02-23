@@ -21,22 +21,17 @@ subtitle: "分享一些日常、没事无聊的瞎想、一些常用的工具等
 keywords: "日常,想法,Android,Windows,手机,电脑"
 # 网站描述，目前与副标题内容相同
 description: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
-
-# 是否在页脚显示字数统计
-vercount: true
+# meme 原生描述字段（用于 head/RSS 等）
+siteDescription: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
 
 # 性能特性开关（面向中国大陆访问优化）
 features:
-  defer_stats: true
   jinrishici:
     enable: true
     position: "sidebar"
 
-# 网站建立时间，用于计算已运行时间
-runtime: "2019-08-22T00:00:00+08:00"
-
-# RSS 输出是否包含全文
-rssFullContent: true
+# RSS 输出是否包含全文（meme 原生字段）
+includeContent: true
 
 # Font Awesome 的静态资源 CDN 前缀
 staticCDNPrefix: "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/"

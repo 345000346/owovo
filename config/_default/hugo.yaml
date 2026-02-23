@@ -18,7 +18,7 @@ menu:
       pre: "internal"
       post: "home"
     - name: "文章"
-      pageRef: "/post/"
+      pageRef: "/archives/"
       weight: 2
       pre: "internal"
       post: "archive"
