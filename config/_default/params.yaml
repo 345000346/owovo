@@ -1,12 +1,11 @@
+# =========================================================
+# 自定义项（你主动配置、体现站点个性的内容）
+# =========================================================
+
 # 作者信息
 author:
   avatar: "/images/avatar.webp"
   name: "LIGT"
-
-# 社交链接
-social:
-  github: "345000346"
-  weibo: "1733321624"
 
 # 指定哪些 section 的文章会出现在首页文章列表中
 mainSections:
@@ -30,13 +29,24 @@ features:
     enable: true
     position: "sidebar"
 
-# RSS 输出是否包含全文（meme 原生字段）
-includeContent: true
-
 # 知识共享许可协议 (Creative Commons) 配置
 cc:
   name: "CC BY-NC-SA 4.0"
   link: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+
+# 站点创建时间（用于页脚年份显示）
+siteCreatedTime: "2019-08-22T00:00:00+08:00"
+
+# 显示页脚版权行
+displaySiteCopyright: true
+
+
+# =========================================================
+# 主题必需保底项（当前 meme 版本缺失会触发样式编译失败）
+# =========================================================
+
+# RSS 输出是否包含全文（meme 原生字段）
+includeContent: true
 
 # meme 文章版权声明（用于 post-copyright 组件）
 enablePostCopyright: true
@@ -84,11 +94,10 @@ displayFooterInHome: true
 displayCopyleftSymbol: false
 displayCopyrightSymbol: true
 displaySiteCreatedYear: true
-siteCreatedTime: "2019-08-22T00:00:00+08:00"
 iconBetweenYearAndAuthor: "heart"
 iconColor: "#f06292"
 iconAnimation: true
 displaySiteAuthorName: true
 displayPoweredBy: true
-displaySiteCopyright: false
+enableSocials: true
 customFooter: ""
