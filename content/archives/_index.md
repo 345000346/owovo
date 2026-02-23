@@ -1,5 +1,3 @@
 ---
 title: "文章归档"
-outputs:
-  - HTML
 ---

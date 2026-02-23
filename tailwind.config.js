@@ -4,7 +4,7 @@ module.exports = {
   content: [
     "./layouts/**/*.html",
     "./content/**/*.md",
-    "./themes/echo/layouts/**/*.html",
+    "./themes/meme/layouts/**/*.html",
   ],
   theme: {
     extend: {
