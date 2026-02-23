@@ -1,6 +1,4 @@
-// --- 1. 定义所有辅助函数 ---
-
-// 滚动辅助函数
+// 阅读进度条
 const handleScroll = () => {
   const progressBar = document.querySelector("#progress");
   const scrollY = window.scrollY;
@@ -14,16 +12,14 @@ const handleScroll = () => {
       `${(scrollY / scrollHeight) * 100}%`,
     );
   }
-
 };
 
-// 代码块折叠辅助函数
+// 代码块折叠
 const handleCodeFolding = () => {
   document.querySelectorAll(".highlight").forEach((el, index) => {
     const pre = el.querySelector("pre");
     if (pre && pre.scrollHeight > 200) {
       pre.style.maxHeight = "200px";
-      // 为 pre 添加 ID 以支持 aria-controls
       const preId = `code-block-${index}`;
       pre.id = preId;
 
@@ -59,7 +55,7 @@ const handleCodeFolding = () => {
   });
 };
 
-// 今日诗词辅助函数
+// 今日诗词懒加载
 const renderPoemFallback = (card) => {
   const sentence = card.querySelector(".poem-sentence");
   const info = card.querySelector(".poem-info");
@@ -167,18 +163,9 @@ const initPoemCards = () => {
   loadPoemSdkOnce();
 };
 
-// --- 2. 添加持久化的事件监听器 ---
 document.addEventListener("DOMContentLoaded", () => {
-  // 滚动事件监听
   document.addEventListener("scroll", handleScroll);
-
-  // --- 3. 运行页面特定的初始化脚本 ---
-  // 代码块折叠功能
   handleCodeFolding();
-
-  // 今日诗词卡片加载
   initPoemCards();
-
-  // 初始化滚动进度和导航背景
   handleScroll();
 });
