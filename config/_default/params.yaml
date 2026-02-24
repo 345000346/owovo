@@ -82,6 +82,16 @@ enableDarkMode: true
 defaultTheme: "light"
 overrideSystemPreferences: false
 enableLunrSearch: true
+# 启用文章标签展示（meme 原生字段）
+enablePostTags: true
+# 启用标签页云展示（/tags/）
+enableTagCloud: true
+# 标签云字号范围（meme 原生字段）
+largestFontSize: 2.5
+smallestFontSize: 1
+fontUnit: "rem"
+# 文章标签图标（启用 enablePostTags 时必填）
+postTagsIcon: "tag"
 enableFooter: true
 displayFooter: true
 displayFooterInHome: true
