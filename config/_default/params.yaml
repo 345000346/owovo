@@ -81,7 +81,7 @@ displayMenuInHome: true
 enableDarkMode: true
 defaultTheme: "light"
 overrideSystemPreferences: false
-enableLunrSearch: true
+enableLunrSearch: false
 # 启用文章标签展示（meme 原生字段）
 enablePostTags: true
 # 启用标签页云展示（/tags/）

@@ -48,7 +48,10 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: hugo --minify
+        run: npm run build
+
+      - name: Verify Pagefind artifacts
+        run: test -f public/pagefind/pagefind.js
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
