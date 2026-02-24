@@ -2,7 +2,6 @@
 module.exports = {
   darkMode: "class",
   content: [
-    "./layouts/**/*.html",
     "./content/**/*.md",
     "./themes/meme/layouts/**/*.html",
   ],
