@@ -44,8 +44,10 @@ menu:
       post: "rss"
     - identifier: "theme-switcher"
       weight: 7
-    - identifier: "search"
+    - name: "搜索"
+      pageRef: "/search/"
       weight: 8
+      pre: "internal"
       post: "search"
 
 # 网站标题
