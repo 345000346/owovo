@@ -82,6 +82,8 @@ enableDarkMode: true
 defaultTheme: "light"
 overrideSystemPreferences: false
 enableLunrSearch: false
+enablePagefindSearch: true
+pagefindSearchPath: "/search/"
 # 启用文章标签展示（meme 原生字段）
 enablePostTags: true
 # 启用标签页云展示（/tags/）
