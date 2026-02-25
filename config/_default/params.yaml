@@ -84,6 +84,13 @@ overrideSystemPreferences: false
 enableLunrSearch: false
 enablePagefindSearch: true
 pagefindSearchPath: "/search/"
+
+# 代码块显示与交互
+enableHighlight: true
+enableOverflowY: true
+maxHeight: 80
+enableCopy: true
+enableCopyAutoHide: true
 # 启用文章标签展示（meme 原生字段）
 enablePostTags: true
 # 启用标签页云展示（/tags/）
