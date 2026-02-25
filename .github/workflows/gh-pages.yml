@@ -33,7 +33,7 @@ jobs:
           path: |
             ~/.cache/hugo
             ~/go/pkg/mod
-          key: ${{ runner.os }}-hugo-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-hugo-${{ hashFiles('package-lock.json', '.gitmodules', 'config/_default/**/*.yaml') }}
           restore-keys: |
             ${{ runner.os }}-hugo-
 
@@ -47,11 +47,27 @@ jobs:
       - name: Install root dependencies
         run: npm ci
 
+      - name: Verify Biome targets exist
+        shell: bash
+        run: |
+          shopt -s globstar nullglob
+          targets=(
+            themes/meme/assets/js/**/*.js
+            themes/meme/assets/css/**/*.css
+            assets/js/**/*.js
+            assets/css/**/*.css
+          )
+          if [ ${#targets[@]} -eq 0 ]; then
+            echo "No files matched Biome includes; fail to avoid false green CI."
+            exit 1
+          fi
+          echo "Biome target files found: ${#targets[@]}"
+
       - name: Build
         run: npm run build
 
       - name: Verify Pagefind artifacts
-        run: test -f public/pagefind/pagefind.js
+        run: test -f public/pagefind/pagefind.js && test -f public/pagefind/pagefind-entry.json
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
