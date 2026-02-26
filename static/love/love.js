@@ -241,6 +241,7 @@
       }
 
       this.particles = [];
+      if (!this.ctx || !this.canvas) return;
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
   }
@@ -306,6 +307,13 @@
     pageState.initialized = false;
   }
 
+  function handlePageShow() {
+    if (!pageState.initialized) {
+      initPage();
+    }
+  }
+
+
   // 初始化页面所有功能
   function initPage() {
     if (pageState.initialized) return;
@@ -331,4 +339,5 @@
   }
   window.addEventListener("pagehide", teardownPage);
   window.addEventListener("beforeunload", teardownPage);
+  window.addEventListener("pageshow", handlePageShow);
 })();
