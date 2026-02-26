@@ -14,16 +14,13 @@
 </head>
 
 <body>
-  <!-- 背景粒子效果容器 -->
-  <div class="background"></div>
-  
   <!-- 主内容区域 -->
   <main class="container">
     <!-- 头部 -->
     <header class="header">
       <h1>我们的爱情故事</h1>
       <div class="timer">
-        <span id="loveTimer"></span>
+        <span id="loveTimer" aria-live="polite"></span>
       </div>
     </header>
 
@@ -60,7 +57,7 @@
 
   <!-- 页脚 -->
   <footer class="footer">
-    <div id="currentDateTime"></div>
+    <div id="currentDateTime" aria-live="polite"></div>
     <div class="copyright"></div>
   </footer>
 
