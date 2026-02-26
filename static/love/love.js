@@ -84,8 +84,7 @@
       this.canvas.style.position = "fixed";
       this.canvas.style.top = "0";
       this.canvas.style.left = "0";
-      this.canvas.style.zIndex =
-        window.innerWidth >= MOBILE_BREAKPOINT ? "5" : "-1";
+      this.canvas.style.zIndex = "5";
       this.canvas.style.pointerEvents = "none";
     }
 
@@ -109,8 +108,7 @@
     resize() {
       this.canvas.width = window.innerWidth;
       this.canvas.height = window.innerHeight;
-      this.canvas.style.zIndex =
-        window.innerWidth >= MOBILE_BREAKPOINT ? "5" : "-1";
+      this.canvas.style.zIndex = "5";
     }
 
     createParticle() {
@@ -326,8 +324,11 @@
     startDateTimeUpdater();
   }
 
-  // 页面加载完成后执行初始化
-  window.addEventListener("load", initPage);
+  if (document.readyState === "loading") {
+    window.addEventListener("DOMContentLoaded", initPage);
+  } else {
+    initPage();
+  }
   window.addEventListener("pagehide", teardownPage);
   window.addEventListener("beforeunload", teardownPage);
 })();
