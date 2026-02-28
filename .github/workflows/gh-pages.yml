@@ -5,7 +5,7 @@ on:
       - main
 
 env:
-  HUGO_VERSION: "0.155.3"
+  HUGO_VERSION: "0.157.0"
 
 jobs:
   build:
