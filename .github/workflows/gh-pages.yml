@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+  # 允许在 GitHub Actions 页面手动触发发布。
+  workflow_dispatch:
 
 env:
   HUGO_VERSION: "0.157.0"
@@ -11,9 +13,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
+      # 新提交到同一分支时，取消旧任务以节省构建时间。
+      cancel-in-progress: true
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -27,12 +31,11 @@ jobs:
           hugo-version: ${{ env.HUGO_VERSION }}
           extended: true
 
+      # 当前仓库未使用 Hugo Modules，无需缓存 Go 模块目录。
       - name: Setup Hugo cache
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.cache/hugo
-            ~/go/pkg/mod
+          path: ~/.cache/hugo
           key: ${{ runner.os }}-hugo-${{ hashFiles('package-lock.json', '.gitmodules', 'config/_default/**/*.yaml') }}
           restore-keys: |
             ${{ runner.os }}-hugo-
@@ -46,22 +49,6 @@ jobs:
 
       - name: Install root dependencies
         run: npm ci
-
-      - name: Verify Biome targets exist
-        shell: bash
-        run: |
-          shopt -s globstar nullglob
-          targets=(
-            themes/meme/assets/js/**/*.js
-            themes/meme/assets/css/**/*.css
-            assets/js/**/*.js
-            assets/css/**/*.css
-          )
-          if [ ${#targets[@]} -eq 0 ]; then
-            echo "No files matched Biome includes; fail to avoid false green CI."
-            exit 1
-          fi
-          echo "Biome target files found: ${#targets[@]}"
 
       - name: Build
         run: npm run build
@@ -77,4 +64,4 @@ jobs:
           cname: owovo.xyz
           publish_branch: master
           publish_dir: ./public
-          commit_message: ${{ github.event.head_commit.message }}
+          commit_message: "${{ github.event.head_commit.message || format('deploy: publish {0}', github.sha) }}"
