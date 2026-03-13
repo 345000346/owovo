@@ -1,18 +1,31 @@
-// 时间格式化工具函数
 (() => {
-  const MOBILE_BREAKPOINT = 768;
-  const LOVE_START_DATE = new Date(2021, 7, 13, 0, 0, 0);
-
+  const LOVE_START_DATE = new Date("2021-08-13T00:00:00+08:00");
+  const REVEAL_GROUPS = [
+    { selector: ".foreword .section-head", baseDelay: 0, step: 0 },
+    { selector: ".foreword .prose", baseDelay: 120, step: 0 },
+    { selector: ".chapters .section-head", baseDelay: 0, step: 0 },
+    { selector: ".chapter-piece", baseDelay: 80, step: 110 },
+    { selector: ".timeline-section .section-head", baseDelay: 0, step: 0 },
+    { selector: ".timeline-item", baseDelay: 60, step: 85 },
+    { selector: ".closing-inner", baseDelay: 0, step: 0 },
+  ];
+  const VISIBILITY_GROUPS = [".timeline"];
+  const TIMER_PARTS = [
+    { key: "day", unit: "天", format: (value) => String(value) },
+    { key: "hour", unit: "小时", format: (value) => String(value).padStart(2, "0") },
+    { key: "minute", unit: "分钟", format: (value) => String(value).padStart(2, "0") },
+    { key: "second", unit: "秒", format: (value) => String(value).padStart(2, "0") },
+  ];
+  const REVEAL_PENDING_CLASS = "reveal-pending";
   const pageState = {
     initialized: false,
-    teardownDone: false,
     timerIntervalId: null,
-    dateTimeIntervalId: null,
-    canvas: null,
-    particleSystem: null,
+    revealObserver: null,
+    timerElement: null,
+    timerValueElements: [],
+    lastTimerValues: null,
   };
 
-  // 安全获取 DOM 元素
   function safeGetElement(id, selector) {
     if (id) {
       const element = document.getElementById(id);
@@ -33,19 +46,93 @@
     };
   }
 
-  // 更新计时器显示的内容
-  function updateTimer() {
+  function prefersReducedMotion() {
+    return (
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }
+
+  function ensureTimerStructure() {
     const timerElement = safeGetElement("loveTimer", null);
+    if (!timerElement) return null;
+
+    if (
+      pageState.timerElement === timerElement &&
+      pageState.timerValueElements.length === TIMER_PARTS.length
+    ) {
+      return timerElement;
+    }
+
+    const fragment = document.createDocumentFragment();
+    const timerValueElements = [];
+
+    TIMER_PARTS.forEach(({ unit }) => {
+      const partElement = document.createElement("span");
+      partElement.className = "timer-part";
+
+      const valueElement = document.createElement("span");
+      valueElement.className = "timer-value";
+      partElement.append(valueElement);
+
+      const unitElement = document.createElement("span");
+      unitElement.className = "timer-unit";
+      unitElement.textContent = unit;
+      partElement.append(unitElement);
+
+      fragment.append(partElement);
+      timerValueElements.push(valueElement);
+    });
+
+    timerElement.replaceChildren(fragment);
+    pageState.timerElement = timerElement;
+    pageState.timerValueElements = timerValueElements;
+    pageState.lastTimerValues = null;
+
+    return timerElement;
+  }
+
+  function restartTimerValueAnimation(valueElement) {
+    if (prefersReducedMotion()) {
+      valueElement.classList.remove("timer-value--changed");
+      return;
+    }
+
+    valueElement.classList.remove("timer-value--changed");
+    void valueElement.offsetWidth;
+    valueElement.classList.add("timer-value--changed");
+  }
+
+  function updateTimer() {
+    const timerElement = ensureTimerStructure();
     if (!timerElement) return;
 
     const now = new Date();
     const timeDiff = now - LOVE_START_DATE;
     const timeUnits = formatTimeDiff(timeDiff);
+    const nextValues = TIMER_PARTS.map(({ key, format }) => format(timeUnits[key]));
+    const previousValues = pageState.lastTimerValues;
 
-    timerElement.textContent = `${timeUnits.day} 天 ${timeUnits.hour} 小时 ${timeUnits.minute} 分钟 ${timeUnits.second} 秒`;
+    pageState.timerValueElements.forEach((valueElement, index) => {
+      const nextValue = nextValues[index];
+      const changed = !previousValues || previousValues[index] !== nextValue;
+
+      if (valueElement.textContent !== nextValue) {
+        valueElement.textContent = nextValue;
+      }
+
+      if (changed) {
+        restartTimerValueAnimation(valueElement);
+      }
+    });
+
+    pageState.lastTimerValues = nextValues;
+    timerElement.setAttribute(
+      "aria-label",
+      `${timeUnits.day} 天 ${timeUnits.hour} 小时 ${timeUnits.minute} 分钟 ${timeUnits.second} 秒`,
+    );
   }
 
-  // 启动并持续更新爱情计时器
   function startTimer() {
     updateTimer();
     if (pageState.timerIntervalId) {
@@ -54,256 +141,92 @@
     pageState.timerIntervalId = setInterval(updateTimer, 1000);
   }
 
-  // 背景爱心粒子效果系统
-  class ParticleSystem {
-    constructor(canvas) {
-      if (!canvas) return;
-      this.canvas = canvas;
-      this.ctx = canvas.getContext("2d");
-      if (!this.ctx) return;
-
-      this.particles = [];
-      this.animationId = null;
-      this.running = false;
-      this.motionState = "normal";
-
-      this.boundResize = this.resize.bind(this);
-      this.boundVisibilityChange = this.handleVisibilityChange.bind(this);
-      this.boundMotionChange = this.handleMotionPreferenceChange.bind(this);
-
-      this.motionMedia =
-        typeof window.matchMedia === "function"
-          ? window.matchMedia("(prefers-reduced-motion: reduce)")
-          : null;
-
-      this.initCanvasStyle();
-      this.init();
+  function setupRevealAnimations() {
+    if (pageState.revealObserver) {
+      pageState.revealObserver.disconnect();
+      pageState.revealObserver = null;
     }
 
-    initCanvasStyle() {
-      this.canvas.style.position = "fixed";
-      this.canvas.style.top = "0";
-      this.canvas.style.left = "0";
-      this.canvas.style.zIndex = "5";
-      this.canvas.style.pointerEvents = "none";
-    }
+    const revealElements = [];
+    const observedElements = new Set();
 
-    init() {
-      this.resize();
-      window.addEventListener("resize", this.boundResize);
-      document.addEventListener("visibilitychange", this.boundVisibilityChange);
-
-      if (this.motionMedia) {
-        if (typeof this.motionMedia.addEventListener === "function") {
-          this.motionMedia.addEventListener("change", this.boundMotionChange);
-        } else if (typeof this.motionMedia.addListener === "function") {
-          this.motionMedia.addListener(this.boundMotionChange);
-        }
-      }
-
-      this.updateMotionState();
-      this.applyMotionState();
-    }
-
-    resize() {
-      this.canvas.width = window.innerWidth;
-      this.canvas.height = window.innerHeight;
-      this.canvas.style.zIndex = "5";
-    }
-
-    createParticle() {
-      return {
-        x: Math.random() * this.canvas.width,
-        y: Math.random() * this.canvas.height,
-        size: Math.random() * 10 + 5,
-        speedX: (Math.random() - 0.5) * 0.5,
-        speedY: (Math.random() - 0.5) * 0.5,
-        color: `rgba(231, 76, 60, ${Math.random() * 0.5 + 0.2})`,
-      };
-    }
-
-    updateMotionState() {
-      if (document.hidden) {
-        this.motionState = "hidden";
-        return;
-      }
-
-      if (this.motionMedia && this.motionMedia.matches) {
-        this.motionState = "reduced-motion";
-        return;
-      }
-
-      this.motionState = "normal";
-    }
-
-    applyMotionState() {
-      if (this.motionState === "normal") {
-        this.start();
-      } else {
-        this.stop();
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      }
-    }
-
-    handleVisibilityChange() {
-      this.updateMotionState();
-      this.applyMotionState();
-    }
-
-    handleMotionPreferenceChange() {
-      this.updateMotionState();
-      this.applyMotionState();
-    }
-
-    start() {
-      if (this.running) return;
-      this.running = true;
-      this.animate();
-    }
-
-    stop() {
-      this.running = false;
-      if (this.animationId) {
-        cancelAnimationFrame(this.animationId);
-        this.animationId = null;
-      }
-    }
-
-    animate() {
-      if (!this.running || this.motionState !== "normal") {
-        return;
-      }
-
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-      const maxParticles =
-        window.innerWidth < MOBILE_BREAKPOINT ? 50 : 80;
-      if (this.particles.length < maxParticles) {
-        this.particles.push(this.createParticle());
-      }
-
-      this.particles = this.particles.filter((particle) => {
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-
-        if (
-          particle.x < 0 ||
-          particle.x > this.canvas.width ||
-          particle.y < 0 ||
-          particle.y > this.canvas.height
-        ) {
-          return false;
-        }
-
-        this.drawHeart(particle);
-        return true;
+    REVEAL_GROUPS.forEach(({ selector, baseDelay, step }) => {
+      document.querySelectorAll(selector).forEach((element, index) => {
+        element.setAttribute("data-reveal", "");
+        element.style.setProperty(
+          "--reveal-delay",
+          `${baseDelay + index * step}ms`,
+        );
+        element.classList.remove(REVEAL_PENDING_CLASS);
+        revealElements.push(element);
+        observedElements.add(element);
       });
+    });
 
-      this.animationId = requestAnimationFrame(() => this.animate());
+    VISIBILITY_GROUPS.forEach((selector) => {
+      document.querySelectorAll(selector).forEach((element) => {
+        observedElements.add(element);
+      });
+    });
+
+    if (!observedElements.size) return;
+
+    if (prefersReducedMotion() || typeof IntersectionObserver !== "function") {
+      revealElements.forEach((element) => {
+        element.classList.remove(REVEAL_PENDING_CLASS);
+      });
+      observedElements.forEach((element) => element.classList.add("is-visible"));
+      return;
     }
 
-    drawHeart(particle) {
-      this.ctx.beginPath();
-      for (let i = 0; i < 100; i++) {
-        const step = (i / 100 - 0.5) * (Math.PI * 2);
-        const x = 15 * Math.pow(Math.sin(step), 3);
-        const y = -(
-          13 * Math.cos(step) -
-          5 * Math.cos(2 * step) -
-          2 * Math.cos(3 * step) -
-          Math.cos(4 * step)
-        );
-        this.ctx.lineTo(
-          particle.x + (x * particle.size) / 15,
-          particle.y + (y * particle.size) / 15,
-        );
+    revealElements.forEach((element) => {
+      if (element.classList.contains("is-visible")) return;
+      element.classList.add(REVEAL_PENDING_CLASS);
+    });
+
+    pageState.revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          entry.target.classList.remove(REVEAL_PENDING_CLASS);
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.16,
+        rootMargin: "0px 0px -12% 0px",
+      },
+    );
+
+    observedElements.forEach((element) => {
+      if (element.classList.contains("is-visible")) {
+        element.classList.remove(REVEAL_PENDING_CLASS);
+        return;
       }
-      this.ctx.fillStyle = particle.color;
-      this.ctx.shadowBlur = 5;
-      this.ctx.shadowColor = particle.color;
-      this.ctx.fill();
-    }
-
-    destroy() {
-      this.stop();
-      window.removeEventListener("resize", this.boundResize);
-      document.removeEventListener(
-        "visibilitychange",
-        this.boundVisibilityChange,
-      );
-
-      if (this.motionMedia) {
-        if (typeof this.motionMedia.removeEventListener === "function") {
-          this.motionMedia.removeEventListener("change", this.boundMotionChange);
-        } else if (typeof this.motionMedia.removeListener === "function") {
-          this.motionMedia.removeListener(this.boundMotionChange);
-        }
-      }
-
-      this.particles = [];
-      if (!this.ctx || !this.canvas) return;
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
+      pageState.revealObserver.observe(element);
+    });
   }
 
-  // 更新页面页脚的日期时间和版权信息
-  function updateDateTime() {
-    const dateTimeElement = safeGetElement("currentDateTime", null);
-    const copyrightElement = safeGetElement(null, ".copyright");
-
-    const now = new Date();
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    };
-
-    if (dateTimeElement) {
-      dateTimeElement.textContent = now.toLocaleString("zh-CN", options);
-    }
-
-    if (copyrightElement) {
-      copyrightElement.textContent = `Copyright © ${now.getFullYear()} | Design by PGQ`;
-    }
+  function stopTimer() {
+    if (!pageState.timerIntervalId) return;
+    clearInterval(pageState.timerIntervalId);
+    pageState.timerIntervalId = null;
   }
 
-  function startDateTimeUpdater() {
-    updateDateTime();
-    if (pageState.dateTimeIntervalId) {
-      clearInterval(pageState.dateTimeIntervalId);
-    }
-    pageState.dateTimeIntervalId = setInterval(updateDateTime, 1000);
+  function initPage() {
+    if (pageState.initialized) return;
+    pageState.initialized = true;
+    startTimer();
+    setupRevealAnimations();
   }
 
   function teardownPage() {
-    if (pageState.teardownDone) return;
-
-    pageState.teardownDone = true;
-
-    if (pageState.timerIntervalId) {
-      clearInterval(pageState.timerIntervalId);
-      pageState.timerIntervalId = null;
+    stopTimer();
+    if (pageState.revealObserver) {
+      pageState.revealObserver.disconnect();
+      pageState.revealObserver = null;
     }
-
-    if (pageState.dateTimeIntervalId) {
-      clearInterval(pageState.dateTimeIntervalId);
-      pageState.dateTimeIntervalId = null;
-    }
-
-    if (pageState.particleSystem) {
-      pageState.particleSystem.destroy();
-      pageState.particleSystem = null;
-    }
-
-    if (pageState.canvas && pageState.canvas.parentNode) {
-      pageState.canvas.parentNode.removeChild(pageState.canvas);
-    }
-
-    pageState.canvas = null;
     pageState.initialized = false;
   }
 
@@ -313,30 +236,24 @@
     }
   }
 
-
-  // 初始化页面所有功能
-  function initPage() {
-    if (pageState.initialized) return;
-
-    pageState.initialized = true;
-    pageState.teardownDone = false;
-
-    startTimer();
-
-    const canvas = document.createElement("canvas");
-    canvas.classList.add("particles");
-    document.body.appendChild(canvas);
-    pageState.canvas = canvas;
-    pageState.particleSystem = new ParticleSystem(canvas);
-
-    startDateTimeUpdater();
-  }
-
   if (document.readyState === "loading") {
-    window.addEventListener("DOMContentLoaded", initPage);
+    window.addEventListener("DOMContentLoaded", initPage, { once: true });
   } else {
     initPage();
   }
+
+  function handleVisibilityChange() {
+    if (document.hidden) {
+      stopTimer();
+      return;
+    }
+
+    if (pageState.initialized) {
+      startTimer();
+    }
+  }
+
+  document.addEventListener("visibilitychange", handleVisibilityChange);
   window.addEventListener("pagehide", teardownPage);
   window.addEventListener("beforeunload", teardownPage);
   window.addEventListener("pageshow", handlePageShow);
