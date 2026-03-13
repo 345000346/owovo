@@ -1,67 +1,203 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <!-- 基本元信息 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我们的爱情故事</title>
-  
-  <!-- 引入Google字体 -->
-  <link rel="stylesheet" href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&amp;display=swap">
-  
-  <!-- 引入自定义样式 -->
+  <title>我们的纪念册</title>
+  <link rel="preload" as="font" type="font/woff2" href="/love/fonts/noto-serif-sc-subset.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/love/fonts/cormorant-garamond-subset.woff2" crossorigin>
   <link rel="stylesheet" href="/love/love.css">
 </head>
-
 <body>
-  <!-- 主内容区域 -->
-  <main class="container">
-    <!-- 头部 -->
-    <header class="header">
-      <h1>我们的爱情故事</h1>
-      <div class="timer">
-        <span id="loveTimer"></span>
-      </div>
-    </header>
+  <main class="memorial-page">
+    <section class="cover" id="top" aria-labelledby="coverTitle">
+      <div class="cover-inner">
+        <p class="cover-kicker">From 2021.08.13</p>
+        <h1 class="cover-title" id="coverTitle">我们的纪念册</h1>
+        <p class="cover-subtitle">把喜欢过成日常，把日常写成值得回看的纪念。</p>
 
-    <!-- 内容卡片 -->
-    <article class="content">
-      <div class="card">
-        <div class="card-content">
-          <!-- 爱情故事内容 -->
-          <p>在我们相处中，我发现我们是如此的契合，是如此的有默契。</p>
-          <p>我好喜欢被你需要的感觉，也好喜欢你的直率与可爱。</p>
-          <p>我们俩能互相get到对方的点，大概是因为我足够了解你，你也足够了解我。</p>
-          <p>我愿意和你一起“幼稚”，我愿意和你一起玩到老，这样才是幸福的一生呀～</p>
-          <p>一见钟情是浪漫，日久生情是陪伴，我坚信最浪漫的事就是和你一起慢慢变老。</p>
-          <p>我们俩共同培养爱情这棵小树苗，然后看着它一点一点的成长，最后长成一棵参天大树。</p>
-          <p>从日出到日落，这山山水水的每一处都透露着浪漫的气息，只有我们俩的惬意时光。</p>
-          <p>我想和你去更多美好的地方，以爱之名看遍万水千山…</p>
-          <p>真爱来了，我们要好好把握，相信中间的计时器将永远继续下去。</p>
-          <p>今天是2021年11月20日，我们在一起的第100天，2400个小时，144000分钟，8640000秒。</p>
-          <p>每一天我都没有缺席，每一天都有亲亲，愿我们彼此温暖，互不辜负，人生苦短，有你很甜，好好生活，慢慢爱你。</p>
-          <p>今天是2022年3月18日，我们在一起的第218天，今天也是你的生日，祝我亲爱的猫猫生日快乐！</p>
-          <p>深情不及久伴，厚爱无需多言，一路走来，我俩有苦有甜，有吵有闹，但我们都走过来了。</p>
-          <p>有你陪伴的日子，即使平淡，也觉得浪漫。一辈子很短，希望开始是你，过程是你，结尾也是你。</p>
-          <p>今天是2022年8月4日农历七月初七，是我们在一起的357天，今天是七夕耶~七夕快乐！</p>
-          <p>我想和你分享各种无关紧要的小事，有分享欲且愿意分享简直太棒啦！你看，这世界这么多人，我遇到了你，你也遇到了我，真好。</p>
-          <p>今天是我们在一起的第520天，你是我生命中的阳光，让我永远充满活力。我相信我们能一起走过所有的难关，互相陪伴，共度美好的未来。</p>
-          <p>今天是2023年8月13日，我们在一起两年啦，在这两年里，我们经历了无数难忘的瞬间，都成为了我们感情的坚实基础。愿我们的未来充满爱与幸福，继续携手创造更多美好回忆。</p>
-          <p>今天是2023年9月6日，我们领证啦，终于等到了和心爱的人走向婚姻的那一刻，感觉幸福爆棚！我们将共度人生的每一个美好时刻，开启幸福的新生活！</p>
-          <p>今天是2024年9月6日，我们结婚一周年啦！这一年里，我们一起经历了许多美好的时光，每一天都充满了幸福和快乐，期待我们未来的每一个周年纪念日！</p>
-          <p>今天是2024年12月31日，我们一起跨年，迎接崭新的2025年。愿我们在新的一年里继续携手同行，创造更多美好回忆，让我们的爱情故事更加精彩纷呈！</p>
+        <div class="cover-timer" aria-labelledby="loveTimerLabel">
+          <span class="timer-label" id="loveTimerLabel">我们已经相爱了多久</span>
+          <strong id="loveTimer">正在计算中...</strong>
+          <noscript>（需要启用 JavaScript 才能显示计时器）</noscript>
+        </div>
+
+        <p class="cover-note">这一页最想认真记住的，不是某个漂亮的句子，而是直到此刻，我们依然在一起好好相爱。</p>
+      </div>
+
+      <a class="scroll-cue" href="#foreword">向下翻阅纪念册</a>
+    </section>
+
+    <section class="section foreword" id="foreword" aria-labelledby="forewordTitle">
+      <div class="section-inner intro-layout">
+        <header class="section-head">
+          <p class="section-index">扉页</p>
+          <h2 id="forewordTitle">写在最前面的几句话</h2>
+          <p class="section-lead">有些喜欢适合热烈表达，有些喜欢更适合被安静收藏。你和我，是后者，也是最珍贵的那一种。</p>
+        </header>
+
+        <div class="prose">
+          <p>在我们相处中，我越来越确定，我们是如此契合，也总能在很小的细节里听懂对方没说完的话。</p>
+          <p>我很喜欢被你需要的感觉，也很喜欢你的直率与可爱。那些被你信任、被你依赖的瞬间，总让我觉得自己被认真放在心上。</p>
+          <p>我愿意和你一起慢慢长大，也愿意和你一起偶尔幼稚。比起轰轰烈烈，我更想和你把日子安安静静地过成一起慢慢变老的样子。</p>
         </div>
       </div>
-    </article>
+    </section>
+
+    <section class="section chapters" id="chapters" aria-labelledby="chaptersTitle">
+      <div class="section-inner">
+        <header class="section-head section-head--center">
+          <p class="section-index">相处章节</p>
+          <h2 id="chaptersTitle">把爱拆开来看，原来每一页都很具体</h2>
+          <p class="section-lead">不是所有温柔都需要惊天动地，很多时候，爱只是刚好懂你，也刚好想陪你久一点。</p>
+        </header>
+
+        <div class="chapter-list">
+          <article class="chapter-piece">
+            <p class="chapter-order">01</p>
+            <div class="chapter-copy">
+              <h3>默契与了解</h3>
+              <p>我们俩能互相 get 到对方的点，大概是因为我足够了解你，你也足够了解我。</p>
+              <p>有些情绪不用解释太多，一个眼神、一句玩笑、一个停顿，彼此就已经懂了。</p>
+            </div>
+          </article>
+
+          <article class="chapter-piece">
+            <p class="chapter-order">02</p>
+            <div class="chapter-copy">
+              <h3>陪伴与幸福</h3>
+              <p>我愿意和你一起“幼稚”，也愿意和你一起玩到老；有你陪伴的日子，即使平淡，也觉得浪漫。</p>
+              <p>深情不及久伴，厚爱无需多言。一路走来有苦有甜、有吵有闹，但想到身边一直是你，心里就很安稳。</p>
+            </div>
+          </article>
+
+          <article class="chapter-piece">
+            <p class="chapter-order">03</p>
+            <div class="chapter-copy">
+              <h3>分享与未来</h3>
+              <p>我想和你分享各种无关紧要的小事，因为世界很大，能遇见一个愿意认真听你说话的人，真的很难得。</p>
+              <p>我也想和你去更多美好的地方，以爱之名看遍万水千山，再把未来的每一天都一起慢慢过完。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section timeline-section" id="milestones" aria-labelledby="timelineTitle">
+      <div class="section-inner">
+        <header class="section-head section-head--center">
+          <p class="section-index">纪念节点</p>
+          <h2 id="timelineTitle">那些值得一遍遍回看的日子</h2>
+          <p class="section-lead">有些日期因为发生在日历上而被记住，有些日期因为发生在我们之间，而变得格外重要。</p>
+        </header>
+
+        <ol class="timeline">
+          <li class="timeline-item">
+            <div class="timeline-meta">
+              <p class="timeline-date">2021.11.20</p>
+              <p class="timeline-days">相爱第 100 天</p>
+            </div>
+            <div class="timeline-body">
+              <h3>第一百天</h3>
+              <p>那一天，我们已经把喜欢认真地过成了日常。2400 个小时的陪伴像是在提醒我：爱不是一时心动，而是每天都不缺席。</p>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-meta">
+              <p class="timeline-date">2022.03.18</p>
+              <p class="timeline-days">相爱第 218 天</p>
+            </div>
+            <div class="timeline-body">
+              <h3>你的生日</h3>
+              <p>这一天不只是纪念相爱，也是在认真庆祝你的来到。祝我亲爱的猫猫生日快乐，希望往后的每一年，我都能陪你把愿望听完。</p>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-meta">
+              <p class="timeline-date">2022.08.04</p>
+              <p class="timeline-days">相爱第 357 天</p>
+            </div>
+            <div class="timeline-body">
+              <h3>七夕</h3>
+              <p>七夕让浪漫有了节日名字，但对我来说，更珍贵的是我们早已把许多平凡日子过成了节日。和你在一起，连平常都带着光。</p>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-meta">
+              <p class="timeline-date">2023.01.14</p>
+              <p class="timeline-days">相爱第 520 天</p>
+            </div>
+            <div class="timeline-body">
+              <h3>第五百二十天</h3>
+              <p>你像阳光一样照进我的生活，也让我更相信，两个人真的可以一起穿过难关，互相陪伴，然后走向更远的未来。</p>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-meta">
+              <p class="timeline-date">2023.08.13</p>
+              <p class="timeline-days">相爱第 731 天</p>
+            </div>
+            <div class="timeline-body">
+              <h3>两周年</h3>
+              <p>两年的时间里，我们经历的无数瞬间，都一点点长成了感情最扎实的底气。想到这些回忆都属于我们，就觉得特别幸福。</p>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-meta">
+              <p class="timeline-date">2023.09.06</p>
+              <p class="timeline-days">相爱第 755 天</p>
+            </div>
+            <div class="timeline-body">
+              <h3>领证</h3>
+              <p>终于和心爱的人把喜欢写进了法律意义上的以后。那一刻的幸福，不是热闹，而是笃定，是终于可以更理直气壮地说“我们”。</p>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-meta">
+              <p class="timeline-date">2024.09.06</p>
+              <p class="timeline-days">相爱第 1121 天</p>
+            </div>
+            <div class="timeline-body">
+              <h3>结婚一周年</h3>
+              <p>这一年里，我们把婚后的日子过成了更深的陪伴。想到未来还会有很多很多个周年纪念日，就会对以后格外期待。</p>
+            </div>
+          </li>
+
+          <li class="timeline-item">
+            <div class="timeline-meta">
+              <p class="timeline-date">2024.12.31</p>
+              <p class="timeline-days">相爱第 1237 天</p>
+            </div>
+            <div class="timeline-body">
+              <h3>一起跨年</h3>
+              <p>我们一起迎接崭新的 2025 年，也继续把故事往后写。新的一年没有别的愿望，只想还是和你并肩，把很远的路慢慢走完。</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section closing" id="closing" aria-labelledby="closingTitle">
+      <div class="section-inner closing-inner">
+        <p class="section-index">尾页</p>
+        <h2 id="closingTitle">写给以后</h2>
+        <p>一见钟情是浪漫，日久生情是陪伴，而我最想要的，是未来每一次回头时，身边都还是你。</p>
+        <p>愿这个计时器一直走下去，也愿我们把往后的每一天，都继续过成值得珍藏的纪念。</p>
+      </div>
+    </section>
   </main>
 
-  <!-- 页脚 -->
-  <footer class="footer">
-    <div id="currentDateTime"></div>
-    <div class="copyright"></div>
+  <footer class="page-footer">
+    <p>From 2021.08.13, still counting.</p>
+    <p>写给你，也写给我们的以后。</p>
   </footer>
 
-  <!-- 引入JavaScript文件 -->
   <script data-cfasync="false" src="/love/love.js"></script>
 </body>
 </html>
