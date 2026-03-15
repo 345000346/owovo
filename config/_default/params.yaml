@@ -58,6 +58,10 @@ listDatePosition: "right"
 # meme 首页与基础布局开关
 homeLayout: "posts"
 headerLayout: "flex"
+
+# 移动端收纳导航（汉堡按钮展开）
+enableNavToggle: true
+navHeight: "20em"
 headerBackground: "linear-gradient(90deg, #f795331a 0, #f370551a 15%, #ef4e7b1a 30%, #a166ab1a 44%, #5073b81a 58%, #1098ad1a 72%, #07b39b1a 86%, #6dba821a 100%)"
 siteBrandFontSize: 1
 siteBrandFontColor: "var(--color-contrast-high)"
@@ -94,6 +98,20 @@ enableCopyAutoHide: true
 
 # 平滑滚动（含 TOC 锚点跳转动画）
 enableSmoothScroll: true
+
+# 文章元信息（用于首页文章列表标题下的一行信息）
+enablePostMetaInHome: true
+postMetaDateFormat: "2006-01-02"
+displayPublishedDate: true
+publishedDateIcon: "calendar-alt"
+displayReadingTime: true
+readingTimeIcon: "clock"
+
+# 为了保持首页信息低调，主动关闭不需要的元信息
+displayModifiedDate: false
+displayWordCount: false
+displayCategory: false
+
 # 启用文章标签展示（meme 原生字段）
 enablePostTags: true
 # 启用标签页云展示（/tags/）
