@@ -30,6 +30,7 @@ Thumbs.db
 
 # Claude local workspace
 .claude/
+.worktrees/
 
 # Claude Code local files
 CLAUDE.md
