@@ -1,5 +1,11 @@
 (() => {
-  const LOVE_START_DATE = new Date("2021-08-13T00:00:00+08:00");
+  const pageRoot = document.querySelector(".memorial-page");
+  const LOVE_START_AT = pageRoot?.getAttribute("data-love-start-at") || "";
+  const LOVE_START_DISPLAY_TEXT = LOVE_START_AT.replace(
+    /^(\d{4})-(\d{2})-(\d{2}).*$/,
+    "$1.$2.$3",
+  );
+  const LOVE_START_DATE = LOVE_START_AT ? new Date(LOVE_START_AT) : null;
   const REVEAL_GROUPS = [
     { selector: ".foreword .section-head", baseDelay: 0, step: 0 },
     { selector: ".foreword .prose", baseDelay: 120, step: 0 },
@@ -35,6 +41,13 @@
       return document.querySelector(selector);
     }
     return null;
+  }
+
+  function syncLoveStartDisplay() {
+    if (!LOVE_START_DISPLAY_TEXT || LOVE_START_DISPLAY_TEXT === LOVE_START_AT) return;
+    document.querySelectorAll("[data-love-start-display]").forEach((element) => {
+      element.textContent = LOVE_START_DISPLAY_TEXT;
+    });
   }
 
   function formatTimeDiff(timeDiff) {
@@ -104,6 +117,8 @@
   }
 
   function updateTimer() {
+    if (!(LOVE_START_DATE instanceof Date) || Number.isNaN(LOVE_START_DATE.getTime())) return;
+
     const timerElement = ensureTimerStructure();
     if (!timerElement) return;
 
@@ -217,6 +232,7 @@
   function initPage() {
     if (pageState.initialized) return;
     pageState.initialized = true;
+    syncLoveStartDisplay();
     startTimer();
     setupRevealAnimations();
   }
