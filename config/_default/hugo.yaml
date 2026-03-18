@@ -2,12 +2,12 @@
 baseURL: "https://owovo.xyz"
 
 # 网站默认语言
-languageCode: "zh-CN"
 defaultContentLanguage: "zh-CN"
 
 languages:
   zh-CN:
-    languageName: "Chinese"
+    locale: "zh-CN"
+    label: "Chinese"
     weight: 1
 
 menu:
