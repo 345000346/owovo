@@ -53,6 +53,7 @@ jobs:
       - name: Verify Hugo 0.158 compatibility
         run: npm run verify:hugo158
 
+      # Hugo 生产构建参数统一收口到 package.json，并与官方推荐的 --gc --minify 对齐。
       - name: Build
         run: npm run build
 
