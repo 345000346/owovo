@@ -7,7 +7,6 @@
     "build:site": "hugo --gc --minify",
     "build:search": "pagefind --site public",
     "build": "npm run build:site && npm run build:search",
-    "verify:hugo158": "pwsh -NoLogo -NoProfile -Command \"$output = hugo --gc --minify --logLevel info 2>&1; $deprecated = $output | Select-String -Pattern '(?i)deprecat'; if ($deprecated) { $deprecated | ForEach-Object { $_.Line }; throw '检测到 Hugo 弃用相关日志，请先完成迁移。' }; Write-Host '未检测到 Hugo 弃用相关日志。'\"",
     "format": "prettier --write \"./**/*.{html,css,js,json,md,yaml,yml}\""
   },
   "keywords": [
