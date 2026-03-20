@@ -128,7 +128,14 @@ caches:
 security:
   exec:
     allow:
+      - "^(dart-)?sass(-embedded)?$"
+      - "^git$"
       - "^npx$"
       - "^postcss$"
+      - "^tailwindcss$"
       - "^go$"
       - "^node$"
+  funcs:
+    getenv:
+      - "^HUGO_"
+      - "^CI$"
