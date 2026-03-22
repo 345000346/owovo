@@ -30,7 +30,7 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      # 让预览地址和正式地址共用同一套构建命令，避免资源路径写死。
+      # 保留 GitHub Pages 的环境配置，后续部署步骤仍会用到。
       - name: Configure Pages
         id: pages
         uses: actions/configure-pages@v5
@@ -60,9 +60,9 @@ jobs:
       - name: Install root dependencies
         run: npm ci
 
-      # 预览环境需要临时覆盖 baseURL，正式域名绑定后会自动切回对应地址。
+      # 正式发布固定使用仓库配置中的根域名，避免误带仓库子目录前缀。
       - name: Build site
-        run: npm run build:site -- --baseURL "${{ steps.pages.outputs.base_url }}/"
+        run: npm run build:site
 
       - name: Build search
         run: npm run build:search
