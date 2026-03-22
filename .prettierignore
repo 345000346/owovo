@@ -9,7 +9,6 @@ public/
 resources/
 static/love.html
 static/love/
-tailwind.config.js
 themes/meme/
 .hugo_build.lock
 hugo_stats.json
