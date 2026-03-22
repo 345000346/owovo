@@ -14,6 +14,10 @@ mainSections:
 # 网站图标
 favicon: "/favicon.ico"
 
+# 浏览器地址栏与系统 UI 使用的主题色
+themeColor: "#ffffff"
+themeColorDark: "#16171d"
+
 # 网站副标题，同时用作 meta description
 subtitle: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
 # 网站关键词

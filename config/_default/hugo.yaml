@@ -104,7 +104,6 @@ services:
     limit: 20 # RSS 输出的文章数量
 
 build:
-  writeStats: true
   use: postcss
 
 # 时区配置
@@ -132,7 +131,6 @@ security:
       - "^git$"
       - "^npx$"
       - "^postcss$"
-      - "^tailwindcss$"
       - "^go$"
       - "^node$"
   funcs:
