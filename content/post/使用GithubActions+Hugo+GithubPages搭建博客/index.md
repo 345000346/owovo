@@ -1,117 +1,222 @@
 ---
-title: "使用 Github Actions + Hugo + Github Pages搭建博客"
-date: 2020-01-01T13:14:18+08:00
+title: "使用 GitHub Actions + Hugo + GitHub Pages 搭建博客"
+date: 2026-03-23T00:00:00+08:00
+slug: "使用-Github-Actions--Hugo--Github-Pages搭建博客"
 toc: true
-tags: ["Github","Hugo"]
+tags: ["GitHub", "Hugo"]
 categories: ["Hugo"]
+draft: false
 ---
 
-如果你想搭建自己的 Blog，但是又没有自己的 VPS、云服务器等，使用 Github Actions + Hugo + Github Pages搭建博客是最简单的选择。
+如果你想用 `Hugo` 搭一个静态博客，同时又希望把站点托管到 `GitHub Pages`，那现在最省事的做法就是：**直接在当前仓库里构建并发布。**
+
+这篇文章只讲一套当前还适合直接照着做的流程：在博客仓库里写文章，在博客仓库里跑 `GitHub Actions`，再由 `GitHub Pages` 直接发布构建结果。
 
 <!--more-->
 
-## 一、建立 Github Pages
+## 一、准备 Hugo 项目
 
-在你的 Github 账号里新建一个 Repository ，仓库名必须为 [你的用户名]-github.io，必须使用 master 分支，这个就是你建立 Github Pages 的 Repository.
+先确保你已经有一个能正常运行的 `Hugo` 项目。
 
-## 二、建立 Hugo 文章仓库
+如果你还没有项目，可以先初始化：
 
-在你的 Github 账号里新建一个 Repository，名称什么的都随意，比如 myBlog.
+```text
+hugo new site myblog
+```
 
-## 三、编写 Github Actions 脚本
+然后根据自己的习惯安装主题、补充配置、添加文章。
 
-1.打开 Hugo 文章仓库中 Repository 的 Actions ，选择右边的 `skip this : Set up a workflow yourself`；
+## 二、设置站点地址
 
-2.选择后，会出现一个 yml 文件的编辑器，里面的内容不用理会；
+打开 Hugo 配置文件，把 `baseURL` 改成你的正式访问地址。
 
-3.我们参考 [peaceiris/actions-hugo](https://github.com/peaceiris/actions-hugo) 和  [peaceiris/actions-gh-pages](peaceiris/actions-gh-pages) 项目，编写自己的 workflow；
+例如：
 
-不废话，直接上代码
+```yaml
+baseURL: "https://owovo.xyz"
+```
 
-```makefile
-name: Github Pages #自动化的名称
+如果你暂时还没有自己的域名，也可以先写成后续准备使用的 `GitHub Pages` 地址，等域名配置完成后再改。
+
+## 三、准备构建命令
+
+如果你的站点只需要 Hugo 本身来生成页面，那么最简单的构建脚本可以这样写：
+
+```json
+{
+  "scripts": {
+    "build:site": "hugo --gc --minify"
+  }
+}
+```
+
+如果你的项目除了生成静态页面之外，还需要额外生成搜索索引、前端资源或别的发布产物，也可以拆开写清楚。
+
+例如：
+
+```json
+{
+  "scripts": {
+    "build:site": "hugo --gc --minify",
+    "build:search": "pagefind --site public",
+    "build": "npm run build:site && npm run build:search"
+  }
+}
+```
+
+核心思路很简单：把你本地发布时真正要跑的命令，整理成仓库里的脚本，后面工作流直接调用它。
+
+## 四、编写 GitHub Pages 工作流
+
+在仓库里新建文件：
+
+```text
+.github/workflows/gh-pages.yml
+```
+
+可以直接使用下面这份工作流：
+
+```yaml
+name: GitHub Pages
+
 on:
-  push: # push 的时候触发
-     branches: # 那些分支需要触发
-      - master
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+env:
+  HUGO_VERSION: "0.158.0"
+
 jobs:
   build:
-    runs-on: ubuntu-latest # 镜像市场
+    runs-on: ubuntu-latest
     steps:
-      - name: checkout # 步骤的名称
-        uses: actions/checkout@master #软件市场的名称
-        # with: # 参数
-         # submodules: true
-      - name: Setup Hugo # 安装 Hugo
-        uses: peaceiris/actions-hugo@v2
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          hugo-version: 'latest' # 使用Hugo最新版
+          submodules: true
+          fetch-depth: 0
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: ${{ env.HUGO_VERSION }}
           extended: true
 
-      - name: Build # 编译
-        run: hugo
-
-      - name: Deploy # 部署
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-         DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-         EXTERNAL_REPOSITORY: 你的用户名/你的用户名.github.io
-         CNAME: #添加你的网站域名作CNAME以便解析
-         PUBLISH_BRANCH: master
-         PUBLISH_DIR: ./public
-         COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build:site
+
+      - name: Build search
+        run: npm run build:search
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 ```
 
-## 四、准备部署
+如果你的项目不需要 `Node.js`、也不需要额外生成搜索索引，可以把下面这些步骤删掉：
 
-我们开发的项目和 Github Pages 是分开的，所以用了两个 Repository，接下来就是要在你将 Hugo文章推到 myBlog 这个 Repository 后，部署到 Github Pages.
+- `Setup Node.js`
+- `Install dependencies`
+- `Build search`
 
-首先我们要在你的电脑上安装 Git ，这是[官网](https://git-scm.com/)，下载安装我就不多说了，一般直接下一步即可。
+然后把工作流里的构建命令改成只执行 Hugo 构建即可。
 
-### 1.生成提交代码用的 *ssh key*
+## 五、开启 Pages 发布
 
-打开 cmd ，或者 Powershell ，输入
+工作流写好之后，进入仓库设置：
 
+```text
+Settings -> Pages
 ```
-ssh-keygen -t rsa -b 4096 -C "$(git config user.email)" -f gh-pages -N ""
-# 你会得到以下这两个文件:
-#   gh-pages.pub (public key)
-#   gh-pages     (private key)
+
+在发布来源里选择：
+
+```text
+GitHub Actions
 ```
 
-**注：这两个文件可能在 `C:\Users\[你的电脑用户名]\.ssh` 下，也可能在打开的命令行目录下。**
+这样这个仓库就会使用你刚刚写好的工作流来发布站点。
 
-### 2.填写密钥
+## 六、推送代码并自动发布
 
-假设 Hugo 文章的 Repository 名字是 `myBlog`，部署的项目为 `[你的用户名].github.io`
+把博客代码推送到 `main` 分支后，`GitHub Actions` 就会自动开始执行。
 
-打开 `myBlog` 仓库的 `settings`，再点击 `Secrets`，然后添加刚刚生成的私钥，`name` 为 `ACTIONS_DEPLOY_KEY`
+整个过程一般分成两步：
 
-打开 [你的用户名].github.io，点击 Deploy keys，添加公钥，`Allow write access` 一定要勾上，否则会无法部署
+- 先构建站点
+- 再部署到 `GitHub Pages`
 
-### 3.提交代码
+你可以在仓库的 `Actions` 页面查看每一次发布记录。
 
-然后，你就可以提交 Hugo文章 到 myBlog 仓库，Push 成功后，打开仓库 Actions，可以查看是否自动编译成功。
+## 七、绑定自定义域名
 
-## 五、绑定自定义域名
+如果你希望博客通过自己的域名访问，比如 `owovo.xyz`，还需要再做两件事。
 
-例如我有域名 owovo.xyz，我希望用自己的域名用来访问刚建立的 Blog，需要进行以下操作。
+### 1. 在 Pages 设置里填写域名
 
-### 1.绑定域名
+进入：
 
-进入 [你的用户名].github.io 仓库的 setting；
+```text
+Settings -> Pages
+```
 
-在下面 Github Pages 里 Custom domain 栏填入对应自己的域名，点击 save 保存，
+把你的正式域名填到 `Custom domain` 里并保存。
 
-**注：可以打开 Enforce HTTPS ，使用 HTTPS 访问，这是 Github 免费签发的证书。**
+保存后，等 GitHub 证书准备完成，再打开 `Enforce HTTPS`。
 
-保存后，在 master 分支应该可以看到一个名为 CNAME 的文件，内容为自己的域名。
+### 2. 在域名服务商后台添加解析
 
-### 2.添加域名解析
+这一部分要看你使用的是哪一家域名服务商，但原则很简单：
 
-到自己域名提供商的控制台添加解析。
+- 根域名解析到 `GitHub Pages`
+- `www` 子域名通常可以添加一条 `CNAME` 指向 `用户名.github.io`
 
-添加一条主机记录为 `CNAME` 解析，记录值为 `[你的用户名].github.io`，
+如果你已经换成自己的正式域名，别忘了把 Hugo 配置里的 `baseURL` 也同步改成这个域名。
 
-解析生效后，就可以通过 `owovo.xyz` 访问自己放在 `Github` 上的个人主页了，并且通过 `[你的用户名].github.io` 访问时，会自动跳转到 `owovo.xyz`.
+## 八、适合长期维护的做法
 
+如果你准备长期维护这个博客，建议把下面几件事固定下来：
+
+1. 内容、主题、配置和工作流都放在同一个仓库里维护。
+2. 本地构建命令和工作流构建命令保持一致。
+3. 每次改域名、改资源路径、改搜索方案时，同时检查 `baseURL` 和发布流程。
+4. 站点能正常发布后，再去处理自定义域名和 HTTPS。
+
+按这套方式整理后，博客的日常维护会简单很多，发布链路也更直观。
