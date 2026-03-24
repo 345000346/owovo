@@ -1,8 +1,57 @@
 // 说明：custom.js 会被 Hugo 作为模板执行（可读取 .Site.Params / i18n）
 
+const getResolvedTheme = () => {
+  const theme = document.documentElement.getAttribute("data-theme")
+  if (theme === "light" || theme === "dark") {
+    return theme
+  }
+
+  if (
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  ) {
+    return "dark"
+  }
+
+  return "light"
+}
+
+const syncThemedBadges = () => {
+  const theme = getResolvedTheme()
+
+  document.querySelectorAll("img.themed-badge").forEach((badge) => {
+    const nextSrc = theme === "dark" ? badge.dataset.darkSrc : badge.dataset.lightSrc
+    if (nextSrc && badge.getAttribute("src") !== nextSrc) {
+      badge.setAttribute("src", nextSrc)
+    }
+  })
+}
+
+const initThemedBadges = () => {
+  const badges = document.querySelectorAll("img.themed-badge")
+  if (badges.length === 0) {
+    return
+  }
+
+  syncThemedBadges()
+
+  const observer = new MutationObserver((mutations) => {
+    if (mutations.some((mutation) => mutation.attributeName === "data-theme")) {
+      syncThemedBadges()
+    }
+  })
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"]
+  })
+}
+
 window.addEventListener(
   "DOMContentLoaded",
   async () => {
+    initThemedBadges()
+
     // =========================================================
     // Pagefind 搜索初始化
     // =========================================================

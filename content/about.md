@@ -86,18 +86,34 @@ toc: true
 
 ## 🌐 社交媒体
 
-<div class="flex flex-wrap gap-2.5">
-  <a target="_blank" href="https://github.com/345000346" class="inline-block border-0">
-    <img data-light-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=f0f6fc&labelColor=282c34&label=GitHub&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github" data-dark-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=181717&labelColor=282c34&label=GitHub&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github" class="themed-badge">
-  </a>
-
-  <a target="_blank" href="https://weibo.com/u/1733321624" class="inline-block border-0">
-    <img data-light-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=E6162D&labelColor=f0f6fc&label=微博&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo" data-dark-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=E6162D&labelColor=282c34&label=微博&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo" class="themed-badge">
-  </a>
-
-  <a target="_blank" href="https://www.zhihu.com/people/Hibernate_" class="inline-block border-0">
-    <img data-light-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=0084ff&labelColor=f0f6fc&label=知乎&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3DHibernate_&logo=zhihu" data-dark-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=0084ff&labelColor=282c34&label=知乎&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3DHibernate_&logo=zhihu" class="themed-badge">
-  </a>
+<div class="about-social-showcase">
+  <p class="about-social-intro">在不同的平台，保留不同的表达方式。</p>
+  <div class="about-social-grid">
+    <a target="_blank" rel="external noopener" href="https://github.com/345000346" class="about-social-card border-0">
+      <span class="about-social-mark about-social-mark-github" aria-hidden="true">GH</span>
+      <span class="about-social-copy">
+        <span class="about-social-platform">GitHub</span>
+        <span class="about-social-role">代码与仓库</span>
+        <img src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=f0f6fc&labelColor=282c34&label=GitHub&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github" data-light-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=f0f6fc&labelColor=282c34&label=GitHub&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github" data-dark-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=181717&labelColor=282c34&label=GitHub&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3D345000346&logo=github" alt="GitHub 关注者徽章" loading="lazy" decoding="async" class="themed-badge about-social-badge">
+      </span>
+    </a>
+    <a target="_blank" rel="external noopener" href="https://weibo.com/u/1733321624" class="about-social-card border-0">
+      <span class="about-social-mark about-social-mark-weibo" aria-hidden="true">WB</span>
+      <span class="about-social-copy">
+        <span class="about-social-platform">微博</span>
+        <span class="about-social-role">日常与碎片</span>
+        <img src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=E6162D&labelColor=f0f6fc&label=微博&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo" data-light-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=E6162D&labelColor=f0f6fc&label=微博&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo" data-dark-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=E6162D&labelColor=282c34&label=微博&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dweibo%26queryKey%3D1733321624&logo=sina-weibo" alt="微博 关注者徽章" loading="lazy" decoding="async" class="themed-badge about-social-badge">
+      </span>
+    </a>
+    <a target="_blank" rel="external noopener" href="https://www.zhihu.com/people/Hibernate_" class="about-social-card border-0">
+      <span class="about-social-mark about-social-mark-zhihu" aria-hidden="true">ZH</span>
+      <span class="about-social-copy">
+        <span class="about-social-platform">知乎</span>
+        <span class="about-social-role">长一点的表达</span>
+        <img src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=0084ff&labelColor=f0f6fc&label=知乎&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3DHibernate_&logo=zhihu" data-light-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=0084ff&labelColor=f0f6fc&label=知乎&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3DHibernate_&logo=zhihu" data-dark-src="https://img.shields.io/badge/dynamic/json?style=flat-square&color=0084ff&labelColor=282c34&label=知乎&query=$.data.totalSubs&suffix= 关注者&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3DHibernate_&logo=zhihu" alt="知乎 关注者徽章" loading="lazy" decoding="async" class="themed-badge about-social-badge">
+      </span>
+    </a>
+  </div>
 </div>
 
 ---
