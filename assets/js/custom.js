@@ -114,7 +114,7 @@ const initPagefindSearch = async () => {
     if (statusNode) {
       statusNode.textContent = config.i18n.pagefindSearchUnavailable;
     }
-    console.error("[search] Pagefind initialization failed", error);
+    console.error("[搜索] Pagefind 初始化失败", error);
   }
 };
 
