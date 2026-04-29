@@ -53,16 +53,25 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: package-lock.json
 
       - name: Install root dependencies
         run: npm ci
 
+      - name: Check format
+        run: npm run format:check
+
       # 正式发布固定使用仓库配置中的根域名，避免误带仓库子目录前缀。
       - name: Build site
-        run: npm run build:site
+        run: |
+          npm run build:site > hugo-build.log 2>&1
+          cat hugo-build.log
+          if grep -qi "deprecated\|WARN" hugo-build.log; then
+            echo "::warning::Hugo 构建输出包含弃用警告"
+            grep -i "deprecated\|WARN" hugo-build.log
+          fi
 
       - name: Build search
         run: npm run build:search
