@@ -4,7 +4,7 @@
 .hugo_build.lock
 hugo_stats.json
 /static/css/
-/static/js/*
+/static/js/
 
 # Environment files
 .env
