@@ -2,7 +2,6 @@ archetypes/
 content/
 config/_default/markup.yaml
 config/_default/params.yaml
-i18n/cn.yaml
 node_modules/
 postcss.config.js
 public/
