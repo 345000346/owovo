@@ -6,7 +6,16 @@ const compilerPathModule = path.join(
   sassEmbeddedRoot,
   "dist/lib/src/compiler-path.js",
 );
-const { compilerCommand } = require(compilerPathModule);
+
+let compilerCommand;
+try {
+  compilerCommand = require(compilerPathModule).compilerCommand;
+} catch (err) {
+  console.error(
+    "无法加载 sass-embedded 编译器路径，请确认 sass-embedded 已正确安装。",
+  );
+  process.exit(1);
+}
 
 let command = compilerCommand[0];
 let args = [...compilerCommand.slice(1), ...process.argv.slice(2)];
