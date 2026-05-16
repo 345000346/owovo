@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  # 允许在 GitHub Actions 页面手动触发发布。
   workflow_dispatch:
 
 permissions:
@@ -14,11 +13,7 @@ permissions:
 
 concurrency:
   group: github-pages
-  # 新提交到同一分支时，取消旧任务以节省构建时间。
   cancel-in-progress: true
-
-env:
-  HUGO_VERSION: "0.161.1"
 
 jobs:
   build:
@@ -30,24 +25,27 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      # 保留 GitHub Pages 的环境配置，后续部署步骤仍会用到。
       - name: Configure Pages
         id: pages
         uses: actions/configure-pages@v5
 
+      - name: Read Hugo version
+        id: hugo-version
+        run: echo "version=$(cat .hugo-version)" >> $GITHUB_OUTPUT
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: ${{ env.HUGO_VERSION }}
+          hugo-version: ${{ steps.hugo-version.outputs.version }}
           extended: true
 
-      # 当前仓库未使用 Hugo Modules，无需缓存 Go 模块目录。
       - name: Setup Hugo cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/hugo
-          key: ${{ runner.os }}-hugo-${{ hashFiles('package-lock.json', '.gitmodules', 'config/_default/**/*.yaml') }}
+          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', '.gitmodules', 'config/_default/**/*.yaml') }}
           restore-keys: |
+            ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
             ${{ runner.os }}-hugo-
 
       - name: Setup Node.js
@@ -63,11 +61,13 @@ jobs:
       - name: Check format
         run: npm run format:check
 
-      # 正式发布固定使用仓库配置中的根域名，避免误带仓库子目录前缀。
       - name: Build site
         run: |
-          npm run build:site > hugo-build.log 2>&1
-          cat hugo-build.log
+          npm run build:site > hugo-build.log 2>&1 || {
+            echo "::error::Hugo 构建失败"
+            cat hugo-build.log
+            exit 1
+          }
           if grep -qi "deprecated\|WARN" hugo-build.log; then
             echo "::warning::Hugo 构建输出包含弃用警告"
             grep -i "deprecated\|WARN" hugo-build.log
