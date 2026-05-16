@@ -26,7 +26,7 @@ toc: true
 
 ## 文本编辑器
 
-[Notepad++](http://notepad-plus-plus.org/)：开源软件，知名度极高，来自台湾，推荐。
+
 [Visual Studio Code](https://code.visualstudio.com/)：微软出品。
 
 ## 办公软件
