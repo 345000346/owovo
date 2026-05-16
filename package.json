@@ -17,6 +17,11 @@
   ],
   "author": "",
   "license": "MIT",
+  "browserslist": [
+    "> 0.5% in CN",
+    "last 2 versions",
+    "not dead"
+  ],
   "devDependencies": {
     "autoprefixer": "^10.4.27",
     "pagefind": "^1.5.2",

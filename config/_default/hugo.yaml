@@ -1,4 +1,3 @@
-# 网站的根 URL，建议取消注释并设置为您的域名
 baseURL: "https://owovo.xyz"
 
 # 网站默认语言
@@ -62,8 +61,7 @@ disablePathToLower: true
 # 启用 CJK（中日韩）语言支持，自动统计字数
 hasCJKLanguage: true
 
-# 自动摘要的长度（字符数）
-summaryLength: 140
+summaryLength: 260
 
 # 自定义文章的永久链接格式
 permalinks:
@@ -106,8 +104,11 @@ timeZone: "Asia/Shanghai"
 # 构建超时时间
 timeout: "120s"
 
-# 启用 robots.txt 生成
 enableRobotsTXT: true
+
+enableGitInfo: true
+
+enableEmoji: true
 
 # 缓存配置
 caches:
