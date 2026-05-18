@@ -2,6 +2,7 @@
 title: "使用 GitHub Actions + Hugo + GitHub Pages 搭建博客"
 date: 2026-03-23T00:00:00+08:00
 slug: "build-blog-with-hugo-github-actions"
+description: "在当前仓库里写文章、跑 GitHub Actions 自动构建、由 GitHub Pages 直接发布。一套 2026 年还适用的 Hugo 博客部署流程。"
 toc: true
 tags: ["GitHub", "Hugo"]
 categories: ["Hugo"]
