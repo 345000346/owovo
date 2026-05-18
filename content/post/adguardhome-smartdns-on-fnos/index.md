@@ -196,6 +196,8 @@ services:
 
 ## 验证效果
 
+### 验证 AdGuard Home
+
 1. 打开 AdGuard Home 管理面板（`http://192.168.31.100:3000`），观察仪表盘中的查询统计
 2. 在浏览器访问一些带广告的网站，确认广告是否被拦截
 3. 使用 `nslookup` 从局域网设备查询域名，确认返回结果来自 AdGuard Home：
@@ -203,6 +205,18 @@ services:
 ```bash
 nslookup www.taobao.com 192.168.31.100
 ```
+
+### 验证 SmartDNS 是否生效
+
+SmartDNS 默认将自身主机名注入到 PTR 反向查询中，可以用以下命令检测：
+
+```bash
+nslookup -querytype=ptr 0.0.0.0 192.168.31.100
+```
+
+如果返回结果中的 `name` 字段显示为 `smartdns`，则说明 SmartDNS 已在正常工作。
+
+也可以直接检查 AdGuard Home 的上游延迟——在管理面板的"设置 → DNS 设置"中点击"测试上游"，如果 `127.0.0.1:6053` 响应正常即为成功。
 
 ## 常见问题
 
