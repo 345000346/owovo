@@ -48,10 +48,6 @@ title: "LIGT'S BLOG"
 
 copyright: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)"
 
-author:
-  name: "LIGT"
-  avatar: "/images/avatar.webp"
-
 # 使用的主题
 theme: meme
 
@@ -124,9 +120,7 @@ security:
     allow:
       - "^(dart-)?sass(-embedded)?$"
       - "^git$"
-      - "^npx$"
       - "^postcss$"
-      - "^go$"
       - "^node$"
   funcs:
     getenv:

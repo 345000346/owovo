@@ -18,13 +18,7 @@ favicon: "/favicon.ico"
 themeColor: "#ffffff"
 themeColorDark: "#16171d"
 
-# 网站副标题，同时用作 meta description
-subtitle: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
-# 网站关键词
-keywords: "日常,想法,Android,Windows,手机,电脑"
-# 网站描述，目前与副标题内容相同
-description: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
-# meme 原生描述字段（用于 head/RSS 等）
+# 网站描述（用于 head meta、RSS/Atom 提要）
 siteDescription: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
 
 # 知识共享许可协议 (Creative Commons) 配置
