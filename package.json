@@ -17,6 +17,9 @@
   ],
   "author": "LIGT",
   "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
   "browserslist": [
     "> 0.5% in CN",
     "last 2 versions",
