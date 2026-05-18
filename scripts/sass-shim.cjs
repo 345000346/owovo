@@ -2,7 +2,7 @@ const { spawnSync } = require("node:child_process");
 const path = require("node:path");
 const sassEmbeddedEntry = require.resolve("sass-embedded");
 const sassEmbeddedRoot = path.resolve(path.dirname(sassEmbeddedEntry), "../..");
-// 注意：以下路径是 sass-embedded 内部实现细节，升级 sass-embedded 时需要验证是否存在
+// 升级 sass-embedded 时必须验证 compiler-path.js 是否存在（该路径为内部实现，非公开 API）
 const compilerPathModule = path.join(
   sassEmbeddedRoot,
   "dist/lib/src/compiler-path.js",
