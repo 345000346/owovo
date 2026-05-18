@@ -1,9 +1,12 @@
 ---
 title: "Windows 常用软件"
 date: 2019-08-23T10:05:47+08:00
+lastmod: 2026-05-18T20:05:00+08:00
 categories: ["Windows"]
 tags: ["Windows","工具","软件"]
 toc: true
+aliases:
+  - /post/Windows-Apps/
 ---
 
 这里是一些我常用的 Windows 软件，可以让你相对轻松的从几款知名或者优秀的软件中，寻找到最适合自己的。
