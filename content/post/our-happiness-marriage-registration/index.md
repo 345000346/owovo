@@ -2,6 +2,7 @@
 title: "我们的小幸福 —— 记录领证的一天"
 date: 2023-09-06T04:53:51+08:00
 slug: "our-happiness-marriage-registration"
+description: "记录和女友一起走进民政局领结婚证的那一天——表面淡定，内心早已兴奋到失眠。这是我们的小幸福，也是法律意义上的全新开始。"
 tags: ["情感"]
 categories: ["情感"]
 draft: false

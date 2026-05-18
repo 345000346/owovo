@@ -2,6 +2,7 @@
 title: "使用今日诗词API"
 date: 2019-08-28T11:39:45+08:00
 slug: "use-today-poetry-api"
+description: "今日诗词 API 可根据地点、时间、节日、季节、天气等智能推荐古诗词名句。本文介绍如何在网页中通过一行代码引入。"
 tags: ["今日诗词","API"]
 categories: ["API"]
 toc: true

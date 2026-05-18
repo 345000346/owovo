@@ -2,6 +2,7 @@
 title: "Impeccable.style 最新使用指南：21 个 skills 怎么安装、更新和上手"
 date: 2026-03-22T17:00:00+08:00
 slug: "impeccable-style-21-skills-guide"
+description: "Impeccable.style 已从「17 条命令」升级为「21 个 skills」的设计技能包。本文回答 5 个实际问题：怎么安装、怎么更新、怎么调用、怎么选 skill、怎么融入日常 AI coding 工作流。"
 toc: true
 tags: ["AI", "设计", "工具", "Impeccable.style", "Claude Code", "Codex"]
 categories: ["工具"]

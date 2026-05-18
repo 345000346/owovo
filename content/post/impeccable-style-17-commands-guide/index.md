@@ -1,6 +1,7 @@
 ---
 title: "Impeccable.style 使用教程：新手怎么上手 17 个官方命令"
 date: 2026-03-08T17:30:00+08:00
+description: "Impeccable.style 不是普通的 prompt 包，而是一套面向 AI coding tools 的前端设计 skills/commands。本文带你从安装到第一次调用，并提供 17 条命令速查。"
 toc: true
 tags: ["AI", "设计", "工具", "Impeccable.style", "Claude Code"]
 categories: ["工具"]

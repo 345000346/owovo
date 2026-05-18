@@ -2,6 +2,7 @@
 title: "（转载）男生真的可以爱一个女生很久吗"
 date: 2019-09-05T14:19:55+08:00
 slug: "can-a-boy-love-a-girl-for-long"
+description: "转载自知乎宏桑的回答，从男生的视角分析爱情能否长久的几个关键因素。"
 toc: true
 tags: ["情感"]
 categories: ["情感"]

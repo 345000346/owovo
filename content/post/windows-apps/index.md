@@ -2,6 +2,7 @@
 title: "Windows 常用软件"
 date: 2019-08-23T10:05:47+08:00
 lastmod: 2026-05-18T20:05:00+08:00
+description: "个人常用的 Windows 软件推荐清单，涵盖视频播放、下载工具、压缩解压、系统优化等类别，帮你从优秀软件中找到最适合自己的。"
 categories: ["Windows"]
 tags: ["Windows","工具","软件"]
 toc: true

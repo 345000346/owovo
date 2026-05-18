@@ -3,6 +3,7 @@ title: "LEDE下SmartDNS安装使用"
 date: 2019-12-10T19:32:10+08:00
 lastmod: 2026-05-18T00:00:00+08:00
 slug: "smartdns-on-lede"
+description: "在 LEDE/OpenWrt 路由器上安装配置 SmartDNS，实现 DNS 加速与广告过滤。已归档，推荐改用 AdGuard Home + SmartDNS 组合方案。"
 tags: ["路由器","DNS","工具"]
 categories : ["路由器"]
 archived: true
