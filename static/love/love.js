@@ -33,7 +33,7 @@
   };
 
   function syncLoveStartDisplay() {
-    if (!LOVE_START_DISPLAY_TEXT || LOVE_START_DISPLAY_TEXT === LOVE_START_AT) return;
+    if (LOVE_START_DISPLAY_TEXT === LOVE_START_AT) return;
     document.querySelectorAll("[data-love-start-display]").forEach((element) => {
       element.textContent = LOVE_START_DISPLAY_TEXT;
     });
@@ -49,10 +49,7 @@
   }
 
   function prefersReducedMotion() {
-    return (
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    );
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
   function ensureTimerStructure() {
