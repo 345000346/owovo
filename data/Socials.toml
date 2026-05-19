@@ -18,3 +18,10 @@ url = "https://weibo.com/1733321624"
 icon = "weibo"
 title = "微博"
 weight = 3
+
+[[socials]]
+id = "zhihu"
+url = "https://www.zhihu.com/people/Hibernate_"
+icon = "zhihu"
+title = "知乎"
+weight = 4

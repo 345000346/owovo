@@ -1,6 +1,7 @@
 baseURL: "https://owovo.xyz"
 
 # 网站默认语言
+languageCode: "zh-CN"
 locale: "zh-CN"
 
 menu:
