@@ -112,14 +112,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
           fetch-depth: 0
-
-      - name: Configure Pages
-        id: pages
-        uses: actions/configure-pages@v5
 
       - name: Read Hugo version
         id: hugo-version
@@ -131,24 +127,31 @@ jobs:
           hugo-version: ${{ steps.hugo-version.outputs.version }}
           extended: true
 
-      - name: Setup Hugo cache
-        uses: actions/cache@v4
+      - name: Setup Hugo resource cache
+        uses: actions/cache@v5
         with:
-          path: ~/.cache/hugo
-          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json') }}
+          path: ./resources/_gen
+          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', '.gitmodules', 'config/_default/**/*.yaml') }}
           restore-keys: |
             ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
             ${{ runner.os }}-hugo-
 
+      - name: Read Node.js version
+        id: node-version
+        run: echo "version=$(cat .node-version)" >> $GITHUB_OUTPUT
+
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: ${{ steps.node-version.outputs.version }}
           cache: "npm"
           cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
+      - name: Install root dependencies
         run: npm ci
+
+      - name: Check format
+        run: npm run format:check
 
       - name: Build site
         run: npm run build:site
@@ -157,7 +160,7 @@ jobs:
         run: npm run build:search
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./public
 
@@ -170,7 +173,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 ```
 
 ### 这份工作流在做什么
@@ -192,19 +195,19 @@ jobs:
 **2. Hugo 构建缓存**
 
 ```yaml
-- name: Setup Hugo cache
-  uses: actions/cache@v4
-  with:
-    path: ~/.cache/hugo
-    key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json') }}
-    restore-keys: |
-      ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
-      ${{ runner.os }}-hugo-
+      - name: Setup Hugo resource cache
+        uses: actions/cache@v5
+        with:
+          path: ./resources/_gen
+          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', '.gitmodules', 'config/_default/**/*.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
+            ${{ runner.os }}-hugo-
 ```
 
-Hugo 在构建过程中会缓存处理过的资源（图片、SCSS 编译结果等）。加上缓存步骤后，后续构建可以直接复用这些中间产物，显著缩短构建时间。
+Hugo 在处理 SCSS 等前端资源时，会在 `resources/_gen` 目录下生成缓存文件。加上缓存步骤后，后续构建可以直接复用这些中间产物，避免重复编译。
 
-缓存的 key 里包含了 Hugo 版本和依赖文件的哈希值——当 Hugo 升级或依赖变化时，旧缓存会自动失效，不会引入不一致的问题。
+缓存的 key 里包含了 Hugo 版本、`package-lock.json` 和配置文件目录的哈希值——当这些依赖发生变化时，旧缓存会自动失效，不会引入不一致的问题。
 
 **3. 使用 npm 脚本作为统一入口**
 
@@ -214,7 +217,7 @@ Hugo 在构建过程中会缓存处理过的资源（图片、SCSS 编译结果�
 
 如果你的项目不需要 `Node.js`、也不需要额外生成搜索索引，可以把下面这些步骤删掉：
 
-- `Setup Hugo cache`
+- `Setup Hugo resource cache`
 - `Setup Node.js`
 - `Install dependencies`
 - `Build search`
