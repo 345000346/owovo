@@ -75,13 +75,9 @@ outputFormats:
   SectionsRSS:
     mediaType: "application/rss+xml"
     baseName: "rss"
-  SearchIndex:
-    mediaType: "application/json"
-    baseName: "search"
 
-# 首页输出使用主题示例的 SectionsAtom/SectionsRSS 组合（并保留搜索索引）
 outputs:
-  home: ["HTML", "SectionsAtom", "SectionsRSS", "SearchIndex"]
+  home: ["HTML", "SectionsAtom", "SectionsRSS"]
   section: ["HTML"]
   taxonomy: ["HTML"]
   term: ["HTML"]
