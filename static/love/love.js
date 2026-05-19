@@ -32,17 +32,6 @@
     lastTimerValues: null,
   };
 
-  function safeGetElement(id, selector) {
-    if (id) {
-      const element = document.getElementById(id);
-      if (element) return element;
-    }
-    if (selector) {
-      return document.querySelector(selector);
-    }
-    return null;
-  }
-
   function syncLoveStartDisplay() {
     if (!LOVE_START_DISPLAY_TEXT || LOVE_START_DISPLAY_TEXT === LOVE_START_AT) return;
     document.querySelectorAll("[data-love-start-display]").forEach((element) => {
@@ -67,7 +56,7 @@
   }
 
   function ensureTimerStructure() {
-    const timerElement = safeGetElement("loveTimer", null);
+    const timerElement = document.getElementById("loveTimer");
     if (!timerElement) return null;
 
     if (
@@ -106,12 +95,8 @@
   }
 
   function restartTimerValueAnimation(valueElement) {
-    if (prefersReducedMotion()) {
-      valueElement.classList.remove("timer-value--changed");
-      return;
-    }
-
     valueElement.classList.remove("timer-value--changed");
+    if (prefersReducedMotion()) return;
     void valueElement.offsetWidth;
     valueElement.classList.add("timer-value--changed");
   }
@@ -246,12 +231,6 @@
     pageState.initialized = false;
   }
 
-  function handlePageShow() {
-    if (!pageState.initialized) {
-      initPage();
-    }
-  }
-
   if (document.readyState === "loading") {
     window.addEventListener("DOMContentLoaded", initPage, { once: true });
   } else {
@@ -272,5 +251,5 @@
   document.addEventListener("visibilitychange", handleVisibilityChange);
   window.addEventListener("pagehide", teardownPage);
   window.addEventListener("beforeunload", teardownPage);
-  window.addEventListener("pageshow", handlePageShow);
+  window.addEventListener("pageshow", () => initPage());
 })();
