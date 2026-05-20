@@ -6,6 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Hugo 静态博客（中文 `zh-CN`），部署到 GitHub Pages（`owovo.xyz`）。主题为 MemE 的个人 fork，通过 Git submodule 引入（`themes/meme`，勿修改其 URL）。Hugo 版本由 `.hugo-version` 统一管理。
 
+## 环境与安装
+
+- Node 24（见 `.node-version`），Hugo 0.161.1（见 `.hugo-version`）
+- `npm ci` 安装依赖（首次）；`npm install` 仅在需要更新 `package-lock.json` 时使用
+- 新建文章：`hugo new post/<slug>` 生成 page bundle，或手动创建 `content/post/<slug>/index.md`
+
 ## 关键命令
 
 ```bash
@@ -28,6 +34,8 @@ npm run format:check # CI 格式检查（只读）
 - 新建文章默认 `draft: true`，需 `npm run dev` 才能在本地看到
 - 摘要分隔：正文中使用 `<!--more-->`
 - 自定义页面：`content/about.md`、`content/ideas.md`、`content/search/_index.md`（Pagefind 搜索）、`content/archives/_index.md`（归档）
+- 数据文件：`data/` 目录存放模板数据（如 `data/Socials.toml`），供 Hugo 模板通过 `$.Site.Data` 访问
+- 原型：`archetypes/default.md` 定义新文章的 front matter 模板
 
 ## 布局定制
 
@@ -39,19 +47,7 @@ npm run format:check # CI 格式检查（只读）
 
 ## CI/CD
 
-`.github/workflows/gh-pages.yml`：推送到 `main` 时触发。Hugo 版本从 `.hugo-version` 读取，不在 CI 中硬编码。流水线顺序（`build` job）：
-
-1. Checkout（含子模块，`fetch-depth: 0`）
-2. 读取 Hugo 版本（`.hugo-version`）
-3. 配置 Hugo + 缓存（键含 Hugo 版本、`package-lock.json`、`.gitmodules`、`config/_default/**/*.yaml`）
-4. Node 22 + `npm ci`
-5. 格式检查（`npm run format:check`）
-6. Hugo 构建（日志仅在失败或含弃用警告时输出）
-7. Pagefind 搜索索引
-8. 验证 Pagefind 产物（`pagefind.js` + `pagefind-entry.json`）
-9. 上传 Pages artifact（`actions/upload-pages-artifact@v5`）
-
-`deploy` job（依赖 `build`）：`actions/deploy-pages@v5` 部署到 GitHub Pages。
+`.github/workflows/gh-pages.yml`：推送到 `main` 时触发，Hugo 版本从 `.hugo-version` 读取。流水线：checkout（含子模块）→ 安装 Hugo + Node → 格式检查 → Hugo 构建 → Pagefind 索引 → 验证 Pagefind 产物 → 部署到 GitHub Pages。缓存键含 Hugo 版本、`package-lock.json`、`.gitmodules`、config yaml。
 
 ## Prettier 排除范围
 
