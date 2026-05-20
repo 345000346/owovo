@@ -56,10 +56,7 @@
     const timerElement = document.getElementById("loveTimer");
     if (!timerElement) return null;
 
-    if (
-      pageState.timerElement === timerElement &&
-      pageState.timerValueElements.length === TIMER_PARTS.length
-    ) {
+    if (pageState.timerElement === timerElement) {
       return timerElement;
     }
 
@@ -114,11 +111,8 @@
       const nextValue = nextValues[index];
       const changed = !previousValues || previousValues[index] !== nextValue;
 
-      if (valueElement.textContent !== nextValue) {
-        valueElement.textContent = nextValue;
-      }
-
       if (changed) {
+        valueElement.textContent = nextValue;
         restartTimerValueAnimation(valueElement);
       }
     });
