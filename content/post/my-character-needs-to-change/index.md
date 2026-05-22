@@ -4,7 +4,7 @@ date: 2020-12-09T14:57:19+08:00
 description: "反思自己下半年以来人际交往越来越懒、越来越不愿意主动联系别人的问题，是时候总结和改变了。"
 TOC : true
 tags: ["情感"]
-categories : ["情感"]
+categories: ["情感"]
 draft: false
 ---
 

@@ -5,7 +5,7 @@ slug: "knowing-you-are-not-young-anymore"
 description: "转载自知乎野良神的回答，一个文不对题却意外好看的短篇反转故事。"
 TOC : false
 tags: ["随想"]
-categories : ["随想"]
+categories: ["随想"]
 draft: false
 ---
 
