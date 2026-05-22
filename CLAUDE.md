@@ -6,6 +6,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Hugo 静态博客（中文 `zh-CN`），部署到 GitHub Pages（`owovo.xyz`）。主题为 MemE 的个人 fork，通过 Git submodule 引入（`themes/meme`，勿修改其 URL）。Hugo 版本由 `.hugo-version` 统一管理。
 
+## 配置架构
+
+`config/_default/` 下三个 YAML 文件各自聚焦不同层级：
+
+- **`hugo.yaml`** — Hugo 核心配置：`baseURL`、`title`、`theme`、`menu`、`permalinks`、`outputFormats`、安全策略等
+- **`params.yaml`** — 主题自定义参数：作者、UI 样式、功能开关（搜索/暗色模式/版权等）
+- **`markup.yaml`** — Goldmark 渲染、代码高亮、目录（TOC）行为
+
+Hugo 构建时会调用 PostCSS（`postcss.config.js` → autoprefixer），目标浏览器由 `package.json` 中的 `browserslist` 字段定义（`> 0.5% in CN, last 2 versions, not dead`）。
+
 ## 环境与安装
 
 - Node 24（见 `.node-version`），Hugo 0.161.1（见 `.hugo-version`）
@@ -33,7 +43,9 @@ npm run format:check # CI 格式检查（只读）
 - 文章：`content/post/<slug>/index.md`（page bundle），固定链接 `/post/:slug/`
 - 新建文章默认 `draft: true`，需 `npm run dev` 才能在本地看到
 - 摘要分隔：正文中使用 `<!--more-->`
-- 自定义页面：`content/about.md`、`content/ideas.md`、`content/search/_index.md`（Pagefind 搜索）、`content/archives/_index.md`（归档）
+- Section branch bundles：`content/post/_index.md`、`content/archives/_index.md`、`content/search/_index.md` 定义各列表页的 front matter（标题、描述）
+- 自定义页面：`content/about.md`、`content/ideas.md`
+- 搜索由 Pagefind 驱动，搜索页入口为 `content/search/_index.md`
 - 数据文件：`data/` 目录存放模板数据（如 `data/Socials.toml`），供 Hugo 模板通过 `$.Site.Data` 访问
 - 原型：`archetypes/default.md` 定义新文章的 front matter 模板
 
@@ -52,43 +64,3 @@ npm run format:check # CI 格式检查（只读）
 ## Prettier 排除范围
 
 `archetypes/`、`content/`、`layouts/`、`themes/meme/`、`static/love.html`、`static/love/`、`config/_default/markup.yaml`、`config/_default/params.yaml`、`postcss.config.js`、构建产物均不格式化。
-
-<!-- code-review-graph MCP tools -->
-
-## MCP Tools: code-review-graph
-
-**IMPORTANT: This project has a knowledge graph. ALWAYS use the
-code-review-graph MCP tools BEFORE using Grep/Glob/Read to explore
-the codebase.** The graph is faster, cheaper (fewer tokens), and gives
-you structural context (callers, dependents, test coverage) that file
-scanning cannot.
-
-### When to use graph tools FIRST
-
-- **Exploring code**: `semantic_search_nodes` or `query_graph` instead of Grep
-- **Understanding impact**: `get_impact_radius` instead of manually tracing imports
-- **Code review**: `detect_changes` + `get_review_context` instead of reading entire files
-- **Finding relationships**: `query_graph` with callers_of/callees_of/imports_of/tests_for
-- **Architecture questions**: `get_architecture_overview` + `list_communities`
-
-Fall back to Grep/Glob/Read **only** when the graph doesn't cover what you need.
-
-### Key Tools
-
-| Tool                        | Use when                                               |
-| --------------------------- | ------------------------------------------------------ |
-| `detect_changes`            | Reviewing code changes — gives risk-scored analysis    |
-| `get_review_context`        | Need source snippets for review — token-efficient      |
-| `get_impact_radius`         | Understanding blast radius of a change                 |
-| `get_affected_flows`        | Finding which execution paths are impacted             |
-| `query_graph`               | Tracing callers, callees, imports, tests, dependencies |
-| `semantic_search_nodes`     | Finding functions/classes by name or keyword           |
-| `get_architecture_overview` | Understanding high-level codebase structure            |
-| `refactor_tool`             | Planning renames, finding dead code                    |
-
-### Workflow
-
-1. The graph auto-updates on file changes (via hooks).
-2. Use `detect_changes` for code review.
-3. Use `get_affected_flows` to understand impact.
-4. Use `query_graph` pattern="tests_for" to check coverage.
