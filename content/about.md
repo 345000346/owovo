@@ -6,7 +6,7 @@ toc: true
 
 <!--more-->
 
-<span class="text-red-500">本文最后更新于：2024 年 12 月 28 日</span>
+<span class="text-red-500">本文最后更新于：2026 年 5 月 27 日</span>
 
 ## 🧑‍💻 个人简介
 
@@ -50,16 +50,18 @@ toc: true
 | :----------------------------: | :---------: | :--: |
 |      ~~Xiaomi MionePlus~~      | 2011 - 2013 | 已退役 |
 |          ~~Xiaomi 3~~          | 2013 - 2015 | 已退役 |
-|          ~~Xiaomi 6~~          | 2017 - 2018 | 已退役 |
-|          PC(i5-6600K)          |  2016 至今  | 使用中 |
-|       HUAWEI Mate 20 Pro       |  2018 至今  | 使用中 |
+|        Apple iPhone 6s         | 2015 - 2023 | 已收藏 |
 |      ~~Apple iPad Air 2~~      | 2016 - 2023 | 已退役 |
-|        Apple iPhone 6s         |  2015 至今  | 使用中 |
+|          PC(i5-6600K)          |  2016 至今  | 使用中 |
+|          ~~Xiaomi 6~~          | 2017 - 2018 | 已退役 |
+|       HUAWEI Mate 20 Pro       | 2018 - 2020 | 已收藏 |
 | ~~Oneplus Bullets Wireless 2~~ | 2019 - 2020 | 已退役 |
-|         Xiaomi 10 Pro          |  2020 至今  | 使用中 |
-|           Xiaomi 13            |  2023 至今  | 使用中 |
+|         Xiaomi 10 Pro          | 2020 - 2023 | 已退役 |
 |        Xiaomi Pad 5 Pro        |  2022 至今  | 使用中 |
-|              ...               |             |      |
+|           Xiaomi 13            | 2023 - 2026 | 已收藏 |
+|        PC(i7-14700KF)          |  2023 至今  | 使用中 |
+|          比亚迪 汉              |  2024 至今  | 使用中 |
+|       OPPO Find X9 Pro         |  2026 至今  | 使用中 |
 
 ---
 
