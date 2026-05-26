@@ -3,7 +3,7 @@ title: "在闲置手机上安装 AdGuardHome "
 date: 2020-12-20T22:19:10+08:00
 slug: "install-adguard-home-on-old-phone"
 description: "在 root 后的小米 3（cancro）上安装 AdGuardHome，利用闲置手机搭建局域网 DNS 去广告服务器。"
-TOC: true
+toc: true
 tags: ["路由器", "DNS", "工具"]
 categories: ["路由器"]
 ---
@@ -11,14 +11,6 @@ categories: ["路由器"]
 今天在闲置多年的小米 3(cancro)上安装了 `AdGuardHome` ，用来局域网内去广告等
 
 <!--more-->
-
-```
-总结了下，有两种方法，都需要 root 权限
-
-这里先说第一种，第二种需要安装 Linux Deploy，太麻烦了，以后再说。
-```
-
-## 第一种方法
 
 ### 使用 Magisk 模块
 
@@ -51,7 +43,3 @@ categories: ["路由器"]
 4.`AdGuardHome_control` 命令支持 `start` | `stop` | `restart`
 
 5.想要取消该功能，通过 `Magisk Manager` 卸载该模块即可，注意将路由器 `DNS` 地址改回
-
-## 第二种方法
-
-(留坑待填)
