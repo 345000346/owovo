@@ -3,7 +3,7 @@ title: "（转载）哪个瞬间让你知道自己已经不小了? - 野良神�
 date: 2020-11-17T12:40:14+08:00
 slug: "knowing-you-are-not-young-anymore"
 description: "转载自知乎野良神的回答，一个文不对题却意外好看的短篇反转故事。"
-TOC : false
+toc: false
 tags: ["随想"]
 categories: ["随想"]
 draft: false

@@ -3,7 +3,7 @@ title: "为什么说沟通很重要"
 date: 2021-06-07T01:14:13+08:00
 slug: "why-communication-matters"
 description: "亲密关系中的冲突往往源于各自站在自己的立场试图说服对方。本文分析沟通模式的恶性循环以及「好好说话、少用反问句」的重要性。"
-TOC: true
+toc: true
 tags: ["情感"]
 categories: ["情感"]
 draft: false
