@@ -98,8 +98,6 @@ timeout: "120s"
 
 enableRobotsTXT: true
 
-enableGitInfo: true
-
 enableEmoji: true
 
 # 缓存配置
@@ -115,7 +113,6 @@ security:
   exec:
     allow:
       - "^(dart-)?sass(-embedded)?$"
-      - "^git$"
       - "^postcss$"
       - "^node$"
   funcs:
