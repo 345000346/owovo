@@ -100,8 +100,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: github-pages
@@ -109,6 +107,10 @@ concurrency:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      pages: write
+      actions: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -154,10 +156,22 @@ jobs:
         run: npm run format:check
 
       - name: Build site
-        run: npm run build:site
+        run: |
+          npm run build:site > hugo-build.log 2>&1 || {
+            echo "::error::Hugo 构建失败"
+            cat hugo-build.log
+            exit 1
+          }
+          if grep -qi "deprecated\|WARN" hugo-build.log; then
+            echo "::warning::Hugo 构建输出包含弃用警告"
+            grep -i "deprecated\|WARN" hugo-build.log
+          fi
 
       - name: Build search
         run: npm run build:search
+
+      - name: Verify Pagefind artifacts
+        run: test -f public/pagefind/pagefind.js && test -f public/pagefind/pagefind-entry.json
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
@@ -165,6 +179,9 @@ jobs:
           path: ./public
 
   deploy:
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -180,7 +197,29 @@ jobs:
 
 上面这份配置包含了几个值得留意的地方：
 
-**1. Hugo 版本集中管理**
+**1. 权限最小化**
+
+工作流顶层只声明了最基础的 `contents: read`，然后在每个 job 里按需声明额外权限：
+
+```yaml
+permissions:
+  contents: read    # 顶层基线
+
+jobs:
+  build:
+    permissions:
+      contents: read   # 检出代码
+      pages: write     # 上传 Pages 构建产物
+      actions: write   # 保存 Hugo/npm 缓存
+  deploy:
+    permissions:
+      pages: write     # 发布到 Pages
+      id-token: write  # OIDC 身份认证
+```
+
+这样比把所有权限写在顶层更加精细：`build` 不拿 OIDC、`deploy` 不拿仓库内容，每个 job 只能做它该做的事。
+
+**2. Hugo 版本集中管理**
 
 把 Hugo 版本号写在一个单独的文件 `.hugo-version` 里：
 
@@ -192,7 +231,7 @@ jobs:
 
 如果你使用 `renovate` 之类的自动更新工具，它也可以直接识别 `.hugo-version` 并自动提 PR。
 
-**2. Hugo 构建缓存**
+**3. Hugo 构建缓存**
 
 ```yaml
       - name: Setup Hugo resource cache
@@ -209,7 +248,7 @@ Hugo 在处理 SCSS 等前端资源时，会在 `resources/_gen` 目录下生成
 
 缓存的 key 里包含了 Hugo 版本、`package-lock.json` 和配置文件目录的哈希值——当这些依赖发生变化时，旧缓存会自动失效，不会引入不一致的问题。
 
-**3. 使用 npm 脚本作为统一入口**
+**4. 使用 npm 脚本作为统一入口**
 
 构建步骤中调用的 `npm run build:site` 和 `npm run build:search` 都是在 `package.json` 里事先定义好的脚本。这样做的好处是：本地开发和 CI 跑的是完全相同的命令，不会出现"本地能过、CI 报错"的情况。
 
