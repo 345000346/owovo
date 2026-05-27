@@ -49,7 +49,7 @@ title: "LIGT'S BLOG"
 copyright: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)"
 
 # 使用的主题
-theme: meme
+theme: "meme"
 
 # 禁止将 URL 转换为小写，保留原始大小写
 disablePathToLower: true
@@ -88,7 +88,7 @@ services:
     limit: 20 # RSS 输出的文章数量
 
 build:
-  use: postcss
+  use: "postcss"
 
 # 时区配置
 timeZone: "Asia/Shanghai"
