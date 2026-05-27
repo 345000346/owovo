@@ -3,7 +3,6 @@ title: "相爱的意义"
 date: 2022-03-18T23:25:17+08:00
 slug: "meaning-of-love"
 description: "从小独立的人，一个人看书、走路、旅行，什么都自己来。那么相爱的意义是什么？或许就是有个人愿意陪你一起做这些事。"
-draft: false
 toc: true
 tags: ["情感", "爱情", "独立"]
 categories: ["生活"]

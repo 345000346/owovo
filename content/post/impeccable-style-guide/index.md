@@ -7,7 +7,6 @@ slug: "impeccable-style-guide"
 toc: true
 tags: ["AI", "前端设计", "Impeccable.style", "Claude Code", "工具"]
 categories: ["技术"]
-draft: false
 ---
 
 AI 生成的前端页面往往千篇一律——Inter 字体、紫蓝渐变、卡片嵌套卡片。`Impeccable.style` 就是为了解决这个问题而生的：它不是几段 prompt，而是一套可以安装到本地、按问题拆分职责的前端设计技能系统，让 AI 做前端时更像一个真正懂设计质量的搭档。截至 2026 年 5 月，它已经发展到 **v3.1.1**，包含 **23 个命令**，支持 11 种 AI 编码工具。

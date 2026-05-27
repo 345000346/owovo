@@ -6,7 +6,6 @@ description: "在当前仓库里写文章、跑 GitHub Actions 自动构建、�
 toc: true
 tags: ["GitHub", "Hugo", "GitHub Actions", "GitHub Pages"]
 categories: ["技术"]
-draft: false
 ---
 
 如果你想用 `Hugo` 搭一个静态博客，同时又希望把站点托管到 `GitHub Pages`，那现在最省事的做法就是：**直接在当前仓库里构建并发布。**

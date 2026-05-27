@@ -3,7 +3,6 @@ title: "磨合期的意义"
 date: 2021-12-27T03:25:17+08:00
 slug: "meaning-of-adjustment-period"
 description: "当两个人开始肆无忌惮当着对方面放屁的时候，磨合期就已经开始了。磨合期的本质是权利争夺，激情褪去后我们不再欣赏对方的优点，而是不由自主地盯住缺点。"
-draft: false
 toc: true
 tags: ["情感", "磨合期", "亲密关系"]
 categories: ["生活"]

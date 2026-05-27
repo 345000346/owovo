@@ -6,7 +6,6 @@ description: "转载自知乎宏桑的回答，列举男生在恋爱中希望女
 toc: true
 tags: ["情感", "恋爱", "转载"]
 categories: ["生活"]
-draft: false
 ---
 
 本文转载自 —— [**有哪些事是男生很想让女朋友知道的？ - 宏桑的回答 - 知乎**](https://www.zhihu.com/question/426854994/answer/1866644532)

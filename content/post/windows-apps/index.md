@@ -6,8 +6,6 @@ description: "个人常用的 Windows 软件推荐清单，涵盖视频播放、
 categories: ["技术"]
 tags: ["Windows", "软件", "效率工具"]
 toc: true
-aliases:
-  - /post/Windows-Apps/
 ---
 
 这里是一些我常用的 Windows 软件，可以让你相对轻松的从几款知名或者优秀的软件中，寻找到最适合自己的。

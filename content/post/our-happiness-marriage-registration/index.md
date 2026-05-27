@@ -5,7 +5,6 @@ slug: "our-happiness-marriage-registration"
 description: "记录和女友一起走进民政局领结婚证的那一天——表面淡定，内心早已兴奋到失眠。这是我们的小幸福，也是法律意义上的全新开始。"
 tags: ["情感", "领证", "婚姻"]
 categories: ["生活"]
-draft: false
 ---
 
 领证啦！
