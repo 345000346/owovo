@@ -4,8 +4,8 @@ date: 2021-06-07T00:18:25+08:00
 slug: "things-boys-want-girlfriends-to-know"
 description: "转载自知乎宏桑的回答，列举男生在恋爱中希望女朋友知道的那些事——关于空间、面子、沟通和安全感。"
 toc: true
-tags: ["情感"]
-categories: ["情感"]
+tags: ["情感", "恋爱", "转载"]
+categories: ["生活"]
 draft: false
 ---
 

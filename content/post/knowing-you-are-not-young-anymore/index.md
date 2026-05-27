@@ -4,8 +4,8 @@ date: 2020-11-17T12:40:14+08:00
 slug: "knowing-you-are-not-young-anymore"
 description: "转载自知乎野良神的回答，一个文不对题却意外好看的短篇反转故事。"
 toc: false
-tags: ["随想"]
-categories: ["随想"]
+tags: ["随想", "转载", "知乎"]
+categories: ["生活"]
 draft: false
 ---
 

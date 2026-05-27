@@ -3,8 +3,8 @@ title: "好好说话、有效沟通、相互包容、共同成长"
 date: 2021-02-10T22:41:14+08:00
 slug: "communication-tolerance-growth"
 description: "好好说话，有效沟通，少用反问句！这是感情能否长久顺利的关键。说起来容易，但很多人做不到。"
-tags: ["情感"]
-categories: ["情感"]
+tags: ["情感", "沟通", "亲密关系"]
+categories: ["生活"]
 draft: false
 ---
 

@@ -4,8 +4,8 @@ date: 2021-06-07T00:39:13+08:00
 slug: "money-in-relationships"
 description: "作为一个男生，谈恋爱时为对方花钱是高兴和有成就感的——不是因为义务，而是因为喜欢。能摆在台面上「谈钱花钱处理钱」的模式就很好。"
 toc: false
-tags: ["情感"]
-categories: ["情感"]
+tags: ["情感", "金钱观", "恋爱"]
+categories: ["生活"]
 draft: false
 ---
 

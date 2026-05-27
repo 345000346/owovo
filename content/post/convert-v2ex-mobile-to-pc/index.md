@@ -4,8 +4,8 @@ date: 2019-09-03T23:09:10+08:00
 slug: "convert-v2ex-mobile-to-pc"
 description: "搜索引擎搜到的 V2EX 链接往往是手机版。本文介绍用油猴脚本（Tampermonkey）自动将 V2EX 移动版页面转为 PC 版。"
 toc: true
-tags: ["V2ex","脚本"]
-categories: ["脚本"]
+tags: ["V2ex", "油猴", "脚本"]
+categories: ["技术"]
 ---
 
 很多时候在搜索引擎上搜索到的 V2ex 网页都是手机版的，本脚本将自动将 V2ex 手机版网页转为 PC 版。

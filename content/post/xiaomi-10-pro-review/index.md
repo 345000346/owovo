@@ -3,8 +3,8 @@ title: "小米10 Pro简单上手体验"
 date: 2020-03-05T00:55:49+08:00
 slug: "xiaomi-10-pro-review"
 description: "10 年 MIUI 粉从华为 Mate20 Pro 换到小米 10 Pro 的上手体验，聊一聊屏幕、手感、MIUI 以及为什么决定支持小米冲击高端。"
-tags: ["小米","手机"]
-categories: ["手机"]
+tags: ["小米", "手机", "评测", "MIUI"]
+categories: ["生活"]
 toc: true
 ---
 

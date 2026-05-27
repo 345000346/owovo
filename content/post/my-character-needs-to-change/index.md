@@ -3,8 +3,8 @@ title: "我这个性格，确实该改改了"
 date: 2020-12-09T14:57:19+08:00
 description: "反思自己下半年以来人际交往越来越懒、越来越不愿意主动联系别人的问题，是时候总结和改变了。"
 toc: true
-tags: ["情感"]
-categories: ["情感"]
+tags: ["情感", "性格", "反思"]
+categories: ["生活"]
 draft: false
 ---
 
