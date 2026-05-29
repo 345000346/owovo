@@ -1,6 +1,5 @@
 baseURL: "https://owovo.xyz"
 
-# 网站默认语言
 locale: "zh-CN"
 
 menu:
@@ -43,27 +42,24 @@ menu:
       pre: "internal"
       post: "search"
 
-# 网站标题
 title: "LIGT'S BLOG"
 
 copyright: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)"
 
-# 使用的主题
 theme: "meme"
 
-# 禁止将 URL 转换为小写，保留原始大小写
+# 保留 URL 原始大小写（某些文章 slug 含大写字母）
 disablePathToLower: true
 
-# 启用 CJK（中日韩）语言支持，自动统计字数
+# 启用 CJK 支持（自动统计中文字数）
 hasCJKLanguage: true
 
 summaryLength: 260
 
-# 自定义文章的永久链接格式
 permalinks:
   post: "/post/:slug/"
 
-# 输出格式定义
+# 自定义 SectionsAtom 输出格式需要显式注册此 media type
 mediaTypes:
   application/atom+xml:
     suffixes: ["xml"]
@@ -82,25 +78,22 @@ outputs:
   taxonomy: ["HTML"]
   term: ["HTML"]
 
-# 服务配置
 services:
   rss:
-    limit: 20 # RSS 输出的文章数量
+    limit: 20
 
 build:
   use: "postcss"
 
-# 时区配置
 timeZone: "Asia/Shanghai"
 
-# 构建超时时间
 timeout: "120s"
 
 enableRobotsTXT: true
 
 enableEmoji: true
 
-# 缓存配置
+# 资源缓存
 caches:
   getresource:
     dir: ":cacheDir/:project"
@@ -112,7 +105,6 @@ caches:
 security:
   exec:
     allow:
-      - "^(dart-)?sass(-embedded)?$"
       - "^postcss$"
       - "^node$"
   funcs:

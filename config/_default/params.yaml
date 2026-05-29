@@ -1,63 +1,50 @@
-# =========================================================
-# 自定义项（你主动配置、体现站点个性的内容）
-# =========================================================
-
 # 作者信息
 author:
   avatar: "/images/avatar.webp"
   name: "LIGT"
 
-# 指定哪些 section 的文章会出现在首页文章列表中
+# 首页文章列表中展示的 section
 mainSections:
   - post
 
-# 网站图标
 favicon: "/favicon.ico"
 
-# 浏览器地址栏与系统 UI 使用的主题色
+# 浏览器地址栏与系统 UI 的主题色
 themeColor: "#ffffff"
 themeColorDark: "#16171d"
 
-# 网站描述（用于 head meta、RSS/Atom 提要）
+# 用于 head meta、RSS/Atom 提要
 siteDescription: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
 
-# 知识共享许可协议 (Creative Commons) 配置
+# 知识共享许可协议 (Creative Commons)
 cc:
   name: "CC BY-NC-SA 4.0"
   link: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
 
-# 站点创建时间（用于页脚年份显示）
+# 用于页脚年份显示
 siteCreatedTime: "2019-08-22T00:00:00+08:00"
 
-# 显示页脚版权行
 displaySiteCopyright: true
 
-
-# =========================================================
-# 主题必需保底项（当前 meme 版本缺失会触发样式编译失败）
-# =========================================================
-
-# RSS 输出是否包含全文（meme 原生字段）
+# RSS 输出包含全文（meme 原生字段）
 includeContent: true
 
-# meme 文章版权声明（用于 post-copyright 组件）
+# 文章版权声明（post-copyright 组件）
 enablePostCopyright: true
 displayPostCopyright: true
 original: true
 
-# meme 主题 404 海报图（留空表示不指定）
+# 404 海报图，留空表示不指定
 fofPoster: ""
 
-# meme 列表页日期格式与位置
 listDateFormat: "1 月 2 日"
-# 可选：left/right
+# 可选 left/right
 listDatePosition: "right"
 
-# meme 首页与基础布局开关
 homeLayout: "posts"
 headerLayout: "flex"
 
-# 移动端收纳导航（汉堡按钮展开）
+# 移动端汉堡按钮展开导航栏
 enableNavToggle: true
 navHeight: "20em"
 headerBackground: "linear-gradient(90deg, #f795331a 0, #f370551a 15%, #ef4e7b1a 30%, #a166ab1a 44%, #5073b81a 58%, #1098ad1a 72%, #07b39b1a 86%, #6dba821a 100%)"
@@ -83,7 +70,7 @@ enableLunrSearch: false
 enablePagefindSearch: true
 pagefindSearchPath: "/search/"
 
-# 代码块显示与交互
+# 代码块：高亮、横向滚动、复制按钮
 enableHighlight: true
 enableOverflowY: true
 maxHeight: 80
@@ -93,7 +80,7 @@ enableCopyAutoHide: true
 # 平滑滚动（含 TOC 锚点跳转动画）
 enableSmoothScroll: true
 
-# 文章元信息（用于首页文章列表标题下的一行信息）
+# 首页文章列表标题下的元信息行
 enablePostMetaInHome: true
 postMetaDateFormat: "2006-01-02"
 displayPublishedDate: true
@@ -101,20 +88,18 @@ publishedDateIcon: "calendar-alt"
 displayReadingTime: true
 readingTimeIcon: "clock"
 
-# 为了保持首页信息低调，主动关闭不需要的元信息
+# 保持首页低调，关闭不需要的元信息
 displayModifiedDate: false
 displayWordCount: false
 displayCategory: false
 
-# 启用文章标签展示（meme 原生字段）
+# 文章标签与标签云
 enablePostTags: true
-# 启用标签页云展示（/tags/）
 enableTagCloud: true
-# 标签云字号范围（meme 原生字段）
 largestFontSize: 2.5
 smallestFontSize: 1
 fontUnit: "rem"
-# 文章标签图标（启用 enablePostTags 时必填）
+# enablePostTags 启用时必填
 postTagsIcon: "tag"
 enableFooter: true
 displayFooter: true
