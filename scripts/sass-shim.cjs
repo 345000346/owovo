@@ -26,11 +26,22 @@ const options = {
   windowsHide: true,
 };
 
+function quoteForCmd(value) {
+  return `"${String(value)
+    .replace(/\^/g, "^^")
+    .replace(/"/g, '""')
+    .replace(/%/g, "^%")
+    .replace(/[&|<>()]/g, "^$&")}"`;
+}
+
 // 保留对 .bat/.cmd 的兼容，避免不同平台的编译器入口差异影响 Hugo。
+// Windows 批处理文件必须经由 cmd.exe 执行；不要把参数简单 join 成字符串，
+// 否则路径空格或 &、|、<、> 等 shell 元字符会破坏参数边界。
 if ([".bat", ".cmd"].includes(path.extname(command).toLowerCase())) {
-  command = `${command} ${args.join(" ")}`;
-  args = [];
-  options.shell = true;
+  const commandLine = `"${[command, ...args].map(quoteForCmd).join(" ")}"`;
+  command = process.env.ComSpec || "cmd.exe";
+  args = ["/d", "/v:off", "/s", "/c", commandLine];
+  options.windowsVerbatimArguments = true;
 }
 
 const result = spawnSync(command, args, options);
