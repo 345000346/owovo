@@ -52,13 +52,11 @@
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
-  function ensureTimerStructure() {
-    const timerElement = document.getElementById("loveTimer");
-    if (!timerElement) return null;
+  function buildTimerDOM() {
+    if (pageState.timerElement) return true;
 
-    if (pageState.timerElement === timerElement) {
-      return timerElement;
-    }
+    const timerElement = document.getElementById("loveTimer");
+    if (!timerElement) return false;
 
     const fragment = document.createDocumentFragment();
     const timerValueElements = [];
@@ -85,7 +83,7 @@
     pageState.timerValueElements = timerValueElements;
     pageState.lastTimerValues = null;
 
-    return timerElement;
+    return true;
   }
 
   function restartTimerValueAnimation(valueElement) {
@@ -97,9 +95,7 @@
 
   function updateTimer() {
     if (!(LOVE_START_DATE instanceof Date) || Number.isNaN(LOVE_START_DATE.getTime())) return;
-
-    const timerElement = ensureTimerStructure();
-    if (!timerElement) return;
+    if (!pageState.timerElement) return;
 
     const now = new Date();
     const timeDiff = now - LOVE_START_DATE;
@@ -118,13 +114,14 @@
     });
 
     pageState.lastTimerValues = nextValues;
-    timerElement.setAttribute(
+    pageState.timerElement.setAttribute(
       "aria-label",
       `${timeUnits.day} 天 ${timeUnits.hour} 小时 ${timeUnits.minute} 分钟 ${timeUnits.second} 秒`,
     );
   }
 
   function startTimer() {
+    if (!buildTimerDOM()) return;
     updateTimer();
     if (pageState.timerIntervalId) {
       clearInterval(pageState.timerIntervalId);
