@@ -1,9 +1,7 @@
 import { spawnSync } from "node:child_process";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const toolsDir = path.resolve(__dirname, "../tools");
+const toolsDir = path.resolve(import.meta.dirname, "../tools");
 
 const env = {
   ...process.env,
