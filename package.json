@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Personal blog powered by Hugo",
   "scripts": {
-    "dev": "node ./scripts/run-hugo.mjs server -D",
-    "build:site": "node ./scripts/run-hugo.mjs --gc --minify",
+    "dev": "hugo server -D",
+    "build:site": "hugo --gc --minify",
     "build:search": "pagefind --site public",
     "build": "npm run build:site && npm run build:search",
-    "hugo:env": "node ./scripts/run-hugo.mjs env",
+    "hugo:env": "hugo env",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -25,12 +25,16 @@
     "last 2 versions",
     "not dead"
   ],
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-go-template"
+    ]
+  },
   "devDependencies": {
     "autoprefixer": "^10.4.27",
     "pagefind": "^1.5.2",
     "postcss": "^8.5.8",
     "prettier": "^3.8.3",
-    "prettier-plugin-go-template": "^0.0.15",
-    "sass-embedded": "^1.99.0"
+    "prettier-plugin-go-template": "^0.0.15"
   }
 }
