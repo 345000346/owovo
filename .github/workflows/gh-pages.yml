@@ -32,11 +32,15 @@ jobs:
           hugo-version: ${{ steps.hugo-version.outputs.version }}
           extended: true
 
+      - name: Capture submodule status for cache
+        id: submodule-status
+        run: echo "hash=$(git submodule status | sha256sum | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+
       - name: Setup Hugo resource cache
         uses: actions/cache@v5
         with:
           path: ./resources/_gen
-          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', '.gitmodules', 'config/_default/**/*.yaml') }}
+          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', 'config/_default/**/*.yaml') }}-${{ steps.submodule-status.outputs.hash }}
           restore-keys: |
             ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
             ${{ runner.os }}-hugo-
@@ -59,16 +63,7 @@ jobs:
         run: npm run format:check
 
       - name: Build site
-        run: |
-          npm run build:site > hugo-build.log 2>&1 || {
-            echo "::error::Hugo 构建失败"
-            cat hugo-build.log
-            exit 1
-          }
-          if grep -qi "deprecated\|WARN" hugo-build.log; then
-            echo "::warning::Hugo 构建输出包含弃用警告"
-            grep -i "deprecated\|WARN" hugo-build.log
-          fi
+        run: npm run build:site -- --logLevel warn
 
       - name: Build search
         run: npm run build:search
