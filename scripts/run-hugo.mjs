@@ -5,7 +5,7 @@ const toolsDir = path.resolve(import.meta.dirname, "../tools");
 
 const env = {
   ...process.env,
-  // 让 Hugo 优先命中仓库自带的 sass shim，避免被 .bin 中的纯 JS sass 抢占。
+  // 让 Hugo 优先命中 tools/ 中的 sass 包装脚本，避免与 .bin/ 中的入口冲突。
   PATH: `${toolsDir}${path.delimiter}${process.env.PATH ?? ""}`,
 };
 

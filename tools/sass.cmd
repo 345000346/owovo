@@ -1,3 +1,3 @@
 @ECHO off
 SETLOCAL
-node "%~dp0..\scripts\sass-shim.cjs" %*
+node "%~dp0..\node_modules\sass-embedded\dist\bin\sass.js" %*

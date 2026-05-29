@@ -36,7 +36,7 @@ npm run format:check # CI 格式检查（只读）
 
 ## Hugo 运行规则
 
-**始终使用 `node ./scripts/run-hugo.mjs` 调用 Hugo，禁止直接使用 `hugo`。** 封装脚本将 `tools/` 注入 PATH，使 Hugo 找到 sass shim（`tools/sass` 或 `tools/sass.cmd`），再由 `scripts/sass-shim.cjs` 桥接到 `dart-sass-embedded` 的编译器二进制文件。
+**始终使用 `node ./scripts/run-hugo.mjs` 调用 Hugo，禁止直接使用 `hugo`。** 封装脚本将 `tools/` 注入 PATH，使 Hugo 命中 `tools/sass`（Unix）或 `tools/sass.cmd`（Windows），直接调用 `sass-embedded` 的编译器入口。
 
 ## 内容结构
 

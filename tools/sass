@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-node "$(dirname "$0")/../scripts/sass-shim.cjs" "$@"
+exec node "$(dirname "$0")/../node_modules/sass-embedded/dist/bin/sass.js" "$@"
