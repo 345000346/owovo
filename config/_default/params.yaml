@@ -63,15 +63,11 @@ navHeight: "20em"
 headerBackground: "linear-gradient(90deg, #f795331a 0, #f370551a 15%, #ef4e7b1a 30%, #a166ab1a 44%, #5073b81a 58%, #1098ad1a 72%, #07b39b1a 86%, #6dba821a 100%)"
 siteBrandFontSize: 1
 siteBrandFontColor: "var(--color-contrast-high)"
-fontFamilySiteBrand: ""
-fontFamilyMenu: ""
+
 fontFamilyTitle: "'Noto Serif SC', serif"
 fontFamilyHeadings: "'Noto Serif SC', serif"
 fontFamilyCode: "'Source Code Pro', 'Noto Serif SC', monospace"
-fontFamilyQuote: ""
-fontFamilyTOC: ""
-fontFamilyCaption: ""
-fontFamilyFooter: ""
+
 fontFamilyBody: "'Noto Serif SC', serif"
 fontsLink: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"
 fontSize: 18
@@ -132,4 +128,4 @@ iconAnimation: true
 displaySiteAuthorName: true
 displayPoweredBy: true
 enableSocials: true
-customFooter: ""
+
