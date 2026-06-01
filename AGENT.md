@@ -47,13 +47,14 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 
 三文件分离，各司其职：
 
-| 文件 | 职责 |
-|------|------|
-| `hugo.yaml` | baseURL、title、theme、menu、permalinks、outputFormats、security |
-| `params.yaml` | 主题参数：作者、UI 样式、功能开关（暗色模式/搜索/版权等） |
-| `markup.yaml` | Goldmark 渲染（允许 unsafe HTML）、TOC、Chroma 代码高亮 |
+| 文件          | 职责                                                             |
+| ------------- | ---------------------------------------------------------------- |
+| `hugo.yaml`   | baseURL、title、theme、menu、permalinks、outputFormats、security |
+| `params.yaml` | 主题参数：作者、UI 样式、功能开关（暗色模式/搜索/版权等）        |
+| `markup.yaml` | Goldmark 渲染（允许 unsafe HTML）、TOC、Chroma 代码高亮          |
 
 关键配置细节：
+
 - URL 保留原始大小写（`disablePathToLower: true`）
 - 启用 CJK 支持（正确统计中文字数）
 - PostCSS 通过 `build.use: "postcss"` 集成
@@ -108,6 +109,7 @@ npm run format:check # CI 格式检查（只读）
 ## 社交媒体
 
 配置位于 `data/Socials.toml`，通过主题模板渲染：
+
 - RSS、GitHub、微博、知乎
 
 ## 编辑器 / 格式化
