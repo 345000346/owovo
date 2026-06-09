@@ -58,7 +58,7 @@ fontFamilyCode: "'Source Code Pro', 'Noto Serif SC', monospace"
 fontFamilyBody: "'Noto Serif SC', serif"
 fontsLink: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"
 fontSize: 18
-lineHeight: 2
+lineHeight: 1.8
 enableHeader: true
 displayHeaderInHome: true
 enableMenu: true
@@ -79,6 +79,9 @@ enableCopyAutoHide: true
 
 # 平滑滚动（含 TOC 锚点跳转动画）
 enableSmoothScroll: true
+
+# 文章页元信息（发布日期、阅读时间等）
+enablePostMeta: true
 
 # 首页文章列表标题下的元信息行
 enablePostMetaInHome: true
