@@ -18,9 +18,21 @@
   const VISIBILITY_GROUPS = [".timeline"];
   const TIMER_PARTS = [
     { key: "day", unit: "天", format: (value) => String(value) },
-    { key: "hour", unit: "小时", format: (value) => String(value).padStart(2, "0") },
-    { key: "minute", unit: "分钟", format: (value) => String(value).padStart(2, "0") },
-    { key: "second", unit: "秒", format: (value) => String(value).padStart(2, "0") },
+    {
+      key: "hour",
+      unit: "小时",
+      format: (value) => String(value).padStart(2, "0"),
+    },
+    {
+      key: "minute",
+      unit: "分钟",
+      format: (value) => String(value).padStart(2, "0"),
+    },
+    {
+      key: "second",
+      unit: "秒",
+      format: (value) => String(value).padStart(2, "0"),
+    },
   ];
   const REVEAL_PENDING_CLASS = "reveal-pending";
   const pageState = {
@@ -34,9 +46,11 @@
 
   function syncLoveStartDisplay() {
     if (LOVE_START_DISPLAY_TEXT === LOVE_START_AT) return;
-    document.querySelectorAll("[data-love-start-display]").forEach((element) => {
-      element.textContent = LOVE_START_DISPLAY_TEXT;
-    });
+    document
+      .querySelectorAll("[data-love-start-display]")
+      .forEach((element) => {
+        element.textContent = LOVE_START_DISPLAY_TEXT;
+      });
   }
 
   function formatTimeDiff(timeDiff) {
@@ -94,13 +108,19 @@
   }
 
   function updateTimer() {
-    if (!(LOVE_START_DATE instanceof Date) || Number.isNaN(LOVE_START_DATE.getTime())) return;
+    if (
+      !(LOVE_START_DATE instanceof Date) ||
+      Number.isNaN(LOVE_START_DATE.getTime())
+    )
+      return;
     if (!pageState.timerElement) return;
 
     const now = new Date();
     const timeDiff = now - LOVE_START_DATE;
     const timeUnits = formatTimeDiff(timeDiff);
-    const nextValues = TIMER_PARTS.map(({ key, format }) => format(timeUnits[key]));
+    const nextValues = TIMER_PARTS.map(({ key, format }) =>
+      format(timeUnits[key]),
+    );
     const previousValues = pageState.lastTimerValues;
 
     pageState.timerValueElements.forEach((valueElement, index) => {
@@ -163,7 +183,9 @@
       revealElements.forEach((element) => {
         element.classList.remove(REVEAL_PENDING_CLASS);
       });
-      observedElements.forEach((element) => element.classList.add("is-visible"));
+      observedElements.forEach((element) =>
+        element.classList.add("is-visible"),
+      );
       return;
     }
 

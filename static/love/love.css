@@ -31,8 +31,12 @@
   --reading-width: 42rem;
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
-  --font-serif-body: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
-  --font-serif-display: "Cormorant Garamond", "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  --font-serif-body:
+    "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun",
+    serif;
+  --font-serif-display:
+    "Cormorant Garamond", "Noto Serif SC", "Source Han Serif SC", "Songti SC",
+    "STSong", "SimSun", serif;
   --page-glow-top: rgba(255, 248, 239, 0.92);
   --page-gradient-start: #f7f1e8;
   --page-gradient-mid: #f2e9dc;
@@ -106,7 +110,12 @@ body {
   line-height: 1.9;
   background:
     radial-gradient(circle at top, var(--page-glow-top), transparent 42%),
-    linear-gradient(180deg, var(--page-gradient-start) 0%, var(--page-gradient-mid) 52%, var(--page-gradient-end) 100%);
+    linear-gradient(
+      180deg,
+      var(--page-gradient-start) 0%,
+      var(--page-gradient-mid) 52%,
+      var(--page-gradient-end) 100%
+    );
 }
 
 body::before {
@@ -115,9 +124,21 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 15% 20%, var(--page-ornament-gold), transparent 24%),
-    radial-gradient(circle at 84% 18%, var(--page-ornament-accent), transparent 20%),
-    radial-gradient(circle at 50% 82%, var(--page-ornament-accent-soft), transparent 26%);
+    radial-gradient(
+      circle at 15% 20%,
+      var(--page-ornament-gold),
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at 84% 18%,
+      var(--page-ornament-accent),
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 50% 82%,
+      var(--page-ornament-accent-soft),
+      transparent 26%
+    );
   opacity: 0.9;
 }
 
@@ -171,7 +192,11 @@ strong {
   inset: clamp(1.1rem, 3vw, 2.5rem);
   border-radius: clamp(1.25rem, 2.4vw, 2rem);
   background:
-    linear-gradient(180deg, var(--cover-panel-top) 0%, var(--cover-panel-bottom) 100%),
+    linear-gradient(
+      180deg,
+      var(--cover-panel-top) 0%,
+      var(--cover-panel-bottom) 100%
+    ),
     linear-gradient(135deg, var(--cover-panel-accent), transparent 52%);
   box-shadow: var(--shadow);
 }
@@ -258,7 +283,11 @@ strong {
   padding: clamp(1.4rem, 3vw, 2.1rem) clamp(1rem, 4vw, 2.4rem);
   border-top: 1px solid var(--line-strong);
   border-bottom: 1px solid var(--line-strong);
-  background: linear-gradient(180deg, var(--cover-timer-top), var(--cover-timer-bottom));
+  background: linear-gradient(
+    180deg,
+    var(--cover-timer-top),
+    var(--cover-timer-bottom)
+  );
 }
 
 .timer-label {
@@ -397,7 +426,11 @@ strong {
 }
 
 .chapters {
-  background: linear-gradient(180deg, var(--chapters-bg-top), var(--chapters-bg-bottom));
+  background: linear-gradient(
+    180deg,
+    var(--chapters-bg-top),
+    var(--chapters-bg-bottom)
+  );
 }
 
 .chapter-list {
@@ -471,7 +504,12 @@ strong {
   top: 1rem;
   bottom: 1rem;
   width: 1px;
-  background: linear-gradient(180deg, var(--timeline-line-start), var(--timeline-line-mid), var(--timeline-line-end));
+  background: linear-gradient(
+    180deg,
+    var(--timeline-line-start),
+    var(--timeline-line-mid),
+    var(--timeline-line-end)
+  );
   opacity: 0;
   transform: scaleY(0);
   transform-origin: top center;
@@ -492,7 +530,9 @@ strong {
   column-gap: var(--gap);
   align-items: start;
   padding: clamp(1.4rem, 3vw, 2rem) 0;
-  transition: transform 420ms var(--ease-out-quart), opacity 420ms var(--ease-out-quart);
+  transition:
+    transform 420ms var(--ease-out-quart),
+    opacity 420ms var(--ease-out-quart);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -592,13 +632,26 @@ strong {
 @media (max-width: 767px) {
   body {
     background:
-      linear-gradient(var(--page-frame-line), var(--page-frame-line)) top 0.6rem left 0.6rem / calc(100% - 1.2rem) 1px no-repeat,
-      linear-gradient(var(--page-frame-line), var(--page-frame-line)) bottom 0.6rem left 0.6rem / calc(100% - 1.2rem) 1px no-repeat,
-      linear-gradient(var(--page-frame-line), var(--page-frame-line)) top 0.6rem left 0.6rem / 1px calc(100% - 1.2rem) no-repeat,
-      linear-gradient(var(--page-frame-line), var(--page-frame-line)) top 0.6rem right 0.6rem / 1px calc(100% - 1.2rem) no-repeat,
-      radial-gradient(circle at 18% 22%, var(--page-ornament-gold), transparent 26%),
+      linear-gradient(var(--page-frame-line), var(--page-frame-line)) top 0.6rem
+        left 0.6rem / calc(100% - 1.2rem) 1px no-repeat,
+      linear-gradient(var(--page-frame-line), var(--page-frame-line)) bottom
+        0.6rem left 0.6rem / calc(100% - 1.2rem) 1px no-repeat,
+      linear-gradient(var(--page-frame-line), var(--page-frame-line)) top 0.6rem
+        left 0.6rem / 1px calc(100% - 1.2rem) no-repeat,
+      linear-gradient(var(--page-frame-line), var(--page-frame-line)) top 0.6rem
+        right 0.6rem / 1px calc(100% - 1.2rem) no-repeat,
+      radial-gradient(
+        circle at 18% 22%,
+        var(--page-ornament-gold),
+        transparent 26%
+      ),
       radial-gradient(circle at top, var(--page-glow-top), transparent 42%),
-      linear-gradient(180deg, var(--page-gradient-start) 0%, var(--page-gradient-mid) 52%, var(--page-gradient-end) 100%);
+      linear-gradient(
+        180deg,
+        var(--page-gradient-start) 0%,
+        var(--page-gradient-mid) 52%,
+        var(--page-gradient-end) 100%
+      );
   }
 
   body::before {
