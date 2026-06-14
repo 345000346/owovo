@@ -10,6 +10,7 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 - **主题**: MemE 的个人 fork，通过 Git submodule 引入（`themes/meme`）
 - **部署**: GitHub Actions → GitHub Pages
 - **运行时**: Node 24，PostCSS + autoprefixer 处理 CSS
+- **搜索**: Pagefind
 
 ## 目录结构
 
@@ -22,9 +23,10 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 │   └── markup.yaml       # 渲染与高亮
 ├── content/              # 内容（Markdown）
 │   ├── post/             # 文章（page bundle）
+│   ├── archives/         # 归档页
 │   ├── about.md          # 关于页
 │   ├── ideas.md          # 想法页
-│   └── search/           # 搜索页
+│   └── search/           # 搜索页（Pagefind）
 ├── data/                 # 模板数据
 │   └── Socials.toml
 ├── layouts/              # 模板覆盖（仅 robots.txt）
@@ -57,8 +59,9 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 
 - URL 保留原始大小写（`disablePathToLower: true`）
 - 启用 CJK 支持（正确统计中文字数）
-- PostCSS 通过 `build.use: "postcss"` 集成
+- PostCSS 通过 `build.use: "postcss"` 集成，配置位于 `postcss.config.js`
 - 安全策略仅允许 `postcss` 和 `node` 命令
+- 时区 `Asia/Shanghai`，超时 `120s`
 
 ## 内容结构
 
@@ -69,7 +72,7 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
   - `content/search/_index.md` → 搜索页
 - **独立页面**: `about.md`、`ideas.md`
 - **摘要分隔**: 正文中使用 `<!--more-->`
-- **原型模板**: `archetypes/default.md`（含 toc、tags、categories 等字段）
+- **原型模板**: `archetypes/default.md`（含 toc、tags、categories、description 等字段）
 - **新文章默认 draft: true**
 
 ## 关键命令
@@ -93,18 +96,18 @@ npm run format:check # CI 格式检查（只读）
 
 ## CI/CD（GitHub Actions）
 
-推送 `main` 分支触发（`gh-pages.yml`）：
+推送 `main` 分支触发（`.github/workflows/gh-pages.yml`）：
 
 1. Checkout（含子模块）
 2. 从 `.hugo-version` 读取版本，安装 Hugo Extended
 3. 从 `.node-version` 读取版本，安装 Node，`npm ci`
 4. Prettier 格式检查
-5. Hugo 构建（`--minify --gc`）
+5. Hugo 构建（`--minify --gc --logLevel warn`）
 6. Pagefind 索引构建
 7. 验证 Pagefind 产物
 8. 上传 `public/` 为 Pages artifact 并部署
 
-缓存策略：Hugo 资源缓存键包含 Hugo 版本、`package-lock.json`、config YAML、子模块状态。
+缓存策略：Hugo 资源缓存（`resources/_gen/`）跨构建复用，key 含 Hugo 版本、`package-lock.json`、config YAML、子模块状态。
 
 ## 社交媒体
 
@@ -112,10 +115,22 @@ npm run format:check # CI 格式检查（只读）
 
 - RSS、GitHub、微博、知乎
 
+## .gitignore 要点
+
+| 模式                   | 说明              |
+| ---------------------- | ----------------- |
+| `/public/`             | Hugo 构建输出     |
+| `/resources/_gen/`     | Hugo 资源缓存     |
+| `node_modules/`        | npm 依赖          |
+| `.vscode/` `.idea/`    | IDE 配置          |
+| `.env*`                | 环境变量          |
+| `*.log`                | 日志文件          |
+
 ## 编辑器 / 格式化
 
-- **Prettier**: 使用 `prettier-plugin-go-template` 插件处理 Go 模板。排除范围见 `.prettierignore`。
-- **EditorConfig**: 统一缩进（2 空格）、UTF-8、LF 换行。
+- **Prettier**（v3）：使用 `prettier-plugin-go-template` 插件处理 Go 模板。排除范围见 `.prettierignore`。
+- **EditorConfig**：统一缩进（2 空格）、UTF-8、LF 换行、文件末空行。
+- **CSS 后处理**：PostCSS + autoprefixer，浏览器目标见 `package.json` 的 `browserslist`。
 
 ## 重要提示
 
@@ -123,3 +138,5 @@ npm run format:check # CI 格式检查（只读）
 - **依赖安装**: 首次用 `npm ci`，仅在需要更新 lock 文件时用 `npm install`
 - **新建文章**: `hugo new post/<slug>` 或手动创建 `content/post/<slug>/index.md`
 - **国际化**: 翻译由主题在 `themes/meme/i18n/zh-cn.toml` 中提供，新增翻译键前先检查主题文件
+- **Hugo 构建缓存**: `resources/_gen/` 被 gitignore，仅 CI 缓存加速
+- **CI 构建日志**: 工作流中 Hugo 通过 `--logLevel warn` 运行，减少噪音
