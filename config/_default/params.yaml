@@ -100,7 +100,7 @@ readingTimeIcon: "clock"
 # 保持首页低调，关闭不需要的元信息
 displayModifiedDate: false
 displayWordCount: false
-displayCategory: false
+displayCategory: true
 
 # 文章标签与标签云
 enablePostTags: true

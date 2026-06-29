@@ -59,28 +59,11 @@ summaryLength: 260
 permalinks:
   post: "/post/:slug/"
 
-# 自定义 SectionsAtom 输出格式需要显式注册此 media type
-mediaTypes:
-  application/atom+xml:
-    suffixes: ["xml"]
-
-outputFormats:
-  SectionsAtom:
-    mediaType: "application/atom+xml"
-    baseName: "atom"
-  SectionsRSS:
-    mediaType: "application/rss+xml"
-    baseName: "rss"
-
 outputs:
-  home: ["HTML", "SectionsAtom", "SectionsRSS"]
+  home: ["HTML", "RSS"]
   section: ["HTML"]
   taxonomy: ["HTML"]
   term: ["HTML"]
-
-services:
-  rss:
-    limit: 20
 
 build:
   use: "postcss"
