@@ -17,4 +17,4 @@ highlight:
   guessSyntax: false
   lineNos: true
   lineNumbersInTable: true
-  noClasses: false
+  noClasses: true
