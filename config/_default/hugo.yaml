@@ -1,5 +1,6 @@
 baseURL: "https://owovo.xyz"
 
+defaultContentLanguage: "zh-cn"
 locale: "zh-CN"
 
 menu:
@@ -90,6 +91,7 @@ security:
     allow:
       - "^postcss$"
       - "^node$"
+      - "^sass$"
   funcs:
     getenv:
       - "^HUGO_"

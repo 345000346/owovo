@@ -36,6 +36,7 @@
     "pagefind": "^1.5.2",
     "postcss": "^8.5.8",
     "prettier": "^3.8.3",
-    "prettier-plugin-go-template": "^0.0.15"
+    "prettier-plugin-go-template": "^0.0.15",
+    "sass-embedded": "^1.100.0"
   }
 }
