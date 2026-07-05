@@ -9,8 +9,9 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 - **框架**: Hugo 0.161.1 Extended（含 Dart Sass）
 - **主题**: MemE 的个人 fork，通过 Git submodule 引入（`themes/meme`）
 - **部署**: GitHub Actions → GitHub Pages
-- **运行时**: Node 24，PostCSS + autoprefixer 处理 CSS
+- **运行时**: Node 24，PostCSS + autoprefixer 处理 CSS，`sass-embedded` 提供 Dart Sass 可执行文件
 - **搜索**: Pagefind
+- **主题策略**: `themes/meme` 是站点专用 fork，不再兼容原 MemE 的完整功能矩阵
 
 ## 目录结构
 
@@ -60,12 +61,13 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 - URL 保留原始大小写（`disablePathToLower: true`）
 - 启用 CJK 支持（正确统计中文字数）
 - PostCSS 通过 `build.use: "postcss"` 集成，配置位于 `postcss.config.js`
-- 安全策略仅允许 `postcss` 和 `node` 命令
+- 安全策略仅允许 `postcss`、`node` 和 `sass` 命令
 - 时区 `Asia/Shanghai`，超时 `120s`
 
 ## 内容结构
 
 - **文章**: `content/post/<slug>/index.md`（page bundle），永久链接 `/post/:slug/`
+- **首页**: 固定使用 `themes/meme/layouts/partials/pages/home-posts.html` 的文章列表布局
 - **Section 列表页**: `_index.md` 定义各 section 的 front matter
   - `content/post/_index.md` → 文章列表
   - `content/archives/_index.md` → 文章归档
@@ -74,6 +76,17 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 - **摘要分隔**: 正文中使用 `<!--more-->`
 - **原型模板**: `archetypes/default.md`（含 toc、tags、categories、description 等字段）
 - **新文章默认 draft: true**
+
+## 正文渲染
+
+主题通过 `themes/meme/layouts/_default/_markup/` 中的 render hooks 渲染正文 Markdown 链接、图片、标题和表格。
+
+- Markdown 表格由 `render-table.html` 包裹为 `.table-container`
+- 标题锚点和 `linkHeadingsToTOC` 由 `render-heading.html` 处理
+- Markdown 图片和 caption 由 `render-image.html` 处理
+- 正文 Markdown 外链由 `render-link.html` 处理；`utils/markdownify.html` 仅继续处理非正文片段的外链
+
+`themes/meme/layouts/partials/utils/content.html` 只负责调用 `custom/content.html` 并输出最终正文；不要重新加入跨节点 HTML 正则改写。
 
 ## 关键命令
 
@@ -87,12 +100,43 @@ npm run format       # Prettier 格式化
 npm run format:check # CI 格式检查（只读）
 ```
 
-直接使用 `hugo` 命令，无需包装脚本。Hugo Extended 已内置 Dart Sass。
+直接使用 `hugo` 命令，无需包装脚本。首次构建前需要 `npm ci`，以安装 PostCSS、Pagefind 与 Dart Sass 可执行文件。
 
 ## 搜索
 
-由 **Pagefind** 驱动，搜索页入口 `content/search/_index.md`。
+由 **Pagefind** 驱动，搜索页入口 `content/search/_index.md`，导航入口在 `config/_default/hugo.yaml` 的 main menu 中配置。
 构建后索引生成于 `public/pagefind/`，部署前会验证 `pagefind.js` 和 `pagefind-entry.json` 存在。
+旧 Lunr/Algolia 链路已删除。
+
+## 已移除的主题兼容项
+
+以下原 MemE 功能不再维护配置兼容性：
+
+- 多评论系统：Disqus、Valine、Utterances、Gitalk、Giscus、Remark42
+- PWA service worker
+- Adsense 与旧统计矩阵：Google Analytics、Yandex Metrika 等
+- 旧文章分享矩阵、Fediverse 分享页
+- 多语言切换组件和非 `zh-cn` 语言包
+- 段落首字下沉、段落缩进、脚注返回图标、视频 host 等正文后处理兼容项
+- 图片 host / headAlso URL 改写
+- 404 海报和视频背景参数
+- GitInfo、编辑链接和反馈入口组件
+- 文章更新时间 SVG badge
+- minimal footer / about minimal footer
+- 相关文章组件
+- Force HTTPS 前端跳转脚本
+- `poetry`、`footage`、`page` 等非文章列表首页模式
+- InstantPage 全站预加载脚本
+- MathJax 公式渲染链路（公式能力保留 KaTeX）
+- Medium Zoom 图片放大集成
+- 原 MemE `exampleSite` / `config-examples` 参数样例
+
+保留并重写为本站定制组件的能力：
+
+- 不蒜子访问统计：站点 PV/UV 与文章页 PV
+- 文章二维码分享：仅文章页按需加载 QR 生成库
+
+未在 `params.yaml` 中显式配置的轻量可选能力不自动视为死代码。KaTeX、Mermaid、文章导航、返回顶部、分类树/标签云、图片 caption 等按“停放能力”处理，只有在确认维护成本高于未来价值时再删除。
 
 ## CI/CD（GitHub Actions）
 
@@ -117,14 +161,14 @@ npm run format:check # CI 格式检查（只读）
 
 ## .gitignore 要点
 
-| 模式                   | 说明              |
-| ---------------------- | ----------------- |
-| `/public/`             | Hugo 构建输出     |
-| `/resources/_gen/`     | Hugo 资源缓存     |
-| `node_modules/`        | npm 依赖          |
-| `.vscode/` `.idea/`    | IDE 配置          |
-| `.env*`                | 环境变量          |
-| `*.log`                | 日志文件          |
+| 模式                | 说明          |
+| ------------------- | ------------- |
+| `/public/`          | Hugo 构建输出 |
+| `/resources/_gen/`  | Hugo 资源缓存 |
+| `node_modules/`     | npm 依赖      |
+| `.vscode/` `.idea/` | IDE 配置      |
+| `.env*`             | 环境变量      |
+| `*.log`             | 日志文件      |
 
 ## 编辑器 / 格式化
 
@@ -137,6 +181,6 @@ npm run format:check # CI 格式检查（只读）
 - **主题子模块**: `themes/meme` 指向个人 fork，**不要修改其 URL**
 - **依赖安装**: 首次用 `npm ci`，仅在需要更新 lock 文件时用 `npm install`
 - **新建文章**: `hugo new post/<slug>` 或手动创建 `content/post/<slug>/index.md`
-- **国际化**: 翻译由主题在 `themes/meme/i18n/zh-cn.toml` 中提供，新增翻译键前先检查主题文件
+- **语言**: 站点固定为 `zh-cn`，翻译只保留 `themes/meme/i18n/zh-cn.toml`
 - **Hugo 构建缓存**: `resources/_gen/` 被 gitignore，仅 CI 缓存加速
 - **CI 构建日志**: 工作流中 Hugo 通过 `--logLevel warn` 运行，减少噪音
