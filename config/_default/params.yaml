@@ -7,8 +7,6 @@ author:
 mainSections:
   - post
 
-favicon: "/favicon.ico"
-
 # 浏览器地址栏与系统 UI 的主题色
 themeColor: "#ffffff"
 themeColorDark: "#16171d"
@@ -21,11 +19,6 @@ openGraph: true
 twitterCards: true
 jsonLD: true
 siteLogo: "/images/avatar.webp"
-
-# 知识共享许可协议 (Creative Commons)
-cc:
-  name: "CC BY-NC-SA 4.0"
-  link: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
 
 # 用于页脚年份显示
 siteCreatedTime: "2019-08-22T00:00:00+08:00"
@@ -40,14 +33,10 @@ enablePostCopyright: true
 displayPostCopyright: true
 original: true
 
-# 404 海报图，留空表示不指定
-fofPoster: ""
-
 listDateFormat: "1 月 2 日"
 # 可选 left/right
 listDatePosition: "right"
 
-homeLayout: "posts"
 headerLayout: "flex"
 
 # 移动端汉堡按钮展开导航栏
@@ -72,9 +61,7 @@ displayMenuInHome: true
 enableDarkMode: true
 defaultTheme: "light"
 overrideSystemPreferences: false
-enableLunrSearch: false
 enablePagefindSearch: true
-pagefindSearchPath: "/search/"
 
 # 代码块：高亮、横向滚动、复制按钮
 enableHighlight: true
@@ -97,10 +84,25 @@ publishedDateIcon: "calendar-alt"
 displayReadingTime: true
 readingTimeIcon: "clock"
 
+# 不蒜子访问统计：保留为本站定制的单一统计入口
+enableBusuanzi: true
+busuanziScript: "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
+displayBusuanziSitePV: true
+displayBusuanziSiteUV: true
+displayBusuanziPagePV: true
+busuanziPagePVIcon: "eye"
+
+# 文章二维码分享：仅在文章页按需加载 QR 生成库
+enableQRCodeShare: true
+qrCodeShareIcon: "qrcode"
+
 # 保持首页低调，关闭不需要的元信息
 displayModifiedDate: false
 displayWordCount: false
 displayCategory: true
+categoryBy: "categories"
+categoryIcon: "folder"
+categoryDelimiter: "/"
 
 # 文章标签与标签云
 enablePostTags: true
@@ -122,4 +124,3 @@ iconAnimation: true
 displaySiteAuthorName: true
 displayPoweredBy: true
 enableSocials: true
-
