@@ -1,22 +1,14 @@
 (() => {
   const pageRoot = document.querySelector(".memorial-page");
-  const LOVE_START_AT = pageRoot?.getAttribute("data-love-start-at") || "";
-  const LOVE_START_DISPLAY_TEXT = LOVE_START_AT.replace(
+  if (!pageRoot) return;
+
+  const loveStartAt = pageRoot.getAttribute("data-love-start-at") || "";
+  const loveStartDate = loveStartAt ? new Date(loveStartAt) : null;
+  const loveStartDisplayText = loveStartAt.replace(
     /^(\d{4})-(\d{2})-(\d{2}).*$/,
     "$1.$2.$3",
   );
-  const LOVE_START_DATE = LOVE_START_AT ? new Date(LOVE_START_AT) : null;
-  const REVEAL_GROUPS = [
-    { selector: ".foreword .section-head", baseDelay: 0, step: 0 },
-    { selector: ".foreword .prose", baseDelay: 120, step: 0 },
-    { selector: ".chapters .section-head", baseDelay: 0, step: 0 },
-    { selector: ".chapter-piece", baseDelay: 80, step: 110 },
-    { selector: ".timeline-section .section-head", baseDelay: 0, step: 0 },
-    { selector: ".timeline-item", baseDelay: 60, step: 85 },
-    { selector: ".closing-inner", baseDelay: 0, step: 0 },
-  ];
-  const VISIBILITY_GROUPS = [".timeline"];
-  const TIMER_PARTS = [
+  const timerParts = [
     { key: "day", unit: "天", format: (value) => String(value) },
     {
       key: "hour",
@@ -34,22 +26,29 @@
       format: (value) => String(value).padStart(2, "0"),
     },
   ];
-  const REVEAL_PENDING_CLASS = "reveal-pending";
-  const pageState = {
-    initialized: false,
-    timerIntervalId: null,
-    revealObserver: null,
-    timerElement: null,
-    timerValueElements: [],
-    lastTimerValues: null,
-  };
+  const revealGroups = [
+    { selector: ".foreword .section-head", baseDelay: 0, step: 0 },
+    { selector: ".foreword .prose", baseDelay: 120, step: 0 },
+    { selector: ".chapters .section-head", baseDelay: 0, step: 0 },
+    { selector: ".chapter-piece", baseDelay: 80, step: 110 },
+    { selector: ".timeline-section .section-head", baseDelay: 0, step: 0 },
+    { selector: ".timeline-item", baseDelay: 60, step: 85 },
+    { selector: ".closing-inner", baseDelay: 0, step: 0 },
+  ];
+  const timerElement = document.getElementById("loveTimer");
+  const timerValueElements = [];
+  let lastTimerValues = null;
+
+  function prefersReducedMotion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
 
   function syncLoveStartDisplay() {
-    if (LOVE_START_DISPLAY_TEXT === LOVE_START_AT) return;
+    if (loveStartDisplayText === loveStartAt) return;
     document
       .querySelectorAll("[data-love-start-display]")
       .forEach((element) => {
-        element.textContent = LOVE_START_DISPLAY_TEXT;
+        element.textContent = loveStartDisplayText;
       });
   }
 
@@ -62,41 +61,26 @@
     };
   }
 
-  function prefersReducedMotion() {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  }
-
   function buildTimerDOM() {
-    if (pageState.timerElement) return true;
-
-    const timerElement = document.getElementById("loveTimer");
     if (!timerElement) return false;
 
     const fragment = document.createDocumentFragment();
-    const timerValueElements = [];
-
-    TIMER_PARTS.forEach(({ unit }) => {
+    timerParts.forEach(({ unit }) => {
       const partElement = document.createElement("span");
-      partElement.className = "timer-part";
-
       const valueElement = document.createElement("span");
-      valueElement.className = "timer-value";
-      partElement.append(valueElement);
-
       const unitElement = document.createElement("span");
+
+      partElement.className = "timer-part";
+      valueElement.className = "timer-value";
       unitElement.className = "timer-unit";
       unitElement.textContent = unit;
-      partElement.append(unitElement);
 
+      partElement.append(valueElement, unitElement);
       fragment.append(partElement);
       timerValueElements.push(valueElement);
     });
 
     timerElement.replaceChildren(fragment);
-    pageState.timerElement = timerElement;
-    pageState.timerValueElements = timerValueElements;
-    pageState.lastTimerValues = null;
-
     return true;
   }
 
@@ -109,70 +93,51 @@
 
   function updateTimer() {
     if (
-      !(LOVE_START_DATE instanceof Date) ||
-      Number.isNaN(LOVE_START_DATE.getTime())
+      !(loveStartDate instanceof Date) ||
+      Number.isNaN(loveStartDate.getTime())
     )
       return;
-    if (!pageState.timerElement) return;
 
-    const now = new Date();
-    const timeDiff = now - LOVE_START_DATE;
-    const timeUnits = formatTimeDiff(timeDiff);
-    const nextValues = TIMER_PARTS.map(({ key, format }) =>
+    const timeUnits = formatTimeDiff(new Date() - loveStartDate);
+    const nextValues = timerParts.map(({ key, format }) =>
       format(timeUnits[key]),
     );
-    const previousValues = pageState.lastTimerValues;
 
-    pageState.timerValueElements.forEach((valueElement, index) => {
-      const nextValue = nextValues[index];
-      const changed = !previousValues || previousValues[index] !== nextValue;
-
-      if (changed) {
-        valueElement.textContent = nextValue;
-        restartTimerValueAnimation(valueElement);
-      }
+    timerValueElements.forEach((valueElement, index) => {
+      if (lastTimerValues && lastTimerValues[index] === nextValues[index])
+        return;
+      valueElement.textContent = nextValues[index];
+      restartTimerValueAnimation(valueElement);
     });
 
-    pageState.lastTimerValues = nextValues;
-    pageState.timerElement.setAttribute(
+    lastTimerValues = nextValues;
+    timerElement.setAttribute(
       "aria-label",
       `${timeUnits.day} 天 ${timeUnits.hour} 小时 ${timeUnits.minute} 分钟 ${timeUnits.second} 秒`,
     );
   }
 
-  function startTimer() {
+  function setupTimer() {
     if (!buildTimerDOM()) return;
     updateTimer();
-    if (pageState.timerIntervalId) {
-      clearInterval(pageState.timerIntervalId);
-    }
-    pageState.timerIntervalId = setInterval(updateTimer, 1000);
+    setInterval(updateTimer, 1000);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) updateTimer();
+    });
   }
 
   function setupRevealAnimations() {
-    if (pageState.revealObserver) {
-      pageState.revealObserver.disconnect();
-      pageState.revealObserver = null;
-    }
-
     const revealElements = [];
-    const observedElements = new Set();
+    const observedElements = new Set(document.querySelectorAll(".timeline"));
 
-    REVEAL_GROUPS.forEach(({ selector, baseDelay, step }) => {
+    revealGroups.forEach(({ selector, baseDelay, step }) => {
       document.querySelectorAll(selector).forEach((element, index) => {
         element.setAttribute("data-reveal", "");
         element.style.setProperty(
           "--reveal-delay",
           `${baseDelay + index * step}ms`,
         );
-        element.classList.remove(REVEAL_PENDING_CLASS);
         revealElements.push(element);
-        observedElements.add(element);
-      });
-    });
-
-    VISIBILITY_GROUPS.forEach((selector) => {
-      document.querySelectorAll(selector).forEach((element) => {
         observedElements.add(element);
       });
     });
@@ -180,26 +145,25 @@
     if (!observedElements.size) return;
 
     if (prefersReducedMotion() || typeof IntersectionObserver !== "function") {
-      revealElements.forEach((element) => {
-        element.classList.remove(REVEAL_PENDING_CLASS);
-      });
+      revealElements.forEach((element) =>
+        element.classList.remove("reveal-pending"),
+      );
       observedElements.forEach((element) =>
         element.classList.add("is-visible"),
       );
       return;
     }
 
-    revealElements.forEach((element) => {
-      if (element.classList.contains("is-visible")) return;
-      element.classList.add(REVEAL_PENDING_CLASS);
-    });
+    revealElements.forEach((element) =>
+      element.classList.add("reveal-pending"),
+    );
 
-    pageState.revealObserver = new IntersectionObserver(
-      (entries, observer) => {
+    const observer = new IntersectionObserver(
+      (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           entry.target.classList.add("is-visible");
-          entry.target.classList.remove(REVEAL_PENDING_CLASS);
+          entry.target.classList.remove("reveal-pending");
           observer.unobserve(entry.target);
         });
       },
@@ -209,57 +173,18 @@
       },
     );
 
-    observedElements.forEach((element) => {
-      if (element.classList.contains("is-visible")) {
-        element.classList.remove(REVEAL_PENDING_CLASS);
-        return;
-      }
-      pageState.revealObserver.observe(element);
-    });
+    observedElements.forEach((element) => observer.observe(element));
   }
 
-  function stopTimer() {
-    if (!pageState.timerIntervalId) return;
-    clearInterval(pageState.timerIntervalId);
-    pageState.timerIntervalId = null;
-  }
-
-  function initPage() {
-    if (pageState.initialized) return;
-    pageState.initialized = true;
+  function init() {
     syncLoveStartDisplay();
-    startTimer();
+    setupTimer();
     setupRevealAnimations();
   }
 
-  function teardownPage() {
-    stopTimer();
-    if (pageState.revealObserver) {
-      pageState.revealObserver.disconnect();
-      pageState.revealObserver = null;
-    }
-    pageState.initialized = false;
-  }
-
   if (document.readyState === "loading") {
-    window.addEventListener("DOMContentLoaded", initPage, { once: true });
+    document.addEventListener("DOMContentLoaded", init, { once: true });
   } else {
-    initPage();
+    init();
   }
-
-  function handleVisibilityChange() {
-    if (document.hidden) {
-      stopTimer();
-      return;
-    }
-
-    if (pageState.initialized) {
-      startTimer();
-    }
-  }
-
-  document.addEventListener("visibilitychange", handleVisibilityChange);
-  window.addEventListener("pagehide", teardownPage);
-  window.addEventListener("beforeunload", teardownPage);
-  window.addEventListener("pageshow", () => initPage());
 })();

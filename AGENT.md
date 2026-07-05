@@ -86,7 +86,7 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 - Markdown 图片和 caption 由 `render-image.html` 处理
 - 正文 Markdown 外链由 `render-link.html` 处理；`utils/markdownify.html` 仅继续处理非正文片段的外链
 
-`themes/meme/layouts/partials/utils/content.html` 只负责调用 `custom/content.html` 并输出最终正文；不要重新加入跨节点 HTML 正则改写。
+`themes/meme/layouts/partials/utils/content.html` 只负责渲染并输出最终正文；不要重新加入跨节点 HTML 正则改写。
 
 ## 关键命令
 
@@ -181,8 +181,6 @@ git -C themes/meme diff --check
 7. 验证 Pagefind 产物
 8. 上传 `public/` 为 Pages artifact 并部署
 
-缓存策略：Hugo 资源缓存（`resources/_gen/`）跨构建复用，key 含 Hugo 版本、`package-lock.json`、config YAML、子模块状态。
-
 ## 社交媒体
 
 配置位于 `data/Socials.toml`，通过主题模板渲染：
@@ -212,5 +210,5 @@ git -C themes/meme diff --check
 - **依赖安装**: 首次用 `npm ci`，仅在需要更新 lock 文件时用 `npm install`
 - **新建文章**: `hugo new post/<slug>` 或手动创建 `content/post/<slug>/index.md`
 - **语言**: 站点固定为 `zh-cn`，翻译只保留 `themes/meme/i18n/zh-cn.toml`
-- **Hugo 构建缓存**: `resources/_gen/` 被 gitignore，仅 CI 缓存加速
+- **Hugo 构建缓存**: `resources/_gen/` 被 gitignore
 - **CI 构建日志**: 工作流中 Hugo 通过 `--logLevel warn` 运行，减少噪音

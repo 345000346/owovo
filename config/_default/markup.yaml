@@ -13,8 +13,4 @@ tableOfContents:
 
 # Hugo Chroma 代码高亮配置
 highlight:
-  codeFences: true
-  guessSyntax: false
   lineNos: true
-  lineNumbersInTable: true
-  noClasses: true

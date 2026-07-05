@@ -32,19 +32,6 @@ jobs:
           hugo-version: ${{ steps.hugo-version.outputs.version }}
           extended: true
 
-      - name: Capture submodule status for cache
-        id: submodule-status
-        run: echo "hash=$(git submodule status | sha256sum | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-
-      - name: Setup Hugo resource cache
-        uses: actions/cache@v5
-        with:
-          path: ./resources/_gen
-          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', 'config/_default/**/*.yaml') }}-${{ steps.submodule-status.outputs.hash }}
-          restore-keys: |
-            ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
-            ${{ runner.os }}-hugo-
-
       - name: Read Node.js version
         id: node-version
         run: echo "version=$(cat .node-version)" >> $GITHUB_OUTPUT
