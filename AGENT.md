@@ -136,7 +136,37 @@ npm run format:check # CI 格式检查（只读）
 - 不蒜子访问统计：站点 PV/UV 与文章页 PV
 - 文章二维码分享：仅文章页按需加载 QR 生成库
 
-未在 `params.yaml` 中显式配置的轻量可选能力不自动视为死代码。KaTeX、Mermaid、文章导航、返回顶部、分类树/标签云、图片 caption 等按“停放能力”处理，只有在确认维护成本高于未来价值时再删除。
+## 主题维护原则
+
+后续维护 `themes/meme` 时，不按“当前是否启用”直接删除功能，而按维护收益分层处理：
+
+- **保留核心能力**：文章列表、归档、分类、标签、RSS、SEO 元信息、暗色模式、代码高亮/复制、TOC、标题锚点、Pagefind 搜索、文章导航、基础图片/表格/脚注样式。
+- **停放轻量能力**：KaTeX、Mermaid、返回顶部、阅读进度、分类树、标签云、图片 caption、外链 target blank、small caps、justify、emphasis point、glyph correction 等。只要模板边界清晰且维护成本低，不因暂时未启用就删除。
+- **删除兼容包袱**：多搜索引擎、多评论系统、多语言主题矩阵、广告/旧统计矩阵/PWA/分享矩阵、非文章列表首页模式、跨节点 HTML 正则后处理。未来需要时按本站需求重建，不恢复上游 MemE 的大兼容矩阵。
+
+已删除功能如需恢复，优先做单一、明确、站点定制的组件。例如评论只选一个 provider，图片灯箱按当前 render hook 结构接入，HTTPS 强制跳转放在部署层处理。
+
+## 重构验证清单
+
+主题或构建链路有较大改动时，至少执行：
+
+```bash
+npm run format:check
+npm run build:site -- --logLevel warn
+npm run build:search
+git diff --check
+git -C themes/meme diff --check
+```
+
+重点抽查：
+
+- `public/pagefind/pagefind.js` 和 `public/pagefind/pagefind-entry.json` 存在。
+- Pagefind 索引页数接近文章页和明确允许索引的独立页数量，不应大量索引标签/分类/分页列表页。
+- 首页、分页页不应出现 `busuanzi_container_page_pv`；该 ID 只应出现在文章详情页。
+- 生成 HTML 中不应存在重复 `<script type="module">`、空社交图标链接或重复 ID。
+- Markdown 表格由 render hook 包裹为 `.table-container`；代码高亮内部表格不应被该容器包裹。
+- `themes/meme/layouts/partials/utils/content.html` 不应重新加入 `replaceRE`、`findRE` 或跨节点 `Scratch` 状态传递。
+- 主题布局和样式不应再引用 `homeLayout`、`homePoetry`、`homePoster` 或 `pages/home-footage`、`pages/home-poetry`。
 
 ## CI/CD（GitHub Actions）
 
