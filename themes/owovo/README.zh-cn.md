@@ -4,8 +4,7 @@
 
 维护时以仓库根目录中的这些文件为准：
 
-- `AGENT.md`
-- `REFACTOR_PLAN.md`
+- `AGENTS.md`
 - `config/_default/`
 
 ## 保留能力
@@ -41,5 +40,8 @@
 - MathJax 渲染链路
 - Medium Zoom 图片放大集成
 - 上游示例配置
+- Atom feed
+- 主题发布元数据、上游资助配置和多语言 README
+- 主题内默认社交链接和重复 favicon / manifest 静态资源
 
 未来新增功能应按本站需求重新实现，不应直接恢复上游的大兼容矩阵。
