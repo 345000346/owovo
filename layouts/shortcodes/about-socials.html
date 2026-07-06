@@ -1,0 +1,37 @@
+{{- $items := sort hugo.Data.AboutSocials.items "weight" -}} {{- if $items -}}
+<div class="about-social-showcase">
+  <p class="about-social-intro">在不同的平台，保留不同的表达方式。</p>
+  <div class="about-social-grid">
+    {{- range $items }} {{- $darkBadge := .badgeDark | default .badgeLight -}}
+    {{- $badgeAlt := .badgeAlt -}}
+    <a
+      target="_blank"
+      rel="external noopener"
+      href="{{ .url }}"
+      class="about-social-card border-0"
+    >
+      <span
+        class="about-social-mark{{ with .markClass }} {{ . }}{{ end }}"
+        aria-hidden="true"
+        >{{ .mark }}</span
+      >
+      <span class="about-social-copy">
+        <span class="about-social-platform">{{ .platform }}</span>
+        <span class="about-social-role">{{ .role }}</span>
+        {{- with .badgeLight }}
+        <img
+          src="{{ . }}"
+          data-light-src="{{ . }}"
+          data-dark-src="{{ $darkBadge }}"
+          alt="{{ $badgeAlt }}"
+          loading="lazy"
+          decoding="async"
+          class="themed-badge about-social-badge"
+        />
+        {{- end }}
+      </span>
+    </a>
+    {{- end }}
+  </div>
+</div>
+{{- end -}}
