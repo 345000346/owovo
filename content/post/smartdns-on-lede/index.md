@@ -6,10 +6,9 @@ slug: "smartdns-on-lede"
 description: "在 LEDE/OpenWrt 路由器上安装配置 SmartDNS，实现 DNS 加速与广告过滤。已归档，推荐改用 AdGuard Home + SmartDNS 组合方案。"
 tags: ["路由器", "DNS", "SmartDNS", "LEDE", "OpenWrt"]
 categories: ["技术"]
-archived: true
+outdated: true
+outdatedNote: "本文内容已过时。LEDE 项目已于 2018 年合并回 OpenWrt，本文所述安装方式已不再适用。如需在现代环境中部署 SmartDNS + AdGuard Home 组合方案，请参阅 [在飞牛NAS上搭建 AdGuard Home + SmartDNS 实现网络加速与去广告](/post/adguardhome-smartdns-on-fnos/)。"
 ---
-
-> **归档提示**：本文内容已过时。LEDE 项目已于 2018 年合并回 OpenWrt，本文所述安装方式已不再适用。如需在现代环境中部署 SmartDNS + AdGuard Home 组合方案，请参阅 [在飞牛NAS上搭建AdGuard Home + SmartDNS 实现网络加速与去广告](/post/adguardhome-smartdns-on-fnos/)。
 
 SmartDNS 是一个运行在本地的 DNS 服务器，SmartDNS 接受本地客户端的 DNS 查询请求，从多个上游 DNS 服务器获取 DNS 查询结果，并将访问速度最快的结果返回给客户端，提高网络访问速度。 同时支持指定特定域名 IP 地址，并高性匹配，达到过滤广告的效果。
 与 dnsmasq 的 all-servers 不同，smartdns 返回的是访问速度最快的解析结果。

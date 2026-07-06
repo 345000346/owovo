@@ -7,11 +7,9 @@ description: "Proxmox VE 5.4 升级到 6.0 的完整步骤，使用国内镜像�
 toc: true
 tags: ["虚拟机", "Proxmox", "Debian", "升级"]
 categories: ["技术"]
-archived: true
-
+outdated: true
+outdatedNote: "本文内容已过时。Proxmox VE 当前主流版本为 8.x，本文涉及的 Proxmox VE 5→6 升级步骤和 Debian stretch 源均已终止生命周期。本文仅作归档保留，不再更新。"
 ---
-
-> **归档提示**：本文内容已过时。Proxmox VE 当前主流版本为 8.x，本文涉及的 Proxmox VE 5→6 升级步骤和 Debian stretch 源均已终止生命周期。本文仅作归档保留，不再更新。
 
 Proxmox VE 6.0 发布了正式版本，使用 Proxmox VE 5.4 的可通过官方提供的更新源升级到最新版本。
 
