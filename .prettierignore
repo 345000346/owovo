@@ -3,6 +3,6 @@ content/
 node_modules/
 public/
 resources/
-themes/meme/
+themes/owovo/
 .hugo_build.lock
 hugo_stats.json

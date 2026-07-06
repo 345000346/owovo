@@ -1,0 +1,28 @@
+.post-outdated {
+    margin: 1.5rem 0 2rem;
+    padding: 1rem 1.2rem;
+    border-left: 3px solid alpha(var(--color-primary), 0.55);
+    background-color: alpha(var(--color-contrast-lower), 0.5);
+    color: var(--color-contrast-high);
+    line-height: 1.8;
+}
+
+.post-outdated-title {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--color-primary);
+}
+
+.post-outdated-body {
+    color: var(--color-contrast-medium);
+
+    p {
+        margin: 0;
+    }
+
+    a {
+        color: var(--color-primary);
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+}

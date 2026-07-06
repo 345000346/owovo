@@ -1,0 +1,16 @@
+{{- $ := index . "$" -}}
+{{- $name := .name | default "" -}}
+{{- $result := "" -}}
+{{- if not $name -}}
+    {{- warnf "Missing icon name on %q" $.RelPermalink -}}
+{{- else -}}
+    {{- $class := .class | default $name -}}
+    {{- $icon := index hugo.Data.SVG $name -}}
+    {{- if not $icon -}}
+        {{- warnf "Missing SVG icon %q on %q" $name $.RelPermalink -}}
+    {{- else -}}
+        {{- $class := printf "icon %s" $class -}}
+        {{- $result = (replace $icon "icon" $class | safeHTML) -}}
+    {{- end -}}
+{{- end -}}
+{{- return $result -}}

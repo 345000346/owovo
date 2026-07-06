@@ -47,7 +47,7 @@ title: "LIGT'S BLOG"
 
 copyright: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)"
 
-theme: "meme"
+theme: "owovo"
 
 # 保留 URL 原始大小写（某些文章 slug 含大写字母）
 disablePathToLower: true

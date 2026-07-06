@@ -1,0 +1,18 @@
+{{- $path := strings.TrimPrefix "/" (printf `%s/css/meme.min.css` .Site.LanguagePrefix) -}}
+{{- /* 仓库统一使用 Dart Sass，确保主题在本地与 CI 走同一条编译链。 */ -}}
+{{- $options := dict
+    "targetPath" $path
+    "outputStyle" "compressed"
+    "transpiler" "dartsass"
+    "silenceDeprecations" (slice "import" "global-builtin" "slash-div")
+-}}
+
+{{- $style := resources.Get "scss/main.scss" | resources.ExecuteAsTemplate (printf "%s/styles/main-rendered.scss" .Lang) . | css.Sass $options -}}
+{{- if .Site.Params.enableFingerprint -}}
+    {{- $style = $style | resources.Fingerprint -}}
+    <link rel="stylesheet" href="{{ $style.RelPermalink }}"
+    {{- if .Site.Params.enableSRI }} integrity="{{ $style.Data.Integrity }}" crossorigin="anonymous"{{- end -}}
+    />
+{{- else -}}
+    <link rel="stylesheet" href="{{ $style.RelPermalink }}" />
+{{- end -}}

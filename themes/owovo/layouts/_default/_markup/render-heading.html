@@ -1,0 +1,46 @@
+{{- $page := .Page -}}
+{{- $level := .Level -}}
+{{- $anchor := .Anchor -}}
+{{- $headingLevels := $page.Site.Params.headingsOpt | default "1-6" -}}
+{{- $anchorLevelEnabled := false -}}
+{{- if in $headingLevels "-" -}}
+    {{- $parts := split $headingLevels "-" -}}
+    {{- if eq (len $parts) 2 -}}
+        {{- $start := index $parts 0 | int -}}
+        {{- $end := index $parts 1 | int -}}
+        {{- $anchorLevelEnabled = and (ge $level $start) (le $level $end) -}}
+    {{- end -}}
+{{- else -}}
+    {{- $anchorLevelEnabled = in $headingLevels (printf "%d" $level) -}}
+{{- end -}}
+
+{{- $enableTOC := $page.Params.toc | default $page.Site.Params.enableTOC -}}
+{{- $linkToTOC := and $enableTOC $page.Site.Params.linkHeadingsToTOC -}}
+{{- $enableAnchor := and $anchorLevelEnabled ($page.Params.anchor | default $page.Site.Params.enableHeadingsAnchor) -}}
+
+<h{{ $level }} id="{{ $anchor | safeURL }}"
+{{- range $key, $value := .Attributes -}}
+    {{- if ne $key "id" -}}
+        {{- printf " %s=%q" $key $value | safeHTMLAttr -}}
+    {{- end -}}
+{{- end -}}
+>
+{{- if $enableAnchor -}}
+    {{- $anchorContent := $page.Site.Params.anchorSymbol | default "§" -}}
+    {{- with $page.Site.Params.anchorIcon -}}
+        {{- with partial "utils/icon.html" (dict "$" $page "name" . "class" "anchor-icon") -}}
+            {{- $anchorContent = . -}}
+        {{- end -}}
+    {{- end -}}
+    {{- if $page.Site.Params.enableAnchorLink -}}
+        <a href="#{{ $anchor | safeURL }}" class="anchor-link" aria-label="{{ $anchor }}">{{ $anchorContent }}</a>
+    {{- else -}}
+        <span class="anchor-link" aria-hidden="true">{{ $anchorContent }}</span>
+    {{- end -}}
+{{- end -}}
+{{- if $linkToTOC -}}
+    <a href="#contents:{{ $anchor | safeURL }}" class="headings">{{ .Text | safeHTML }}</a>
+{{- else -}}
+    {{ .Text | safeHTML }}
+{{- end -}}
+</h{{ $level }}>

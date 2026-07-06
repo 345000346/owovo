@@ -1,0 +1,15 @@
+{{ if .Params.katex | default .Site.Params.enableKaTeX }}
+    {{ partial "third-party/katex.html" . }}
+{{ end }}
+
+{{ if .Params.mermaid | default .Site.Params.enableMermaid }}
+    {{ partial "third-party/mermaid.html" . }}
+{{ end }}
+
+{{ if .Site.Params.enableBusuanzi | default false }}
+    {{ partial "third-party/busuanzi.html" . }}
+{{ end }}
+
+{{ if and (.Site.Params.enableQRCodeShare | default false) .IsPage (in (.Site.Params.mainSections | default (slice "post")) .Section) }}
+    {{ partial "third-party/qrcode-share.html" . }}
+{{ end }}

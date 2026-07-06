@@ -1,0 +1,129 @@
+<head{{ if .Site.Params.openGraph }} prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#"{{ end }}>
+    <meta charset="UTF-8" />
+
+    {{ hugo.Generator }}
+
+    {{- with .Site.Params.defaultTheme | default "light" -}}
+        {{- if eq . "light" -}}
+            <meta name="theme-color" content="{{ $.Site.Params.themeColor }}" />
+        {{- else -}}
+            <meta name="theme-color" content="{{ $.Site.Params.themeColorDark }}" />
+        {{- end -}}
+    {{- end -}}
+
+    <!-- https://web.dev/color-scheme/ -->
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Responsive Web Design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Avoid Automatic Format Detection -->
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+    <!-- Avoid Transcoding -->
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <!-- Avoid Baidu Mobile Search Transcoding -->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <title>{{ (partial "utils/title.html" (dict "$" . "title" .Title)).title }}</title>
+
+    <!-- CSS -->
+    {{- partial "style.html" . }}
+    {{- if and .Site.Params.enablePagefindSearch (ne .Section "search") -}}
+        <script type="module">
+          const highlightTerms = new URLSearchParams(window.location.search).getAll("hl");
+          if (highlightTerms.some(Boolean)) {
+            const { default: PagefindHighlight } = await import("{{ "pagefind/pagefind-highlight.js" | relURL }}");
+
+            new PagefindHighlight({
+              addStyles: false,
+              highlightParam: "hl",
+              markOptions: {
+                className: "search-highlight",
+                exclude: [
+                  "[data-pagefind-ignore]",
+                  "[data-pagefind-ignore] *",
+                  "script",
+                  "style",
+                  "textarea",
+                  "input",
+                  "select",
+                  "noscript",
+                  "code",
+                  "pre",
+                  "kbd",
+                ],
+              },
+            });
+
+            const firstMark = document.querySelector("mark.search-highlight");
+            if (firstMark) {
+              requestAnimationFrame(() => {
+                firstMark.scrollIntoView({ block: "center", behavior: "smooth" });
+              });
+            }
+          }
+        </script>
+        <style>
+          mark.search-highlight {
+            background: none;
+            color: inherit;
+            font-weight: 700;
+            text-decoration: underline;
+            text-decoration-color: var(--color-primary);
+            text-decoration-thickness: 2.5px;
+            text-underline-offset: 0.22em;
+          }
+        </style>
+    {{- end }}
+
+    <!-- JavaScript -->
+    {{ if ne .Kind "404" }}
+        {{ partial "script.html" . }}
+    {{ end }}
+
+    <!-- Fonts -->
+    {{- with .Site.Params.fontsLink -}}
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <link rel="stylesheet" href="{{ . }}" media="print" onload="this.media='all'" />
+        <noscript><link rel="stylesheet" href="{{ . }}" /></noscript>
+    {{- end }}
+
+    <meta name="author" content="{{ .Params.author | default .Site.Params.author.name }}" />
+    {{- $description := .Description | default (partial "utils/summary.html" .) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
+    <meta name="description" content="{{ $description }}" />
+
+    <!-- Favicon, Icons, Web App -->
+    {{- $icoFavicon := "favicon.ico" -}}
+    {{- $svgFavicon := "icons/favicon.svg" -}}
+    {{- $pngFavicon := "icons/favicon-96x96.png" -}}
+    {{- $appleTouchIcon := "icons/apple-touch-icon.png" -}}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ $icoFavicon | relURL }}" />
+    <link rel="icon" type="image/svg+xml" href="{{ $svgFavicon | relURL }}" />
+    <link rel="icon" type="image/png" href="{{ $pngFavicon | relURL }}" sizes="96x96" />
+    <link rel="apple-touch-icon" href="{{ $appleTouchIcon | relURL }}" sizes="180x180" />
+
+    <!-- Feeds -->
+    {{ with .OutputFormats.Get "RSS" -}}
+        <link rel="{{ .Rel }}" type="{{ .MediaType }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}" />
+    {{ end }}
+    {{ with .OutputFormats.Get "Atom" -}}
+        <link rel="{{ .Rel }}" type="{{ .MediaType }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}" />
+    {{ end }}
+
+    <!-- SEO -->
+    <link rel="canonical" href="{{ .Permalink }}" />
+    <!-- JSON-LD -->
+    {{- with .Site.Params.jsonLD -}}
+        {{ partial "utils/json-ld.html" (dict "$" $ "description" $description) }}
+    {{- end }}
+
+    <!-- Twitter Cards -->
+    {{- with .Site.Params.twitterCards -}}
+        {{ partial "utils/twitter-cards.html" (dict "$" $) }}
+    {{- end }}
+    <!-- Open Graph -->
+    {{- with .Site.Params.openGraph -}}
+        {{ partial "utils/open-graph.html" (dict "$" $ "description" $description) }}
+    {{- end }}
+
+</head>

@@ -1,0 +1,75 @@
+{{- $src := partial "utils/lib.html" (dict "$" . "type" "qrcode-generator") -}}
+<script>
+    (() => {
+        const root = document.getElementById('post-qrcode-share');
+        if (!root) return;
+
+        const button = root.querySelector('.post-qrcode-toggle');
+        const panel = document.getElementById('post-qrcode-panel');
+        const target = document.getElementById('post-qrcode-canvas');
+        if (!button || !panel || !target) return;
+
+        const loadQRCode = () => new Promise((resolve, reject) => {
+            if (typeof qrcode === 'function') {
+                resolve();
+                return;
+            }
+
+            const existing = document.querySelector('script[data-qrcode-share-lib]');
+            if (existing) {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = '{{ $src }}';
+            script.crossOrigin = 'anonymous';
+            script.dataset.qrcodeShareLib = 'true';
+            script.addEventListener('load', resolve, { once: true });
+            script.addEventListener('error', reject, { once: true });
+            document.body.appendChild(script);
+        });
+
+        const renderQRCode = () => {
+            if (target.dataset.rendered === 'true' || typeof qrcode !== 'function') return;
+
+            const qr = qrcode(0, 'M');
+            qr.addData(root.dataset.url || window.location.href);
+            qr.make();
+            target.innerHTML = qr.createSvgTag(4, 2);
+            const svg = target.querySelector('svg');
+            if (svg) {
+                svg.setAttribute('role', 'img');
+                svg.setAttribute('aria-label', '当前文章二维码');
+            }
+            target.dataset.rendered = 'true';
+        };
+
+        let loading;
+        const openPanel = async () => {
+            panel.hidden = false;
+            button.setAttribute('aria-expanded', 'true');
+            if (target.dataset.rendered !== 'true') {
+                target.textContent = '二维码生成中...';
+            }
+
+            try {
+                loading = loading || loadQRCode();
+                await loading;
+                renderQRCode();
+            } catch (error) {
+                target.textContent = '二维码生成失败';
+            }
+        };
+
+        button.addEventListener('click', () => {
+            if (!panel.hidden) {
+                panel.hidden = true;
+                button.setAttribute('aria-expanded', 'false');
+                return;
+            }
+            openPanel();
+        });
+    })();
+</script>

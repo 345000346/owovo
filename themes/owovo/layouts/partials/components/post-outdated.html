@@ -1,0 +1,9 @@
+{{- if .Params.outdated -}}
+    {{- $note := .Params.outdatedNote | default "本文内容可能已经过时，仅作归档保留。请结合发布时间和当前环境自行判断。" -}}
+    <aside class="post-outdated" role="note">
+        <strong class="post-outdated-title">归档提示</strong>
+        <div class="post-outdated-body">
+            {{ partial "utils/markdownify.html" (dict "$" . "raw" $note "isContent" false) }}
+        </div>
+    </aside>
+{{- end -}}
