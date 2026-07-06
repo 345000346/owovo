@@ -106,9 +106,6 @@
     {{ with .OutputFormats.Get "RSS" -}}
         <link rel="{{ .Rel }}" type="{{ .MediaType }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}" />
     {{ end }}
-    {{ with .OutputFormats.Get "Atom" -}}
-        <link rel="{{ .Rel }}" type="{{ .MediaType }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}" />
-    {{ end }}
 
     <!-- SEO -->
     <link rel="canonical" href="{{ .Permalink }}" />

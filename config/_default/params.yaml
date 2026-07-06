@@ -11,7 +11,7 @@ mainSections:
 themeColor: "#ffffff"
 themeColorDark: "#16171d"
 
-# 用于 head meta、RSS/Atom 提要
+# 用于 head meta、RSS 提要
 siteDescription: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
 
 # ── SEO / 社交分享 ──

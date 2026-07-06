@@ -3,7 +3,6 @@
 <!-- Reference: https://github.com/kaushalmodi/hugo-atom-feed/blob/master/layouts/_default/list.atom.xml -->
 <!-- Reference: https://validator.w3.org/feed/docs/rss2.html -->
 <!-- Reference: https://developers.google.com/gdata/docs/1.0/reference -->
-<!-- Reference: https://www.intertwingly.net/wiki/pie/Rss20AndAtom10Compared -->
 <!-- Reference: https://en.wikipedia.org/wiki/RSS -->
 {{- $pages := where .Site.RegularPages "Section" "in" .Site.Params.mainSections -}}
 {{- $limit := .Site.Config.Services.RSS.Limit -}}
