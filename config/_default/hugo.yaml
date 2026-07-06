@@ -61,10 +61,23 @@ permalinks:
   post: "/post/:slug/"
 
 outputs:
-  home: ["HTML", "RSS"]
+  home: ["HTML", "RSS", "Atom"]
   section: ["HTML"]
   taxonomy: ["HTML"]
   term: ["HTML"]
+
+mediaTypes:
+  application/atom+xml:
+    suffixes:
+      - "xml"
+
+outputFormats:
+  Atom:
+    baseName: "index"
+    mediaType: "application/atom+xml"
+    rel: "alternate"
+  RSS:
+    baseName: "rss"
 
 build:
   use: "postcss"
