@@ -34,6 +34,8 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 ├── static/               # 静态资源
 │   ├── images/avatar.webp
 │   ├── icons/
+│   ├── love.html         # 独立纪念页（不走主题模板）
+│   ├── love/             # 独立纪念页资源
 │   └── favicon.ico
 ├── themes/meme/          # 主题子模块（勿修改 URL）
 ├── .github/workflows/    # CI/CD
@@ -200,7 +202,8 @@ git -C themes/meme diff --check
 
 ## 编辑器 / 格式化
 
-- **Prettier**（v3）：使用 `prettier-plugin-go-template` 插件处理 Go 模板。排除范围见 `.prettierignore`。
+- **Prettier**（v3）：用于站点自有配置、静态页、Markdown 说明、普通 JS/CSS。排除范围见 `.prettierignore`。
+- `themes/meme/` 保持排除：主题内存在 Hugo 模板化的 `.html`、`.js`、`.scss`，Prettier 会按普通语法解析失败。主题改动以 Hugo 构建、`git -C themes/meme diff --check` 和重点产物抽查验证。
 - **EditorConfig**：统一缩进（2 空格）、UTF-8、LF 换行、文件末空行。
 - **CSS 后处理**：PostCSS + autoprefixer，浏览器目标见 `package.json` 的 `browserslist`。
 

@@ -1,10 +1,6 @@
 archetypes/
 content/
-config/_default/markup.yaml
-config/_default/params.yaml
-layouts/
 node_modules/
-postcss.config.js
 public/
 resources/
 themes/meme/
