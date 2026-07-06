@@ -4,7 +4,7 @@
   "description": "Personal blog powered by Hugo",
   "scripts": {
     "dev": "hugo server -D",
-    "build:site": "hugo --gc --minify",
+    "build:site": "hugo --gc --minify --cleanDestinationDir",
     "build:search": "pagefind --site public",
     "build": "npm run build:site && npm run build:search",
     "hugo:env": "hugo env",
