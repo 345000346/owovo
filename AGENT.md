@@ -7,11 +7,11 @@
 Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作者 LIGT。
 
 - **框架**: Hugo 0.161.1 Extended（含 Dart Sass）
-- **主题**: MemE 的个人 fork，通过 Git submodule 引入（`themes/meme`）
+- **主题**: 基于 MemE 演化的站点自有主题，已直接纳入主仓库（`themes/owovo`）
 - **部署**: GitHub Actions → GitHub Pages
 - **运行时**: Node 24，PostCSS + autoprefixer 处理 CSS，`sass-embedded` 提供 Dart Sass 可执行文件
 - **搜索**: Pagefind
-- **主题策略**: `themes/meme` 是站点专用 fork，不再兼容原 MemE 的完整功能矩阵
+- **主题策略**: `themes/owovo` 是站点专用主题，不再兼容原 MemE 的完整功能矩阵，也不再作为 submodule 维护
 
 ## 目录结构
 
@@ -37,7 +37,7 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 │   ├── love.html         # 独立纪念页（不走主题模板）
 │   ├── love/             # 独立纪念页资源
 │   └── favicon.ico
-├── themes/meme/          # 主题子模块（勿修改 URL）
+├── themes/owovo/         # 站点自有主题（主仓库普通目录）
 ├── .github/workflows/    # CI/CD
 ├── .editorconfig
 ├── .hugo-version
@@ -69,7 +69,7 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 ## 内容结构
 
 - **文章**: `content/post/<slug>/index.md`（page bundle），永久链接 `/post/:slug/`
-- **首页**: 固定使用 `themes/meme/layouts/partials/pages/home-posts.html` 的文章列表布局
+- **首页**: 固定使用 `themes/owovo/layouts/partials/pages/home-posts.html` 的文章列表布局
 - **Section 列表页**: `_index.md` 定义各 section 的 front matter
   - `content/post/_index.md` → 文章列表
   - `content/archives/_index.md` → 文章归档
@@ -81,14 +81,14 @@ Hugo 静态博客，中文内容，部署于 GitHub Pages（`owovo.xyz`）。作
 
 ## 正文渲染
 
-主题通过 `themes/meme/layouts/_default/_markup/` 中的 render hooks 渲染正文 Markdown 链接、图片、标题和表格。
+主题通过 `themes/owovo/layouts/_default/_markup/` 中的 render hooks 渲染正文 Markdown 链接、图片、标题和表格。
 
 - Markdown 表格由 `render-table.html` 包裹为 `.table-container`
 - 标题锚点和 `linkHeadingsToTOC` 由 `render-heading.html` 处理
 - Markdown 图片和 caption 由 `render-image.html` 处理
 - 正文 Markdown 外链由 `render-link.html` 处理；`utils/markdownify.html` 仅继续处理非正文片段的外链
 
-`themes/meme/layouts/partials/utils/content.html` 只负责渲染并输出最终正文；不要重新加入跨节点 HTML 正则改写。
+`themes/owovo/layouts/partials/utils/content.html` 只负责渲染并输出最终正文；不要重新加入跨节点 HTML 正则改写。
 
 ## 关键命令
 
@@ -140,7 +140,7 @@ npm run format:check # CI 格式检查（只读）
 
 ## 主题维护原则
 
-后续维护 `themes/meme` 时，不按“当前是否启用”直接删除功能，而按维护收益分层处理：
+后续维护 `themes/owovo` 时，不按“当前是否启用”直接删除功能，而按维护收益分层处理：
 
 - **保留核心能力**：文章列表、归档、分类、标签、RSS、SEO 元信息、暗色模式、代码高亮/复制、TOC、标题锚点、Pagefind 搜索、文章导航、基础图片/表格/脚注样式。
 - **停放轻量能力**：KaTeX、Mermaid、返回顶部、阅读进度、分类树、标签云、图片 caption、外链 target blank、small caps、justify、emphasis point、glyph correction 等。只要模板边界清晰且维护成本低，不因暂时未启用就删除。
@@ -157,7 +157,7 @@ npm run format:check
 npm run build:site -- --logLevel warn
 npm run build:search
 git diff --check
-git -C themes/meme diff --check
+git diff --check -- themes/owovo
 ```
 
 重点抽查：
@@ -167,14 +167,14 @@ git -C themes/meme diff --check
 - 首页、分页页不应出现 `busuanzi_container_page_pv`；该 ID 只应出现在文章详情页。
 - 生成 HTML 中不应存在重复 `<script type="module">`、空社交图标链接或重复 ID。
 - Markdown 表格由 render hook 包裹为 `.table-container`；代码高亮内部表格不应被该容器包裹。
-- `themes/meme/layouts/partials/utils/content.html` 不应重新加入 `replaceRE`、`findRE` 或跨节点 `Scratch` 状态传递。
+- `themes/owovo/layouts/partials/utils/content.html` 不应重新加入 `replaceRE`、`findRE` 或跨节点 `Scratch` 状态传递。
 - 主题布局和样式不应再引用 `homeLayout`、`homePoetry`、`homePoster` 或 `pages/home-footage`、`pages/home-poetry`。
 
 ## CI/CD（GitHub Actions）
 
 推送 `main` 分支触发（`.github/workflows/gh-pages.yml`）：
 
-1. Checkout（含子模块）
+1. Checkout
 2. 从 `.hugo-version` 读取版本，安装 Hugo Extended
 3. 从 `.node-version` 读取版本，安装 Node，`npm ci`
 4. Prettier 格式检查
@@ -203,15 +203,15 @@ git -C themes/meme diff --check
 ## 编辑器 / 格式化
 
 - **Prettier**（v3）：用于站点自有配置、静态页、Markdown 说明、普通 JS/CSS。排除范围见 `.prettierignore`。
-- `themes/meme/` 保持排除：主题内存在 Hugo 模板化的 `.html`、`.js`、`.scss`，Prettier 会按普通语法解析失败。主题改动以 Hugo 构建、`git -C themes/meme diff --check` 和重点产物抽查验证。
+- `themes/owovo/` 保持排除：主题内存在 Hugo 模板化的 `.html`、`.js`、`.scss`，Prettier 会按普通语法解析失败。主题改动以 Hugo 构建、`git diff --check -- themes/owovo` 和重点产物抽查验证。
 - **EditorConfig**：统一缩进（2 空格）、UTF-8、LF 换行、文件末空行。
 - **CSS 后处理**：PostCSS + autoprefixer，浏览器目标见 `package.json` 的 `browserslist`。
 
 ## 重要提示
 
-- **主题子模块**: `themes/meme` 指向个人 fork，**不要修改其 URL**
+- **主题目录**: `themes/owovo` 是主仓库普通目录，按站点自有主题维护；不再使用 Git submodule
 - **依赖安装**: 首次用 `npm ci`，仅在需要更新 lock 文件时用 `npm install`
 - **新建文章**: `hugo new post/<slug>` 或手动创建 `content/post/<slug>/index.md`
-- **语言**: 站点固定为 `zh-cn`，翻译只保留 `themes/meme/i18n/zh-cn.toml`
+- **语言**: 站点固定为 `zh-cn`，翻译只保留 `themes/owovo/i18n/zh-cn.toml`
 - **Hugo 构建缓存**: `resources/_gen/` 被 gitignore
 - **CI 构建日志**: 工作流中 Hugo 通过 `--logLevel warn` 运行，减少噪音

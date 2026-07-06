@@ -115,7 +115,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          submodules: true
           fetch-depth: 0
 
       - name: Read Hugo version
@@ -132,7 +131,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ./resources/_gen
-          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', '.gitmodules', 'config/_default/**/*.yaml') }}
+          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', 'config/_default/**/*.yaml') }}
           restore-keys: |
             ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
             ${{ runner.os }}-hugo-
@@ -237,7 +236,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ./resources/_gen
-          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', '.gitmodules', 'config/_default/**/*.yaml') }}
+          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', 'config/_default/**/*.yaml') }}
           restore-keys: |
             ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
             ${{ runner.os }}-hugo-
