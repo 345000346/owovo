@@ -1,6 +1,7 @@
 # Build outputs (Hugo)
 /public/
-/resources/_gen/
+# Hugo 资源缓存（自动生成，请勿手动放置文件）
+/resources/
 .hugo_build.lock
 hugo_stats.json
 /static/css/
