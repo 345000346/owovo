@@ -70,9 +70,6 @@ outputFormats:
   RSS:
     baseName: "rss"
 
-build:
-  use: "postcss"
-
 timeZone: "Asia/Shanghai"
 
 timeout: "120s"
@@ -93,7 +90,6 @@ caches:
 security:
   exec:
     allow:
-      - "^postcss$"
       - "^node$"
       - "^sass$"
   funcs:
