@@ -29,8 +29,14 @@
 
     const firstMark = document.querySelector("mark.search-highlight");
     if (firstMark) {
+      const enableSmoothScroll = {{ if .Site.Params.enableSmoothScroll }}true{{ else }}false{{ end }};
+      const reducedMotion =
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const behavior = enableSmoothScroll && !reducedMotion ? "smooth" : "auto";
+
       requestAnimationFrame(() => {
-        firstMark.scrollIntoView({ block: "center", behavior: "smooth" });
+        firstMark.scrollIntoView({ block: "center", behavior });
       });
     }
   });

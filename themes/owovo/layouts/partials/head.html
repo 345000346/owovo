@@ -51,7 +51,7 @@
     {{- end }}
 
     <meta name="author" content="{{ .Site.Params.author.name }}" />
-    {{- $description := .Description | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
+    {{- $description := .Description | default (partial "utils/summary.html" .) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
     <meta name="description" content="{{ $description }}" />
 
     <!-- Favicon, Icons, Web App -->

@@ -1,3 +1,5 @@
+{{ $src := partial "utils/lib.html" (dict "$" . "type" "clipboard") }}
+
 // Copy Button for Code Blocks
 
 // References
@@ -14,49 +16,82 @@ window.addEventListener("DOMContentLoaded", event => {
         div.appendChild(e);
     });
 
-    if (!navigator.clipboard) {
-        return;
-    }
-
-    const divs = document.querySelectorAll('table.lntable, .highlight > pre, .post-body > div > pre');
-
-    divs.forEach((containerEl) => {
-        let codeBlock;
-        if (containerEl.classList.contains('lntable')) {
-            codeBlock = containerEl.querySelectorAll('.lntd')[1];
-        } else {
-            codeBlock = containerEl.querySelector('code');
-        }
-
-        if (!codeBlock) {
+    function addCopyButtons(clipboardLike) {
+        if (!clipboardLike || typeof clipboardLike.writeText !== 'function') {
             return;
         }
 
-        containerEl.parentNode.style.position = 'relative';
+        const divs = document.querySelectorAll('table.lntable, .highlight > pre, .post-body > div > pre');
 
-        const button = document.createElement('button');
-        button.className = 'copy-button';
-        button.type = 'button';
-        button.innerText = copyText;
+        divs.forEach((containerEl) => {
+            if (containerEl.querySelector('.copy-button')) {
+                return;
+            }
 
-        button.addEventListener('click', () => {
-            navigator.clipboard.writeText(codeBlock.innerText).then(() => {
-                /* Chrome doesn't seem to blur automatically,
-                   leaving the button in a focused state. */
-                button.blur();
+            let codeBlock;
+            if (containerEl.classList.contains('lntable')) {
+                codeBlock = containerEl.querySelectorAll('.lntd')[1];
+            } else {
+                codeBlock = containerEl.querySelector('code');
+            }
 
-                button.innerText = copiedText;
+            if (!codeBlock) {
+                return;
+            }
 
-                setTimeout(() => {
-                    button.innerText = copyText;
-                }, 1000);
-            }).catch((error) => {
-                button.innerText = 'Error';
+            containerEl.parentNode.style.position = 'relative';
 
-                console.error(error);
+            const button = document.createElement('button');
+            button.className = 'copy-button';
+            button.type = 'button';
+            button.innerText = copyText;
+
+            button.addEventListener('click', () => {
+                clipboardLike.writeText(codeBlock.innerText).then(() => {
+                    /* Chrome doesn't seem to blur automatically,
+                       leaving the button in a focused state. */
+                    button.blur();
+
+                    button.innerText = copiedText;
+
+                    setTimeout(() => {
+                        button.innerText = copyText;
+                    }, 1000);
+                }).catch((error) => {
+                    button.innerText = 'Error';
+
+                    console.error(error);
+                });
             });
-        });
 
-        containerEl.appendChild(button);
-    });
+            containerEl.appendChild(button);
+
+            {{ if .Site.Params.enableCopyAutoHide }}
+                containerEl.parentNode.addEventListener('mouseover', () => {
+                    button.style = 'visibility: visible; opacity: 1';
+                });
+
+                containerEl.parentNode.addEventListener('mouseout', () => {
+                    button.style = 'visibility: hidden; opacity: 0';
+                });
+            {{ end }}
+        });
+    }
+
+    if (navigator && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        addCopyButtons(navigator.clipboard);
+    } else {
+        const script = document.createElement('script');
+        script.src = '{{ $src }}';
+        script.defer = true;
+        script.onload = function() {
+            const clipboardPolyfill = window.clipboard || (typeof clipboard !== 'undefined' ? clipboard : null);
+            addCopyButtons(clipboardPolyfill);
+        };
+        script.onerror = function(error) {
+            console.error(error);
+        };
+
+        document.head.appendChild(script);
+    }
 }, {once: true});
