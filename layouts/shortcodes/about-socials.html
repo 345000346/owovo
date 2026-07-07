@@ -1,4 +1,5 @@
-{{- $items := sort hugo.Data.AboutSocials.items "weight" -}} {{- if $items -}}
+{{- $items := sort (where hugo.Data.Socials.items "about" true) "weight" -}} {{-
+if $items -}}
 <div class="about-social-showcase">
   <p class="about-social-intro">在不同的平台，保留不同的表达方式。</p>
   <div class="about-social-grid">

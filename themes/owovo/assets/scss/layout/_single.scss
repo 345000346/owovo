@@ -262,6 +262,12 @@ pre {
             visibility: hidden;
             opacity: 0;
         }
+
+        &:hover .copy-button,
+        &:focus-within .copy-button {
+            visibility: visible;
+            opacity: 1;
+        }
     }
 }
 

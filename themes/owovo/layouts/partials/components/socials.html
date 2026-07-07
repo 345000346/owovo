@@ -1,18 +1,17 @@
-{{ if .Site.Params.enableSocials }}
-    {{ with hugo.Data.Socials }}
-        <ul class="socials">
-            {{- range sort .socials "weight" -}}
-                <li class="socials-item">
-                    <a href="{{ .url | safeURL }}" target="_blank" rel="external noopener" title="{{ .title }}">
-                        {{- $icon := partial "utils/icon.html" (dict "$" $ "name" .icon "class" "social-icon") -}}
-                        {{- if $icon -}}
-                            {{- $icon -}}
-                        {{- else -}}
-                            <span class="icon social-icon social-icon-text">{{ .title }}</span>
-                        {{- end -}}
-                    </a>
-                </li>
-            {{- end -}}
-        </ul>
-    {{ end }}
+{{ with hugo.Data.Socials }}
+    {{- $items := .items | default .socials -}}
+    <ul class="socials">
+        {{- range where (sort $items "weight") "footer" true -}}
+            <li class="socials-item">
+                <a href="{{ .url | safeURL }}" target="_blank" rel="external noopener" title="{{ .title }}">
+                    {{- $icon := partial "utils/icon.html" (dict "$" $ "name" .icon "class" "social-icon") -}}
+                    {{- if $icon -}}
+                        {{- $icon -}}
+                    {{- else -}}
+                        <span class="icon social-icon social-icon-text">{{ .title }}</span>
+                    {{- end -}}
+                </a>
+            </li>
+        {{- end -}}
+    </ul>
 {{ end }}
