@@ -4,7 +4,7 @@
 
 维护时以仓库根目录中的这些文件为准：
 
-- `AGENTS.md`
+- `CLAUDE.md`
 - `config/_default/`
 
 ## 保留能力
