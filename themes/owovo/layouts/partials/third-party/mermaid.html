@@ -5,14 +5,20 @@
     // Replace mermaid pre.code to div
     Array.from(document.getElementsByClassName("language-mermaid")).forEach(
         (el) => {
-            el.parentElement.outerHTML = `<div class="mermaid">${el.innerText}</div>`;
+            const container = document.createElement("div");
+            container.className = "mermaid";
+            container.textContent = el.innerText;
+            if (el.parentElement) {
+                el.parentElement.replaceWith(container);
+            }
         }
     );
     const mermaidConfig = {
         startOnLoad: true,
+        securityLevel: "strict",
         flowchart: {
             useMaxWidth: false,
-            htmlLabels: true
+            htmlLabels: false
         },
         theme: '{{ template "mermaid-theme" . }}'
     };

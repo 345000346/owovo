@@ -167,17 +167,19 @@ function changeMode() {
                 // Already rendered, clean the processed attributes
                 e.removeAttribute('data-processed');
                 // Replace the rendered HTML with the stored text
-                e.innerHTML = e.getAttribute('data-graph');
+                e.textContent = e.getAttribute('data-graph') || '';
             } else {
                 // First time, store the text
                 e.setAttribute('data-graph', e.textContent);
             }
         });
 
-        mermaidConfig.theme = isDark
-            ? '{{ .Site.Params.mermaidThemeDark | default "dark" }}'
-            : '{{ .Site.Params.mermaidTheme | default "default" }}';
-        mermaid.initialize(mermaidConfig);
+        mermaid.initialize({
+            ...mermaidConfig,
+            theme: isDark
+                ? '{{ .Site.Params.mermaidThemeDark | default "dark" }}'
+                : '{{ .Site.Params.mermaidTheme | default "default" }}',
+        });
         mermaid.init();
     }
 }
