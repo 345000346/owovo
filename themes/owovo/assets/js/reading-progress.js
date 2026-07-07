@@ -18,6 +18,6 @@ const updateReadingProgress = () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.addEventListener("scroll", updateReadingProgress);
+  onScroll(updateReadingProgress);
   updateReadingProgress();
 });

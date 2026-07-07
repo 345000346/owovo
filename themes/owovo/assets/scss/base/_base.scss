@@ -1,7 +1,5 @@
-@if ($enableSmoothScroll) {
-    html {
-        scroll-behavior: smooth;
-    }
+html {
+    scroll-behavior: smooth;
 }
 
 html, body {
@@ -31,14 +29,8 @@ body {
 }
 
 .main {
-    padding: 2em 1em 15em;
+    padding: 7em 1em 15em;
     display: block;
-}
-
-@if ($headerLayoutFlex) {
-    .main {
-        padding-top: 7em;
-    }
 }
 
 .main-inner {

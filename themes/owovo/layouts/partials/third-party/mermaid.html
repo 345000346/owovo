@@ -27,7 +27,7 @@
 
 {{- define "mermaid-theme" -}}
     {{- $theme := .Site.Params.mermaidTheme | default "default" -}}
-    {{- if and .Site.Params.enableDarkMode (eq .Site.Params.defaultTheme "dark") -}}
+    {{- if eq .Site.Params.defaultTheme "dark" -}}
         {{- $theme = .Site.Params.mermaidThemeDark | default "dark" -}}
     {{- end -}}
     {{- $theme -}}

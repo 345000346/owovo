@@ -200,7 +200,7 @@ article.content.post.home {
 }
 
 [data-theme="dark"] .post-body .about-social-showcase {
-  border-color: alpha(var(--color-contrast-light), 0.08);
+  border-color: rgba(255, 255, 255, 0.08);
   background:
     radial-gradient(circle at top right, rgba(185, 151, 118, 0.12), transparent 36%),
     linear-gradient(180deg, #24201c 0%, #1b1815 100%);
@@ -208,7 +208,7 @@ article.content.post.home {
 }
 
 [data-theme="dark"] .post-body .about-social-card {
-  border-color: alpha(var(--color-contrast-light), 0.08);
+  border-color: rgba(255, 255, 255, 0.08);
   background-color: rgba(255, 255, 255, 0.03);
   box-shadow: 0 12px 22px rgba(0, 0, 0, 0.16);
 }

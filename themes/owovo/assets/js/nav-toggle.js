@@ -37,12 +37,11 @@ window.addEventListener(
             closeNav();
         });
 
-        window.addEventListener(
-            "scroll",
-            throttle(() => {
+        onScroll(() => {
+            if (isOpen()) {
                 closeNav();
-            }, delayTime),
-        );
+            }
+        });
 
         const maxWidth = window
             .getComputedStyle(document.documentElement, null)
@@ -75,10 +74,6 @@ window.addEventListener(
         }
 
         function closeNav(noFade) {
-            if (!isOpen()) {
-                return;
-            }
-
             header.classList.remove("open");
             navToggle.classList.remove("open");
             navToggle.setAttribute("aria-expanded", "false");

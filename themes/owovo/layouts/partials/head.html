@@ -28,51 +28,13 @@
     <!-- CSS -->
     {{- partial "style.html" . }}
     {{- if and .Site.Params.enablePagefindSearch (ne .Section "search") -}}
-        <script type="module">
-          const highlightTerms = new URLSearchParams(window.location.search).getAll("hl");
-          if (highlightTerms.some(Boolean)) {
-            const { default: PagefindHighlight } = await import("{{ "pagefind/pagefind-highlight.js" | relURL }}");
-
-            new PagefindHighlight({
-              addStyles: false,
-              highlightParam: "hl",
-              markOptions: {
-                className: "search-highlight",
-                exclude: [
-                  "[data-pagefind-ignore]",
-                  "[data-pagefind-ignore] *",
-                  "script",
-                  "style",
-                  "textarea",
-                  "input",
-                  "select",
-                  "noscript",
-                  "code",
-                  "pre",
-                  "kbd",
-                ],
-              },
-            });
-
-            const firstMark = document.querySelector("mark.search-highlight");
-            if (firstMark) {
-              requestAnimationFrame(() => {
-                firstMark.scrollIntoView({ block: "center", behavior: "smooth" });
-              });
-            }
-          }
-        </script>
-        <style>
-          mark.search-highlight {
-            background: none;
-            color: inherit;
-            font-weight: 700;
-            text-decoration: underline;
-            text-decoration-color: var(--color-primary);
-            text-decoration-thickness: 2.5px;
-            text-underline-offset: 0.22em;
-          }
-        </style>
+        {{- $highlight := resources.Get "js/search-highlight.js" | resources.ExecuteAsTemplate (printf "%s/js/search-highlight-rendered.js" .Lang) . | resources.Minify -}}
+        {{- if .Site.Params.enableFingerprint -}}
+            {{- $highlight = $highlight | resources.Fingerprint -}}
+        {{- end -}}
+        <script type="module" src="{{ $highlight.RelPermalink }}"
+        {{- if and .Site.Params.enableFingerprint .Site.Params.enableSRI }} integrity="{{ $highlight.Data.Integrity }}" crossorigin="anonymous"{{- end -}}
+        ></script>
     {{- end }}
 
     <!-- JavaScript -->
@@ -89,7 +51,7 @@
     {{- end }}
 
     <meta name="author" content="{{ .Site.Params.author.name }}" />
-    {{- $description := .Description | default (partial "utils/summary.html" .) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
+    {{- $description := .Description | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
     <meta name="description" content="{{ $description }}" />
 
     <!-- Favicon, Icons, Web App -->
@@ -109,18 +71,23 @@
 
     <!-- SEO -->
     <link rel="canonical" href="{{ .Permalink }}" />
-    <!-- JSON-LD -->
-    {{- with .Site.Params.jsonLD -}}
-        {{ partial "utils/json-ld.html" (dict "$" $ "description" $description) }}
-    {{- end }}
+    {{- $seoEnabled := or .Site.Params.jsonLD .Site.Params.twitterCards .Site.Params.openGraph -}}
+    {{- if $seoEnabled -}}
+        {{- $seo := partial "utils/seo-data.html" (dict "$" $ "description" $description) -}}
 
-    <!-- Twitter Cards -->
-    {{- with .Site.Params.twitterCards -}}
-        {{ partial "utils/twitter-cards.html" (dict "$" $) }}
-    {{- end }}
-    <!-- Open Graph -->
-    {{- with .Site.Params.openGraph -}}
-        {{ partial "utils/open-graph.html" (dict "$" $ "description" $description) }}
+        <!-- JSON-LD -->
+        {{- with .Site.Params.jsonLD -}}
+            {{ partial "utils/json-ld.html" (dict "$" $ "seo" $seo) }}
+        {{- end }}
+
+        <!-- Twitter Cards -->
+        {{- with .Site.Params.twitterCards -}}
+            {{ partial "utils/twitter-cards.html" (dict "$" $ "seo" $seo) }}
+        {{- end }}
+        <!-- Open Graph -->
+        {{- with .Site.Params.openGraph -}}
+            {{ partial "utils/open-graph.html" (dict "$" $ "seo" $seo) }}
+        {{- end }}
     {{- end }}
 
 </head>

@@ -1,10 +1,8 @@
-{{ with .Site.Params.fontSize | default 16 }}
+{{ with .Site.Params.fontSize | default 18 }}
     $fontSize: {{ . }}px;
 {{ end }}
-{{ with .Site.Params.tabSize | default 4 }}
-    $tabSize: {{ . }};
-{{ end }}
-{{ with .Site.Params.lineHeight | default 2 }}
+$tabSize: {{ .Site.Params.tabSize | default 4 }};
+{{ with .Site.Params.lineHeight | default 1.8 }}
     $lineHeight: {{ . }};
 {{ end }}
 
@@ -19,62 +17,18 @@
     $duration: {{ . }}s;
 {{ end }}
 
-{{ if eq .Site.Params.headerLayout "flex" }}
-    $headerLayoutFlex: true;
-{{ else }}
-    $headerLayoutFlex: false;
-{{ end }}
-
-{{ if .Site.Params.enableHeaderAutoHide }}
-    $enableHeaderAutoHide: true;
-{{ else }}
-    $enableHeaderAutoHide: false;
-{{ end }}
-
-{{ if .Site.Params.enableNavToggle }}
-    $enableNavToggle: true;
-
-    {{ with .Site.Params.navHeight | default "10em" }}
-        $navHeight: {{ . }};
-    {{ end }}
-{{ else }}
-    $enableNavToggle: false;
-{{ end }}
-
-{{ if .Site.Params.displayBackToTopOnMobile }}
-    $displayBackToTopOnMobile: true;
-{{ else }}
-    $displayBackToTopOnMobile: false;
-{{ end }}
-
-{{ if .Site.Params.enableOverflowY }}
-    $enableOverflowY: true;
-{{ else }}
-    $enableOverflowY: false;
-{{ end }}
-
-{{ with .Site.Params.maxHeight | default 20 }}
+$headerLayoutFlex: true;
+$enableHeaderAutoHide: false;
+$enableNavToggle: true;
+$navHeight: {{ .Site.Params.navHeight | default "20em" }};
+$displayBackToTopOnMobile: false;
+$enableOverflowY: true;
+{{ with .Site.Params.maxHeight | default 80 }}
     $maxHeight: {{ . }}em;
 {{ end }}
-
-{{ if .Site.Params.enableCopy }}
-    $enableCopy: true;
-{{ else }}
-    $enableCopy: false;
-{{ end }}
-
-{{ if .Site.Params.enableCopyAutoHide }}
-    $enableCopyAutoHide: true;
-{{ else }}
-    $enableCopyAutoHide: false;
-{{ end }}
-
-{{ if .Site.Params.enableSmoothScroll }}
-    $enableSmoothScroll: true;
-{{ else }}
-    $enableSmoothScroll: false;
-{{ end }}
-
+$enableCopy: true;
+$enableCopyAutoHide: true;
+$enableSmoothScroll: true;
 $baseRelURL: "{{ "" | relURL | strings.TrimSuffix "/" }}";
 
 
@@ -88,21 +42,12 @@ $baseRelURL: "{{ "" | relURL | strings.TrimSuffix "/" }}";
 
 @import "base/base";
 
-{{ if .Site.Params.customizeScrollbar }}
-    @import "base/scrollbar";
-{{ end }}
-
 
 // Typography
 
 // Font Family
 
-{{ if .Site.Params.enableChinesePunctuationGlyphCorrection }}
-    {{ .Scratch.Set "glyph" "'glyph-correction', " }}
-{{ else }}
-    {{ .Scratch.Set "glyph" "" }}
-{{ end }}
-{{ $glyph := .Scratch.Get "glyph" }}
+{{ $glyph := "" }}
 
 {{ with .Site.Params.fontFamilySiteBrand }}
     $fontFamilySiteBrand: {{ $glyph }}{{ . }};
@@ -138,16 +83,7 @@ $baseRelURL: "{{ "" | relURL | strings.TrimSuffix "/" }}";
 @import "base/font-family";
 
 // Chinese Punctuation Glyph Correction
-
-{{ if .Site.Params.enableChinesePunctuationGlyphCorrection }}
-    @import "base/glyph-correction";
-{{ end }}
-
 // Emphasis Point
-
-{{ if .Site.Params.enableEmphasisPoint }}
-    @import "base/emphasis-point";
-{{ end }}
 
 // Themes
 
@@ -168,83 +104,55 @@ $baseRelURL: "{{ "" | relURL | strings.TrimSuffix "/" }}";
     {{ end }}
 {{ end }}
 
-{{ if and .Site.Params.enableDarkMode (eq .Site.Params.defaultTheme "dark") }}
-    $defaultTheme: dark;
-{{ else }}
-    $defaultTheme: light;
-{{ end }}
-
-{{ if .Site.Params.enableHighlight }}
-    $enableHighlight: true;
-{{ else }}
-    $enableHighlight: false;
-{{ end }}
+$defaultTheme: {{ .Site.Params.defaultTheme | default "light" }};
+$enableHighlight: true;
 
 @import "themes/light";
 
 // Dark Mode
 
-{{ if .Site.Params.enableDarkMode }}
-    {{ with .Site.Params.primaryColorDark | default "201, 65%, 62%" }}
-        {{ $number := (split (replace . "%" "") ", ") }}
-        {{ range $index, $value := $number }}
-            {{ if eq $index 0 }}
-                $primaryColorDarkH: {{ $value | int }};
-            {{ end }}
-            {{ if eq $index 1 }}
-                $primaryColorDarkS: {{ $value | int }}%;
-            {{ end }}
-            {{ if eq $index 2 }}
-                $primaryColorDarkL: {{ $value | int }}%;
-            {{ end }}
+{{ with .Site.Params.primaryColorDark | default "201, 65%, 62%" }}
+    {{ $number := (split (replace . "%" "") ", ") }}
+    {{ range $index, $value := $number }}
+        {{ if eq $index 0 }}
+            $primaryColorDarkH: {{ $value | int }};
+        {{ end }}
+        {{ if eq $index 1 }}
+            $primaryColorDarkS: {{ $value | int }}%;
+        {{ end }}
+        {{ if eq $index 2 }}
+            $primaryColorDarkL: {{ $value | int }}%;
         {{ end }}
     {{ end }}
-
-    @import "themes/dark";
-    @import "components/theme-switcher";
 {{ end }}
+
+@import "themes/dark";
+@import "components/theme-switcher";
 
 
 // Header
 
-{{ if .Site.Params.enableHeader }}
-    {{ with .Site.Params.headerBackground }}
-        $headerBackground: {{ . }};
-    {{ end }}
+$headerBackground: {{ .Site.Params.headerBackground | default "var(--color-bg)" }};
 
-    {{ if .Site.Params.siteBrandSVG }}
-        $siteBrandSVG: true;
-        $siteBrandSVGWidth: {{ .Site.Params.siteBrandSVGWidth }}px;
-        $siteBrandSVGHeight: {{ .Site.Params.siteBrandSVGHeight }}px;
-        $siteBrandSVGFill: {{ .Site.Params.siteBrandSVGFill }};
-    {{ else }}
-        $siteBrandSVG: false;
-        $siteBrandFontSize: {{ .Site.Params.siteBrandFontSize }}em;
-        $siteBrandFontColor: {{ .Site.Params.siteBrandFontColor }};
-    {{ end }}
+$siteBrandSVG: false;
+$siteBrandFontSize: {{ .Site.Params.siteBrandFontSize | default 1 }}em;
+$siteBrandFontColor: {{ .Site.Params.siteBrandFontColor | default "var(--color-contrast-high)" }};
 
-    @import 'layout/header';
-
-    {{ if and (eq .Site.Params.headerLayout "flex") .Site.Params.enableNavToggle }}
-        @import 'components/nav-toggle';
-    {{ end }}
-{{ end }}
+@import "layout/header";
+@import "components/nav-toggle";
 
 
 // Menu Bar
 
-{{ if or .Site.Params.enableMenu (eq .Site.Params.headerLayout "flex") }}
-    @import 'layout/menu';
-{{ end }}
+@import "layout/menu";
 
 
 // List Page
 
-{{ if eq .Site.Params.listDatePosition "right" }}
-    $listDatePosition: right;
-{{ end }}
 {{ if eq .Site.Params.listDatePosition "left" }}
     $listDatePosition: left;
+{{ else }}
+    $listDatePosition: right;
 {{ end }}
 
 @import "layout/list";
@@ -252,96 +160,48 @@ $baseRelURL: "{{ "" | relURL | strings.TrimSuffix "/" }}";
 
 // Single Page
 
-{{ if .Site.Params.enableAnchorAutoHide }}
-    $enableAnchorAutoHide: true;
-{{ else }}
-    $enableAnchorAutoHide: false;
-{{ end }}
+$enableAnchorAutoHide: false;
 
 @import "layout/single";
 
 
 // Footer
 
-{{ if .Site.Params.enableFooter }}
-    {{ with .Site.Params.iconColor }}
-        $iconColor: {{ . }};
-    {{ end }}
+$iconColor: {{ .Site.Params.iconColor | default "#f06292" }};
+$iconAnimation: true;
 
-    {{ if .Site.Params.iconAnimation }}
-        $iconAnimation: true;
-    {{ else }}
-        $iconAnimation: false;
-    {{ end }}
-
-    @import "layout/footer";
-{{ end }}
+@import "layout/footer";
 
 
 // Components
 
-{{ if or .Site.Params.enablePostMeta .Site.Params.enablePostMetaInHome }}
-    @import "components/post-meta";
-{{ end }}
-
-{{ if .Site.Params.enablePostCopyright }}
-    @import "components/post-copyright";
-{{ end }}
-
+@import "components/post-meta";
+@import "components/post-copyright";
 @import "components/post-outdated";
+@import "components/post-tags";
+@import "components/post-nav";
 
-{{ if .Site.Params.enablePostTags }}
-    @import "components/post-tags";
-{{ end }}
+$enableBackToTopAutoHide: true;
 
-{{ if .Site.Params.enablePostNav }}
-    @import "components/post-nav";
-{{ end }}
-
-{{ if .Site.Params.enableBackToTop }}
-    {{ if .Site.Params.enableBackToTopAutoHide }}
-        $enableBackToTopAutoHide: true;
-    {{ else }}
-        $enableBackToTopAutoHide: false;
-    {{ end }}
-
-    @import "components/back-to-top";
-{{ end }}
-
-{{ if .Site.Params.enableHighlight }}
-    @import "components/highlight";
-{{ end }}
-
-{{ if .Site.Params.enableSocials }}
-    @import "components/socials";
-{{ end }}
-
-{{ if .Site.Params.enableBusuanzi }}
-    @import "components/busuanzi";
-{{ end }}
-
-{{ if .Site.Params.enableQRCodeShare }}
-    @import "components/post-qrcode";
-{{ end }}
-
-{{ if (.Site.Params.enableReadingProgress | default true) }}
-    @import "components/reading-progress";
-{{ end }}
+@import "components/back-to-top";
+@import "components/highlight";
+@import "components/socials";
+@import "components/busuanzi";
+@import "components/reading-progress";
+@import "components/search-highlight";
 
 
-// Homepage Layout
+// Homepage Layout styles
 
 @import "pages/home-posts";
 
 
-// Categories Page
+// Categories Page styles
 
-{{ if .Site.Params.enableTree }}
-    @import "pages/tree-categories";
-{{ end }}
+@import "pages/tree-categories";
 
 
-// Tags Page
+// Tags Page styles
 
 {{ if .Site.Params.enableTagCloud }}
     @import "pages/tag-cloud";

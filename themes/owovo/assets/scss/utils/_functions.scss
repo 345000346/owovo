@@ -1,13 +1,8 @@
-// https://codyhouse.co/blog/post/how-to-combine-sass-color-functions-and-css-variables
-
 // return css color variable with different opacity value
 @function alpha($color, $opacity){
     $color: str-replace($color, 'var(');
     $color: str-replace($color, ')');
-    $color-h: var(#{$color+'-h'});
-    $color-s: var(#{$color+'-s'});
-    $color-l: var(#{$color+'-l'});
-    @return hsla($color-h, $color-s, $color-l, $opacity);
+    @return hsl(var(#{$color + '-hsl'}) / $opacity);
 }
 
 // replace substring with another string

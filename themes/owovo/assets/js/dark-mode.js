@@ -2,14 +2,12 @@
 // https://web.dev/prefers-color-scheme/#reacting-on-dark-mode-changes (old reference)
 // https://twitter.com/ChromeDevTools/status/1197175265643745282 (old reference)
 
-// Check if system preferences should be overridden
-const enableDarkMode = {{ if .Site.Params.enableDarkMode }}true{{ else }}false{{ end }};
 const overrideSystemPreferences = {{ if .Site.Params.overrideSystemPreferences }}true{{ else }}false{{ end }};
 const defaultTheme = '{{ .Site.Params.defaultTheme | default "light" }}';
 
 // Helper function to check if system preferences should be overridden
 function shouldOverrideSystemPreferences() {
-    return enableDarkMode && overrideSystemPreferences;
+    return overrideSystemPreferences;
 }
 
 // Helper function to check if theme switching is allowed

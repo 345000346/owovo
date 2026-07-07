@@ -1,24 +1,28 @@
-// https://www.30secondsofcode.org/js/s/throttle/
+const scrollTasks = [];
+let scrollScheduled = false;
 
-const throttle = (fn, wait) => {
-    let inThrottle, lastFn, lastTime;
-    return function() {
-        const context = this,
-              args = arguments;
-        if (!inThrottle) {
-            fn.apply(context, args);
-            lastTime = Date.now();
-            inThrottle = true;
-        } else {
-            clearTimeout(lastFn);
-            lastFn = setTimeout(function() {
-                if (Date.now() - lastTime >= wait) {
-                    fn.apply(context, args);
-                    lastTime = Date.now();
-                }
-            }, Math.max(wait - (Date.now() - lastTime), 0));
-        }
-    };
+const onScroll = (task) => {
+    if (typeof task === 'function') {
+        scrollTasks.push(task);
+    }
 };
 
-const delayTime = 420;
+const scheduleScrollTasks = window.requestAnimationFrame || ((callback) => setTimeout(callback, 16));
+
+const runScrollTasks = () => {
+    scrollScheduled = false;
+    scrollTasks.forEach((task) => {
+        try {
+            task(window.scrollY);
+        } catch (error) {
+            console.error(error);
+        }
+    });
+};
+
+window.addEventListener('scroll', () => {
+    if (!scrollScheduled) {
+        scrollScheduled = true;
+        scheduleScrollTasks(runScrollTasks);
+    }
+}, { passive: true });
