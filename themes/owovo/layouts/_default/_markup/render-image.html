@@ -1,11 +1,12 @@
 {{- $src := .Destination -}}
 
-<img src="{{ $src | safeURL }}" alt="{{ .Text }}"
+<img src="{{ $src | safeURL }}" alt="{{ .Text }}" decoding="async"
+ loading="{{ .Attributes.loading | default "lazy" }}"
 {{- with .Title -}}
     {{- if not $.Page.Site.Params.enableCaption }} title="{{ . }}"{{ end -}}
 {{- end -}}
 {{- range $key, $value := .Attributes -}}
-    {{- if and (ne $key "src") (ne $key "alt") (ne $key "title") -}}
+    {{- if and (ne $key "src") (ne $key "alt") (ne $key "title") (ne $key "loading") -}}
         {{- printf " %s=%q" $key $value | safeHTMLAttr -}}
     {{- end -}}
 {{- end -}}
