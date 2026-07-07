@@ -1,46 +1,22 @@
-{{ if or (and .IsHome .Site.Params.displayFooterInHome) (and (not .IsHome) (.Site.Params.displayFooter | default .Site.Params.enableFooter)) }}
-    <footer id="footer" class="footer">
-        <div class="footer-inner">
-            <div class="site-info">
-              {{- if .Site.Params.displayCopyleftSymbol -}}
-                  <span class="copyleft-symbol">🄯</span>&nbsp;
-              {{- end -}}
-              {{- if .Site.Params.displayCopyrightSymbol -}}
-                  ©&nbsp;
-              {{- end -}}
+<footer id="footer" class="footer">
+    <div class="footer-inner">
+        <div class="site-info">
+            ©&nbsp;
+            {{- dateFormat "2006" (time .Site.Params.siteCreatedTime) -}}–{{- now.Format "2006" -}}
 
-              {{- if .Site.Params.displaySiteCreatedYear -}}
-                  {{- dateFormat "2006" (time .Site.Params.siteCreatedTime) -}}–
-              {{- end -}}
-              {{- now.Format "2006" -}}
-
-              {{- with .Site.Params.iconBetweenYearAndAuthor -}}
-                  &nbsp;{{- partial "utils/icon.html" (dict "$" $ "name" . "class" "footer-icon") -}}
-              {{- end -}}
-
-              {{- if .Site.Params.displaySiteAuthorName -}}
-                  &nbsp;{{- .Site.Params.author.name -}}
-              {{- end -}}
-            </div>
-
-            {{- if .Site.Params.displayPoweredBy }}
-                {{- $raw := `Powered by [Hugo](https://github.com/gohugoio/hugo) | Theme is [MemE](https://github.com/reuixiy/hugo-theme-meme)` -}}
-                <div class="powered-by">{{ partial "utils/markdownify.html" (dict "$" $ "raw" $raw "isContent" false) }}</div>
-            {{- end }}
-
-            {{- if .Site.Params.displaySiteCopyright }}
-                {{- $raw := .Site.Copyright -}}
-                <div class="site-copyright">{{ partial "utils/markdownify.html" (dict "$" $ "raw" $raw "isContent" false) }}</div>
-            {{- end }}
-
-            {{- with .Site.Params.customFooter }}
-                {{- $raw := . -}}
-                <div class="custom-footer">{{ partial "utils/markdownify.html" (dict "$" $ "raw" $raw "isContent" false) }}</div>
-            {{- end }}
-
-            {{ partial "components/busuanzi-site.html" . }}
-
-            {{ partial "components/socials.html" . }}
+            &nbsp;{{- partial "utils/icon.html" (dict "$" $ "name" "heart" "class" "footer-icon") -}}
+            &nbsp;{{- .Site.Params.author.name -}}
         </div>
-    </footer>
-{{ end }}
+
+        {{- $raw := `Powered by [Hugo](https://github.com/gohugoio/hugo) | Theme is [MemE](https://github.com/reuixiy/hugo-theme-meme)` -}}
+        <div class="powered-by">{{ partial "utils/markdownify.html" (dict "$" $ "raw" $raw "isContent" false) }}</div>
+
+        {{- with .Site.Copyright -}}
+            <div class="site-copyright">{{ partial "utils/markdownify.html" (dict "$" $ "raw" . "isContent" false) }}</div>
+        {{- end }}
+
+        {{ partial "components/busuanzi-site.html" . }}
+
+        {{ partial "components/socials.html" . }}
+    </div>
+</footer>

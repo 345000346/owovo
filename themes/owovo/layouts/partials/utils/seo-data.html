@@ -1,0 +1,25 @@
+{{- $ := index . "$" -}}
+{{- $description := .description -}}
+{{- $title := (partial "utils/title.html" (dict "$" $ "title" $.Title)).rawTitle -}}
+{{- $dates := partial "utils/date.html" $ -}}
+{{- $author := partial "utils/author.html" $ -}}
+{{- $images := partial "utils/images.html" $ -}}
+{{- if not $images -}}
+    {{- with $.Site.Params.siteLogo -}}
+        {{- $images = slice (. | absURL) -}}
+    {{- end -}}
+{{- end -}}
+{{- $license := "" -}}
+{{- with $author.copyright -}}
+    {{- $license = . | plainify | htmlUnescape | replaceRE `^\[[^\]]+\]\(([^)]+)\)$` `$1` -}}
+{{- end -}}
+{{- $baseURLWithLangFix := "" | absLangURL -}}
+{{- return dict
+    "title" $title
+    "description" $description
+    "dates" $dates
+    "author" $author
+    "images" $images
+    "license" $license
+    "baseURL" $baseURLWithLangFix
+-}}

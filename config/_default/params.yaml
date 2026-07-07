@@ -14,7 +14,7 @@ themeColorDark: "#16171d"
 # 用于 head meta、RSS 提要
 siteDescription: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
 
-# ── SEO / 社交分享 ──
+# SEO / 社交分享
 openGraph: true
 twitterCards: true
 jsonLD: true
@@ -23,24 +23,13 @@ siteLogo: "/images/avatar.webp"
 # 用于页脚年份显示
 siteCreatedTime: "2019-08-22T00:00:00+08:00"
 
-displaySiteCopyright: true
-
 # RSS 输出包含全文（meme 原生字段）
 includeContent: true
 
-# 文章版权声明（post-copyright 组件）
-enablePostCopyright: true
-displayPostCopyright: true
-original: true
-
 listDateFormat: "1 月 2 日"
-# 可选 left/right
 listDatePosition: "right"
 
-headerLayout: "flex"
-
 # 移动端汉堡按钮展开导航栏
-enableNavToggle: true
 navHeight: "20em"
 headerBackground: "linear-gradient(90deg, #f795331a 0, #f370551a 15%, #ef4e7b1a 30%, #a166ab1a 44%, #5073b81a 58%, #1098ad1a 72%, #07b39b1a 86%, #6dba821a 100%)"
 siteBrandFontSize: 1
@@ -49,78 +38,32 @@ siteBrandFontColor: "var(--color-contrast-high)"
 fontFamilyTitle: "'Noto Serif SC', serif"
 fontFamilyHeadings: "'Noto Serif SC', serif"
 fontFamilyCode: "'Source Code Pro', 'Noto Serif SC', monospace"
-
 fontFamilyBody: "'Noto Serif SC', serif"
 fontsLink: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"
 fontSize: 18
 lineHeight: 1.8
-enableHeader: true
-displayHeaderInHome: true
-enableMenu: true
-displayMenuInHome: true
-enableDarkMode: true
+
 defaultTheme: "light"
 overrideSystemPreferences: false
 enablePagefindSearch: true
 
 # 代码块：高亮、横向滚动、复制按钮
-enableHighlight: true
-enableOverflowY: true
 maxHeight: 80
-enableCopy: true
-enableCopyAutoHide: true
 
-# 平滑滚动（含 TOC 锚点跳转动画）
-enableSmoothScroll: true
-
-# 文章页元信息（发布日期、阅读时间等）
-enablePostMeta: true
-
-# 首页文章列表标题下的元信息行
-enablePostMetaInHome: true
+# 文章页元信息（发布日期、分类、阅读时间）
 postMetaDateFormat: "2006-01-02"
-displayPublishedDate: true
-publishedDateIcon: "calendar-alt"
-displayReadingTime: true
-readingTimeIcon: "clock"
 
 # 不蒜子访问统计：保留为本站定制的单一统计入口
-enableBusuanzi: true
 busuanziScript: "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
 displayBusuanziSitePV: true
 displayBusuanziSiteUV: true
 displayBusuanziPagePV: true
 busuanziPagePVIcon: "eye"
 
-# 文章二维码分享：仅在文章页按需加载 QR 生成库
-enableQRCodeShare: true
-qrCodeShareIcon: "qrcode"
-
-# 保持首页低调，关闭不需要的元信息
-displayModifiedDate: false
-displayWordCount: false
-displayCategory: true
-categoryBy: "categories"
-categoryIcon: "folder"
-categoryDelimiter: "/"
-
 # 文章标签与标签云
-enablePostTags: true
 enableTagCloud: true
 largestFontSize: 2.5
 smallestFontSize: 1
 fontUnit: "rem"
-# enablePostTags 启用时必填
-postTagsIcon: "tag"
-enableFooter: true
-displayFooter: true
-displayFooterInHome: true
-displayCopyleftSymbol: false
-displayCopyrightSymbol: true
-displaySiteCreatedYear: true
-iconBetweenYearAndAuthor: "heart"
+
 iconColor: "#f06292"
-iconAnimation: true
-displaySiteAuthorName: true
-displayPoweredBy: true
-enableSocials: true

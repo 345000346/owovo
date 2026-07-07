@@ -1,4 +1,4 @@
-{{ if and .Site.Params.enablePostNav (in .Site.Params.mainSections .Section) }}
+{{ if in .Site.Params.mainSections .Section }}
     {{ if .Site.Params.postNavInSection }}
         {{ .Scratch.Set "prev" .PrevInSection }}
         {{ .Scratch.Set "next" .NextInSection }}

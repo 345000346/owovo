@@ -1,35 +1,20 @@
 <!-- https://schema.org/ -->
-<!-- https://json-ld.org/ -->
-<!-- https://search.google.com/structured-data/testing-tool -->
 {{- $ := index . "$" -}}
-{{- $description := .description -}}
-{{- $baseURLWithLangFix := "" | absLangURL -}}
-<!-- Title -->
-{{- $rawTitle := (partial "utils/title.html" (dict "$" $ "title" $.Title)).rawTitle -}}
-<!-- Date -->
-{{- $dates := partial "utils/date.html" $ -}}
-<!-- Author -->
-{{- $author := partial "utils/author.html" $ -}}
-{{- $license := "" -}}
-{{- with $author.copyright -}}
-    {{- $license = . | plainify | htmlUnescape | replaceRE `^\[[^\]]+\]\(([^)]+)\)$` `$1` -}}
-{{- end -}}
-<!-- Images -->
-{{- $images := partial "utils/images.html" $ -}}
+{{- $seo := .seo -}}
 
 {{- if $.IsHome -}}
 <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "datePublished": {{ $dates.pubDate }},
-        "dateModified": {{ $dates.modDate }},
-        "url": {{ $baseURLWithLangFix }},
-        "description": {{ $description }},
-        {{ with $.Site.Params.siteLogo -}}
-        "image": {{ . | absURL }},
+        "datePublished": {{ $seo.dates.pubDate }},
+        "dateModified": {{ $seo.dates.modDate }},
+        "url": {{ $seo.baseURL }},
+        "description": {{ $seo.description }},
+        {{ with $seo.images -}}
+        "image": {{ index . 0 }},
         {{ end -}}
-        {{ with $author -}}
+        {{ with $seo.author -}}
         "author": {
             "@type": "Person",
             {{ with .motto -}}
@@ -49,10 +34,10 @@
             {{- end }}
         },
         {{ end -}}
-        {{ with $license -}}
+        {{ with $seo.license -}}
         "license": {{ . }},
         {{ end -}}
-        "name": {{ $rawTitle }}
+        "name": {{ $seo.title }}
     }
 </script>
 {{- else if and $.IsPage (in $.Site.Params.mainSections $.Section) -}}
@@ -60,22 +45,18 @@
     {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
-        "datePublished": {{ $dates.pubDate }},
-        "dateModified": {{ $dates.modDate }},
+        "datePublished": {{ $seo.dates.pubDate }},
+        "dateModified": {{ $seo.dates.modDate }},
         "url": {{ $.Permalink }},
-        "headline": {{ $rawTitle }},
-        "description": {{ $description }},
+        "headline": {{ $seo.title }},
+        "description": {{ $seo.description }},
         "inLanguage" : "{{ $.Site.Language.Locale }}",
         "articleSection": {{ $.Section }},
         "wordCount": {{ $.WordCount }},
-        {{ with $images -}}
+        {{ with $seo.images -}}
         "image": {{ . }},
-        {{ else -}}
-        {{ with $.Site.Params.siteLogo -}}
-        "image": {{ . | absURL }},
         {{ end -}}
-        {{ end -}}
-        {{ with $author -}}
+        {{ with $seo.author -}}
         "author": {
             "@type": "Person",
             {{ with .motto -}}
@@ -95,7 +76,7 @@
             {{- end }}
         },
         {{ end -}}
-        {{ with $license -}}
+        {{ with $seo.license -}}
         "license": {{ . }},
         {{ end -}}
         "publisher": {
@@ -107,11 +88,11 @@
                 "url": {{ . | absURL }}
             },
             {{ end -}}
-            "url": {{ $baseURLWithLangFix }}
+            "url": {{ $seo.baseURL }}
         },
         "mainEntityOfPage": {
             "@type": "WebSite",
-            "@id": {{ $baseURLWithLangFix }}
+            "@id": {{ $seo.baseURL }}
         }
     }
 </script>
@@ -120,19 +101,15 @@
     {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "datePublished": {{ $dates.pubDate }},
-        "dateModified": {{ $dates.modDate }},
+        "datePublished": {{ $seo.dates.pubDate }},
+        "dateModified": {{ $seo.dates.modDate }},
         "url": {{ $.Permalink }},
-        "name": {{ $rawTitle }},
-        "description": {{ $description }},
-        {{ with $images -}}
+        "name": {{ $seo.title }},
+        "description": {{ $seo.description }},
+        {{ with $seo.images -}}
         "image": {{ . }},
-        {{ else -}}
-        {{ with $.Site.Params.siteLogo -}}
-        "image": {{ . | absURL }},
         {{ end -}}
-        {{ end -}}
-        {{ with $license -}}
+        {{ with $seo.license -}}
         "license": {{ . }},
         {{ end -}}
         "publisher": {
@@ -144,11 +121,11 @@
                 "url": {{ . | absURL }}
             },
             {{ end -}}
-            "url": {{ $baseURLWithLangFix }}
+            "url": {{ $seo.baseURL }}
         },
         "mainEntityOfPage": {
             "@type": "WebSite",
-            "@id": {{ $baseURLWithLangFix }}
+            "@id": {{ $seo.baseURL }}
         }
     }
 </script>

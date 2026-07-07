@@ -6,22 +6,12 @@
   - 提升“扫描效率”
   - 避免与正文页底部的 post-tags 重复
 */ -}}
-{{- if and $isHome ($page.Site.Params.enablePostTags | default false) -}}
+{{- if $isHome -}}
   {{- with $page.Params.tags -}}
-    {{- $tags := . -}}
-
     <div class="post-meta-item post-meta-tags" aria-label="标签">
-      {{- $icon := partial "utils/icon.html" (dict "$" $page "name" $page.Site.Params.postTagsIcon "class" "post-meta-icon") -}}
+      {{- $icon := partial "utils/icon.html" (dict "$" $page "name" "tag" "class" "post-meta-icon") -}}
       <span class="post-meta-tags-icon">{{- $icon -}}</span>
-
-      {{- range $tag := $tags -}}
-        {{- $path := (urls.Parse ($tag | urlize)).Path -}}
-        {{- with $page.Site.GetPage (printf `/tags/%s` $path) -}}
-          <a href="{{ .RelPermalink }}" rel="tag" class="post-meta-tag-link">{{ .LinkTitle | default $path }}</a>
-        {{- else -}}
-          <span class="post-meta-tag-link">{{ $tag }}</span>
-        {{- end -}}
-      {{- end -}}
+      {{- partial "utils/taxonomy-links.html" (dict "$" $page "taxonomy" "tags" "terms" . "class" "post-meta-tag-link") -}}
     </div>
   {{- end -}}
 {{- end -}}

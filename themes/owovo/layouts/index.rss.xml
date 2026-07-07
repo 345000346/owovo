@@ -60,20 +60,6 @@
                         {{ partial "utils/make-links-absolute.html" (dict "$" . "content" $feedFooter) | html }}
                     </description>
                 {{ end }}
-                <!-- Sections -->
-                {{ if eq $.Site.Params.categoryBy "sections" }}
-                    {{ $.Scratch.Delete "sectionDir" }}
-                    {{ $sections := split (strings.TrimSuffix "/" .File.Dir) "/" }}
-                    {{ range $sections }}
-                        {{ $section := . }}
-                        {{ $.Scratch.Add "sectionDir" (printf `/%s` .) }}
-                        {{ with $.Site.GetPage ($.Scratch.Get "sectionDir") }}
-                            {{ if (eq .Kind "section") }}
-                                <category domain="{{ .Permalink }}">{{ $section }}</category>
-                            {{ end }}
-                        {{ end }}
-                    {{ end }}
-                {{ end }}
                 <!-- Taxonomies -->
                 {{ with $.Site.Taxonomies }}
                     {{ range $taxonomy, $terms := . }}

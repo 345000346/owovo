@@ -1,13 +1,8 @@
 <!-- https://developer.twitter.com/en/docs/tweets/optimize-with-cards/guides/getting-started -->
-<!-- https://cards-dev.twitter.com/validator -->
-<!-- https://github.com/gohugoio/hugo/blob/master/tpl/tplimpl/embedded/templates/twitter_cards.html -->
 {{- $ := index . "$" -}}
-<!-- Author -->
-{{- $author := partial "utils/author.html" $ -}}
-<!-- Images -->
-{{- $images := partial "utils/images.html" $ -}}
+{{- $seo := .seo -}}
 
-{{- with $images -}}
+{{- with $seo.images -}}
     <meta name="twitter:card" content="summary_large_image" />
 {{ else -}}
     <meta name="twitter:card" content="summary" />
@@ -16,6 +11,6 @@
 {{ with $.Site.Params.siteTwitter -}}
     <meta name="twitter:site" content="@{{ . }}" />
 {{ end -}}
-{{ with $author.twitter -}}
+{{ with $seo.author.twitter -}}
     <meta name="twitter:creator" content="@{{ . }}" />
 {{ end -}}

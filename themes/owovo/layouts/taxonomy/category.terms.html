@@ -1,7 +1,20 @@
 {{ define "main" }}
-    {{ if .Site.Params.enableTree }}
-        {{ partial "pages/tree-categories.html" . }}
-    {{ else }}
-        {{ partial "pages/taxonomy.html" . }}
-    {{ end }}
+    <main class="main list" id="main">
+        <div class="main-inner">
+            <div class="content categories">
+                <h1 class="list-title">{{ .Title | default (.Type | title) }}</h1>
+                <div class="tree">
+                    <ul class="list-categories">
+                        {{ range .Data.Terms.Alphabetical }}
+                            {{ $term := .Page }}
+                            <li>
+                                <a href="{{ $term.RelPermalink }}" class="category-item">{{ $term.LinkTitle | default $term.Data.Term | default .Name }}</a>
+                                <span class="category-count">{{ printf "(%d)" .Count }}</span>
+                            </li>
+                        {{ end }}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
 {{ end }}

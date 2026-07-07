@@ -1,0 +1,15 @@
+{{- $ := index . "$" -}}
+{{- $taxonomy := .taxonomy -}}
+{{- $terms := .terms -}}
+{{- $class := .class -}}
+{{- $delimiter := .delimiter | default "" -}}
+{{- $icon := .icon -}}
+{{- range $index, $term := $terms -}}
+    {{- if and $delimiter (ne $index 0) -}}{{- $delimiter -}}{{- end -}}
+    {{- $path := (urls.Parse ($term | urlize)).Path -}}
+    {{- with $.Site.GetPage (printf `/%s/%s` $taxonomy $path) -}}
+        <a href="{{- .RelPermalink -}}"{{ with $class }} class="{{ . }}"{{ end }}>{{ with $icon }}{{ partial "utils/icon.html" (dict "$" $ "name" . "class" "tag-icon") }}{{ end }}{{- .LinkTitle | default $path -}}</a>
+    {{- else -}}
+        <span{{ with $class }} class="{{ . }}"{{ end }}>{{- $term -}}</span>
+    {{- end -}}
+{{- end -}}
