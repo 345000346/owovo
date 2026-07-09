@@ -1,10 +1,5 @@
 {{ define "main" }}
-    {{- $path := "" -}}
-    {{- with .File -}}
-        {{- $path = .Path -}}
-    {{- else -}}
-        {{- $path = .Path -}}
-    {{- end -}}
+    {{- $path := .Path -}}
 
     <main class="main list" id="main">
         <div class="main-inner">
