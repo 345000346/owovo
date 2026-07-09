@@ -199,6 +199,19 @@ article.content.post.home {
   clear: none;
 }
 
+// 第三方 substats/shields 徽章加载失败或超时的文本回退态，
+// 复用徽章位宽与圆角，避免回退后卡片布局塌陷。
+.post-body .about-social-badge-fallback {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 0.3rem;
+  background: var(--color-contrast-low);
+  color: var(--color-contrast-medium);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
 [data-theme="dark"] .post-body .about-social-showcase {
   border-color: rgba(255, 255, 255, 0.08);
   background:

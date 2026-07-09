@@ -4,7 +4,7 @@ if $items -}}
   <p class="about-social-intro">在不同的平台，保留不同的表达方式。</p>
   <div class="about-social-grid">
     {{- range $items }} {{- $darkBadge := .badgeDark | default .badgeLight -}}
-    {{- $badgeAlt := .badgeAlt -}}
+    {{- $badgeAlt := .badgeAlt -}} {{- $platform := .platform -}}
     <a
       target="_blank"
       rel="external noopener"
@@ -17,7 +17,7 @@ if $items -}}
         >{{ .mark }}</span
       >
       <span class="about-social-copy">
-        <span class="about-social-platform">{{ .platform }}</span>
+        <span class="about-social-platform">{{ $platform }}</span>
         <span class="about-social-role">{{ .role }}</span>
         {{- with .badgeLight }}
         <img
@@ -28,6 +28,8 @@ if $items -}}
           loading="lazy"
           decoding="async"
           class="themed-badge about-social-badge"
+          data-fallback="{{ $platform }}"
+          onerror="window.__badgeFallback(this)"
         />
         {{- end }}
       </span>
@@ -35,4 +37,33 @@ if $items -}}
     {{- end }}
   </div>
 </div>
+<script>
+  // 关注者徽章由 shields.io + substats 第三方接口实时生成，
+  // 任一上游不可用时图片会留白或长期 loading。此处统一兜底：
+  // 1) 单图 onerror 时以平台名文本占位，避免破损图标；
+  // 2) 加载超时仍未完成也触发回退，避免卡在空状态。
+  (function () {
+    var BADGE_TIMEOUT_MS = 8000;
+    window.__badgeFallback = function (img) {
+      if (img.dataset.fallbackApplied) return;
+      img.dataset.fallbackApplied = "1";
+      var span = document.createElement("span");
+      span.className = "about-social-badge about-social-badge-fallback";
+      span.textContent = img.getAttribute("data-fallback") || "";
+      if (img.parentNode) img.parentNode.replaceChild(span, img);
+    };
+    window.addEventListener("DOMContentLoaded", function () {
+      var imgs = document.querySelectorAll(
+        ".about-social-badge[data-fallback]",
+      );
+      setTimeout(function () {
+        imgs.forEach(function (img) {
+          if (!img.complete || img.naturalWidth === 0) {
+            window.__badgeFallback(img);
+          }
+        });
+      }, BADGE_TIMEOUT_MS);
+    });
+  })();
+</script>
 {{- end -}}

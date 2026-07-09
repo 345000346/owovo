@@ -63,3 +63,6 @@ other = "搜索需要启用 JavaScript。"
 
 [pageView]
 other = "阅读"
+
+[statsUnavailable]
+other = "统计暂不可用"
