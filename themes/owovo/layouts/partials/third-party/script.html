@@ -1,9 +1,1 @@
-{{ if .Params.katex | default .Site.Params.enableKaTeX }}
-    {{ partial "third-party/katex.html" . }}
-{{ end }}
-
-{{ if .Params.mermaid | default .Site.Params.enableMermaid }}
-    {{ partial "third-party/mermaid.html" . }}
-{{ end }}
-
 {{ partial "third-party/vercount.html" . }}

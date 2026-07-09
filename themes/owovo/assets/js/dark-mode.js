@@ -154,30 +154,4 @@ function changeMode() {
     // Change theme color meta
     const themeColor = isDark ? '{{ .Site.Params.themeColorDark }}' : '{{ .Site.Params.themeColor }}';
     document.querySelector('meta[name="theme-color"]').setAttribute('content', themeColor);
-
-    // Mermaid
-    // https://github.com/reuixiy/hugo-theme-meme/issues/205
-    if (typeof mermaidConfig !== 'undefined') {
-        const mermaids = document.querySelectorAll('.mermaid');
-
-        mermaids.forEach(e => {
-            if (e.getAttribute('data-processed')) {
-                // Already rendered, clean the processed attributes
-                e.removeAttribute('data-processed');
-                // Replace the rendered HTML with the stored text
-                e.textContent = e.getAttribute('data-graph') || '';
-            } else {
-                // First time, store the text
-                e.setAttribute('data-graph', e.textContent);
-            }
-        });
-
-        mermaid.initialize({
-            ...mermaidConfig,
-            theme: isDark
-                ? '{{ .Site.Params.mermaidThemeDark | default "dark" }}'
-                : '{{ .Site.Params.mermaidTheme | default "default" }}',
-        });
-        mermaid.init();
-    }
 }

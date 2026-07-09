@@ -17,7 +17,6 @@
 - 代码高亮和复制按钮
 - TOC、标题锚点和文章导航
 - Markdown 链接、图片、标题、表格 render hooks
-- KaTeX、Mermaid 等轻量可选集成
 
 ## 已移除的上游兼容项
 
@@ -34,6 +33,7 @@
 - GitInfo、编辑链接和反馈入口组件
 - 文章更新时间 SVG badge
 - minimal footer 和 about minimal footer
+- KaTeX 和 Mermaid 数学公式/图表集成
 - 相关文章组件
 - Force HTTPS 前端跳转脚本
 - InstantPage 全站预加载脚本
