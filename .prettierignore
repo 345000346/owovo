@@ -3,7 +3,11 @@ content/
 node_modules/
 public/
 resources/
-themes/owovo/
 .claude/
 .hugo_build.lock
 hugo_stats.json
+
+# 主题模板含大量 Hugo Go template（{{ }}）语法，prettier-plugin-go-template
+# 对自闭合标签与模板内引号的处理存在已知缺陷，强行格式化会报 SyntaxError
+# 并阻断 CI 的 format:check。故主题代码不纳入 Prettier，保持手工维护。
+themes/owovo/

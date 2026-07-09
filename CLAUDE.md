@@ -32,7 +32,7 @@ themes/owovo/             # 自有主题（MemE fork），独立维护
     _default/             # baseof.html, list.html, single.html
     _default/_markup/     # render-heading/render-image/render-link/render-table（render hooks）
     partials/             # 组件 partials + 工具 partials
-    partials/third-party/ # KaTeX, Mermaid, Vercount
+    partials/third-party/ # Vercount（访问统计）
     search/               # Pagefind 搜索页面
   i18n/zh-cn.toml         # 仅 zh-cn 语言包
   data/Libs.toml          # CDN 库路径（jsdelivr）
@@ -47,10 +47,10 @@ archetypes/default.md     # 新文章 front matter 模板
 
 ## 架构要点
 
-- **自含式主题**：`themes/owovo/` 是 MemE 的精简 fork，去除大量上游兼容项（多评论、多搜索、PWA、多语言等），保留基础博客功能和 Pagefind 搜索、暗色模式、KaTeX/Mermaid 可选集成。
+- **自含式主题**：`themes/owovo/` 是 MemE 的精简 fork，去除大量上游兼容项（多评论、多搜索、PWA、多语言等，KaTeX/Mermaid 集成也已移除），保留基础博客功能和 Pagefind 搜索、暗色模式。
 - **Dart Sass 编译链**：主题样式通过 `themes/owovo/assets/scss/main.scss` 入口编译，使用 Dart Sass（`sass-embedded`），仓库不使用 LibSass 或 Node Sass。
 - **Markdown render hooks**：在 `themes/owovo/layouts/_default/_markup/` 自定义了标题（添加锚点）、图片（懒加载）、链接、表格的渲染。
-- **第三方库**：KaTeX、Mermaid 等通过 jsdelivr CDN 按需加载，路径配置在 `themes/owovo/data/Libs.toml`，可在站点级 `data/Libs.toml` 覆盖。
+- **第三方库**：通过 jsdelivr CDN 加载的库路径配置在 `themes/owovo/data/Libs.toml`（当前仅 clipboard、vercount），可在站点级 `data/Libs.toml` 覆盖。
 - **Pagefind 搜索**：构建后运行 `npx pagefind --site public` 生成搜索索引，前台由 `themes/owovo/layouts/search/list.html` 驱动。
 - **CI/CD**：GitHub Actions（`.github/workflows/gh-pages.yml`）在 main 分支推送时构建并部署到 GitHub Pages，流程包括 format:check → build:site → build:search → upload-pages-artifact → deploy-pages。
 
@@ -76,3 +76,7 @@ npm run build
 ```
 
 涉及主题/样式/模板变更时，用 `npm run dev` 手动检查首页、文章页、列表页、搜索页、关于页。
+
+## 已知技术选择
+
+- **Pagefind 搜索使用 Default UI**：从 Pagefind 1.5.0 起新集成推荐 Component UI，但本项目沿用 Default UI（`themes/owovo/layouts/search/list.html` 引入 `pagefind-ui.js`）。原因是 Default UI 的视觉风格更贴合本主题。属有意选择，无障碍与定制性差异在可接受范围内，请勿擅自迁移。
