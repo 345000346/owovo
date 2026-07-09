@@ -53,12 +53,11 @@ maxHeight: 80
 # 文章页元信息（发布日期、分类、阅读时间）
 postMetaDateFormat: "2006-01-02"
 
-# 不蒜子访问统计：保留为本站定制的单一统计入口
-busuanziScript: "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
-displayBusuanziSitePV: true
-displayBusuanziSiteUV: true
-displayBusuanziPagePV: true
-busuanziPagePVIcon: "eye"
+# 访问统计（Vercount）
+displayVercountSitePV: true
+displayVercountSiteUV: true
+displayVercountPagePV: true
+vercountPagePVIcon: "eye"
 
 # 文章标签与标签云
 enableTagCloud: true

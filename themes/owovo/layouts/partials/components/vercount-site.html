@@ -1,0 +1,12 @@
+{{- $showPV := .Site.Params.displayVercountSitePV | default false -}}
+{{- $showUV := .Site.Params.displayVercountSiteUV | default false -}}
+{{- if or $showPV $showUV -}}
+    <div class="vercount-site-stats" aria-label="站点访问统计">
+        {{- if $showPV -}}
+            <span class="vercount-site-stat" id="vercount_container_site_pv">访问 <span id="vercount_value_site_pv"></span></span>
+        {{- end -}}
+        {{- if $showUV -}}
+            <span class="vercount-site-stat" id="vercount_container_site_uv">访客 <span id="vercount_value_site_uv"></span></span>
+        {{- end -}}
+    </div>
+{{- end -}}

@@ -39,6 +39,6 @@
         {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "clock" "class" "post-meta-icon") }}
         <span class="post-meta-item reading-time">{{ $icon }}&nbsp;{{ $.ReadingTime }}&nbsp;{{ i18n "minute" $.ReadingTime }}</span>
     {{ end }}
-    {{ partial "components/busuanzi-page.html" (dict "$" $ "isHome" $isHome) }}
+    {{ partial "components/vercount-page.html" (dict "$" $ "isHome" $isHome) }}
     {{ partial "custom/post-meta.html" (dict "$" $ "isHome" $isHome) }}
 </div>

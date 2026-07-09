@@ -32,7 +32,7 @@ themes/owovo/             # 自有主题（MemE fork），独立维护
     _default/             # baseof.html, list.html, single.html
     _default/_markup/     # render-heading/render-image/render-link/render-table（render hooks）
     partials/             # 组件 partials + 工具 partials
-    partials/third-party/ # KaTeX, Mermaid, Busuanzi
+    partials/third-party/ # KaTeX, Mermaid, Vercount
     search/               # Pagefind 搜索页面
   i18n/zh-cn.toml         # 仅 zh-cn 语言包
   data/Libs.toml          # CDN 库路径（jsdelivr）
