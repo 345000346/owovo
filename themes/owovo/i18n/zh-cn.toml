@@ -1,6 +1,3 @@
-[ellipsis]
-other = "……"
-
 [colon]
 other = "："
 
@@ -41,22 +38,11 @@ other = "404 - 页面不存在"
 [fofLinkText]
 other = "送我回主页"
 
-[searchResultsTitle]
-one = "找到 1 条关于「{{ .Term }}」的结果"
-other = "找到 {{ .Count }} 条关于「{{ .Term }}」的结果"
-
-[searchResultsNone]
-other = "没有找到关于「{{ .Term }}」的结果"
-
 [backToTop]
 other = "回到顶部"
 
 [themeSwitcher]
 other = "切换主题"
-
-[pagefindSearchRegionLabel]
-other = "站内搜索区域"
-
 
 [pagefindSearchNoScript]
 other = "搜索需要启用 JavaScript。"
