@@ -29,12 +29,7 @@
     {{- partial "style.html" . }}
     {{- if and .Site.Params.enablePagefindSearch (ne .Section "search") -}}
         {{- $highlight := resources.Get "js/search-highlight.js" | resources.ExecuteAsTemplate (printf "%s/js/search-highlight-rendered.js" .Lang) . | resources.Minify -}}
-        {{- if .Site.Params.enableFingerprint -}}
-            {{- $highlight = $highlight | resources.Fingerprint -}}
-        {{- end -}}
-        <script type="module" src="{{ $highlight.RelPermalink }}"
-        {{- if and .Site.Params.enableFingerprint .Site.Params.enableSRI }} integrity="{{ $highlight.Data.Integrity }}" crossorigin="anonymous"{{- end -}}
-        ></script>
+        <script type="module" src="{{ $highlight.RelPermalink }}"></script>
     {{- end }}
 
     <!-- JavaScript -->

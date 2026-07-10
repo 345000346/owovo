@@ -8,11 +8,4 @@
 -}}
 
 {{- $style := resources.Get "scss/main.scss" | resources.ExecuteAsTemplate (printf "%s/styles/main-rendered.scss" .Lang) . | css.Sass $options -}}
-{{- if .Site.Params.enableFingerprint -}}
-    {{- $style = $style | resources.Fingerprint -}}
-    <link rel="stylesheet" href="{{ $style.RelPermalink }}"
-    {{- if .Site.Params.enableSRI }} integrity="{{ $style.Data.Integrity }}" crossorigin="anonymous"{{- end -}}
-    />
-{{- else -}}
-    <link rel="stylesheet" href="{{ $style.RelPermalink }}" />
-{{- end -}}
+<link rel="stylesheet" href="{{ $style.RelPermalink }}" />

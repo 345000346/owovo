@@ -1,6 +1,6 @@
 {{- $ := index . "$" -}}
 {{- $type := .type -}}
-{{- $host := $.Site.Params.lib.host | default "https://cdn.jsdelivr.net" -}}
+{{- $host := "https://cdn.jsdelivr.net" -}}
 {{- $path := "" -}}
 
 {{- with index hugo.Data.Libs $type -}}

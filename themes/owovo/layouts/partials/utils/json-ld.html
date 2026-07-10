@@ -17,17 +17,8 @@
         {{ with $seo.author -}}
         "author": {
             "@type": "Person",
-            {{ with .motto -}}
-            "description": {{ . | plainify | htmlUnescape }},
-            {{ end -}}
-            {{ with .email -}}
-            "email": {{ . }},
-            {{ end -}}
             {{ with .avatar -}}
             "image": {{ . | absURL }},
-            {{ end -}}
-            {{ with .website -}}
-            "url": {{ . }},
             {{ end -}}
             {{ with .name -}}
             "name": {{ . }}
@@ -59,17 +50,8 @@
         {{ with $seo.author -}}
         "author": {
             "@type": "Person",
-            {{ with .motto -}}
-            "description": {{ . | plainify | htmlUnescape }},
-            {{ end -}}
-            {{ with .email -}}
-            "email": {{ . }},
-            {{ end -}}
             {{ with .avatar -}}
             "image": {{ . | absURL }},
-            {{ end -}}
-            {{ with .website -}}
-            "url": {{ . }},
             {{ end -}}
             {{ with .name -}}
             "name": {{ . }}

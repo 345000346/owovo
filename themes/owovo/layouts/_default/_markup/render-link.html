@@ -2,7 +2,7 @@
 {{- $isRemote := or (strings.HasPrefix $href "http://") (strings.HasPrefix $href "https://") -}}
 <a href="{{ $href | safeURL }}"
 {{- with .Title }} title="{{ . }}"{{ end -}}
-{{- if and .Page.Site.Params.hrefTargetBlank $isRemote }} target="_blank" rel="noopener"{{ end -}}
+{{- if $isRemote }} target="_blank" rel="external noopener"{{ end -}}
 {{- range $key, $value := .Attributes -}}
     {{- if and (ne $key "href") (ne $key "title") (ne $key "target") (ne $key "rel") -}}
         {{- printf " %s=%q" $key $value | safeHTMLAttr -}}

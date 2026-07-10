@@ -16,14 +16,7 @@
 
                 {{ with .Params.subtitle }}
                     {{- $raw := . -}}
-                    <div class="post-subtitle p-name">{{ partial "utils/markdownify.html" (dict "$" $ "raw" $raw "isContent" false) }}</div>
-                {{ end }}
-
-                {{ if .Site.Params.displayPostDescription }}
-                    {{ with .Params.description }}
-                        {{- $raw := . -}}
-                        <div class="post-description p-summary">{{ partial "utils/markdownify.html" (dict "$" $ "raw" $raw "isContent" false) }}</div>
-                    {{ end }}
+                    <div class="post-subtitle p-name">{{ partial "utils/markdownify.html" (dict "raw" $raw "isContent" false) }}</div>
                 {{ end }}
 
                 {{ partial "components/post-meta.html" (dict "$" . "isHome" false) }}

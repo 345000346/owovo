@@ -23,7 +23,7 @@ siteLogo: "/images/avatar.webp"
 # 用于页脚年份显示
 siteCreatedTime: "2019-08-22T00:00:00+08:00"
 
-# RSS 输出包含全文（meme 原生字段）
+# RSS 输出包含全文
 includeContent: true
 
 listDateFormat: "1 月 2 日"
@@ -66,3 +66,8 @@ smallestFontSize: 1
 fontUnit: "rem"
 
 iconColor: "#f06292"
+
+# 文章 TOC / 标题锚点（显式锁定，消除隐式默认）
+enableTOC: true
+linkHeadingsToTOC: true
+enableHeadingsAnchor: true
