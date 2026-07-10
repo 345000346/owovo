@@ -1,0 +1,22 @@
+// Theme literals (no Hugo injection — import after entry injects site params)
+
+$tabSize: 4;
+$postWidth: 42em;
+$listWidth: 42em;
+$duration: 0.5s;
+$primaryColorLightH: 220;
+$primaryColorLightS: 90%;
+$primaryColorLightL: 56%;
+$primaryColorDarkH: 201;
+$primaryColorDarkS: 65%;
+$primaryColorDarkL: 62%;
+
+$displayBackToTopOnMobile: false;
+$enableOverflowY: true;
+$enableCopy: true;
+$enableCopyAutoHide: true;
+$enableSmoothScroll: true;
+$enableHighlight: true;
+$enableAnchorAutoHide: false;
+$enableBackToTopAutoHide: true;
+$iconAnimation: true;

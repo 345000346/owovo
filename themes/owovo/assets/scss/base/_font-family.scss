@@ -1,15 +1,3 @@
-@if variable-exists("fontFamilySiteBrand") {
-    .site-brand {
-        font-family: $fontFamilySiteBrand;
-    }
-}
-
-@if variable-exists("fontFamilyMenu") {
-    .menu {
-        font-family: $fontFamilyMenu;
-    }
-}
-
 @if variable-exists("fontFamilyTitle") {
     .list-title, .term-title, .list-year, .list-month, .post-title, .post-subtitle, .post-nav, thead, dt {
         font-family: $fontFamilyTitle;
@@ -30,30 +18,6 @@
 @if variable-exists("fontFamilyCode") {
     code, pre, sup, .post-meta, .copy-button {
         font-family: $fontFamilyCode;
-    }
-}
-
-@if variable-exists("fontFamilyQuote") {
-    blockquote {
-        font-family: $fontFamilyQuote;
-    }
-}
-
-@if variable-exists("fontFamilyTOC") {
-    .contents {
-        font-family: $fontFamilyTOC;
-    }
-}
-
-@if variable-exists("fontFamilyCaption") {
-    .caption {
-        font-family: $fontFamilyCaption;
-    }
-}
-
-@if variable-exists("fontFamilyFooter") {
-    .footer {
-        font-family: $fontFamilyFooter;
     }
 }
 

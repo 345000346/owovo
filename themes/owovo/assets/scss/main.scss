@@ -1,153 +1,23 @@
+// Entry: Hugo-injected site params + pure SCSS imports
+// Note: ExecuteAsTemplate only runs on this file, not on @imported partials.
+
 {{ with .Site.Params.fontSize | default 18 }}
     $fontSize: {{ . }}px;
 {{ end }}
-$tabSize: {{ .Site.Params.tabSize | default 4 }};
 {{ with .Site.Params.lineHeight | default 1.8 }}
     $lineHeight: {{ . }};
 {{ end }}
-
-{{ with .Site.Params.postWidth | default 42 }}
-    $postWidth: {{ . }}em;
+{{ with .Site.Params.navHeight | default "20em" }}
+    $navHeight: {{ . }};
 {{ end }}
-{{ with .Site.Params.listWidth | default 42 }}
-    $listWidth: {{ . }}em;
-{{ end }}
-
-{{ with .Site.Params.duration | default 0.5 }}
-    $duration: {{ . }}s;
-{{ end }}
-
-$headerLayoutFlex: true;
-$enableHeaderAutoHide: false;
-$enableNavToggle: true;
-$navHeight: {{ .Site.Params.navHeight | default "20em" }};
-$displayBackToTopOnMobile: false;
-$enableOverflowY: true;
 {{ with .Site.Params.maxHeight | default 80 }}
     $maxHeight: {{ . }}em;
 {{ end }}
-$enableCopy: true;
-$enableCopyAutoHide: true;
-$enableSmoothScroll: true;
-$baseRelURL: "{{ "" | relURL | strings.TrimSuffix "/" }}";
-
-
-// Utilities
-
-@import "utils/functions";
-@import "utils/mixins";
-
-
-// Base
-
-@import "base/base";
-
-
-// Typography
-
-// Font Family
-
-{{ $glyph := "" }}
-
-{{ with .Site.Params.fontFamilySiteBrand }}
-    $fontFamilySiteBrand: {{ $glyph }}{{ . }};
-{{ end }}
-{{ with .Site.Params.fontFamilyMenu }}
-    $fontFamilyMenu: {{ $glyph }}{{ . }};
-{{ end }}
-{{ with .Site.Params.fontFamilyTitle }}
-    $fontFamilyTitle: {{ $glyph }}{{ . }};
-{{ end }}
-{{ with .Site.Params.fontFamilyHeadings }}
-    $fontFamilyHeadings: {{ $glyph }}{{ . }};
-{{ end }}
-{{ with .Site.Params.fontFamilyCode }}
-    $fontFamilyCode: {{ $glyph }}{{ . }};
-{{ end }}
-{{ with .Site.Params.fontFamilyQuote }}
-    $fontFamilyQuote: {{ $glyph }}{{ . }};
-{{ end }}
-{{ with .Site.Params.fontFamilyTOC }}
-    $fontFamilyTOC: {{ $glyph }}{{ . }};
-{{ end }}
-{{ with .Site.Params.fontFamilyCaption }}
-    $fontFamilyCaption: {{ $glyph }}{{ . }};
-{{ end }}
-{{ with .Site.Params.fontFamilyFooter }}
-    $fontFamilyFooter: {{ $glyph }}{{ . }};
-{{ end }}
-{{ with .Site.Params.fontFamilyBody }}
-    $fontFamilyBody: {{ $glyph }}{{ . }};
-{{ end }}
-
-@import "base/font-family";
-
-// Chinese Punctuation Glyph Correction
-// Emphasis Point
-
-// Themes
-
-// Light
-
-{{ with .Site.Params.primaryColorLight | default "220, 90%, 56%" }}
-    {{ $number := (split (replace . "%" "") ", ") }}
-    {{ range $index, $value := $number }}
-        {{ if eq $index 0 }}
-            $primaryColorLightH: {{ $value | int }};
-        {{ end }}
-        {{ if eq $index 1 }}
-            $primaryColorLightS: {{ $value | int }}%;
-        {{ end }}
-        {{ if eq $index 2 }}
-            $primaryColorLightL: {{ $value | int }}%;
-        {{ end }}
-    {{ end }}
-{{ end }}
-
-$defaultTheme: {{ .Site.Params.defaultTheme | default "light" }};
-$enableHighlight: true;
-
-@import "themes/light";
-
-// Dark Mode
-
-{{ with .Site.Params.primaryColorDark | default "201, 65%, 62%" }}
-    {{ $number := (split (replace . "%" "") ", ") }}
-    {{ range $index, $value := $number }}
-        {{ if eq $index 0 }}
-            $primaryColorDarkH: {{ $value | int }};
-        {{ end }}
-        {{ if eq $index 1 }}
-            $primaryColorDarkS: {{ $value | int }}%;
-        {{ end }}
-        {{ if eq $index 2 }}
-            $primaryColorDarkL: {{ $value | int }}%;
-        {{ end }}
-    {{ end }}
-{{ end }}
-
-@import "themes/dark";
-@import "components/theme-switcher";
-
-
-// Header
-
 $headerBackground: {{ .Site.Params.headerBackground | default "var(--color-bg)" }};
-
-$siteBrandSVG: false;
 $siteBrandFontSize: {{ .Site.Params.siteBrandFontSize | default 1 }}em;
 $siteBrandFontColor: {{ .Site.Params.siteBrandFontColor | default "var(--color-contrast-high)" }};
-
-@import "layout/header";
-@import "components/nav-toggle";
-
-
-// Menu Bar
-
-@import "layout/menu";
-
-
-// List Page
+$iconColor: {{ .Site.Params.iconColor | default "#f06292" }};
+$defaultTheme: {{ .Site.Params.defaultTheme | default "light" }};
 
 {{ if eq .Site.Params.listDatePosition "left" }}
     $listDatePosition: left;
@@ -155,91 +25,72 @@ $siteBrandFontColor: {{ .Site.Params.siteBrandFontColor | default "var(--color-c
     $listDatePosition: right;
 {{ end }}
 
+{{ with .Site.Params.fontFamilyTitle }}
+    $fontFamilyTitle: {{ . }};
+{{ end }}
+{{ with .Site.Params.fontFamilyHeadings }}
+    $fontFamilyHeadings: {{ . }};
+{{ end }}
+{{ with .Site.Params.fontFamilyCode }}
+    $fontFamilyCode: {{ . }};
+{{ end }}
+{{ with .Site.Params.fontFamilyBody }}
+    $fontFamilyBody: {{ . }};
+{{ end }}
+
+@import "utils/variables";
+
+@import "utils/functions";
+@import "utils/mixins";
+
+@import "base/base";
+@import "base/font-family";
+
+@import "themes/light";
+@import "themes/dark";
+@import "components/theme-switcher";
+
+@import "layout/header";
+@import "components/nav-toggle";
+@import "layout/menu";
 @import "layout/list";
-
-
-// Single Page
-
-$enableAnchorAutoHide: false;
-
 @import "layout/single";
-
-
-// Footer
-
-$iconColor: {{ .Site.Params.iconColor | default "#f06292" }};
-$iconAnimation: true;
-
 @import "layout/footer";
-
-
-// Components
 
 @import "components/post-meta";
 @import "components/post-copyright";
 @import "components/post-outdated";
 @import "components/post-tags";
 @import "components/post-nav";
-
-$enableBackToTopAutoHide: true;
-
 @import "components/back-to-top";
 @import "components/highlight";
 @import "components/socials";
 @import "components/vercount";
 @import "components/reading-progress";
 @import "components/search-highlight";
-
-
-// Homepage Layout styles
+@import "components/about-socials";
 
 @import "pages/home-posts";
-
-
-// Categories Page styles
-
 @import "pages/tree-categories";
-
-
-// Tags Page styles
 
 {{ if .Site.Params.enableTagCloud }}
     @import "pages/tag-cloud";
 {{ end }}
 
-
-// 404 Page
-
 @import "pages/404";
 
-
-// Responsive
-
+// Responsive max-width (depends on $postWidth / $listWidth)
 $greaterWidth: null;
-
 @if ($postWidth > $listWidth) {
     $greaterWidth: $postWidth;
 } @else {
     $greaterWidth: $listWidth;
 }
-
-@import "base/max-width";
+$maxWidth: $fontSize * (strip-unit($greaterWidth) + 5);
 :root {
     --max-width: #{$maxWidth};
 }
 @import "base/responsive";
-
-
-// Data Attributes
-
 @import "base/data-attributes";
-
-
-// @supports()
-
-@import "base/supports";
-
-
-// Custom
 
 @import "custom/custom";
