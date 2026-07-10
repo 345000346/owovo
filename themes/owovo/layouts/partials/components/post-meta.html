@@ -40,5 +40,14 @@
         <span class="post-meta-item reading-time">{{ $icon }}&nbsp;{{ $.ReadingTime }}&nbsp;{{ i18n "minute" $.ReadingTime }}</span>
     {{ end }}
     {{ partial "components/vercount-page.html" (dict "$" $ "isHome" $isHome) }}
-    {{ partial "custom/post-meta.html" (dict "$" $ "isHome" $isHome) }}
+    {{- /* 仅首页列表展示标签，避免与正文页底部 post-tags 重复 */ -}}
+    {{- if $isHome -}}
+        {{- with $.Params.tags -}}
+            <div class="post-meta-item post-meta-tags" aria-label="标签">
+                {{- $icon := partial "utils/icon.html" (dict "$" $ "name" "tag" "class" "post-meta-icon") -}}
+                <span class="post-meta-tags-icon">{{- $icon -}}</span>
+                {{- partial "utils/taxonomy-links.html" (dict "$" $ "taxonomy" "tags" "terms" . "class" "post-meta-tag-link") -}}
+            </div>
+        {{- end -}}
+    {{- end -}}
 </div>

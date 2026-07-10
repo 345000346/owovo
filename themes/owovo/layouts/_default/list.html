@@ -1,6 +1,4 @@
 {{ define "main" }}
-    {{- $path := .Path -}}
-
     <main class="main list" id="main">
         <div class="main-inner">
             <div class="content list-group">
@@ -10,47 +8,25 @@
                     </div>
                 {{ end }}
 
-                {{ if .Site.Params.displayListTitle }}
-                    {{ if (eq .Kind "section") }}
-                        <h1 class="list-title">{{ .Title | default (delimit (last 1 (split (strings.TrimSuffix "/_index.md" $path) "/")) " ") }}</h1>
-                    {{ end }}
-                    {{ if (eq .Kind "term") }}
-                        <h1 class="list-title">{{ .Title | default .Data.Term | default (delimit (last 1 (split (strings.TrimSuffix "/_index.md" $path) "/")) " ") }}</h1>
-                    {{ end }}
-                {{ end }}
+                {{ $pages := false }}
 
-                {{ .Scratch.Delete "pages" }}
-
-                <!-- Section -->
-                {{ if (eq .Kind "section") }}
-                    <!-- Archives -->
-                    {{ if (eq .Section "archives") }}
-                        {{ $pages := (where .Site.RegularPages "Section" "in" .Site.Params.mainSections) }}
-                        {{ .Scratch.Set "pages" $pages }}
-                    <!-- Regular Section -->
+                {{ if eq .Kind "section" }}
+                    {{ if eq .Section "archives" }}
+                        {{ $pages = where .Site.RegularPages "Section" "in" .Site.Params.mainSections }}
                     {{ else }}
-                        {{ $sectionPage := .CurrentSection }}
-                        {{ range .Site.RegularPages }}
-                            {{ if (.IsDescendant $sectionPage) }}
-                                {{ $.Scratch.Add "pages" (slice .) }}
-                            {{ end }}
-                        {{ end }}
+                        {{ $pages = .Pages }}
                     {{ end }}
                 {{ end }}
 
-                <!-- Taxonomy (See `taxonomy` folder) -->
-
-                <!-- Taxonomy Term -->
-                {{ if (eq .Kind "term") }}
-                    {{ $pages := .Pages }}
-                    {{ $.Scratch.Set "pages" $pages }}
+                {{ if eq .Kind "term" }}
+                    {{ $pages = .Pages }}
                 {{ end }}
 
-                <!-- Start List -->
-                {{ $pages := .Scratch.Get "pages" }}
-                {{ range $pages.GroupByDate "2006" }}
-                    <h2 class="list-year">{{ .Key }}</h2>
-                    {{ partial "utils/list-item.html" (dict "$" .) }}
+                {{ with $pages }}
+                    {{ range .GroupByDate "2006" }}
+                        <h2 class="list-year">{{ .Key }}</h2>
+                        {{ partial "utils/list-item.html" (dict "$" .) }}
+                    {{ end }}
                 {{ end }}
             </div>
         </div>
