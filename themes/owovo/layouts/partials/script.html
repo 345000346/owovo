@@ -1,11 +1,10 @@
 {{- $scripts := slice
     "js/main.js"
-    "js/header.js"
+    "js/scroll-ui.js"
     "js/nav-toggle.js"
     "js/dark-mode.js"
     "js/vercount-fallback.js"
     "js/copy.js"
-    "js/reading-progress.js"
     "js/custom.js"
 -}}
 
@@ -22,11 +21,4 @@
 {{- $path := (strings.TrimPrefix "/" (printf `%s/js/meme.js` .Site.LanguagePrefix)) -}}
 
 {{- $script := $processedScripts | resources.Concat $path | resources.Minify -}}
-{{- if .Site.Params.enableFingerprint -}}
-    {{- $script = $script | resources.Fingerprint -}}
-    <script src="{{ $script.RelPermalink }}"
-    {{- if .Site.Params.enableSRI }} integrity="{{ $script.Data.Integrity }}" crossorigin="anonymous"{{- end -}}
-    ></script>
-{{- else -}}
-    <script src="{{ $script.RelPermalink }}"></script>
-{{- end }}
+<script src="{{ $script.RelPermalink }}"></script>

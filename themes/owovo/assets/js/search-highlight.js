@@ -29,7 +29,7 @@
 
     const firstMark = document.querySelector("mark.search-highlight");
     if (firstMark) {
-      const enableSmoothScroll = {{ if .Site.Params.enableSmoothScroll }}true{{ else }}false{{ end }};
+      const enableSmoothScroll = true; // 与 scss $enableSmoothScroll 字面量一致
       const reducedMotion =
         typeof window.matchMedia === "function" &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches;

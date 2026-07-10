@@ -24,12 +24,12 @@ config/_default/          # Hugo 配置
   hugo.yaml               # 站点、菜单、输出格式、安全策略等
   markup.yaml             # Goldmark (Markdown 渲染)、Chroma (代码高亮)、TOC
   params.yaml             # 主题参数（布局、社交、统计、第三方集成）
-content/post/<slug>/      # 文章目录，每篇为 index.md + 资源文件
 themes/owovo/             # 自有主题（MemE fork），独立维护
-  assets/js/              # JS：main, dark-mode, copy, header, nav-toggle, reading-progress 等
+  assets/js/              # JS：main, scroll-ui, dark-mode, copy, nav-toggle, search 等
   assets/scss/            # Dart Sass：按 base/components/layout/pages/themes/utils 组织
   layouts/                # Hugo 模板
-    _default/             # baseof.html, list.html, single.html
+    _default/             # baseof.html, list.html, single.html, terms.html
+
     _default/_markup/     # render-heading/render-image/render-link/render-table（render hooks）
     partials/             # 组件 partials + 工具 partials
     partials/third-party/ # Vercount（访问统计）
