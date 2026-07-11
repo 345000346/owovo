@@ -2,6 +2,8 @@
     position: fixed;
     right: 0;
     z-index: 1;
+    bottom: -3.6em;
+    transition: bottom 0.3s ease-in-out;
     a {
         display: block;
         padding: 1em;
@@ -10,18 +12,7 @@
             color: var(--color-primary);
         }
     }
-}
-
-@if ($enableBackToTopAutoHide) {
-    .back-to-top {
-        bottom: -3.6em;
-        transition: bottom 0.3s ease-in-out;
-        &.show {
-            bottom: 0;
-        }
-    }
-} @else {
-    .back-to-top {
+    &.show {
         bottom: 0;
     }
 }

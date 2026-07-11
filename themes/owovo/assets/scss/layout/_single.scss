@@ -159,28 +159,6 @@ ol, ul {
     position: absolute;
     transform: translate(-150%);
 }
-.anchor-icon {
-    width: 0.75em;
-    height: 0.75em;
-    vertical-align: baseline;
-}
-
-@if ($enableAnchorAutoHide) {
-    :root {
-        --anchor-opacity: 0;
-    }
-    .anchor-link {
-        opacity: var(--anchor-opacity);
-        transition: all ($duration / 2);
-    }
-    .post {
-        h1, h2, h3, h4, h5, h6, .anchor-link {
-            &:hover {
-                --anchor-opacity: 1;
-            }
-        }
-    }
-}
 
 .table-container {
     margin: 2em 0;
@@ -228,6 +206,7 @@ pre {
     padding: 1em;
     line-height: 1.618;
     background-color: alpha(var(--color-contrast-lower), 0.5);
+    max-height: $maxHeight;
     code {
         background-color: unset;
         font-size: 0.8rem;
@@ -235,38 +214,29 @@ pre {
     }
 }
 
-@if ($enableOverflowY) {
-    pre {
-        max-height: $maxHeight;
+.copy-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    font-size: inherit;
+    color: var(--color-bg);
+    background-color: alpha(var(--color-contrast-medium), 0.5);
+    transition: all $duration;
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    &:hover {
+        background-color: alpha(var(--color-primary), 0.5);
     }
 }
 
-@if ($enableCopy) {
-    .copy-button {
-        position: absolute;
-        top: 0;
-        right: 0;
-        border: 0;
-        font-size: inherit;
-        color: var(--color-bg);
-        background-color: alpha(var(--color-contrast-medium), 0.5);
-        transition: all $duration;
-        cursor: pointer;
-        &:hover {
-            background-color: alpha(var(--color-primary), 0.5);
-        }
-    }
-
-    @if ($enableCopyAutoHide) {
-        .copy-button {
-            visibility: hidden;
-            opacity: 0;
-        }
-
-        &:hover .copy-button,
-        &:focus-within .copy-button {
-            visibility: visible;
-            opacity: 1;
-        }
+table.lntable,
+.highlight,
+.post-body > div {
+    &:hover .copy-button,
+    &:focus-within .copy-button {
+        visibility: visible;
+        opacity: 1;
     }
 }

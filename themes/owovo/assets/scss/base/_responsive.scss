@@ -7,10 +7,8 @@
         transform: none;
         float: right;
     }
-    @if (not $displayBackToTopOnMobile) {
-        #back-to-top {
-            display: none;
-        }
+    #back-to-top {
+        display: none;
     }
     .header-inner {
         width: 100%;

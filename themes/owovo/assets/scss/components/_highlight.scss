@@ -29,10 +29,8 @@ span.lnt {
     background-color: alpha(var(--color-contrast-lower), 0.5);
 }
 
-@if ($enableOverflowY) {
-    .lntable, .highlight > pre {
-        max-height: $maxHeight;
-    }
+.lntable, .highlight > pre {
+    max-height: $maxHeight;
 }
 
 /* The following is the output of `hugo gen chromastyles --style=dracula` */
