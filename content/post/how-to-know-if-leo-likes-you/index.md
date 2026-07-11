@@ -6,8 +6,7 @@ description: "转载一篇关于狮子座喜欢一个人的表现的文章，作
 tags: ["情感", "星座", "转载"]
 categories: ["生活"]
 toc: true
-original: false
-link: "https://www.zhihu.com/question/28670334/answer/1326929485"
+source: "https://www.zhihu.com/question/28670334/answer/1326929485"
 ---
 
 > 转载者的话：

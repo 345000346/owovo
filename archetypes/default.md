@@ -6,6 +6,6 @@ toc: true
 tags: []
 categories: []
 description: ""
-original: true
+# source: "https://example.com/original"  # 转载时填写原文 URL
 outdated: false
 ---

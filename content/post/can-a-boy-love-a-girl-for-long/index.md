@@ -6,8 +6,7 @@ description: "转载自知乎宏桑的回答，从男生的视角分析爱情能
 toc: true
 tags: ["情感", "转载", "知乎"]
 categories: ["生活"]
-original: false
-link: "https://www.zhihu.com/question/317944434/answer/664843990"
+source: "https://www.zhihu.com/question/317944434/answer/664843990"
 ---
 
 本文转载自 —— [男生真的可以爱一个女生很久很久吗？ - 宏桑的回答 - 知乎](https://www.zhihu.com/question/317944434/answer/664843990)
