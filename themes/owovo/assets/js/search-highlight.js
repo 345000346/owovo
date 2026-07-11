@@ -29,11 +29,10 @@
 
     const firstMark = document.querySelector("mark.search-highlight");
     if (firstMark) {
-      const enableSmoothScroll = true; // 与 scss $enableSmoothScroll 字面量一致
       const reducedMotion =
         typeof window.matchMedia === "function" &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const behavior = enableSmoothScroll && !reducedMotion ? "smooth" : "auto";
+      const behavior = reducedMotion ? "auto" : "smooth";
 
       requestAnimationFrame(() => {
         firstMark.scrollIntoView({ block: "center", behavior });

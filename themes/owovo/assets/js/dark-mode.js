@@ -6,39 +6,6 @@ const overrideSystemPreferences = {{ if .Site.Params.overrideSystemPreferences }
 const defaultTheme = '{{ .Site.Params.defaultTheme | default "light" }}';
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-applyThemeFromPreference(getUserPreference());
-
-mediaQuery.addEventListener('change', () => {
-    if (!overrideSystemPreferences && getUserPreference() === 'system') {
-        applyThemeFromPreference('system');
-        changeMode();
-    }
-});
-
-window.addEventListener("DOMContentLoaded", () => {
-    changeMode();
-    updateThemeIcons(getUserPreference());
-
-    const themeSwitcher = document.getElementById('theme-switcher');
-    if (themeSwitcher) {
-        themeSwitcher.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!overrideSystemPreferences) {
-                cycleTheme();
-                changeMode();
-            }
-        });
-    }
-}, {once: true});
-
-window.addEventListener('storage', function (event) {
-    if (event.key !== 'theme' || overrideSystemPreferences) {
-        return;
-    }
-    applyThemeFromPreference(event.newValue || 'system');
-    changeMode();
-});
-
 function getUserPreference() {
     if (overrideSystemPreferences) {
         return defaultTheme;
@@ -54,23 +21,47 @@ function getCurrentTheme() {
     return document.documentElement.getAttribute('data-theme') || getSystemPreference();
 }
 
-function applyThemeFromPreference(preference) {
-    let actualTheme;
+function resolveTheme(preference) {
     if (overrideSystemPreferences) {
-        actualTheme = defaultTheme;
-    } else if (preference === 'system') {
-        actualTheme = getSystemPreference();
-    } else {
-        actualTheme = preference;
+        return defaultTheme;
     }
-    changeModeMeta(actualTheme);
+    if (preference === 'system') {
+        return getSystemPreference();
+    }
+    return preference;
+}
+
+function changeModeMeta(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+}
+
+function updateThemeIcons(preference) {
+    const icons = document.querySelectorAll('.theme-icon-light, .theme-icon-dark, .theme-icon-system');
+    if (!icons.length) {
+        return;
+    }
+    icons.forEach(icon => icon.style.display = 'none');
+    const iconToShow = document.querySelector(`.theme-icon-${preference}`);
+    if (iconToShow) {
+        iconToShow.style.display = 'inline-block';
+    }
+}
+
+function changeMode() {
+    const isDark = getCurrentTheme() === 'dark';
+    const themeColor = isDark ? '{{ .Site.Params.themeColorDark }}' : '{{ .Site.Params.themeColor }}';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) {
+        meta.setAttribute('content', themeColor);
+    }
+}
+
+function applyThemeFromPreference(preference) {
+    changeModeMeta(resolveTheme(preference));
     updateThemeIcons(preference);
 }
 
 function cycleTheme() {
-    if (overrideSystemPreferences) {
-        return;
-    }
     const currentPreference = getUserPreference();
     let newPreference;
     switch (currentPreference) {
@@ -89,27 +80,38 @@ function cycleTheme() {
     applyThemeFromPreference(newPreference);
 }
 
-function updateThemeIcons(preference) {
-    const icons = document.querySelectorAll('.theme-icon-light, .theme-icon-dark, .theme-icon-system');
-    icons.forEach(icon => icon.style.display = 'none');
-    const iconClass = overrideSystemPreferences
-        ? `.theme-icon-${defaultTheme}`
-        : `.theme-icon-${preference}`;
-    const iconToShow = document.querySelector(iconClass);
-    if (iconToShow) {
-        iconToShow.style.display = 'inline-block';
-    }
+// FOUC prevention: set data-theme before paint (icons/meta wait for DOM)
+changeModeMeta(resolveTheme(getUserPreference()));
+
+if (!overrideSystemPreferences) {
+    mediaQuery.addEventListener('change', () => {
+        if (getUserPreference() === 'system') {
+            applyThemeFromPreference('system');
+            changeMode();
+        }
+    });
+
+    window.addEventListener('storage', (event) => {
+        if (event.key !== 'theme') {
+            return;
+        }
+        applyThemeFromPreference(event.newValue || 'system');
+        changeMode();
+    });
 }
 
-function changeModeMeta(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-}
+window.addEventListener("DOMContentLoaded", () => {
+    changeMode();
+    updateThemeIcons(getUserPreference());
 
-function changeMode() {
-    const isDark = getCurrentTheme() === 'dark';
-    const themeColor = isDark ? '{{ .Site.Params.themeColorDark }}' : '{{ .Site.Params.themeColor }}';
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) {
-        meta.setAttribute('content', themeColor);
+    if (!overrideSystemPreferences) {
+        const themeSwitcher = document.getElementById('theme-switcher');
+        if (themeSwitcher) {
+            themeSwitcher.addEventListener('click', (e) => {
+                e.preventDefault();
+                cycleTheme();
+                changeMode();
+            });
+        }
     }
-}
+}, {once: true});
