@@ -1,0 +1,38 @@
+{{ define "main" }}
+    {{- $pagefindCSS := "pagefind/pagefind-ui.css" | relURL -}}
+    {{- $pagefindJS := "pagefind/pagefind-ui.js" | relURL -}}
+    {{- $pagefindBundle := "pagefind/" | relURL -}}
+    <link rel="stylesheet" href="{{ $pagefindCSS }}" />
+    <style>
+        .search-area { margin-top: 0.5rem; }
+        .pagefind-ui {
+            --pagefind-ui-primary: var(--color-primary);
+            --pagefind-ui-text: var(--color-contrast-high);
+            --pagefind-ui-background: var(--color-bg);
+            --pagefind-ui-border: var(--color-contrast-low);
+            --pagefind-ui-border-width: 1px;
+            --pagefind-ui-border-radius: 0.75rem;
+            --pagefind-ui-font: inherit;
+        }
+        .pagefind-ui__search-input { font-family: inherit; }
+        .pagefind-ui__result-link { color: var(--color-contrast-high); }
+        .pagefind-ui__message, .pagefind-ui__result-excerpt { color: var(--color-contrast-medium); }
+        .pagefind-ui mark { background: none; color: var(--color-primary); font-weight: 700; }
+        .search-noscript { padding: 2rem 0; color: var(--color-contrast-medium); text-align: center; }
+    </style>
+    <main class="main list" id="main">
+        <div class="main-inner">
+            <div class="content list-group" data-pagefind-ignore>
+                <h1 class="list-title">{{ .Title }}</h1>
+                <div id="search" class="search-area" data-pagefind-bundle="{{ $pagefindBundle }}"></div>
+            </div>
+        </div>
+    </main>
+    {{/* Classic (blocking) UI script must stay before the module init. search.js waits briefly if PagefindUI is late. */}}
+    <script src="{{ $pagefindJS }}"></script>
+    {{- $search := resources.Get "js/search.js" | resources.Minify | resources.Fingerprint -}}
+    <script type="module" src="{{ $search.RelPermalink }}" integrity="{{ $search.Data.Integrity }}" crossorigin="anonymous"></script>
+    <noscript>
+        <p class="search-noscript">{{ i18n "pagefindSearchNoScript" }}</p>
+    </noscript>
+{{ end }}

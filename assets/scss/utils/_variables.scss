@@ -1,0 +1,38 @@
+// Site design tokens — fixed values for this single-site blog.
+// No Hugo ExecuteAsTemplate injection.
+
+$fontSize: 18px;
+$lineHeight: 1.8;
+$navHeight: 20em;
+$maxHeight: 80em;
+$headerBackground: linear-gradient(
+  90deg,
+  #f795331a 0,
+  #f370551a 15%,
+  #ef4e7b1a 30%,
+  #a166ab1a 44%,
+  #5073b81a 58%,
+  #1098ad1a 72%,
+  #07b39b1a 86%,
+  #6dba821a 100%
+);
+$siteBrandFontSize: 1em;
+$siteBrandFontColor: var(--color-contrast-high);
+$iconColor: #f06292;
+$listDatePosition: right;
+
+$fontFamilyTitle: "Noto Serif SC", serif;
+$fontFamilyHeadings: "Noto Serif SC", serif;
+$fontFamilyCode: "Source Code Pro", "Noto Serif SC", monospace;
+$fontFamilyBody: "Noto Serif SC", serif;
+
+$tabSize: 4;
+$postWidth: 42em;
+$listWidth: 42em;
+$duration: 0.5s;
+$primaryColorLightH: 220;
+$primaryColorLightS: 90%;
+$primaryColorLightL: 56%;
+$primaryColorDarkH: 201;
+$primaryColorDarkS: 65%;
+$primaryColorDarkL: 62%;

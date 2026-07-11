@@ -1,0 +1,7 @@
+{{- $toc := .TableOfContents -}}
+{{- $hasTOCItems := gt (len (findRE `<li>` $toc)) 0 -}}
+{{- if $hasTOCItems -}}
+    {{- $toc = $toc | replaceRE `<nav id="TableOfContents">` `<nav class="contents">` -}}
+    {{- $toc = $toc | replaceRE `(?s)(<nav class="contents">.*?)(<(ol|ul)>)` `$1<$3 class="toc">` -}}
+    {{- $toc | safeHTML -}}
+{{- end -}}

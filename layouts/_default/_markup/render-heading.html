@@ -1,0 +1,19 @@
+{{- $page := .Page -}}
+{{- $level := .Level -}}
+{{- $anchor := .Anchor -}}
+{{- $enableAnchor := true -}}
+{{- if isset $page.Params "anchor" -}}
+    {{- $enableAnchor = $page.Params.anchor -}}
+{{- end -}}
+<h{{ $level }} id="{{ $anchor | safeURL }}"
+{{- range $key, $value := .Attributes -}}
+    {{- if ne $key "id" -}}
+        {{- printf " %s=%q" $key $value | safeHTMLAttr -}}
+    {{- end -}}
+{{- end -}}
+>
+{{- if $enableAnchor -}}
+    <a href="#{{ $anchor | safeURL }}" class="anchor-link" aria-label="本节永久链接">§</a>
+{{- end -}}
+{{ .Text | safeHTML }}
+</h{{ $level }}>

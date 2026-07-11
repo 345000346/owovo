@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Locale }}" data-stats-unavailable="{{ i18n "statsUnavailable" }}">
+    {{ partial "head.html" . }}
+    <body>
+        {{- if and .IsPage (partial "utils/is-post.html" .) -}}
+            <div id="reading-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="阅读进度"></div>
+        {{- end -}}
+        <div class="container">
+            {{ partial "header.html" . }}
+            {{ block "main" . }}{{ end }}
+            {{ partial "components/back-to-top.html" . }}
+            {{ partial "footer.html" . }}
+        </div>
+        {{ partial "third-party/vercount.html" . }}
+    </body>
+</html>

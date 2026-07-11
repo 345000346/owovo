@@ -1,0 +1,24 @@
+<nav class="nav" aria-label="主导航">
+    <ul class="menu" id="menu">
+        {{ $currentPage := . }}
+        {{ range .Site.Menus.main }}
+            {{ if eq .Identifier "theme-switcher" }}
+                <li class="menu-item">
+                    {{ partial "components/dark-mode.html" $currentPage }}
+                </li>
+            {{ else }}
+                {{- $isCurrent := or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) -}}
+                <li class="menu-item{{ if $isCurrent }} active{{ end }}">
+                    {{- $isExternal := strings.HasPrefix .URL "http" -}}
+                    <a href="{{ .URL }}"{{ if $isExternal }} target="_blank" rel="external noopener"{{ end }}{{ if $isCurrent }} aria-current="page"{{ end }}>
+                        {{- $iconName := (string .Post) -}}
+                        {{- partial "utils/icon.html" (dict "$" $ "name" $iconName "class" .Identifier) -}}
+                        {{- with .Name -}}
+                            <span class="menu-item-name">{{ . }}</span>
+                        {{- end -}}
+                    </a>
+                </li>
+            {{ end }}
+        {{ end }}
+    </ul>
+</nav>

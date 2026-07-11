@@ -1,0 +1,111 @@
+<head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+    <meta charset="UTF-8" />
+
+    {{ hugo.Generator }}
+
+    {{- $themeColor := .Site.Params.themeColor | default "#ffffff" -}}
+    {{- $themeColorDark := .Site.Params.themeColorDark | default "#16171d" -}}
+    <meta name="theme-color" content="{{ $themeColor }}" data-theme-color-light="{{ $themeColor }}" data-theme-color-dark="{{ $themeColorDark }}" />
+
+    <script>
+      (function () {
+        try {
+          var preference = localStorage.getItem("theme") || "system";
+          var theme = preference;
+          if (preference === "system") {
+            theme =
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          }
+          if (theme !== "dark" && theme !== "light") {
+            theme = "light";
+          }
+          if (preference !== "dark" && preference !== "light" && preference !== "system") {
+            preference = "system";
+          }
+          document.documentElement.setAttribute("data-theme", theme);
+          document.documentElement.setAttribute("data-theme-preference", preference);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) {
+            meta.setAttribute(
+              "content",
+              theme === "dark"
+                ? meta.getAttribute("data-theme-color-dark")
+                : meta.getAttribute("data-theme-color-light")
+            );
+          }
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "light");
+          document.documentElement.setAttribute("data-theme-preference", "system");
+        }
+      })();
+    </script>
+
+    <meta name="color-scheme" content="light dark" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <title>{{ (partial "utils/title.html" (dict "$" . "title" .Title)).title }}</title>
+
+    {{- partial "style.html" . }}
+
+    {{- if and (ne .Section "search") (ne .Kind "404") -}}
+        {{- $highlightPath := "pagefind/pagefind-highlight.js" | relURL -}}
+        {{- $highlight := resources.Get "js/search-highlight.js" | resources.Minify | resources.Fingerprint -}}
+        <script>
+          (function () {
+            try {
+              if (!new URLSearchParams(window.location.search).getAll("hl").some(Boolean)) {
+                return;
+              }
+              var s = document.createElement("script");
+              s.type = "module";
+              s.src = "{{ $highlight.RelPermalink }}";
+              s.integrity = "{{ $highlight.Data.Integrity }}";
+              s.crossOrigin = "anonymous";
+              s.dataset.pagefindHighlight = "{{ $highlightPath }}";
+              document.head.appendChild(s);
+            } catch (e) {}
+          })();
+        </script>
+    {{- end }}
+
+    {{ if ne .Kind "404" }}
+        {{ partial "script.html" . }}
+    {{ end }}
+
+    {{- with .Site.Params.fontsLink -}}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="{{ . }}" media="print" onload="this.media='all'" />
+        <noscript><link rel="stylesheet" href="{{ . }}" /></noscript>
+    {{- end }}
+
+    <meta name="author" content="{{ .Site.Params.author.name }}" />
+    {{- $description := .Description | default (partial "utils/summary.html" .) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
+    <meta name="description" content="{{ $description }}" />
+
+    {{- $icoFavicon := "favicon.ico" -}}
+    {{- $svgFavicon := "icons/favicon.svg" -}}
+    {{- $pngFavicon := "icons/favicon-96x96.png" -}}
+    {{- $appleTouchIcon := "icons/apple-touch-icon.png" -}}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ $icoFavicon | relURL }}" />
+    <link rel="icon" type="image/svg+xml" href="{{ $svgFavicon | relURL }}" />
+    <link rel="icon" type="image/png" href="{{ $pngFavicon | relURL }}" sizes="96x96" />
+    <link rel="apple-touch-icon" href="{{ $appleTouchIcon | relURL }}" sizes="180x180" />
+
+    {{ with .OutputFormats.Get "RSS" -}}
+        <link rel="{{ .Rel }}" type="{{ .MediaType }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}" />
+    {{ end }}
+
+    <link rel="canonical" href="{{ .Permalink }}" />
+    {{- $seo := partial "utils/seo-data.html" (dict "$" $ "description" $description) -}}
+    {{ partial "utils/json-ld.html" (dict "$" $ "seo" $seo) }}
+    {{ partial "utils/twitter-cards.html" (dict "$" $ "seo" $seo) }}
+    {{ partial "utils/open-graph.html" (dict "$" $ "seo" $seo) }}
+</head>
+

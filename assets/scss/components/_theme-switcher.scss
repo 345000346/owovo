@@ -1,0 +1,43 @@
+#theme-switcher {
+  border: none;
+  padding: 0;
+  background: transparent;
+  font-size: inherit;
+  cursor: pointer;
+
+  color: var(--color-contrast-medium);
+  transition: color $duration;
+  z-index: 4;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  .icon {
+    margin-right: 0 !important;
+  }
+
+  // Preference is the single source of truth for which icon is shown.
+  .theme-icon-light,
+  .theme-icon-dark,
+  .theme-icon-system {
+    display: none;
+  }
+}
+
+// Default before preference attribute exists: light icon.
+html:not([data-theme-preference]) #theme-switcher .theme-icon-light {
+  display: inline-block;
+}
+
+html[data-theme-preference="light"] #theme-switcher .theme-icon-light {
+  display: inline-block;
+}
+
+html[data-theme-preference="dark"] #theme-switcher .theme-icon-dark {
+  display: inline-block;
+}
+
+html[data-theme-preference="system"] #theme-switcher .theme-icon-system {
+  display: inline-block;
+}

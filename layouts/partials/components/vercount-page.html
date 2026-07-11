@@ -1,0 +1,6 @@
+{{- $ := index . "$" -}}
+{{- $isHome := .isHome | default false -}}
+{{- if and (not $isHome) $.IsPage (partial "utils/is-post.html" $) -}}
+    {{- $icon := partial "utils/icon.html" (dict "$" $ "name" "eye" "class" "post-meta-icon") -}}
+    <span class="post-meta-item vercount-page-pv" id="vercount_container_page_pv">{{ $icon }}&nbsp;<span id="vercount_value_page_pv"></span>&nbsp;{{ i18n "pageView" }}</span>
+{{- end -}}

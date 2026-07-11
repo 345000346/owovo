@@ -1,0 +1,45 @@
+.fof {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .main-inner {
+    width: min($postWidth, calc(100% - 2rem));
+    text-align: center;
+    margin: 0 auto;
+    padding: 20vh 1rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-contrast-high);
+    margin: 0.67em 0;
+  }
+
+  .fof-footer {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .fof {
+    h1 {
+      font-size: 2rem;
+    }
+    .fof-footer {
+      font-size: 1rem;
+    }
+  }
+}

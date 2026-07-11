@@ -1,0 +1,18 @@
+@mixin defineColorHSL($color, $hue, $saturation, $lightness) {
+  #{$color}: unquote("hsl(var(#{$color}-hsl))");
+  #{$color}-hsl: #{$hue} #{$saturation} #{$lightness};
+}
+
+// Backdrop
+
+@mixin blur {
+  -webkit-backdrop-filter: saturate(180%) blur(1em);
+  backdrop-filter: saturate(180%) blur(1em);
+}
+
+// Tab Size
+
+@mixin tabSize {
+  -moz-tab-size: $tabSize;
+  tab-size: $tabSize;
+}

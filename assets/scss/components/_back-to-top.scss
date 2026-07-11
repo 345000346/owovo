@@ -1,0 +1,18 @@
+.back-to-top {
+  position: fixed;
+  right: 0;
+  z-index: 1;
+  bottom: -3.6em;
+  transition: bottom 0.3s ease-in-out;
+  a {
+    display: block;
+    padding: 1em;
+    color: var(--color-contrast-medium);
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+  &.show {
+    bottom: 0;
+  }
+}

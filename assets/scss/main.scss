@@ -1,0 +1,52 @@
+// Entry: pure SCSS — no Hugo template injection.
+
+@import "utils/variables";
+@import "utils/functions";
+@import "utils/mixins";
+
+@import "base/base";
+@import "base/font-family";
+
+@import "themes/light";
+@import "themes/dark";
+@import "components/theme-switcher";
+
+@import "layout/header";
+@import "components/nav-toggle";
+@import "layout/menu";
+@import "layout/list";
+@import "layout/single";
+@import "layout/footer";
+
+@import "components/post-meta";
+@import "components/post-copyright";
+@import "components/post-outdated";
+@import "components/post-tags";
+@import "components/post-nav";
+@import "components/back-to-top";
+@import "components/highlight";
+@import "components/socials";
+@import "components/vercount";
+@import "components/reading-progress";
+@import "components/search-highlight";
+@import "components/about-socials";
+
+@import "pages/home-posts";
+@import "pages/tree-categories";
+@import "pages/tag-cloud";
+@import "pages/404";
+
+// Responsive max-width (depends on $postWidth / $listWidth)
+$greaterWidth: null;
+@if ($postWidth > $listWidth) {
+  $greaterWidth: $postWidth;
+} @else {
+  $greaterWidth: $listWidth;
+}
+$maxWidth: $fontSize * (strip-unit($greaterWidth) + 5);
+:root {
+  --max-width: #{$maxWidth};
+}
+@import "base/responsive";
+
+@import "custom/custom";

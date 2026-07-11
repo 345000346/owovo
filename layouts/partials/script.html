@@ -1,0 +1,14 @@
+{{- $theme := resources.Get "js/theme.js" | resources.Minify | resources.Fingerprint -}}
+{{- $nav := resources.Get "js/navigation.js" | resources.Minify | resources.Fingerprint -}}
+{{- $scroll := resources.Get "js/scroll-ui.js" | resources.Minify | resources.Fingerprint -}}
+<script type="module" src="{{ $theme.RelPermalink }}" integrity="{{ $theme.Data.Integrity }}" crossorigin="anonymous"></script>
+<script type="module" src="{{ $nav.RelPermalink }}" integrity="{{ $nav.Data.Integrity }}" crossorigin="anonymous"></script>
+<script type="module" src="{{ $scroll.RelPermalink }}" integrity="{{ $scroll.Data.Integrity }}" crossorigin="anonymous"></script>
+{{- if or (eq .Section "about") (in .RelPermalink "/about/") -}}
+    {{- $badges := resources.Get "js/themed-badges.js" | resources.Minify | resources.Fingerprint -}}
+    <script type="module" src="{{ $badges.RelPermalink }}" integrity="{{ $badges.Data.Integrity }}" crossorigin="anonymous"></script>
+{{- end -}}
+{{- if and .IsPage (partial "utils/is-post.html" .) -}}
+    {{- $article := resources.Get "js/article.js" | resources.Minify | resources.Fingerprint -}}
+    <script type="module" src="{{ $article.RelPermalink }}" integrity="{{ $article.Data.Integrity }}" crossorigin="anonymous"></script>
+{{- end -}}

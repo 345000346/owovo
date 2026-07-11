@@ -1,0 +1,8 @@
+{{- /* Chrome only — highlighter defaults live in config/_default/markup.yaml. */ -}}
+{{- $lang := .Type | default "" -}}
+{{- $result := transform.HighlightCodeBlock . -}}
+<div class="code-block"{{ with $lang }} data-lang="{{ . }}"{{ end }}>
+  {{ $result.Wrapped | safeHTML }}
+  <button type="button" class="copy-button">{{ i18n "copy" }}</button>
+  <span class="code-block__status" aria-live="polite"></span>
+</div>
