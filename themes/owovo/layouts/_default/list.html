@@ -9,17 +9,14 @@
                 {{ end }}
 
                 {{ $pages := false }}
-
-                {{ if eq .Kind "section" }}
+                {{ if eq .Kind "term" }}
+                    {{ $pages = .Pages }}
+                {{ else if eq .Kind "section" }}
                     {{ if eq .Section "archives" }}
                         {{ $pages = where .Site.RegularPages "Section" "in" .Site.Params.mainSections }}
                     {{ else }}
                         {{ $pages = .Pages }}
                     {{ end }}
-                {{ end }}
-
-                {{ if eq .Kind "term" }}
-                    {{ $pages = .Pages }}
                 {{ end }}
 
                 {{ with $pages }}

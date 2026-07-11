@@ -9,10 +9,10 @@
         </div>
 
         {{- $raw := `Powered by [Hugo](https://github.com/gohugoio/hugo) | Theme is [MemE](https://github.com/reuixiy/hugo-theme-meme)` -}}
-        <div class="powered-by">{{ partial "utils/markdownify.html" (dict "raw" $raw "isContent" false) }}</div>
+        <div class="powered-by">{{ partial "utils/markdownify.html" (dict "raw" $raw) }}</div>
 
         {{- with .Site.Copyright -}}
-            <div class="site-copyright">{{ partial "utils/markdownify.html" (dict "raw" . "isContent" false) }}</div>
+            <div class="site-copyright">{{ partial "utils/markdownify.html" (dict "raw" .) }}</div>
         {{- end }}
 
         {{ partial "components/vercount-site.html" . }}

@@ -10,12 +10,8 @@
 
 {{- $processedScripts := slice -}}
 {{- range $scripts -}}
-    {{- if findRE `^https?:` . -}}
-        <script src="{{ . }}" defer></script>
-    {{- else -}}
-        {{- $path := printf "%s/%s" $.Lang (. | replaceRE `\.js$` "-rendered.js") -}}
-        {{- $processedScripts = $processedScripts | append (resources.Get . | resources.ExecuteAsTemplate $path $) -}}
-    {{- end -}}
+    {{- $path := printf "%s/%s" $.Lang (. | replaceRE `\.js$` "-rendered.js") -}}
+    {{- $processedScripts = $processedScripts | append (resources.Get . | resources.ExecuteAsTemplate $path $) -}}
 {{- end -}}
 
 {{- $path := (strings.TrimPrefix "/" (printf `%s/js/meme.js` .Site.LanguagePrefix)) -}}

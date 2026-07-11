@@ -1,10 +1,1 @@
-{{- $Content := .raw -}}
-{{- $isContent := .isContent -}}
-
-{{- /* 正文请直接输出 .Content（render-link 已处理外链）。
-     非正文片段走 markdownify，同样会命中 render-link。 */ -}}
-{{- if not $isContent -}}
-    {{- $Content = $Content | markdownify -}}
-{{- end -}}
-
-{{- $Content | safeHTML -}}
+{{- .raw | markdownify | safeHTML -}}
