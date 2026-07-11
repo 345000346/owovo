@@ -3,10 +3,6 @@ author:
   avatar: "/images/avatar.webp"
   name: "LIGT"
 
-# 首页文章列表中展示的 section
-mainSections:
-  - post
-
 # 浏览器地址栏与系统 UI 的主题色
 themeColor: "#ffffff"
 themeColorDark: "#16171d"
@@ -14,60 +10,17 @@ themeColorDark: "#16171d"
 # 用于 head meta、RSS 提要
 siteDescription: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
 
-# SEO / 社交分享
-openGraph: true
-twitterCards: true
-jsonLD: true
+# 用于 JSON-LD / OG 默认图
 siteLogo: "/images/avatar.webp"
 
 # 用于页脚年份显示
 siteCreatedTime: "2019-08-22T00:00:00+08:00"
 
-# RSS 输出包含全文
-includeContent: true
-
+# 列表与文章元信息日期格式
 listDateFormat: "1 月 2 日"
-listDatePosition: "right"
-
-# 移动端汉堡按钮展开导航栏
-navHeight: "20em"
-headerBackground: "linear-gradient(90deg, #f795331a 0, #f370551a 15%, #ef4e7b1a 30%, #a166ab1a 44%, #5073b81a 58%, #1098ad1a 72%, #07b39b1a 86%, #6dba821a 100%)"
-siteBrandFontSize: 1
-siteBrandFontColor: "var(--color-contrast-high)"
-
-fontFamilyTitle: "'Noto Serif SC', serif"
-fontFamilyHeadings: "'Noto Serif SC', serif"
-fontFamilyCode: "'Source Code Pro', 'Noto Serif SC', monospace"
-fontFamilyBody: "'Noto Serif SC', serif"
-fontsLink: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-fontSize: 18
-lineHeight: 1.8
-
-defaultTheme: "light"
-overrideSystemPreferences: false
-enablePagefindSearch: true
-
-# 代码块：高亮、横向滚动、复制按钮
-maxHeight: 80
-
-# 文章页元信息（发布日期、分类、阅读时间）
 postMetaDateFormat: "2006-01-02"
 
-# 访问统计（Vercount）
-displayVercountSitePV: true
-displayVercountSiteUV: true
-displayVercountPagePV: true
-vercountPagePVIcon: "eye"
+# 暗色模式：无用户选择时跟随系统（localStorage key: theme = light|dark|system）
 
-# 文章标签与标签云
-enableTagCloud: true
-largestFontSize: 2.5
-smallestFontSize: 1
-fontUnit: "rem"
-
-iconColor: "#f06292"
-
-# 文章 TOC / 标题锚点（显式锁定，消除隐式默认）
-enableTOC: true
-linkHeadingsToTOC: true
-enableHeadingsAnchor: true
+# Google Fonts（后续可改为自托管）
+fontsLink: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"

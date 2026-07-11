@@ -8,46 +8,37 @@ menu:
     - name: "首页"
       pageRef: "/"
       weight: 1
-      pre: "internal"
       post: "home"
     - name: "文章"
       pageRef: "/archives/"
       weight: 2
-      pre: "internal"
       post: "archive"
     - name: "标签"
       pageRef: "/tags/"
       weight: 3
-      pre: "internal"
       post: "tag"
     - name: "想法"
       url: "/ideas/"
       weight: 4
-      pre: "internal"
       post: "edit"
     - name: "关于"
       pageRef: "/about/"
       weight: 5
-      pre: "internal"
       post: "user-circle"
     - name: "RSS"
       url: "/rss.xml"
       weight: 6
-      pre: "internal"
       post: "rss"
     - identifier: "theme-switcher"
       weight: 7
     - name: "搜索"
       pageRef: "/search/"
       weight: 8
-      pre: "internal"
       post: "search"
 
 title: "LIGT'S BLOG"
 
 copyright: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)"
-
-theme: "owovo"
 
 # 保留 URL 原始大小写（某些文章 slug 含大写字母）
 disablePathToLower: true
