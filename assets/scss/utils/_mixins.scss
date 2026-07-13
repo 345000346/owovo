@@ -1,5 +1,8 @@
+@use "sass:string";
+@use "variables";
+
 @mixin defineColorHSL($color, $hue, $saturation, $lightness) {
-  #{$color}: unquote("hsl(var(#{$color}-hsl))");
+  #{$color}: string.unquote("hsl(var(#{$color}-hsl))");
   #{$color}-hsl: #{$hue} #{$saturation} #{$lightness};
 }
 
@@ -13,6 +16,6 @@
 // Tab Size
 
 @mixin tabSize {
-  -moz-tab-size: $tabSize;
-  tab-size: $tabSize;
+  -moz-tab-size: variables.$tabSize;
+  tab-size: variables.$tabSize;
 }

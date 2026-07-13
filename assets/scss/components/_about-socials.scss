@@ -1,8 +1,11 @@
+@use "../utils/functions";
+@use "../utils/variables";
+
 // about 页社交展示区：做成安静的名片式陈列，不影响页脚社交图标
 .post-body .about-social-showcase {
   margin: 1.75rem 0 0;
   padding: 1.35rem;
-  border: 1px solid alpha(var(--color-contrast-high), 0.08);
+  border: 1px solid functions.alpha(var(--color-contrast-high), 0.08);
   border-radius: 1.5rem;
   background:
     radial-gradient(
@@ -11,12 +14,12 @@
       transparent 34%
     ),
     linear-gradient(180deg, #fcfaf6 0%, #f3ede4 100%);
-  box-shadow: 0 18px 40px alpha(var(--color-contrast-high), 0.06);
+  box-shadow: 0 18px 40px functions.alpha(var(--color-contrast-high), 0.06);
 }
 
 .post-body .about-social-intro {
   margin: 0 0 1rem;
-  color: alpha(var(--color-contrast-medium), 0.92);
+  color: functions.alpha(var(--color-contrast-medium), 0.92);
   font-size: 0.96rem;
   line-height: 1.8;
 }
@@ -33,27 +36,27 @@
   gap: 0.9rem;
   align-items: center;
   padding: 1rem 1.05rem;
-  border: 1px solid alpha(var(--color-contrast-high), 0.08);
+  border: 1px solid functions.alpha(var(--color-contrast-high), 0.08);
   border-radius: 1.15rem;
-  background-color: alpha(var(--color-bg), 0.84);
+  background-color: functions.alpha(var(--color-bg), 0.84);
   color: inherit;
   text-decoration: none;
-  box-shadow: 0 10px 22px alpha(var(--color-contrast-high), 0.04);
+  box-shadow: 0 10px 22px functions.alpha(var(--color-contrast-high), 0.04);
   transition:
-    transform $duration,
-    border-color $duration,
-    box-shadow $duration,
-    background-color $duration;
+    transform variables.$duration,
+    border-color variables.$duration,
+    box-shadow variables.$duration,
+    background-color variables.$duration;
 }
 
 .post-body .about-social-card:hover {
   transform: translateY(-2px);
-  border-color: alpha(var(--color-primary), 0.18);
-  box-shadow: 0 16px 28px alpha(var(--color-contrast-high), 0.08);
+  border-color: functions.alpha(var(--color-primary), 0.18);
+  box-shadow: 0 16px 28px functions.alpha(var(--color-contrast-high), 0.08);
 }
 
 .post-body .about-social-card:focus-visible {
-  outline: 2px solid alpha(var(--color-primary), 0.5);
+  outline: 2px solid functions.alpha(var(--color-primary), 0.5);
   outline-offset: 4px;
 }
 
@@ -142,12 +145,12 @@
 }
 
 [data-theme="dark"] .post-body .about-social-card:hover {
-  border-color: alpha(var(--color-primary), 0.28);
+  border-color: functions.alpha(var(--color-primary), 0.28);
   box-shadow: 0 16px 30px rgba(0, 0, 0, 0.24);
 }
 
 [data-theme="dark"] .post-body .about-social-intro {
-  color: alpha(var(--color-contrast-medium), 0.96);
+  color: functions.alpha(var(--color-contrast-medium), 0.96);
 }
 
 [data-theme="dark"] .post-body .about-social-mark {

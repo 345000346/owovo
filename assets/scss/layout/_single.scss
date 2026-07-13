@@ -1,5 +1,9 @@
+@use "sass:math";
+@use "../utils/functions";
+@use "../utils/variables";
+
 .single .main-inner {
-  width: $postWidth;
+  width: variables.$postWidth;
 }
 
 .post-title {
@@ -25,7 +29,7 @@
     text-decoration: underline;
     text-decoration-color: var(--color-contrast-low);
     &:hover {
-      text-decoration-color: alpha(var(--color-primary), 0.5);
+      text-decoration-color: functions.alpha(var(--color-primary), 0.5);
     }
   }
 }
@@ -33,7 +37,7 @@
 .post {
   p {
     margin: 1em 0;
-    line-height: $lineHeight;
+    line-height: variables.$lineHeight;
   }
   picture {
     display: block;
@@ -63,7 +67,7 @@
   ul {
     margin: 0;
     padding-left: 2em;
-    line-height: $lineHeight;
+    line-height: variables.$lineHeight;
   }
   hr {
     border: none;
@@ -186,7 +190,7 @@ td {
   border: 1px solid var(--color-contrast-lower);
 }
 table > tbody > tr:nth-of-type(odd) {
-  background-color: alpha(var(--color-contrast-lower), 0.5);
+  background-color: functions.alpha(var(--color-contrast-lower), 0.5);
 }
 table > tbody > tr:hover {
   background-color: var(--color-contrast-lower);
@@ -200,8 +204,8 @@ dd {
 }
 
 code {
-  padding: ($fontSize / 8) ($fontSize / 4);
-  background-color: alpha(var(--color-contrast-lower), 0.5);
+  padding: math.div(variables.$fontSize, 8) math.div(variables.$fontSize, 4);
+  background-color: functions.alpha(var(--color-contrast-lower), 0.5);
   font-size: 80%;
 }
 pre {
@@ -212,8 +216,8 @@ pre {
   margin: 2rem 0;
   padding: 1em;
   line-height: 1.618;
-  background-color: alpha(var(--color-contrast-lower), 0.5);
-  max-height: $maxHeight;
+  background-color: functions.alpha(var(--color-contrast-lower), 0.5);
+  max-height: variables.$maxHeight;
   code {
     background-color: unset;
     font-size: 0.8rem;
@@ -228,16 +232,16 @@ pre {
   border: 0;
   font-size: inherit;
   color: var(--color-bg);
-  background-color: alpha(var(--color-contrast-medium), 0.5);
+  background-color: functions.alpha(var(--color-contrast-medium), 0.5);
   transition:
-    color $duration,
-    background-color $duration,
-    opacity $duration;
+    color variables.$duration,
+    background-color variables.$duration,
+    opacity variables.$duration;
   cursor: pointer;
   opacity: 0;
   &:hover,
   &:focus-visible {
-    background-color: alpha(var(--color-primary), 0.5);
+    background-color: functions.alpha(var(--color-primary), 0.5);
   }
 }
 

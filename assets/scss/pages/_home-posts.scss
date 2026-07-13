@@ -1,3 +1,5 @@
+@use "../utils/variables";
+
 article.content.post.home {
   margin-top: 5em;
 }
@@ -7,7 +9,7 @@ article.content.post.home {
 }
 
 .summary {
-  line-height: $lineHeight;
+  line-height: variables.$lineHeight;
   display: block;
 }
 

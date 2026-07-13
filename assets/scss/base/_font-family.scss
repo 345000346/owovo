@@ -1,3 +1,5 @@
+@use "../utils/variables";
+
 .list-title,
 .term-title,
 .list-year,
@@ -7,7 +9,7 @@
 .post-nav,
 thead,
 dt {
-  font-family: $fontFamilyTitle;
+  font-family: variables.$fontFamilyTitle;
 }
 
 .post-body {
@@ -17,11 +19,11 @@ dt {
   h4,
   h5,
   h6 {
-    font-family: $fontFamilyHeadings;
+    font-family: variables.$fontFamilyHeadings;
   }
 }
 .contents-title {
-  font-family: $fontFamilyHeadings;
+  font-family: variables.$fontFamilyHeadings;
 }
 
 code,
@@ -29,9 +31,9 @@ pre,
 sup,
 .post-meta,
 .copy-button {
-  font-family: $fontFamilyCode;
+  font-family: variables.$fontFamilyCode;
 }
 
 body {
-  font-family: $fontFamilyBody;
+  font-family: variables.$fontFamilyBody;
 }

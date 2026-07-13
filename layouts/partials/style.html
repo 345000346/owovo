@@ -4,7 +4,6 @@
     "targetPath" $path
     "outputStyle" "compressed"
     "transpiler" "dartsass"
-    "silenceDeprecations" (slice "import" "global-builtin" "slash-div")
 -}}
 {{- $style := resources.Get "scss/main.scss" | css.Sass $options | resources.Fingerprint -}}
 <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}" crossorigin="anonymous" />

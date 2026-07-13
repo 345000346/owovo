@@ -1,11 +1,14 @@
+@use "../utils/functions";
+@use "../utils/variables";
+
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   font-size: 90%;
-  color: alpha(var(--color-contrast-medium), 0.8);
+  color: functions.alpha(var(--color-contrast-medium), 0.8);
   a {
-    color: alpha(var(--color-contrast-medium), 0.8);
+    color: functions.alpha(var(--color-contrast-medium), 0.8);
     &:hover {
       color: var(--color-primary);
     }
@@ -21,10 +24,8 @@
   margin: 0 0.25em 0.3em;
 }
 
-@if variable-exists("iconColor") {
-  .footer-icon {
-    fill: $iconColor;
-  }
+.footer-icon {
+  fill: variables.$iconColor;
 }
 
 @keyframes heartbeat {

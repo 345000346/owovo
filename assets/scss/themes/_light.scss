@@ -1,19 +1,22 @@
+@use "../utils/mixins";
+@use "../utils/variables";
+
 // https://codyhouse.co/ds/globals/colors
 
 @mixin light-theme {
   --theme-name: "light";
-  @include defineColorHSL(
+  @include mixins.defineColorHSL(
     --color-primary,
-    $primaryColorLightH,
-    $primaryColorLightS,
-    $primaryColorLightL
+    variables.$primaryColorLightH,
+    variables.$primaryColorLightS,
+    variables.$primaryColorLightL
   );
-  @include defineColorHSL(--color-bg, 0, 0%, 100%);
-  @include defineColorHSL(--color-contrast-lower, 0, 0%, 95%);
-  @include defineColorHSL(--color-contrast-low, 240, 1%, 83%);
-  @include defineColorHSL(--color-contrast-medium, 240, 1%, 48%);
-  @include defineColorHSL(--color-contrast-high, 240, 4%, 20%);
-  @include defineColorHSL(--color-contrast-higher, 240, 8%, 12%);
+  @include mixins.defineColorHSL(--color-bg, 0, 0%, 100%);
+  @include mixins.defineColorHSL(--color-contrast-lower, 0, 0%, 95%);
+  @include mixins.defineColorHSL(--color-contrast-low, 240, 1%, 83%);
+  @include mixins.defineColorHSL(--color-contrast-medium, 240, 1%, 48%);
+  @include mixins.defineColorHSL(--color-contrast-high, 240, 4%, 20%);
+  @include mixins.defineColorHSL(--color-contrast-higher, 240, 8%, 12%);
   img {
     filter: none;
   }

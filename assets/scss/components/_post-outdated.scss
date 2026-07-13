@@ -1,8 +1,10 @@
+@use "../utils/functions";
+
 .post-outdated {
   margin: 1.5rem 0 2rem;
   padding: 1rem 1.2rem;
-  border-left: 3px solid alpha(var(--color-primary), 0.55);
-  background-color: alpha(var(--color-contrast-lower), 0.5);
+  border-left: 3px solid functions.alpha(var(--color-primary), 0.55);
+  background-color: functions.alpha(var(--color-contrast-lower), 0.5);
   color: var(--color-contrast-high);
   line-height: 1.8;
 }

@@ -1,3 +1,7 @@
+@use "../utils/functions";
+@use "../utils/mixins";
+@use "../utils/variables";
+
 .header {
   z-index: 3;
   position: fixed;
@@ -8,9 +12,9 @@
 
 .header-wrapper {
   padding: 1em 0;
-  @include blur;
-  background: $headerBackground;
-  transition: background $duration;
+  @include mixins.blur;
+  background: variables.$headerBackground;
+  transition: background variables.$duration;
 }
 
 .header-inner {
@@ -18,11 +22,11 @@
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
-  max-width: $postWidth;
+  max-width: variables.$postWidth;
 }
 
 .header-inner.list {
-  max-width: $listWidth;
+  max-width: variables.$listWidth;
 }
 
 .site-brand {
@@ -30,26 +34,27 @@
 }
 
 .brand {
-  font-size: $siteBrandFontSize;
-  color: $siteBrandFontColor;
+  font-size: variables.$siteBrandFontSize;
+  color: variables.$siteBrandFontColor;
   text-decoration: none;
   &:hover {
-    color: $siteBrandFontColor;
+    color: variables.$siteBrandFontColor;
   }
 }
 
-/* $siteBrandFontSize * {body line-height} */
-$brandHeight: $fontSize * strip-unit($siteBrandFontSize) * 1.618;
+/* variables.$siteBrandFontSize * {body line-height} */
+$brandHeight: variables.$fontSize *
+  functions.strip-unit(variables.$siteBrandFontSize) * 1.618;
 
 :root {
   /* This is an approximate calculation, it won't cover all scenarios */
   --header-height: calc(
     max(
         /* brand */ #{$brandHeight},
-        /* menu */ #{$fontSize * 0.8 * 1.5}
+        /* menu */ #{variables.$fontSize * 0.8 * 1.5}
           /* {.nav font-size} * {.menu line-height} */
       )
-      /* .header-wrapper top+bottom margin */ + #{$fontSize * 2}
+      /* .header-wrapper top+bottom margin */ + #{variables.$fontSize * 2}
   );
 }
 

@@ -1,3 +1,18 @@
+@use "../utils/functions";
+@use "../utils/variables";
+
+$greaterWidth: null;
+@if variables.$postWidth > variables.$listWidth {
+  $greaterWidth: variables.$postWidth;
+} @else {
+  $greaterWidth: variables.$listWidth;
+}
+$maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
+
+:root {
+  --max-width: #{$maxWidth};
+}
+
 @media (max-width: $maxWidth) {
   .main-inner {
     width: auto !important;
@@ -45,7 +60,7 @@
   .header.open {
     .nav {
       display: block;
-      animation: appear $duration;
+      animation: appear variables.$duration;
       animation-iteration-count: 1;
       animation-fill-mode: forwards;
     }
@@ -59,14 +74,14 @@
       }
       100% {
         opacity: 1;
-        height: $navHeight;
+        height: variables.$navHeight;
         margin: 2em 0;
         transform: scaleY(1);
         transform-origin: top;
       }
     }
     .nav-curtain {
-      animation: appearCurtain $duration;
+      animation: appearCurtain variables.$duration;
       animation-iteration-count: 1;
       animation-fill-mode: forwards;
     }
@@ -84,14 +99,14 @@
   .header.fade {
     .nav {
       display: block;
-      animation: fade $duration;
+      animation: fade variables.$duration;
       animation-iteration-count: 1;
       animation-fill-mode: forwards;
     }
     @keyframes fade {
       0% {
         opacity: 1;
-        height: $navHeight;
+        height: variables.$navHeight;
         margin: 2em 0;
         transform: scaleY(1);
         transform-origin: top;
@@ -105,7 +120,7 @@
       }
     }
     .nav-curtain {
-      animation: fadeCurtain $duration;
+      animation: fadeCurtain variables.$duration;
       animation-iteration-count: 1;
       animation-fill-mode: forwards;
     }

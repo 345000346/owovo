@@ -1,3 +1,5 @@
+@use "../utils/functions";
+
 .post-tags {
   margin-top: 5rem;
   text-align: center;
@@ -5,7 +7,7 @@
 }
 
 .post-tags-link {
-  color: alpha(var(--color-contrast-medium), 0.9);
+  color: functions.alpha(var(--color-contrast-medium), 0.9);
   margin: 0 0.5em;
   line-height: 2;
   display: inline-block;

@@ -1,3 +1,5 @@
+@use "../utils/functions";
+
 .tree {
   overflow: auto hidden;
   white-space: nowrap;
@@ -29,7 +31,7 @@
   color: var(--color-primary);
   font-size: 1.2em;
   &:hover {
-    color: alpha(var(--color-primary), 0.75);
+    color: functions.alpha(var(--color-primary), 0.75);
   }
 }
 

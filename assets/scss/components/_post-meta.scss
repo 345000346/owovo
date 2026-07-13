@@ -1,3 +1,5 @@
+@use "../utils/functions";
+
 .post-meta {
   color: var(--color-contrast-medium);
   font-size: 80%;
@@ -23,6 +25,6 @@
 }
 
 .post-meta-icon {
-  fill: alpha(var(--color-contrast-medium), 0.5);
+  fill: functions.alpha(var(--color-contrast-medium), 0.5);
   margin-bottom: 0.3em;
 }

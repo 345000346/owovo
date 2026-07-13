@@ -1,51 +1,35 @@
 // Entry: pure SCSS — no Hugo template injection.
 
-@import "utils/variables";
-@import "utils/functions";
-@import "utils/mixins";
+@use "base/base";
+@use "base/font-family";
 
-@import "base/base";
-@import "base/font-family";
+@use "themes/light";
+@use "themes/dark";
+@use "components/theme-switcher";
 
-@import "themes/light";
-@import "themes/dark";
-@import "components/theme-switcher";
+@use "layout/header";
+@use "components/nav-toggle";
+@use "layout/menu";
+@use "layout/list";
+@use "layout/single";
+@use "layout/footer";
 
-@import "layout/header";
-@import "components/nav-toggle";
-@import "layout/menu";
-@import "layout/list";
-@import "layout/single";
-@import "layout/footer";
+@use "components/post-meta";
+@use "components/post-copyright";
+@use "components/post-outdated";
+@use "components/post-tags";
+@use "components/post-nav";
+@use "components/back-to-top";
+@use "components/highlight";
+@use "components/socials";
+@use "components/reading-progress";
+@use "components/search-highlight";
+@use "components/about-socials";
 
-@import "components/post-meta";
-@import "components/post-copyright";
-@import "components/post-outdated";
-@import "components/post-tags";
-@import "components/post-nav";
-@import "components/back-to-top";
-@import "components/highlight";
-@import "components/socials";
-@import "components/reading-progress";
-@import "components/search-highlight";
-@import "components/about-socials";
+@use "pages/home-posts";
+@use "pages/tree-categories";
+@use "pages/tag-cloud";
+@use "pages/404" as page404;
+@use "base/responsive";
 
-@import "pages/home-posts";
-@import "pages/tree-categories";
-@import "pages/tag-cloud";
-@import "pages/404";
-
-// Responsive max-width (depends on $postWidth / $listWidth)
-$greaterWidth: null;
-@if ($postWidth > $listWidth) {
-  $greaterWidth: $postWidth;
-} @else {
-  $greaterWidth: $listWidth;
-}
-$maxWidth: $fontSize * (strip-unit($greaterWidth) + 5);
-:root {
-  --max-width: #{$maxWidth};
-}
-@import "base/responsive";
-
-@import "custom/custom";
+@use "custom/custom";

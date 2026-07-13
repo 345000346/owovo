@@ -1,3 +1,7 @@
+@use "../utils/functions";
+@use "../utils/mixins";
+@use "../utils/variables";
+
 html {
   scroll-behavior: smooth;
 }
@@ -13,19 +17,19 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
-  font-size: $fontSize;
+  font-size: variables.$fontSize;
 }
 
 body {
-  @include tabSize;
+  @include mixins.tabSize;
   color: var(--color-contrast-high);
   background-color: var(--color-bg);
   overflow-wrap: break-word;
   word-wrap: break-word;
   line-height: 1.618;
   transition:
-    color $duration,
-    background-color $duration;
+    color variables.$duration,
+    background-color variables.$duration;
 }
 
 .container {
@@ -90,15 +94,15 @@ a {
   color: var(--color-contrast-high);
   text-decoration: none;
   transition:
-    color $duration,
-    background-color $duration;
+    color variables.$duration,
+    background-color variables.$duration;
   &:hover {
     color: var(--color-primary);
   }
 }
 
 ::selection {
-  background-color: alpha(var(--color-primary), 0.3);
+  background-color: functions.alpha(var(--color-primary), 0.3);
 }
 
 // https://www.w3.org/International/clreq/#id84
