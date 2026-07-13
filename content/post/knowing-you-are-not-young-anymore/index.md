@@ -7,6 +7,7 @@ toc: false
 tags: ["随想", "转载", "知乎"]
 categories: ["生活"]
 source: "https://www.zhihu.com/question/425625068/answer/1524154959"
+author: "野良神"
 ---
 
 本文转载自 —— [**哪个瞬间让你知道自己已经不小了? - 野良神的回答 - 知乎**](https://www.zhihu.com/question/425625068/answer/1524154959)

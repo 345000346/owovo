@@ -1,11 +1,15 @@
 {{- $author := dict -}}
-{{- with .Site.Params.author.name -}}
+{{- with .Params.author -}}
     {{- $author = merge $author (dict "name" .) -}}
-{{- end -}}
-{{- with .Site.Params.author.avatar -}}
-    {{- $author = merge $author (dict "avatar" .) -}}
-{{- end -}}
-{{- with .Site.Copyright -}}
-    {{- $author = merge $author (dict "copyright" .) -}}
+{{- else -}}
+    {{- with .Site.Params.author.name -}}
+        {{- $author = merge $author (dict "name" .) -}}
+    {{- end -}}
+    {{- with .Site.Params.author.avatar -}}
+        {{- $author = merge $author (dict "avatar" .) -}}
+    {{- end -}}
+    {{- with .Site.Copyright -}}
+        {{- $author = merge $author (dict "copyright" .) -}}
+    {{- end -}}
 {{- end -}}
 {{- return $author -}}

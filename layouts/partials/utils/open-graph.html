@@ -6,10 +6,16 @@
 <meta property="og:description" content="{{ $seo.description }}" />
 <meta property="og:url" content="{{ $.Permalink }}" />
 <meta property="og:site_name" content="{{ $.Site.Title }}" />
-<meta property="og:locale" content="{{ $.Site.Language.Lang }}" />
+{{- $localeParts := split $.Site.Language.Lang "-" -}}
+{{- $ogLocale := lower (index $localeParts 0) -}}
+{{- if gt (len $localeParts) 1 -}}
+    {{- $ogLocale = printf "%s_%s" $ogLocale (upper (index $localeParts 1)) -}}
+{{- end -}}
+<meta property="og:locale" content="{{ $ogLocale }}" />
 
 {{- range $seo.images -}}
     <meta property="og:image" content="{{ . }}" />
+    <meta property="og:image:alt" content="{{ $seo.title }}" />
 {{- end -}}
 
 {{- if and $.IsPage (partial "utils/is-post.html" $) -}}
