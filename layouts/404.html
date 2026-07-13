@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.Language.Locale }}">
-    {{ partial "head.html" . }}
+    <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+        {{ partial "head.html" . }}
+        {{ block "head-extra" . }}{{ end }}
+    </head>
     <body id="top">
         <div class="container">
             <main class="fof">

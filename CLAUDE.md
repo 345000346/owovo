@@ -15,7 +15,7 @@ npm run format            # Prettier 格式化
 npm run format:check      # 格式检查
 ```
 
-Node 版本见 `.node-version`（>=24），Hugo 版本见 `.hugo-version`（0.161.1，需 extended 版）。
+Node 版本见 `.node-version`（>=24），Hugo 版本见 `.hugo-version`（0.164.0，需 extended 版）。
 
 ## 项目结构
 

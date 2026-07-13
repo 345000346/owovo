@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.Language.Locale }}">
-    {{ partial "head.html" . }}
+    <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+        {{ partial "head.html" . }}
+        {{ block "head-extra" . }}{{ end }}
+    </head>
     <body id="top">
         {{- if and .IsPage (partial "utils/is-post.html" .) -}}
             <div id="reading-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="阅读进度"></div>

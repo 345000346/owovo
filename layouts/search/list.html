@@ -1,7 +1,5 @@
-{{ define "main" }}
+{{ define "head-extra" }}
     {{- $pagefindCSS := "pagefind/pagefind-ui.css" | relURL -}}
-    {{- $pagefindJS := "pagefind/pagefind-ui.js" | relURL -}}
-    {{- $pagefindBundle := "pagefind/" | relURL -}}
     <link rel="stylesheet" href="{{ $pagefindCSS }}" />
     <style>
         .search-area { margin-top: 0.5rem; }
@@ -20,6 +18,11 @@
         .pagefind-ui mark { background: none; color: var(--color-primary); font-weight: 700; }
         .search-noscript { padding: 2rem 0; color: var(--color-contrast-medium); text-align: center; }
     </style>
+{{ end }}
+
+{{ define "main" }}
+    {{- $pagefindJS := "pagefind/pagefind-ui.js" | relURL -}}
+    {{- $pagefindBundle := "pagefind/" | relURL -}}
     <main class="main list" id="main">
         <div class="main-inner">
             <div class="content list-group" data-pagefind-ignore>

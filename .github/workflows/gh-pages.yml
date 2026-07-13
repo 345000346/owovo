@@ -1,6 +1,7 @@
 name: GitHub Pages
 
 on:
+  pull_request:
   push:
     branches:
       - main
@@ -51,7 +52,7 @@ jobs:
         run: npm run format:check
 
       - name: Build site
-        run: npm run build:site -- --logLevel warn
+        run: npm run build:site -- --panicOnWarning --logLevel warn
 
       - name: Build search
         run: npm run build:search
@@ -66,6 +67,7 @@ jobs:
           path: ./public
 
   deploy:
+    if: github.event_name != 'pull_request'
     permissions:
       pages: write
       id-token: write
