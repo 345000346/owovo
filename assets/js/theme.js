@@ -91,11 +91,17 @@ function cycleTheme() {
 // FOUC already applied matching attrs; only re-apply when storage/OS differs.
 applyThemeFromPreference(safeGetTheme());
 
-mediaQuery.addEventListener("change", () => {
+const handleSystemThemeChange = () => {
   if (safeGetTheme() === "system") {
     applyThemeFromPreference("system", { force: true });
   }
-});
+};
+
+if (typeof mediaQuery.addEventListener === "function") {
+  mediaQuery.addEventListener("change", handleSystemThemeChange);
+} else {
+  mediaQuery.addListener(handleSystemThemeChange);
+}
 
 window.addEventListener("storage", (event) => {
   if (event.key !== "theme") {

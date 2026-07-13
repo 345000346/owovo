@@ -229,12 +229,11 @@ pre {
   transition:
     color $duration,
     background-color $duration,
-    opacity $duration,
-    visibility $duration;
+    opacity $duration;
   cursor: pointer;
-  visibility: hidden;
   opacity: 0;
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background-color: alpha(var(--color-primary), 0.5);
   }
 }
@@ -242,8 +241,8 @@ pre {
 .code-block {
   position: relative;
   &:hover .copy-button,
-  &:focus-within .copy-button {
-    visibility: visible;
+  &:focus-within .copy-button,
+  .copy-button:focus-visible {
     opacity: 1;
   }
 }
@@ -260,7 +259,6 @@ pre {
 }
 @media (hover: none), (pointer: coarse) {
   .code-block .copy-button {
-    visibility: visible;
     opacity: 0.85;
   }
 }
