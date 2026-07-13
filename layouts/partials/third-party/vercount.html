@@ -1,4 +1,0 @@
-{{- /* Site footer always renders counters on baseof pages; 404 uses its own layout. */ -}}
-<script defer src="https://www.vercount.one/js"></script>
-{{- $vercount := resources.Get "js/vercount-fallback.js" | resources.Minify | resources.Fingerprint -}}
-<script type="module" src="{{ $vercount.RelPermalink }}" integrity="{{ $vercount.Data.Integrity }}" crossorigin="anonymous"></script>

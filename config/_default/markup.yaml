@@ -1,8 +1,8 @@
 # Goldmark 配置
 goldmark:
   renderer:
-    # 允许在 Markdown 中使用原始 HTML
-    unsafe: true
+    # 禁止 Markdown 中未经审查的原始 HTML
+    unsafe: false
 
 # 目录（TOC）配置
 # 显式声明，避免依赖 Hugo 默认值导致行为漂移

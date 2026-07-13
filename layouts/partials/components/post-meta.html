@@ -19,7 +19,6 @@
     {{ if $isPost }}
         {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "clock" "class" "post-meta-icon") }}
         <span class="post-meta-item reading-time">{{ $icon }}&nbsp;{{ $.ReadingTime }}&nbsp;{{ i18n "minute" $.ReadingTime }}</span>
-        {{ partial "components/vercount-page.html" (dict "$" $ "isHome" $isHome) }}
     {{ end }}
     {{- if $isHome -}}
         {{- with $.Params.tags -}}

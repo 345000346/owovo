@@ -5,15 +5,9 @@
 {{- if isset $page.Params "anchor" -}}
     {{- $enableAnchor = $page.Params.anchor -}}
 {{- end -}}
-<h{{ $level }} id="{{ $anchor | safeURL }}"
-{{- range $key, $value := .Attributes -}}
-    {{- if ne $key "id" -}}
-        {{- printf " %s=%q" $key $value | safeHTMLAttr -}}
-    {{- end -}}
-{{- end -}}
->
+<h{{ $level }} id="{{ $anchor }}">
 {{- if $enableAnchor -}}
-    <a href="#{{ $anchor | safeURL }}" class="anchor-link" aria-label="本节永久链接">§</a>
+    <a href="#{{ $anchor }}" class="anchor-link" aria-label="本节永久链接">§</a>
 {{- end -}}
 {{ .Text | safeHTML }}
 </h{{ $level }}>

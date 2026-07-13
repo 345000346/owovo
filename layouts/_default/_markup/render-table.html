@@ -1,9 +1,5 @@
 <div class="table-container">
-    <table
-    {{- range $key, $value := .Attributes -}}
-        {{- printf " %s=%q" $key $value | safeHTMLAttr -}}
-    {{- end -}}
-    >
+    <table>
         <thead>
             {{- range .THead }}
                 <tr>
