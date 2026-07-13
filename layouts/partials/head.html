@@ -77,12 +77,8 @@
         {{ partial "script.html" . }}
     {{ end }}
 
-    {{- with .Site.Params.fontsLink -}}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="stylesheet" href="{{ . }}" media="print" onload="this.media='all'" />
-        <noscript><link rel="stylesheet" href="{{ . }}" /></noscript>
-    {{- end }}
+    {{- $fonts := resources.Get "css/fonts.css" | resources.Minify | resources.Fingerprint -}}
+    <link rel="stylesheet" href="{{ $fonts.RelPermalink }}" integrity="{{ $fonts.Data.Integrity }}" crossorigin="anonymous" />
 
     {{- $author := partial "utils/author.html" . -}}
     {{ with $author.name }}<meta name="author" content="{{ . }}" />{{ end }}

@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Personal blog powered by Hugo",
   "scripts": {
-    "dev": "hugo server -D",
-    "build:site": "hugo --gc --minify --cleanDestinationDir",
+    "sync:fonts": "node scripts/sync-fonts.mjs",
+    "dev": "npm run sync:fonts && hugo server -D",
+    "build:site": "npm run sync:fonts && hugo --gc --minify --cleanDestinationDir",
     "build:search": "pagefind --site public",
     "build": "npm run build:site && npm run build:search",
     "preview": "npm run build:site && npm run build:search -- --serve",
@@ -19,14 +20,17 @@
   "author": "LIGT",
   "license": "MIT",
   "engines": {
-    "node": ">=24"
+    "node": ">=24.18.0"
   },
+  "packageManager": "npm@11.17.0",
   "prettier": {
     "plugins": [
       "prettier-plugin-go-template"
     ]
   },
   "devDependencies": {
+    "@fontsource-variable/noto-serif-sc": "5.2.10",
+    "@fontsource/source-code-pro": "5.2.7",
     "pagefind": "^1.5.2",
     "prettier": "^3.8.3",
     "prettier-plugin-go-template": "^0.0.15",

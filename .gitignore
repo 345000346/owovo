@@ -5,6 +5,8 @@
 .hugo_build.lock
 hugo_stats.json
 /static/css/
+/static/fonts/
+/assets/css/fonts.css
 /static/js/
 
 # Environment files

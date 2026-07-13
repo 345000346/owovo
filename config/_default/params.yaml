@@ -22,5 +22,4 @@ postMetaDateFormat: "2006-01-02"
 
 # 暗色模式：无用户选择时跟随系统（localStorage key: theme = light|dark|system）
 
-# Google Fonts（后续可改为自托管）
-fontsLink: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+# 本地字体由 Fontsource 在构建时同步到 static/fonts。
