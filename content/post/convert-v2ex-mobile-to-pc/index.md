@@ -28,15 +28,15 @@ categories: ["技术"]
 
 点击这个
 
-![Tampermonkey 扩展安装页面](https://i.loli.net/2019/09/03/CHa2kXP53yMghsc.png)
+![Tampermonkey 扩展安装页面](tampermonkey-install.png)
 
 或者
 
-![Tampermonkey 安装确认界面](https://i.loli.net/2019/09/03/gVIfv9TleN7CWsz.png)
+![Tampermonkey 安装确认界面](tampermonkey-confirm.png)
 
 进入新建脚本
 
-![Tampermonkey 新建脚本界面](https://i.loli.net/2019/09/03/ZyDmP1CxTv8p5BW.png)
+![Tampermonkey 新建脚本界面](tampermonkey-script-editor.png)
 
 将下面一段代码复制进去
 
