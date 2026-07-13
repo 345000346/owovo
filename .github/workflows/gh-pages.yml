@@ -16,7 +16,9 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    env:
+      HUGO_CACHEDIR: ${{ runner.temp }}/hugo-cache
     steps:
       - name: Checkout
         # v6.0.2
@@ -44,6 +46,15 @@ jobs:
           node-version: ${{ steps.node-version.outputs.version }}
           cache: "npm"
           cache-dependency-path: package-lock.json
+
+      - name: Restore Hugo cache
+        # v4.2.3
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ${{ env.HUGO_CACHEDIR }}
+          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('assets/**', 'config/**', 'content/**', 'data/**', 'layouts/**') }}
+          restore-keys: |
+            ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
 
       - name: Install root dependencies
         run: npm ci
@@ -74,7 +85,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
     steps:
       - name: Deploy to GitHub Pages
