@@ -20,7 +20,7 @@
     {{- $htmlTitle = $htmlTitle | default (delimit (last 1 (split (strings.TrimSuffix "/_index.md" $path) "/")) " ") -}}
 {{- end -}}
 
-{{- $htmlTitle = partial "utils/markdownify.html" (dict "raw" $htmlTitle) -}}
+{{- $htmlTitle = $htmlTitle | markdownify | safeHTML -}}
 
 {{- $rawTitle := $htmlTitle | plainify | htmlUnescape | strings.TrimSpace -}}
 

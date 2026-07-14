@@ -1,4 +1,4 @@
-<!-- https://github.com/reuixiy/hugo-theme-meme/issues/141 -->
+{{- /* RSS/HTML: rewrite root-relative and fragment links to absolute URLs for feed consumers. */ -}}
 {{- $ := index . "$" -}}
 {{- $content := .content -}}
 {{- $baseURL := "" | absLangURL | strings.TrimSuffix "/" -}}

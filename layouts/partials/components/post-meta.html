@@ -4,7 +4,7 @@
 <div class="post-meta">
     {{ if not $.PublishDate.IsZero }}
         {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "calendar-alt" "class" "post-meta-icon") }}
-        <time datetime="{{ $.PublishDate.Format "2006-01-02T15:04:05-07:00" }}" class="post-meta-item published dt-published">{{ $icon }}&nbsp;{{ $.PublishDate.Format $.Site.Params.postMetaDateFormat }}</time>
+        <time datetime="{{ $.PublishDate.Format "2006-01-02T15:04:05-07:00" }}" class="post-meta-item published">{{ $icon }}&nbsp;{{ $.PublishDate.Format $.Site.Params.postMetaDateFormat }}</time>
     {{ end }}
     {{ if and $isPost (not $.Lastmod.IsZero) (ne ($.Lastmod.Format "2006-01-02") ($.PublishDate.Format "2006-01-02")) }}
         {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "edit" "class" "post-meta-icon") }}
@@ -13,7 +13,7 @@
     {{ with $.Params.categories }}
         <span class="post-meta-item category">
             {{- partial "utils/icon.html" (dict "$" $ "name" "folder" "class" "post-meta-icon") -}}&nbsp;
-            {{- partial "utils/taxonomy-links.html" (dict "$" $ "taxonomy" "categories" "terms" . "class" "category-link p-category" "delimiter" "/") -}}
+            {{- partial "utils/taxonomy-links.html" (dict "$" $ "taxonomy" "categories" "terms" . "class" "category-link" "delimiter" "/") -}}
         </span>
     {{ end }}
     {{ if $isPost }}

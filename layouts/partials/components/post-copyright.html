@@ -3,7 +3,7 @@
 {{ with $author.name }}
     <ul class="post-copyright">
         <li class="copyright-item author">
-            <span class="copyright-item-text">作者</span>：<span class="p-author h-card">{{ . }}</span>
+            <span class="copyright-item-text">作者</span>：{{ . }}
         </li>
         {{ if $source }}
             <li class="copyright-item link"><span class="copyright-item-text">链接</span>：<a href="{{ $source }}" target="_blank" rel="external noopener">{{ $source }}</a></li>

@@ -1,2 +1,2 @@
-{{- /* Single-site post predicate — use instead of scattering eq .Section "post". */ -}}
-{{- return eq .Section "post" -}}
+{{- /* Post page: section post and a single page (not section/list/term). */ -}}
+{{- return and .IsPage (eq .Section "post") -}}

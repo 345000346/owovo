@@ -1,0 +1,2 @@
+{{- /* Root about page (content/about.md). Prefer this over Section / RelPermalink checks. */ -}}
+{{- return and .IsPage .File (eq .File.ContentBaseName "about") -}}

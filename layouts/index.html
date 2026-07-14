@@ -4,13 +4,13 @@
             {{ $pages := where .Site.RegularPages "Section" "eq" "post" }}
             {{ $paginator := .Paginate $pages }}
             {{ range $paginator.Pages }}
-                <article class="content post home h-entry">
-                    <h2 class="post-title p-name">
-                        <a href="{{ .RelPermalink }}" class="summary-title-link u-url">{{ (partial "utils/title.html" (dict "$" . "title" .LinkTitle)).htmlTitle }}</a>
+                <article class="content post home">
+                    <h2 class="post-title">
+                        <a href="{{ .RelPermalink }}" class="summary-title-link">{{ (partial "utils/title.html" (dict "$" . "title" .LinkTitle)).htmlTitle }}</a>
                     </h2>
                     {{ partial "components/post-meta.html" (dict "$" . "isHome" true) }}
-                    <div class="summary p-summary">
-                        {{ partial "utils/summary.html" . }}
+                    <div class="summary">
+                        {{ .Summary | plainify | htmlUnescape | strings.TrimSpace }}
                     </div>
                     {{ if or .Truncated .Params.summary }}
                         <div class="read-more-container">
