@@ -32,7 +32,7 @@ layouts/                  # 站点模板（已压平，不再使用 themes/）
   search/                 # Pagefind 搜索页
   shortcodes/             # 自定义 shortcodes
 assets/
-  js/                     # ES modules：theme、navigation、scroll-ui、article、badges、search
+  js/                     # ES modules：theme / navigation / scroll-ui（Concat 为 site.js）、article、badges、search
   scss/                   # Dart Sass：main.scss 为入口，视觉 token 在 utils/_variables.scss
   css/fonts.css           # 由 sync-fonts 生成（gitignore）
 data/                     # Socials.toml、SVG.toml
@@ -46,14 +46,17 @@ archetypes/default.md     # 新文章 front matter 模板
 
 - **单站点应用**：不再使用 `theme: owovo` 主题边界；`layouts` / `assets` 均在仓库根目录。
 - **单语（简体中文）**：不使用 Hugo i18n；UI 文案直接写在模板中。`defaultContentLanguage: zh-cn` 与 `locale` 仍用于 `lang` / SEO / Pagefind。
-- **配置最小化**：视觉常量进入 SCSS，功能默认写死在模板中；`params` 只保留作者、描述、主题色等运营数据。
+- **配置最小化**：视觉常量进入 SCSS，功能默认写死在模板中；`params` 只保留作者、描述、主题色等运营数据。`themeColor` / `themeColorDark` 为必填。
 - **Dart Sass**：`assets/scss/main.scss` 通过 `css.Sass`（`dartsass` + `sass-embedded`）编译；SCSS 使用 `@use` 模块系统。
 - **JS 按能力拆分**：
-  - 全站：`theme.js`、`navigation.js`、`scroll-ui.js`
+  - 全站源码：`theme.js`、`navigation.js`、`scroll-ui.js`；构建时 `resources.Concat` 为单一 `js/site.js` 再 Minify + Fingerprint（一请求、源码分文件）
+  - FOUC 内联脚本与 `theme.js` 共用契约（见 `theme.js` 文件头注释）
   - 文章页：`article.js`（代码复制）
   - 关于页：`themed-badges.js`（社交徽章明暗主题）
   - 搜索页：Pagefind Default UI + `search.js`
-  - 带 `?hl=` 时按需加载 `search-highlight.js`
+  - 带 `?hl=` 时：`search-highlight-loader`（`<template data-*>` + 内联 loader）注入 `search-highlight.js` → `import` Pagefind highlight（URL 只放 data-*，不进 JS 字面量）
+  - taxonomy 列表页仅支持 `tags` / `categories`（其它 `warnf` + 可见兜底文案）
+  - SEO 出口：`partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）
 - **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 扫描可见文案（`content` / `layouts`），按 `unicode-range` 过滤 Fontsource 官方 `index.css` 并只复制命中分片（始终包含 latin / latin-ext），不重写 `@font-face` 模板。
 - **Pagefind 搜索**：构建后 `pagefind --site public`；**Default UI 为有意选择**，请勿擅自迁移 Component UI。
 - **CI/CD**：GitHub Actions 在 main 推送时 `format:check` → `build` → deploy Pages；PR 只构建不部署。
@@ -62,11 +65,13 @@ archetypes/default.md     # 新文章 front matter 模板
 
 - partials 传参可使用字典：`{{ partial "utils/icon.html" (dict "$" . "name" "tag") }}`
 - 命名风格：小写路径，连字符分隔
-- 判断文章页优先使用 `partial "utils/is-post.html"`，不要散落 `eq .Section "post"`
+- 判断文章页使用 `partial "utils/is-post.html"`（`IsPage` 且 `Section == post`），不要散落 Section 判断
+- 判断关于页使用 `partial "utils/is-about.html"`（`content/about.md` 的 ContentBaseName）
+- 搜索区高亮 loader：`partials/components/search-highlight-loader.html`；在 head 中对 `ne .Section "search"` 调用即可
 - UI 文案直接写简体中文，不要再引入 `i18n/` 或 `{{ i18n }}`
 - 外链在 render hook 中统一 `target="_blank" rel="external noopener"`
 - JS / CSS 经 `resources.Minify | resources.Fingerprint`，模板输出 `integrity` 与 `crossorigin="anonymous"`
-- `layouts/` 不纳入 Prettier（Go template 插件对部分语法不兼容）；其余文件走 `format:check`
+- `layouts/` 不纳入 Prettier（Go template 与 Prettier 不兼容）；其余文件走 `format:check`
 
 ## 文章操作
 
@@ -96,7 +101,12 @@ npm run build:site -- --panicOnWarning --logLevel warn
 ## 已知技术选择
 
 - **Pagefind 搜索使用 Default UI**：视觉风格更贴合本站，请勿擅自迁移 Component UI。
+- **搜索结果页内高亮（`?hl=`）保留**：实现见 `partials/components/search-highlight-loader.html`；资源 URL 放在 `<template id="search-highlight-config">` 的 `data-*`，loader 用 `getAttribute` 读取（勿把 Fingerprint URL 写进 JS 字面量 / `dataset.x =`，Hugo `--minify` 会破坏）。
 - **SCSS 使用 `@use` 模块系统**：入口与各 partial 均已迁移，新增样式请继续用 `@use`，不要引入 `@import`。
+- **Favicon**：仅 `icons/favicon.svg` + `icons/apple-touch-icon.png`（无 ICO/96 PNG）。
+- **无 Microformats**（`h-entry` 等已移除）；结构化数据以 JSON-LD + OG + Twitter 为准。
+- **分类 taxonomy 保留、菜单不入口**（L3）：`/categories/` 可访问；样式为扁平列表，不是树。
 - **无访问统计脚本**：历史上的 Vercount 相关代码已移除；若重新接入统计，需完整补齐脚本、模板、样式与隐私说明。
 - **无 i18n 层**：单语站直接硬编码简体中文；若将来要多语言，再引入 `i18n/` 与 `{{ i18n }}`。
 - **独立页 `static/love.html`**：不走 Hugo 模板管线，已 `noindex`；修改时勿与主站 partial 混用假设。
+- **关于页 shields / `themed-badges.js`**：有意保留第三方徽章；勿在「精简」中擅自删除。
