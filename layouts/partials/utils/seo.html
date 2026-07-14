@@ -1,0 +1,144 @@
+{{- /*
+  SEO: author meta + Open Graph + Twitter Cards + JSON-LD.
+  Call: partial "utils/seo.html" (dict "$" $ "description" $description)
+*/ -}}
+{{- $ := index . "$" -}}
+{{- $description := .description -}}
+{{- $isPost := partial "utils/is-post.html" $ -}}
+{{- $title := (partial "utils/title.html" (dict "$" $ "title" $.Title)).rawTitle -}}
+{{- $author := partial "utils/author.html" $ -}}
+
+{{- with $author.name -}}
+    <meta name="author" content="{{ . }}" />
+{{- end -}}
+
+{{- $pubDate := $.PublishDate -}}
+{{- if $pubDate.IsZero -}}
+    {{- $pubDate = $.Site.Params.siteCreatedTime -}}
+{{- end -}}
+{{- $pubDate = dateFormat "2006-01-02T15:04:05-07:00" $pubDate -}}
+{{- $modDate := $.Lastmod -}}
+{{- if $modDate.IsZero -}}
+    {{- $modDate = $.Site.Params.siteCreatedTime -}}
+{{- end -}}
+{{- $modDate = dateFormat "2006-01-02T15:04:05-07:00" $modDate -}}
+
+{{- $images := slice -}}
+{{- with $.Params.images -}}
+    {{- range . -}}
+        {{- $images = $images | append (. | absURL) -}}
+    {{- end -}}
+{{- else -}}
+    {{- with $.Site.Params.siteLogo -}}
+        {{- $images = slice (. | absURL) -}}
+    {{- end -}}
+{{- end -}}
+
+{{- $license := "" -}}
+{{- with $author.copyright -}}
+    {{- $license = . | plainify | htmlUnescape | replaceRE `^\[[^\]]+\]\(([^)]+)\)$` `$1` -}}
+{{- end -}}
+{{- $baseURL := "" | absLangURL -}}
+
+{{- $person := dict "@type" "Person" -}}
+{{- with $author.avatar -}}
+    {{- $person = merge $person (dict "image" (. | absURL)) -}}
+{{- end -}}
+{{- with $author.name -}}
+    {{- $person = merge $person (dict "name" .) -}}
+{{- end -}}
+{{- $hasPerson := or $author.name $author.avatar -}}
+
+{{- $publisher := dict "@type" "Organization" "name" $.Site.Title "url" $baseURL -}}
+{{- with $.Site.Params.siteLogo -}}
+    {{- $publisher = merge $publisher (dict "logo" (dict "@type" "ImageObject" "url" (. | absURL))) -}}
+{{- end -}}
+
+{{- /* Open Graph */ -}}
+<meta property="og:title" content="{{ $title }}" />
+<meta property="og:description" content="{{ $description }}" />
+<meta property="og:url" content="{{ $.Permalink }}" />
+<meta property="og:site_name" content="{{ $.Site.Title }}" />
+{{- $localeParts := split $.Site.Language.Lang "-" -}}
+{{- $ogLocale := lower (index $localeParts 0) -}}
+{{- if gt (len $localeParts) 1 -}}
+    {{- $ogLocale = printf "%s_%s" $ogLocale (upper (index $localeParts 1)) -}}
+{{- end -}}
+<meta property="og:locale" content="{{ $ogLocale }}" />
+{{- range $images -}}
+    <meta property="og:image" content="{{ . }}" />
+    <meta property="og:image:alt" content="{{ $title }}" />
+{{- end -}}
+{{- if $isPost -}}
+    <meta property="og:type" content="article" />
+    <meta property="article:published_time" content="{{ $pubDate }}" />
+    <meta property="article:modified_time" content="{{ $modDate }}" />
+    {{- if not $.ExpiryDate.IsZero -}}
+        <meta property="article:expiration_time" content="{{ $.ExpiryDate.Format "2006-01-02T15:04:05-07:00" }}" />
+    {{- end }}
+    <meta property="article:section" content="{{ $.Section }}" />
+{{- else -}}
+    <meta property="og:type" content="website" />
+{{- end }}
+
+{{- /* Twitter Cards */ -}}
+{{- with $images -}}
+    <meta name="twitter:card" content="summary_large_image" />
+{{- else -}}
+    <meta name="twitter:card" content="summary" />
+{{- end }}
+<meta name="twitter:title" content="{{ $title }}" />
+<meta name="twitter:description" content="{{ $description }}" />
+{{- with $images }}
+    <meta name="twitter:image" content="{{ index . 0 }}" />
+    <meta name="twitter:image:alt" content="{{ $title }}" />
+{{- end }}
+
+{{- /* JSON-LD: branch-specific fields, then shared optional tail */ -}}
+{{- $ld := dict
+    "@context" "https://schema.org"
+    "datePublished" $pubDate
+    "dateModified" $modDate
+    "description" $description
+-}}
+{{- if $.IsHome -}}
+    {{- $ld = merge $ld (dict "@type" "WebSite" "url" $baseURL "name" $title) -}}
+    {{- with $images -}}
+        {{- $ld = merge $ld (dict "image" (index . 0)) -}}
+    {{- end -}}
+    {{- if $hasPerson -}}
+        {{- $ld = merge $ld (dict "author" $person) -}}
+    {{- end -}}
+{{- else if $isPost -}}
+    {{- $ld = merge $ld (dict
+        "@type" "BlogPosting"
+        "url" $.Permalink
+        "headline" $title
+        "inLanguage" $.Site.Language.Locale
+        "articleSection" $.Section
+        "wordCount" $.WordCount
+        "publisher" $publisher
+        "mainEntityOfPage" (dict "@type" "WebPage" "@id" $.Permalink)
+    ) -}}
+    {{- with $images -}}
+        {{- $ld = merge $ld (dict "image" .) -}}
+    {{- end -}}
+    {{- if $hasPerson -}}
+        {{- $ld = merge $ld (dict "author" $person) -}}
+    {{- end -}}
+{{- else -}}
+    {{- $ld = merge $ld (dict
+        "@type" "WebPage"
+        "url" $.Permalink
+        "name" $title
+        "publisher" $publisher
+        "mainEntityOfPage" (dict "@type" "WebSite" "@id" $baseURL)
+    ) -}}
+    {{- with $images -}}
+        {{- $ld = merge $ld (dict "image" .) -}}
+    {{- end -}}
+{{- end -}}
+{{- with $license -}}
+    {{- $ld = merge $ld (dict "license" .) -}}
+{{- end -}}
+<script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
