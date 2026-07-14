@@ -3,15 +3,15 @@
 {{ with $author.name }}
     <ul class="post-copyright">
         <li class="copyright-item author">
-            <span class="copyright-item-text">{{ i18n "copyrightAuthor" }}</span>{{ i18n "colon" }}<span class="p-author h-card">{{ . }}</span>
+            <span class="copyright-item-text">作者</span>：<span class="p-author h-card">{{ . }}</span>
         </li>
         {{ if $source }}
-            <li class="copyright-item link"><span class="copyright-item-text">{{ i18n "copyrightLink" }}</span>{{ i18n "colon" }}<a href="{{ $source }}" target="_blank" rel="external noopener">{{ $source }}</a></li>
+            <li class="copyright-item link"><span class="copyright-item-text">链接</span>：<a href="{{ $source }}" target="_blank" rel="external noopener">{{ $source }}</a></li>
         {{ else }}
-            <li class="copyright-item link"><span class="copyright-item-text">{{ i18n "copyrightLink" }}</span>{{ i18n "colon" }}<a href="{{ $.RelPermalink }}">{{ $.Permalink }}</a></li>
+            <li class="copyright-item link"><span class="copyright-item-text">链接</span>：<a href="{{ $.RelPermalink }}">{{ $.Permalink }}</a></li>
         {{ end }}
         {{ with $author.copyright }}
-            <li class="copyright-item license"><span class="copyright-item-text">{{ i18n "copyrightLicense" }}</span>{{ i18n "colon" }}{{ . | markdownify }}</li>
+            <li class="copyright-item license"><span class="copyright-item-text">许可</span>：{{ . | markdownify }}</li>
         {{ end }}
     </ul>
 {{ end }}

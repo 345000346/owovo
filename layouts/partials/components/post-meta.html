@@ -18,7 +18,7 @@
     {{ end }}
     {{ if $isPost }}
         {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "clock" "class" "post-meta-icon") }}
-        <span class="post-meta-item reading-time">{{ $icon }}&nbsp;{{ $.ReadingTime }}&nbsp;{{ i18n "minute" $.ReadingTime }}</span>
+        <span class="post-meta-item reading-time">{{ $icon }}&nbsp;{{ $.ReadingTime }}&nbsp;分钟</span>
     {{ end }}
     {{- if $isHome -}}
         {{- with $.Params.tags -}}

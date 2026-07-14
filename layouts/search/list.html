@@ -36,6 +36,6 @@
     {{- $search := resources.Get "js/search.js" | resources.Minify | resources.Fingerprint -}}
     <script type="module" src="{{ $search.RelPermalink }}" integrity="{{ $search.Data.Integrity }}" crossorigin="anonymous"></script>
     <noscript>
-        <p class="search-noscript">{{ i18n "pagefindSearchNoScript" }}</p>
+        <p class="search-noscript">搜索需要启用 JavaScript。</p>
     </noscript>
 {{ end }}
