@@ -1,5 +1,5 @@
 (() => {
-  // A3-light: only loaded when ?hl= is present (see head bootstrap).
+  // Loaded only when ?hl= is present (see head loader).
   // Dynamic import keeps the common path free of Pagefind highlight cost;
   // failures degrade silently (no highlight) rather than breaking the page.
   const highlightTerms = new URLSearchParams(window.location.search).getAll(
@@ -14,8 +14,8 @@
     "script[data-pagefind-highlight][type='module']",
   );
   const highlightSrc =
-    scriptEl?.dataset?.pagefindHighlight ||
-    document.documentElement.dataset.pagefindHighlight ||
+    scriptEl?.getAttribute("data-pagefind-highlight") ||
+    document.documentElement.getAttribute("data-pagefind-highlight") ||
     "/pagefind/pagefind-highlight.js";
 
   import(highlightSrc)

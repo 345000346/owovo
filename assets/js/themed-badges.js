@@ -1,6 +1,6 @@
 "use strict";
 
-// Theme for badges: FOUC + theme.js always set data-theme before this module runs.
+// Theme for badges: FOUC + theme.js (in site bundle) set data-theme before this runs.
 const getResolvedTheme = () => {
   const theme = document.documentElement.getAttribute("data-theme");
   return theme === "dark" ? "dark" : "light";
