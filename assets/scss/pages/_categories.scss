@@ -1,0 +1,23 @@
+@use "../utils/functions";
+
+.list-categories {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  > li {
+    margin: 0.5em 0;
+  }
+}
+
+.category-item {
+  color: var(--color-primary);
+  font-size: 1.2em;
+  &:hover {
+    color: functions.alpha(var(--color-primary), 0.75);
+  }
+}
+
+.category-count {
+  color: var(--color-contrast-medium);
+}

@@ -11,6 +11,41 @@
       color: var(--color-primary);
     }
   }
+
+  .post-meta-tag-link {
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+
+    &:hover {
+      border-bottom-color: currentColor;
+    }
+  }
+
+  // 标签：全部展示；放不下就换行
+  .post-meta-item.post-meta-tags {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.15em 0.55em;
+  }
+
+  .post-meta-tags-icon {
+    display: inline-flex;
+    align-items: center;
+
+    .post-meta-icon {
+      margin-bottom: 0;
+    }
+  }
+
+  .post-meta-item.post-meta-tags .post-meta-tag-link {
+    white-space: nowrap;
+  }
+
+  .post-meta-sep {
+    opacity: 0.6;
+  }
 }
 
 .home {

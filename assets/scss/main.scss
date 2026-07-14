@@ -27,9 +27,7 @@
 @use "components/about-socials";
 
 @use "pages/home-posts";
-@use "pages/tree-categories";
+@use "pages/categories";
 @use "pages/tag-cloud";
 @use "pages/404" as page404;
 @use "base/responsive";
-
-@use "custom/custom";
