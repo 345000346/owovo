@@ -2,14 +2,28 @@
 
     {{ hugo.Generator }}
 
-    {{- $themeColor := .Site.Params.themeColor | default "#ffffff" -}}
-    {{- $themeColorDark := .Site.Params.themeColorDark | default "#16171d" -}}
+    {{- /* themeColor / themeColorDark are required in params.yaml (no silent empty meta). */ -}}
+    {{- if not .Site.Params.themeColor -}}
+        {{- warnf "params.themeColor is required" -}}
+    {{- end -}}
+    {{- if not .Site.Params.themeColorDark -}}
+        {{- warnf "params.themeColorDark is required" -}}
+    {{- end -}}
+    {{- $themeColor := .Site.Params.themeColor -}}
+    {{- $themeColorDark := .Site.Params.themeColorDark -}}
     <meta name="theme-color" content="{{ $themeColor }}" data-theme-color-light="{{ $themeColor }}" data-theme-color-dark="{{ $themeColorDark }}" />
 
+    {{/*
+      FOUC bootstrap — keep rules aligned with assets/js/theme.js (see that file’s contract).
+      Minimal: read preference → resolve light|dark → set data-* + theme-color. No cycle / events here.
+    */}}
     <script>
       (function () {
         try {
           var preference = localStorage.getItem("theme") || "system";
+          if (preference !== "light" && preference !== "dark" && preference !== "system") {
+            preference = "system";
+          }
           var theme = preference;
           if (preference === "system") {
             theme =
@@ -17,12 +31,8 @@
               window.matchMedia("(prefers-color-scheme: dark)").matches
                 ? "dark"
                 : "light";
-          }
-          if (theme !== "dark" && theme !== "light") {
+          } else if (theme !== "dark") {
             theme = "light";
-          }
-          if (preference !== "dark" && preference !== "light" && preference !== "system") {
-            preference = "system";
           }
           document.documentElement.setAttribute("data-theme", theme);
           document.documentElement.setAttribute("data-theme-preference", preference);
@@ -45,32 +55,13 @@
     <meta name="color-scheme" content="light dark" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
-    <meta http-equiv="Cache-Control" content="no-transform" />
-    <meta http-equiv="Cache-Control" content="no-siteapp" />
 
     <title>{{ (partial "utils/title.html" (dict "$" . "title" .Title)).title }}</title>
 
     {{- partial "style.html" . }}
 
     {{- if and (ne .Section "search") (ne .Kind "404") -}}
-        {{- $highlightPath := "pagefind/pagefind-highlight.js" | relURL -}}
-        {{- $highlight := resources.Get "js/search-highlight.js" | resources.Minify | resources.Fingerprint -}}
-        <script>
-          (function () {
-            try {
-              if (!new URLSearchParams(window.location.search).getAll("hl").some(Boolean)) {
-                return;
-              }
-              var s = document.createElement("script");
-              s.type = "module";
-              s.src = "{{ $highlight.RelPermalink }}";
-              s.integrity = "{{ $highlight.Data.Integrity }}";
-              s.crossOrigin = "anonymous";
-              s.dataset.pagefindHighlight = "{{ $highlightPath }}";
-              document.head.appendChild(s);
-            } catch (e) {}
-          })();
-        </script>
+        {{- partial "components/search-highlight-loader.html" . -}}
     {{- end }}
 
     {{ if ne .Kind "404" }}
@@ -80,22 +71,14 @@
     {{- $fonts := resources.Get "css/fonts.css" | resources.Minify | resources.Fingerprint -}}
     <link rel="stylesheet" href="{{ $fonts.RelPermalink }}" integrity="{{ $fonts.Data.Integrity }}" crossorigin="anonymous" />
 
-    {{- $author := partial "utils/author.html" . -}}
-    {{ with $author.name }}<meta name="author" content="{{ . }}" />{{ end }}
-    {{- $description := .Description | default (partial "utils/summary.html" .) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
+    {{- $description := .Description | default (.Summary | plainify | htmlUnescape | strings.TrimSpace) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
     <meta name="description" content="{{ $description }}" />
     {{- if eq .Kind "404" }}
         <meta name="robots" content="noindex,follow" />
     {{- end }}
 
-    {{- $icoFavicon := "favicon.ico" -}}
-    {{- $svgFavicon := "icons/favicon.svg" -}}
-    {{- $pngFavicon := "icons/favicon-96x96.png" -}}
-    {{- $appleTouchIcon := "icons/apple-touch-icon.png" -}}
-    <link rel="shortcut icon" type="image/x-icon" href="{{ $icoFavicon | relURL }}" />
-    <link rel="icon" type="image/svg+xml" href="{{ $svgFavicon | relURL }}" />
-    <link rel="icon" type="image/png" href="{{ $pngFavicon | relURL }}" sizes="96x96" />
-    <link rel="apple-touch-icon" href="{{ $appleTouchIcon | relURL }}" sizes="180x180" />
+    <link rel="icon" type="image/svg+xml" href="{{ "icons/favicon.svg" | relURL }}" />
+    <link rel="apple-touch-icon" href="{{ "icons/apple-touch-icon.png" | relURL }}" sizes="180x180" />
 
     {{ with .OutputFormats.Get "RSS" -}}
         <link rel="{{ .Rel }}" type="{{ .MediaType }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}" />
@@ -103,9 +86,5 @@
 
     {{- if ne .Kind "404" }}
         <link rel="canonical" href="{{ .Permalink }}" />
-        {{- $seo := partial "utils/seo-data.html" (dict "$" $ "description" $description) -}}
-        {{ partial "utils/json-ld.html" (dict "$" $ "seo" $seo) }}
-        {{ partial "utils/twitter-cards.html" (dict "$" $ "seo" $seo) }}
-        {{ partial "utils/open-graph.html" (dict "$" $ "seo" $seo) }}
+        {{ partial "utils/seo.html" (dict "$" $ "description" $description) }}
     {{- end }}
-
