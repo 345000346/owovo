@@ -1,0 +1,46 @@
+{{- /*
+  Optional ?hl= page highlight. Config lives in a <template> data-* bag so Hugo
+  --minify cannot mangle URL strings inside JS literals. Loader only injects the
+  heavy module when ?hl= is present at runtime.
+*/ -}}
+{{- $highlightPath := "pagefind/pagefind-highlight.js" | relURL -}}
+{{- $highlight := resources.Get "js/search-highlight.js" | resources.Minify | resources.Fingerprint -}}
+<template
+    id="search-highlight-config"
+    data-module="{{ $highlight.RelPermalink }}"
+    data-integrity="{{ $highlight.Data.Integrity }}"
+    data-pagefind-highlight="{{ $highlightPath }}"
+></template>
+<script>
+  (function () {
+    try {
+      if (!new URLSearchParams(window.location.search).getAll("hl").some(Boolean)) {
+        return;
+      }
+      var c = document.getElementById("search-highlight-config");
+      if (!c) {
+        return;
+      }
+      var pagefindPath = c.getAttribute("data-pagefind-highlight") || "";
+      var moduleSrc = c.getAttribute("data-module") || "";
+      var integrity = c.getAttribute("data-integrity") || "";
+      if (pagefindPath) {
+        document.documentElement.setAttribute("data-pagefind-highlight", pagefindPath);
+      }
+      if (!moduleSrc) {
+        return;
+      }
+      var s = document.createElement("script");
+      s.type = "module";
+      s.src = moduleSrc;
+      if (integrity) {
+        s.integrity = integrity;
+        s.crossOrigin = "anonymous";
+      }
+      if (pagefindPath) {
+        s.setAttribute("data-pagefind-highlight", pagefindPath);
+      }
+      document.head.appendChild(s);
+    } catch (e) {}
+  })();
+</script>
