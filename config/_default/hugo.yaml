@@ -18,7 +18,7 @@ menu:
       weight: 3
       post: "tag"
     - name: "想法"
-      url: "/ideas/"
+      pageRef: "/ideas/"
       weight: 4
       post: "edit"
     - name: "关于"

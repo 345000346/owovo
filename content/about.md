@@ -19,7 +19,8 @@ toc: true
 
 - **博客框架**：Hugo
 - **部署方式**：GitHub Actions + GitHub Pages
-- **CDN加速**：jsDelivr
+- **字体与静态资源**：Fontsource 自托管（构建时同步）
+- **全文搜索**：Pagefind
 - **版本控制**：Git
 
 ---
@@ -97,6 +98,7 @@ toc: true
 
 - **2014年**：首次使用本域名搭建博客
 - **2020年**：迁移至GitHub，采用Git管理
-- **2021年**：引入jsDelivr CDN加速
+- **2021年**：曾使用 jsDelivr CDN 加速静态资源
 - **2023年**：全面优化博客性能与内容
 - **2024年底**：全面重构博客
+- **2026年**：字体改为 Fontsource 自托管，去掉第三方 CDN 依赖
