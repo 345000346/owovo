@@ -63,20 +63,9 @@ outputFormats:
 
 timeZone: "Asia/Shanghai"
 
-timeout: "120s"
+timeout: "30s"
 
 enableRobotsTXT: true
-
-enableEmoji: true
-
-# 资源缓存
-caches:
-  getresource:
-    dir: ":cacheDir/:project"
-    maxAge: "12h"
-  images:
-    dir: ":cacheDir/:project"
-    maxAge: "24h"
 
 security:
   exec:
