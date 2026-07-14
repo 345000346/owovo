@@ -23,17 +23,11 @@
     "node": ">=24.18.0"
   },
   "packageManager": "npm@11.17.0",
-  "prettier": {
-    "plugins": [
-      "prettier-plugin-go-template"
-    ]
-  },
   "devDependencies": {
     "@fontsource-variable/noto-serif-sc": "5.2.10",
     "@fontsource/source-code-pro": "5.2.7",
     "pagefind": "^1.5.2",
     "prettier": "^3.9.5",
-    "prettier-plugin-go-template": "^0.0.15",
     "sass-embedded": "^1.100.0"
   }
 }
