@@ -1,13 +1,5 @@
-{{- $page := .Page -}}
 {{- $level := .Level -}}
 {{- $anchor := .Anchor -}}
-{{- $enableAnchor := true -}}
-{{- if isset $page.Params "anchor" -}}
-    {{- $enableAnchor = $page.Params.anchor -}}
-{{- end -}}
 <h{{ $level }} id="{{ $anchor }}">
-{{- if $enableAnchor -}}
-    <a href="#{{ $anchor }}" class="anchor-link" aria-label="本节永久链接">§</a>
-{{- end -}}
 {{ .Text | safeHTML }}
 </h{{ $level }}>

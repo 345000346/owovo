@@ -17,11 +17,6 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
   .main-inner {
     width: auto !important;
   }
-  .anchor-link {
-    position: relative;
-    transform: none;
-    float: right;
-  }
   #back-to-top {
     display: none;
   }
