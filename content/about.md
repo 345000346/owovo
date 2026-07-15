@@ -2,6 +2,7 @@
 title: "关于我"
 date: 2020-04-27T20:53:11+08:00
 type: page
+layout: about
 toc: true
 ---
 

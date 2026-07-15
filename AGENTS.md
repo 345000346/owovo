@@ -27,7 +27,8 @@ config/_default/          # Hugo 配置
   markup.yaml             # Goldmark、Chroma、TOC
   params.yaml             # 运营参数（作者、描述、主题色等）
 layouts/                  # 站点模板（已压平，不再使用 themes/）
-  _default/               # baseof、list、single、terms + render hooks
+  _default/               # baseof、list、single、terms + render hooks、404
+  post/                   # 文章 single + section 列表（/post/ 重定向到 /archives/）
   partials/               # 组件与工具 partials
   search/                 # Pagefind 搜索页
   shortcodes/             # 自定义 shortcodes
@@ -61,12 +62,27 @@ archetypes/default.md     # 新文章 front matter 模板
 - **Pagefind 搜索**：构建后 `pagefind --site public`；**Default UI 为有意选择**，请勿擅自迁移 Component UI。
 - **CI/CD**：GitHub Actions 在 main 推送时 `format:check` → `build` → deploy Pages；PR 只构建不部署。
 
+## 内容模型（列表职责）
+
+| 角色         | 路径           | 说明                                                            |
+| ------------ | -------------- | --------------------------------------------------------------- |
+| 文章实体     | `/post/:slug/` | `content/post/<slug>/index.md`；模板 `layouts/post/single.html` |
+| 权威文章列表 | `/archives/`   | 菜单「文章」入口；`where Section==post`，按年分组               |
+| 首页         | `/`            | 同一批文章，摘要 + 分页（不是归档的替代）                       |
+| section 根   | `/post/`       | **不作为列表**；`layouts/post/list.html` 重定向到 `/archives/`  |
+| 关于         | `/about/`      | `layout: about`（显式身份，供徽章脚本等）                       |
+| 普通页       | 如 `/ideas/`   | `type: page`，走 `layouts/_default/single.html`                 |
+| 搜索         | `/search/`     | Pagefind Default UI                                             |
+| 纪念册       | `/love.html`   | `static/` 旁路，不进 Hugo / Pagefind                            |
+
 ## 模板约定
 
 - partials 传参可使用字典：`{{ partial "utils/icon.html" (dict "$" . "name" "tag") }}`
 - 命名风格：小写路径，连字符分隔
-- 判断文章页使用 `partial "utils/is-post.html"`（`IsPage` 且 `Section == post`），不要散落 Section 判断
-- 判断关于页使用 `partial "utils/is-about.html"`（`content/about.md` 的 ContentBaseName）
+- 判断文章页使用 `partial "utils/is-post.html"`（`IsPage` 且 `Section == post`），不要散落 Section 判断；文章专属 UI 写在 `layouts/post/single.html`，勿再堆进通用 single
+- 判断关于页使用 `partial "utils/is-about.html"`（front matter `layout: about`），不要用 ContentBaseName / 路径推断
+- 通用页：`layouts/_default/single.html`（meta + 可选 `toc: true` + body）；文章壳勿复制到普通页
+- 404：`layouts/404.html` 只 `define "main"`，共用 `baseof`（含顶栏页脚）
 - 搜索区高亮 loader：`partials/components/search-highlight-loader.html`；在 head 中对 `ne .Section "search"` 调用即可
 - UI 文案直接写简体中文，不要再引入 `i18n/` 或 `{{ i18n }}`
 - 外链在 render hook 中统一 `target="_blank" rel="external noopener"`
@@ -76,9 +92,10 @@ archetypes/default.md     # 新文章 front matter 模板
 ## 文章操作
 
 - 新文章：`content/post/<slug>/index.md`，front matter 参考 `archetypes/default.md`
-- 转载用 `source: <url>`；`outdated: true` 显示归档提示；`toc: false` 可关闭目录
+- 新 slug 建议全小写 kebab-case；`disablePathToLower: true` 仅为兼容历史含大写 slug，勿扩大债务
+- 转载用 `source: <url>`；`outdated: true` 显示归档提示；`toc: false` 可关闭目录（文章默认开 TOC）
+- 关于页须带 `layout: about`（及通常 `type: page`）；普通独立页用 `type: page` 即可
 - permalink：`/post/:slug/`
-- `disablePathToLower: true` — slug 保留原始大小写
 - 本地图片放在文章目录内引用；Hugo 会生成响应式 WebP
 
 ## 验证
@@ -110,3 +127,4 @@ npm run build:site -- --panicOnWarning --logLevel warn
 - **无 i18n 层**：单语站直接硬编码简体中文；若将来要多语言，再引入 `i18n/` 与 `{{ i18n }}`。
 - **独立页 `static/love.html`**：不走 Hugo 模板管线，已 `noindex`；修改时勿与主站 partial 混用假设。
 - **关于页 shields / `themed-badges.js`**：有意保留第三方徽章；勿在「精简」中擅自删除。
+- **文章列表入口唯一**：菜单与外链用 `/archives/`；`/post/` section 根仅重定向，避免与归档双列表。

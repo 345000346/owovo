@@ -1,2 +1,5 @@
-{{- /* Root about page (content/about.md). Prefer this over Section / RelPermalink checks. */ -}}
-{{- return and .IsPage .File (eq .File.ContentBaseName "about") -}}
+{{- /*
+  About page: explicit front matter layout: about (see content/about.md).
+  Prefer this over ContentBaseName / path checks so renames do not break badges.
+*/ -}}
+{{- return and .IsPage (eq .Layout "about") -}}

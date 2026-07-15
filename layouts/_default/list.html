@@ -12,6 +12,7 @@
                     {{ $pages = .Pages }}
                 {{ else if eq .Kind "section" }}
                     {{ if eq .Section "archives" }}
+                        {{- /* Canonical post list: all section=post regular pages, year groups. */ -}}
                         {{ $pages = where .Site.RegularPages "Section" "eq" "post" }}
                     {{ else }}
                         {{ $pages = .Pages }}

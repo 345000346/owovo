@@ -1,0 +1,30 @@
+{{ define "main" }}
+    <main class="main single" id="main">
+        <div class="main-inner">
+            <article class="content post">
+                <h1 class="post-title">{{ (partial "utils/title.html" (dict "$" $ "title" $.Title)).htmlTitle }}</h1>
+                {{ partial "components/post-meta.html" (dict "$" . "isHome" false "isPost" true) }}
+                {{ partial "components/post-outdated.html" . }}
+                {{- $enableTOC := true -}}
+                {{- if isset .Params "toc" -}}
+                    {{- $enableTOC = .Params.toc -}}
+                {{- end -}}
+                {{- if $enableTOC -}}
+                    {{- partial "utils/toc.html" . -}}
+                {{- end -}}
+                <div
+                    class="post-body"
+                    data-pagefind-body
+                    data-copy-label="复制"
+                    data-copied-label="已复制"
+                    data-copy-failed-label="复制失败"
+                >
+                    {{ .Content }}
+                </div>
+                {{ partial "components/post-copyright.html" . }}
+            </article>
+            {{ partial "components/post-tags.html" . }}
+            {{ partial "components/post-nav.html" . }}
+        </div>
+    </main>
+{{ end }}

@@ -1,0 +1,23 @@
+{{ define "main" }}
+    {{- /*
+      /post/ is the article section root, not a public list.
+      Canonical list is /archives/ (year groups). Redirect so the section URL
+      is not a second, divergent index.
+    */ -}}
+    {{- $archives := "/archives/" | relLangURL -}}
+    <main class="main list" id="main">
+        <div class="main-inner">
+            <div class="content list-group">
+                <h1 class="list-title">文章</h1>
+                <p>
+                    文章列表已移至
+                    <a href="{{ $archives }}">归档</a>。
+                </p>
+                <meta http-equiv="refresh" content="0;url={{ $archives }}" />
+                <script>
+                    location.replace({{ $archives | jsonify | safeJS }});
+                </script>
+            </div>
+        </div>
+    </main>
+{{ end }}
