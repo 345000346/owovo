@@ -16,28 +16,6 @@
   }
 }
 
-@if (variables.$listDatePosition == "right") {
-  .list-item-title {
-    flex: 1;
-  }
-  .list-item-time {
-    text-align: right;
-    margin-left: 1em !important;
-  }
-}
-@if (variables.$listDatePosition == "left") {
-  .list-item {
-    flex-direction: row-reverse;
-  }
-  .list-item-time {
-    flex: 1;
-  }
-  .list-item-title {
-    text-align: right;
-    margin-left: 1em !important;
-  }
-}
-
 .list-item {
   line-height: 2;
   position: relative;
@@ -68,12 +46,15 @@
   }
 }
 .list-item-title {
+  flex: 1;
   margin: 0 0.618em 0 2em;
   font-size: 1.2em;
   line-height: 1.5;
 }
 .list-item-time {
   margin: 0 0.618em 0 2em;
+  margin-left: 1em !important;
+  text-align: right;
   color: var(--color-contrast-medium);
   line-height: 1.5;
 }
