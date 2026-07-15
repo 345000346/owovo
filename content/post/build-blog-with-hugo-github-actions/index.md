@@ -86,12 +86,13 @@ baseURL: "https://owovo.xyz"
 .github/workflows/gh-pages.yml
 ```
 
-可以直接使用下面这份工作流：
+可以直接使用下面这份工作流（示例用 major 标签；生产仓库建议 pin 到 commit SHA，并由 Dependabot 自动升级）：
 
 ```yaml
 name: GitHub Pages
 
 on:
+  pull_request:
   push:
     branches:
       - main
@@ -101,21 +102,16 @@ permissions:
   contents: read
 
 concurrency:
-  group: github-pages
+  group: pages-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
-    permissions:
-      contents: read
-      pages: write
-      actions: write
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v7
 
       - name: Read Hugo version
         id: hugo-version
@@ -128,22 +124,17 @@ jobs:
           extended: true
 
       - name: Setup Hugo resource cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
-          path: ./resources/_gen
-          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', 'config/_default/**/*.yaml') }}
+          path: resources/_gen
+          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', 'assets/**', 'config/**', 'layouts/**', 'data/**') }}
           restore-keys: |
             ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
-            ${{ runner.os }}-hugo-
-
-      - name: Read Node.js version
-        id: node-version
-        run: echo "version=$(cat .node-version)" >> $GITHUB_OUTPUT
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ steps.node-version.outputs.version }}
+          node-version-file: ".node-version"
           cache: "npm"
           cache-dependency-path: package-lock.json
 
@@ -154,16 +145,7 @@ jobs:
         run: npm run format:check
 
       - name: Build site
-        run: |
-          npm run build:site > hugo-build.log 2>&1 || {
-            echo "::error::Hugo 构建失败"
-            cat hugo-build.log
-            exit 1
-          }
-          if grep -qi "deprecated\|WARN" hugo-build.log; then
-            echo "::warning::Hugo 构建输出包含弃用警告"
-            grep -i "deprecated\|WARN" hugo-build.log
-          fi
+        run: npm run build:site -- --panicOnWarning --logLevel warn
 
       - name: Build search
         run: npm run build:search
@@ -172,18 +154,21 @@ jobs:
         run: test -f public/pagefind/pagefind.js && test -f public/pagefind/pagefind-entry.json
 
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: ./public
 
   deploy:
+    if: github.event_name != 'pull_request'
     permissions:
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     needs: build
     steps:
       - name: Deploy to GitHub Pages
@@ -191,64 +176,66 @@ jobs:
         uses: actions/deploy-pages@v5
 ```
 
+> **说明：** 本仓库的真实工作流以 `.github/workflows/gh-pages.yml` 为准；下面解释的是同一套设计。
+
 ### 这份工作流在做什么
 
 上面这份配置包含了几个值得留意的地方：
 
 **1. 权限最小化**
 
-工作流顶层只声明了最基础的 `contents: read`，然后在每个 job 里按需声明额外权限：
+工作流顶层只声明 `contents: read`。`build` 不额外要权限：上传 Pages artifact、读写 `actions/cache` 在默认 `GITHUB_TOKEN` 下即可完成。只有真正发布的 `deploy` 才声明：
 
 ```yaml
 permissions:
-  contents: read    # 顶层基线
+  contents: read    # 顶层基线：检出代码
 
 jobs:
-  build:
-    permissions:
-      contents: read   # 检出代码
-      pages: write     # 上传 Pages 构建产物
-      actions: write   # 保存 Hugo/npm 缓存
   deploy:
     permissions:
       pages: write     # 发布到 Pages
       id-token: write  # OIDC 身份认证
 ```
 
-这样比把所有权限写在顶层更加精细：`build` 不拿 OIDC、`deploy` 不拿仓库内容，每个 job 只能做它该做的事。
+`build` 不拿 OIDC，`deploy` 不读仓库内容，每个 job 只拿它需要的权限。
 
-**2. Hugo 版本集中管理**
+**2. 并发隔离**
 
-把 Hugo 版本号写在一个单独的文件 `.hugo-version` 里：
+`concurrency.group` 按 PR 编号或 git ref 区分，避免 PR 构建与 `main` 部署互相取消。同一 ref 上的连续推送仍会取消进行中的旧 run。
+
+**3. Hugo / Node 版本集中管理**
+
+Hugo 版本写在 `.hugo-version`：
 
 ```text
-0.161.1
+0.164.0
 ```
 
-工作流通过 `Read Hugo version` 步骤读取这个文件，再传给 `peaceiris/actions-hugo`。这样以后升级 Hugo 只需要改这一个文件，不用去翻工作流配置。
+工作流读取后传给 `peaceiris/actions-hugo`。升级 Hugo 只改这一处。
 
-如果你使用 `renovate` 之类的自动更新工具，它也可以直接识别 `.hugo-version` 并自动提 PR。
+Node 用 `setup-node` 的 `node-version-file: ".node-version"`，不必再手写一步 `cat`。
 
-**3. Hugo 构建缓存**
+**4. Hugo 资源缓存**
 
 ```yaml
       - name: Setup Hugo resource cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
-          path: ./resources/_gen
-          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', 'config/_default/**/*.yaml') }}
+          path: resources/_gen
+          key: ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-${{ hashFiles('package-lock.json', 'assets/**', 'config/**', 'layouts/**', 'data/**') }}
           restore-keys: |
             ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
-            ${{ runner.os }}-hugo-
 ```
 
-Hugo 在处理 SCSS 等前端资源时，会在 `resources/_gen` 目录下生成缓存文件。加上缓存步骤后，后续构建可以直接复用这些中间产物，避免重复编译。
+Hugo 处理 SCSS、图片等资源时会把中间产物放在 `resources/_gen`。缓存 key 绑定 Hugo 版本与资产/配置/模板/数据哈希；纯改 Markdown 时仍可命中旧缓存。不要把整个 `content/**` 塞进 key，否则几乎每次发文都会强制重建缓存。
 
-缓存的 key 里包含了 Hugo 版本、`package-lock.json` 和配置文件目录的哈希值——当这些依赖发生变化时，旧缓存会自动失效，不会引入不一致的问题。
+**5. 严格构建与 npm 统一入口**
 
-**4. 使用 npm 脚本作为统一入口**
+CI 使用 `npm run build:site -- --panicOnWarning --logLevel warn`：警告直接失败，比事后 `grep` 日志更可靠。`build:site` / `build:search` 与本地脚本一致，减少「本地能过、CI 挂」的偏差。
 
-构建步骤中调用的 `npm run build:site` 和 `npm run build:search` 都是在 `package.json` 里事先定义好的脚本。这样做的好处是：本地开发和 CI 跑的是完全相同的命令，不会出现"本地能过、CI 报错"的情况。
+**6. PR 只验证、不上传**
+
+`pull_request` 仍跑 format 与完整构建；`Upload Pages artifact` 与 `deploy` 都带 `if: github.event_name != 'pull_request'`，避免 PR 占用 artifact 存储。
 
 ### 按需裁剪
 
@@ -256,8 +243,10 @@ Hugo 在处理 SCSS 等前端资源时，会在 `resources/_gen` 目录下生成
 
 - `Setup Hugo resource cache`
 - `Setup Node.js`
-- `Install dependencies`
+- `Install root dependencies`
+- `Check format`
 - `Build search`
+- `Verify Pagefind artifacts`
 
 然后把工作流里的构建命令改成只执行 Hugo 构建即可。Hugo 版本仍然建议通过 `.hugo-version` 管理，而不是直接写在 `env` 里。
 
@@ -318,10 +307,12 @@ Settings -> Pages
 如果你准备长期维护这个博客，建议把下面几件事固定下来：
 
 1. 内容、主题、配置和工作流都放在同一个仓库里维护。
-2. 把 Hugo 版本号放在 `.hugo-version` 文件里单独管理，工作流从文件读取而不是硬编码。升级 Hugo 时只需要改这一个地方。
-3. 本地构建命令和工作流构建命令保持一致，都通过 `package.json` 里的 `npm` 脚本调用。
-4. 为 Hugo 配置构建缓存（`actions/cache`），能让每次 CI 构建快不少；缓存 key 里记得带上 Hugo 版本号，升级时旧缓存会自动失效。
-5. 每次改域名、改资源路径、改搜索方案时，同时检查 `baseURL` 和发布流程。
-6. 站点能正常发布后，再去处理自定义域名和 HTTPS。
+2. 把 Hugo 版本号放在 `.hugo-version` 文件里单独管理；Node 用 `.node-version` + `node-version-file`。升级时只改对应版本文件。
+3. 本地构建命令和工作流构建命令保持一致，都通过 `package.json` 里的 `npm` 脚本调用；CI 可额外加 `--panicOnWarning`。
+4. 为 Hugo 配置 `resources/_gen` 缓存（`actions/cache`）；缓存 key 带上 Hugo 版本与资产/配置/模板哈希，不要把整站 `content/**` 绑死。
+5. 并发组按 PR / ref 隔离；PR 只构建不部署、不上传 Pages artifact。
+6. 生产工作流 pin action 到 commit SHA，并用 Dependabot 的 `github-actions` 生态做分组升级；注释里的版本号要与 SHA 同步，或干脆不写易过期的注释。
+7. 每次改域名、改资源路径、改搜索方案时，同时检查 `baseURL` 和发布流程。
+8. 站点能正常发布后，再去处理自定义域名和 HTTPS。
 
 按这套方式整理后，博客的日常维护会简单很多，发布链路也更直观。
