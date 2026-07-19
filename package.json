@@ -10,6 +10,7 @@
     "build": "npm run build:site && npm run build:search",
     "preview": "npm run build:site && npm run build:search -- --serve",
     "hugo:env": "hugo env",
+    "cf:setup": "node scripts/setup-cloudflare.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
