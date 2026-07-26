@@ -130,9 +130,6 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
       }
     }
   }
-  #langs li {
-    width: auto;
-  }
 }
 
 @media (max-width: $maxWidth) and (prefers-reduced-motion: reduce) {

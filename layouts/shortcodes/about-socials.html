@@ -7,7 +7,7 @@
     {{- $darkBadge := .badgeDark | default .badgeLight -}}
     {{- $badgeAlt := .badgeAlt -}}
     {{- $platform := .platform -}}
-    <a target="_blank" rel="external noopener" href="{{ .url }}" class="about-social-card border-0">
+    <a target="_blank" rel="external noopener" href="{{ .url }}" class="about-social-card">
       <span class="about-social-mark{{ with .markClass }} {{ . }}{{ end }}" aria-hidden="true">{{ .mark }}</span>
       <span class="about-social-copy">
         <span class="about-social-platform">{{ $platform }}</span>
