@@ -18,7 +18,7 @@
    - **Zone → Zone Settings → Edit**
    - **Zone → Zone → Read**
    - **Zone → DNS → Edit**
-   - **Account → Account Rulesets → Edit** 或 **Zone → Cache Rules / Config Rules** 相关 Edit（用于 Cache Rules / Redirect；若权限不足脚本会警告并跳过部分项）
+   - **Account → Account Rulesets → Edit** 或 **Zone → Cache Rules / Config Rules** 相关 Edit（用于 Cache Rules / Redirect）
    - Zone Resources：只选 `owovo.xyz`
 3. 在仓库根目录执行（PowerShell）：
 
@@ -26,6 +26,7 @@
 $env:CLOUDFLARE_API_TOKEN = "你的Token"
 $env:GITHUB_PAGES_HOST = "你的用户名.github.io"   # 不要带 https:// 或仓库路径
 node scripts/setup-cloudflare.mjs
+# 或: npm run cf:setup
 ```
 
 预览不写变更：
@@ -35,8 +36,13 @@ $env:CF_DRY_RUN = "1"
 node scripts/setup-cloudflare.mjs
 ```
 
-脚本会：根域/www CNAME（橙云）→ SSL Full 等安全项 → 静态长缓存 / HTML 短缓存 → `www` 301 到根域。  
-**不会**代替你在 GitHub Pages 里填写 Custom domain（需手动一次）。
+脚本行为：
+
+- 根域 / `www` **CNAME 橙云** upsert；**会删除**这两个名称上冲突的 A / AAAA / 多余 CNAME
+- SSL Full 等安全与性能项 → 静态长缓存 / HTML 短缓存 → `www` 301 到根域
+- **默认严格**：任一步失败则打印失败列表并以 **exit 1** 退出（不会假成功）
+- 权限不全仍想尽量推进时：`$env:CF_BEST_EFFORT = "1"`（失败只警告，exit 0；不推荐作默认）
+- **不会**代替你在 GitHub Pages 里填写 Custom domain（需手动一次）
 
 ---
 

@@ -61,7 +61,7 @@ archetypes/default.md     # 新文章 front matter 模板
 - **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 扫描可见文案（`content` / `layouts`），按 `unicode-range` 过滤 Fontsource 官方 `index.css` 并只复制命中分片（始终包含 latin / latin-ext），不重写 `@font-face` 模板。
 - **Pagefind 搜索**：构建后 `pagefind --site public`；**Default UI 为有意选择**，请勿擅自迁移 Component UI。
 - **CI/CD**：GitHub Actions 在 main 推送时 `format:check` → `build` → deploy Pages；PR 只构建不部署。
-- **域名 / CDN**：生产域 `owovo.xyz`（`baseURL` + `static/CNAME`）；无备案时用 Cloudflare 代理 GitHub Pages，步骤见 `docs/cloudflare.md`。一键：`CLOUDFLARE_API_TOKEN` + `GITHUB_PAGES_HOST` 后 `npm run cf:setup`（勿改 baseURL 为 `*.github.io`）。
+- **域名 / CDN**：生产域 `owovo.xyz`（`baseURL` + `static/CNAME`）；无备案时用 Cloudflare 代理 GitHub Pages，步骤见 `docs/cloudflare.md`。一键：`CLOUDFLARE_API_TOKEN` + `GITHUB_PAGES_HOST` 后 `npm run cf:setup`（会删 apex/www 冲突 DNS；默认严格 exit 1；`CF_DRY_RUN=1` 预览；勿改 baseURL 为 `*.github.io`）。
 
 ## 内容模型（列表职责）
 
