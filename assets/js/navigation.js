@@ -56,9 +56,12 @@
       { passive: true },
     );
 
-    const maxWidth = window
+    const maxWidthRaw = window
       .getComputedStyle(document.documentElement, null)
-      .getPropertyValue("--max-width");
+      .getPropertyValue("--max-width")
+      .trim();
+    // Keep in sync with assets/scss/base/_responsive.scss $maxWidth (fontSize * (max(post,list)+5)).
+    const maxWidth = maxWidthRaw || "846px";
     const navMediaQuery = window.matchMedia(`(max-width: ${maxWidth})`);
     const handleViewportChange = (event) => {
       if (!event.matches) {
