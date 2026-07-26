@@ -12,5 +12,8 @@ tableOfContents:
   ordered: true
 
 # Hugo Chroma 代码高亮配置
+# noClasses: false — 用 CSS 类 + 主题 token，明暗切换可换色（勿回退 monokai 内联）
 highlight:
+  noClasses: false
   lineNos: true
+  lineNumbersInTable: true

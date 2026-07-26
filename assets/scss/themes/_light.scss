@@ -4,7 +4,6 @@
 // https://codyhouse.co/ds/globals/colors
 
 @mixin light-theme {
-  --theme-name: "light";
   @include mixins.defineColorHSL(
     --color-primary,
     variables.$primaryColorLightH,
@@ -27,6 +26,7 @@
   --chroma-line-numbers-background: #ffffcc;
   --chroma-line-numbers-color: #7f7f7f;
   --chroma-keyword-color: #006699;
+  --chroma-declaration-color: #006699;
   --chroma-name-color: #9999ff;
   --chroma-attribute-color: #330099;
   --chroma-literal-color: #cc3300;

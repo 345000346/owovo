@@ -5,7 +5,6 @@
 // https://github.com/dracula/dracula-theme/
 
 @mixin dark-theme {
-  --theme-name: "dark";
   @include mixins.defineColorHSL(
     --color-primary,
     variables.$primaryColorDarkH,
@@ -26,9 +25,10 @@
   /* https://xyproto.github.io/splash/docs/all.html */
   /* Color values matching dracula style */
 
-  --chroma-line-numbers-background: #ffffcc;
-  --chroma-line-numbers-color: #7f7f7f;
+  --chroma-line-numbers-background: #44475a;
+  --chroma-line-numbers-color: #6272a4;
   --chroma-keyword-color: #ff79c6;
+  --chroma-declaration-color: #8be9fd;
   --chroma-name-color: #8be9fd;
   --chroma-attribute-color: #50fa7b;
   --chroma-literal-color: #f1fa8c;
