@@ -1,132 +1,257 @@
+import { love } from "./data.js";
+
 (() => {
+  const DAY_MS = 1000 * 60 * 60 * 24;
   const pageRoot = document.querySelector(".memorial-page");
   if (!pageRoot) return;
 
-  const loveStartAt = pageRoot.getAttribute("data-love-start-at") || "";
-  const loveStartDate = loveStartAt ? new Date(loveStartAt) : null;
-  const loveStartDisplayText = loveStartAt.replace(
-    /^(\d{4})-(\d{2})-(\d{2}).*$/,
-    "$1.$2.$3",
-  );
-  const timerParts = [
-    { key: "day", unit: "天", format: (value) => String(value) },
-    {
-      key: "hour",
-      unit: "小时",
-      format: (value) => String(value).padStart(2, "0"),
-    },
-    {
-      key: "minute",
-      unit: "分钟",
-      format: (value) => String(value).padStart(2, "0"),
-    },
-    {
-      key: "second",
-      unit: "秒",
-      format: (value) => String(value).padStart(2, "0"),
-    },
-  ];
-  const revealGroups = [
-    { selector: ".foreword .section-head", baseDelay: 0, step: 0 },
-    { selector: ".foreword .prose", baseDelay: 120, step: 0 },
-    { selector: ".chapters .section-head", baseDelay: 0, step: 0 },
-    { selector: ".chapter-piece", baseDelay: 80, step: 110 },
-    { selector: ".timeline-section .section-head", baseDelay: 0, step: 0 },
-    { selector: ".timeline-item", baseDelay: 60, step: 85 },
-    { selector: ".closing-inner", baseDelay: 0, step: 0 },
-  ];
-  const timerElement = document.getElementById("loveTimer");
-  const timerValueElements = [];
+  const startAt =
+    pageRoot.getAttribute("data-love-start-at") || love.startAt || "";
+  const startDate = startAt ? new Date(startAt) : null;
+  const startDisplay = formatStartDisplay(startAt);
+
+  const timerRoot = document.getElementById("loveTimer");
+  const timerNodes = {
+    years: timerRoot?.querySelector('[data-timer="years"]') ?? null,
+    days: timerRoot?.querySelector('[data-timer="days"]') ?? null,
+    hours: timerRoot?.querySelector('[data-timer="hours"]') ?? null,
+    minutes: timerRoot?.querySelector('[data-timer="minutes"]') ?? null,
+    seconds: timerRoot?.querySelector('[data-timer="seconds"]') ?? null,
+  };
   let lastTimerValues = null;
+  let timerIntervalId = 0;
 
   function prefersReducedMotion() {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
+  function formatStartDisplay(value) {
+    const matched = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
+    return matched ? `${matched[1]}.${matched[2]}.${matched[3]}` : value;
+  }
+
+  function pad2(value) {
+    return String(value).padStart(2, "0");
+  }
+
+  function isValidDate(value) {
+    return value instanceof Date && !Number.isNaN(value.getTime());
+  }
+
+  /** 日历年差 + 自上次周年日起的整天数（与「满 x 年 y 天」口语一致）。 */
+  function diffCalendar(from, to) {
+    let years = to.getFullYear() - from.getFullYear();
+    let anniversary = new Date(
+      to.getFullYear(),
+      from.getMonth(),
+      from.getDate(),
+      from.getHours(),
+      from.getMinutes(),
+      from.getSeconds(),
+      from.getMilliseconds(),
+    );
+
+    if (anniversary > to) {
+      years -= 1;
+      anniversary = new Date(
+        to.getFullYear() - 1,
+        from.getMonth(),
+        from.getDate(),
+        from.getHours(),
+        from.getMinutes(),
+        from.getSeconds(),
+        from.getMilliseconds(),
+      );
+    }
+
+    const restMs = Math.max(0, to - anniversary);
+    const days = Math.floor(restMs / DAY_MS);
+    const afterDays = restMs % DAY_MS;
+    const hours = Math.floor(afterDays / (1000 * 60 * 60));
+    const minutes = Math.floor((afterDays % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((afterDays % (1000 * 60)) / 1000);
+
+    return { years, days, hours, minutes, seconds };
+  }
+
+  function daysBetween(from, to) {
+    const fromUtc = Date.UTC(
+      from.getFullYear(),
+      from.getMonth(),
+      from.getDate(),
+    );
+    const toUtc = Date.UTC(to.getFullYear(), to.getMonth(), to.getDate());
+    return Math.round((toUtc - fromUtc) / DAY_MS);
+  }
+
+  function parseEventDate(dateStr) {
+    const matched = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!matched) return null;
+    const year = Number(matched[1]);
+    const month = Number(matched[2]) - 1;
+    const day = Number(matched[3]);
+    return new Date(year, month, day, 0, 0, 0, 0);
+  }
+
+  function formatDotDate(dateStr) {
+    return String(dateStr).replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$1.$2.$3");
+  }
+
   function syncLoveStartDisplay() {
-    if (loveStartDisplayText === loveStartAt) return;
-    document
-      .querySelectorAll("[data-love-start-display]")
-      .forEach((element) => {
-        element.textContent = loveStartDisplayText;
-      });
-  }
-
-  function formatTimeDiff(timeDiff) {
-    return {
-      day: Math.floor(timeDiff / (1000 * 60 * 60 * 24)),
-      hour: Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-      minute: Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)),
-      second: Math.floor((timeDiff % (1000 * 60)) / 1000),
-    };
-  }
-
-  function buildTimerDOM() {
-    if (!timerElement) return false;
-
-    const fragment = document.createDocumentFragment();
-    timerParts.forEach(({ unit }) => {
-      const partElement = document.createElement("span");
-      const valueElement = document.createElement("span");
-      const unitElement = document.createElement("span");
-
-      partElement.className = "timer-part";
-      valueElement.className = "timer-value";
-      unitElement.className = "timer-unit";
-      unitElement.textContent = unit;
-
-      partElement.append(valueElement, unitElement);
-      fragment.append(partElement);
-      timerValueElements.push(valueElement);
+    if (!startDisplay) return;
+    document.querySelectorAll("[data-love-start-display]").forEach((el) => {
+      el.textContent = startDisplay;
     });
-
-    timerElement.replaceChildren(fragment);
-    return true;
   }
 
-  function restartTimerValueAnimation(valueElement) {
-    valueElement.classList.remove("timer-value--changed");
-    if (prefersReducedMotion()) return;
-    void valueElement.offsetWidth;
-    valueElement.classList.add("timer-value--changed");
+  function restartValueAnimation(el) {
+    if (!el || prefersReducedMotion()) return;
+    el.classList.remove("timer-value--changed");
+    void el.offsetWidth;
+    el.classList.add("timer-value--changed");
   }
 
   function updateTimer() {
-    if (
-      !(loveStartDate instanceof Date) ||
-      Number.isNaN(loveStartDate.getTime())
-    )
-      return;
+    if (!isValidDate(startDate) || !timerRoot) return;
 
-    const timeUnits = formatTimeDiff(new Date() - loveStartDate);
-    const nextValues = timerParts.map(({ key, format }) =>
-      format(timeUnits[key]),
-    );
+    const parts = diffCalendar(startDate, new Date());
+    const next = {
+      years: String(parts.years),
+      days: String(parts.days),
+      hours: pad2(parts.hours),
+      minutes: pad2(parts.minutes),
+      seconds: pad2(parts.seconds),
+    };
 
-    timerValueElements.forEach((valueElement, index) => {
-      if (lastTimerValues && lastTimerValues[index] === nextValues[index])
-        return;
-      valueElement.textContent = nextValues[index];
-      restartTimerValueAnimation(valueElement);
+    Object.keys(next).forEach((key) => {
+      const node = timerNodes[key];
+      if (!node) return;
+      if (lastTimerValues && lastTimerValues[key] === next[key]) return;
+      node.textContent = next[key];
+      restartValueAnimation(node);
     });
 
-    lastTimerValues = nextValues;
-    timerElement.setAttribute(
+    lastTimerValues = next;
+    timerRoot.setAttribute(
       "aria-label",
-      `${timeUnits.day} 天 ${timeUnits.hour} 小时 ${timeUnits.minute} 分钟 ${timeUnits.second} 秒`,
+      `${parts.years} 年 ${parts.days} 天 ${parts.hours} 小时 ${parts.minutes} 分钟 ${parts.seconds} 秒`,
     );
   }
 
   function setupTimer() {
-    if (!buildTimerDOM()) return;
+    if (!timerRoot || !isValidDate(startDate)) return;
     updateTimer();
-    setInterval(updateTimer, 1000);
+    timerIntervalId = window.setInterval(updateTimer, 1000);
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) updateTimer();
     });
   }
 
+  function renderThemes() {
+    const list = document.querySelector("[data-theme-list]");
+    if (!list || !love.themes?.items?.length) return;
+
+    const fragment = document.createDocumentFragment();
+    love.themes.items.forEach((item) => {
+      const article = document.createElement("article");
+      article.className = "theme-piece";
+
+      const order = document.createElement("p");
+      order.className = "theme-order";
+      order.textContent = item.order;
+
+      const copy = document.createElement("div");
+      copy.className = "theme-copy";
+
+      const title = document.createElement("h3");
+      title.textContent = item.title;
+      copy.append(title);
+
+      (item.paragraphs || []).forEach((text) => {
+        const p = document.createElement("p");
+        p.textContent = text;
+        copy.append(p);
+      });
+
+      article.append(order, copy);
+      fragment.append(article);
+    });
+
+    list.replaceChildren(fragment);
+  }
+
+  function renderTimeline() {
+    const timeline = document.querySelector("[data-timeline]");
+    if (!timeline || !love.chronicle?.events?.length || !isValidDate(startDate))
+      return;
+
+    const fragment = document.createDocumentFragment();
+    let lastYear = null;
+
+    love.chronicle.events.forEach((event) => {
+      const eventDate = parseEventDate(event.date);
+      if (!eventDate) return;
+
+      const year = eventDate.getFullYear();
+      if (year !== lastYear) {
+        const yearItem = document.createElement("li");
+        yearItem.className = "timeline-year";
+        yearItem.setAttribute("aria-hidden", "true");
+        yearItem.textContent = String(year);
+        fragment.append(yearItem);
+        lastYear = year;
+      }
+
+      const dayCount = daysBetween(startDate, eventDate);
+      const tone = event.tone || "normal";
+      const item = document.createElement("li");
+      item.className = "timeline-item";
+      if (tone === "major") item.classList.add("timeline-item--major");
+      if (tone === "quiet") item.classList.add("timeline-item--quiet");
+      item.id = `e-${event.date}`;
+
+      const meta = document.createElement("div");
+      meta.className = "timeline-meta";
+
+      const dateP = document.createElement("p");
+      dateP.className = "timeline-date";
+      const time = document.createElement("time");
+      time.dateTime = event.date;
+      time.textContent = formatDotDate(event.date);
+      dateP.append(time);
+
+      const daysP = document.createElement("p");
+      daysP.className = "timeline-days";
+      daysP.textContent = `相爱第 ${dayCount + 1} 天`;
+
+      meta.append(dateP, daysP);
+
+      const body = document.createElement("div");
+      body.className = "timeline-body";
+      const title = document.createElement("h3");
+      title.textContent = event.title;
+      const p = document.createElement("p");
+      p.textContent = event.body;
+      body.append(title, p);
+
+      item.append(meta, body);
+      fragment.append(item);
+    });
+
+    timeline.replaceChildren(fragment);
+  }
+
   function setupRevealAnimations() {
+    const revealGroups = [
+      { selector: ".letter .section-head", baseDelay: 0, step: 0 },
+      { selector: ".letter .prose", baseDelay: 120, step: 0 },
+      { selector: ".themes .section-head", baseDelay: 0, step: 0 },
+      { selector: ".theme-piece", baseDelay: 80, step: 110 },
+      { selector: ".chronicle .section-head", baseDelay: 0, step: 0 },
+      { selector: ".timeline-item", baseDelay: 60, step: 85 },
+      { selector: ".epilogue-inner", baseDelay: 0, step: 0 },
+    ];
+
     const revealElements = [];
     const observedElements = new Set(document.querySelectorAll(".timeline"));
 
@@ -145,18 +270,12 @@
     if (!observedElements.size) return;
 
     if (prefersReducedMotion() || typeof IntersectionObserver !== "function") {
-      revealElements.forEach((element) =>
-        element.classList.remove("reveal-pending"),
-      );
-      observedElements.forEach((element) =>
-        element.classList.add("is-visible"),
-      );
+      revealElements.forEach((el) => el.classList.remove("reveal-pending"));
+      observedElements.forEach((el) => el.classList.add("is-visible"));
       return;
     }
 
-    revealElements.forEach((element) =>
-      element.classList.add("reveal-pending"),
-    );
+    revealElements.forEach((el) => el.classList.add("reveal-pending"));
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -173,13 +292,73 @@
       },
     );
 
-    observedElements.forEach((element) => observer.observe(element));
+    observedElements.forEach((el) => observer.observe(el));
+  }
+
+  function setupTocSpy() {
+    const linkNodes = () =>
+      Array.from(document.querySelectorAll("[data-toc-link]"));
+
+    const sectionEntries = () =>
+      linkNodes()
+        .map((link) => {
+          const id = link.getAttribute("href")?.slice(1);
+          const section = id ? document.getElementById(id) : null;
+          return section ? { link, section } : null;
+        })
+        .filter(Boolean);
+
+    const setActive = (activeLink) => {
+      linkNodes().forEach((item) => {
+        const active = item === activeLink;
+        item.classList.toggle("is-active", active);
+        if (active) item.setAttribute("aria-current", "true");
+        else item.removeAttribute("aria-current");
+      });
+    };
+
+    const sync = () => {
+      const entries = sectionEntries();
+      if (!entries.length) return;
+
+      const offset = Math.min(140, window.innerHeight * 0.22);
+      let current = entries[0];
+
+      entries.forEach((entry) => {
+        if (entry.section.getBoundingClientRect().top <= offset) {
+          current = entry;
+        }
+      });
+
+      // 接近页底时锁定最后一节
+      const reachBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 4;
+      if (reachBottom) current = entries[entries.length - 1];
+
+      setActive(current.link);
+    };
+
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+    window.addEventListener("hashchange", sync);
+    document.querySelector(".toc")?.addEventListener("click", (event) => {
+      const link = event.target.closest("[data-toc-link]");
+      if (!link) return;
+      window.requestAnimationFrame(sync);
+      window.setTimeout(sync, 120);
+      window.setTimeout(sync, 320);
+    });
   }
 
   function init() {
     syncLoveStartDisplay();
+    renderThemes();
+    renderTimeline();
     setupTimer();
     setupRevealAnimations();
+    setupTocSpy();
   }
 
   if (document.readyState === "loading") {
@@ -187,4 +366,12 @@
   } else {
     init();
   }
+
+  window.addEventListener(
+    "pagehide",
+    () => {
+      if (timerIntervalId) window.clearInterval(timerIntervalId);
+    },
+    { once: true },
+  );
 })();
