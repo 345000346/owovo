@@ -1,0 +1,2 @@
+// Search-page only entry: must load AFTER pagefind-ui.css so tokens win cascade.
+@use "pages/search";

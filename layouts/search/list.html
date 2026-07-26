@@ -1,23 +1,14 @@
 {{ define "head-extra" }}
     {{- $pagefindCSS := "pagefind/pagefind-ui.css" | relURL -}}
     <link rel="stylesheet" href="{{ $pagefindCSS }}" />
-    <style>
-        .search-area { margin-top: 0.5rem; }
-        .pagefind-ui {
-            --pagefind-ui-primary: var(--color-primary);
-            --pagefind-ui-text: var(--color-contrast-high);
-            --pagefind-ui-background: var(--color-bg);
-            --pagefind-ui-border: var(--color-contrast-low);
-            --pagefind-ui-border-width: 1px;
-            --pagefind-ui-border-radius: 0.75rem;
-            --pagefind-ui-font: inherit;
-        }
-        .pagefind-ui__search-input { font-family: inherit; }
-        .pagefind-ui__result-link { color: var(--color-contrast-high); }
-        .pagefind-ui__message, .pagefind-ui__result-excerpt { color: var(--color-contrast-medium); }
-        .pagefind-ui mark { background: none; color: var(--color-primary); font-weight: 700; }
-        .search-noscript { padding: 2rem 0; color: var(--color-contrast-medium); text-align: center; }
-    </style>
+    {{- /* After pagefind-ui.css so --pagefind-ui-* tokens override vendor defaults. */ -}}
+    {{- $options := dict
+        "targetPath" "css/search.min.css"
+        "outputStyle" "compressed"
+        "transpiler" "dartsass"
+    -}}
+    {{- $searchStyle := resources.Get "scss/search.scss" | css.Sass $options | resources.Fingerprint -}}
+    <link rel="stylesheet" href="{{ $searchStyle.RelPermalink }}" integrity="{{ $searchStyle.Data.Integrity }}" crossorigin="anonymous" />
 {{ end }}
 
 {{ define "main" }}

@@ -70,7 +70,6 @@
       },
       showImages: false,
       showSubResults: true,
-      sort: { term_frequency_desc: {} },
     });
 
     const initialTerm = getHashSearch();
