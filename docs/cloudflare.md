@@ -185,7 +185,7 @@ Cloudflare → **Caching → Cache Rules**（免费档可用），建议建两�
 
 **建议关或慎用：**
 
-- **Auto Minify**（JS/CSS/HTML）：与已 minify + SRI（`integrity`）可能冲突，**保持关闭**
+- **Auto Minify**：Cloudflare 已下线该 zone setting；本站 HTML/CSS/JS 在构建时 minify，且带 SRI，勿再依赖边缘改写
 - **Rocket Loader**：可能干扰主题/模块脚本，**关闭**
 - **Email Address Obfuscation / Injected content**：易改 HTML，个人站建议关
 - 免费计划下的「伪中国加速」类市场应用：勿轻信，且可能违反 ToS
@@ -227,7 +227,7 @@ curl.exe -sI https://owovo.xyz/css/ 2>$null
 | 错误 526                    | SSL 改为 **Full**；确认 Pages Enforce HTTPS 与自定义域证书就绪         |
 | 错误 521 / 522              | 源站 GitHub 故障或 DNS 指错；检查 CNAME 是否为 `<user>.github.io`      |
 | 改站后仍是旧页面            | Purge Cache；检查 HTML 规则 Edge TTL 是否过长                          |
-| 样式/脚本报 SRI 失败        | 关闭 Auto Minify / Rocket Loader，再硬刷新                             |
+| 样式/脚本报 SRI 失败        | 关闭 Rocket Loader / 任何改写 HTML 的应用，再硬刷新                    |
 | `www` 打不开                | 补 `www` CNAME + 301 到根域，并在 Pages 考虑同时添加 www（或只做跳转） |
 
 ---

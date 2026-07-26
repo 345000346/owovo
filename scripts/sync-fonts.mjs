@@ -21,8 +21,8 @@ const sourceCodeSource = resolve(
 const fontDirectory = resolve(root, "static/fonts");
 const cssDirectory = resolve(root, "assets/css");
 
-// Visible copy only — not assets/config source that is mostly ASCII.
-const SCAN_ROOTS = ["content", "layouts"];
+// Visible copy only — not assets source that is mostly ASCII.
+const SCAN_ROOTS = ["content", "layouts", "config", "data"];
 const SCAN_EXTS = new Set([".md", ".html", ".toml", ".yaml", ".yml", ".txt"]);
 // Always ship basic Latin so UI chrome and English snippets never fall back.
 const ALWAYS_FILE = /-(?:latin|latin-ext)-wght-normal\.woff2$/;

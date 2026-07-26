@@ -326,7 +326,7 @@ function redirectRules() {
   ];
 }
 
-/** Zone settings: SRI-safe (no auto minify / rocket loader). */
+/** Zone settings: SRI-safe (no rocket loader / email rewrite). Auto Minify is retired. */
 const ZONE_SETTINGS = [
   ["ssl", "full"],
   ["always_use_https", "on"],
@@ -337,7 +337,6 @@ const ZONE_SETTINGS = [
   ["http3", "on"],
   ["0rtt", "on"],
   ["rocket_loader", "off"],
-  ["minify", { css: "off", html: "off", js: "off" }],
   ["email_obfuscation", "off"],
   ["server_side_exclude", "off"],
 ];
