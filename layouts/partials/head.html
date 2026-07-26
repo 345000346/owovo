@@ -60,6 +60,9 @@
 
     {{- partial "style.html" . }}
 
+    {{- $fonts := resources.Get "css/fonts.css" | resources.Minify | resources.Fingerprint -}}
+    <link rel="stylesheet" href="{{ $fonts.RelPermalink }}" integrity="{{ $fonts.Data.Integrity }}" crossorigin="anonymous" />
+
     {{- if and (ne .Section "search") (ne .Kind "404") -}}
         {{- partial "components/search-highlight-loader.html" . -}}
     {{- end }}
@@ -67,9 +70,6 @@
     {{ if ne .Kind "404" }}
         {{ partial "script.html" . }}
     {{ end }}
-
-    {{- $fonts := resources.Get "css/fonts.css" | resources.Minify | resources.Fingerprint -}}
-    <link rel="stylesheet" href="{{ $fonts.RelPermalink }}" integrity="{{ $fonts.Data.Integrity }}" crossorigin="anonymous" />
 
     {{- $description := .Description | default (.Summary | plainify | htmlUnescape | strings.TrimSpace) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
     <meta name="description" content="{{ $description }}" />
