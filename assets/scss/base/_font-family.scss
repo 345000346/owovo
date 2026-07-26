@@ -1,9 +1,7 @@
 @use "../utils/variables";
 
 .list-title,
-.term-title,
 .list-year,
-.list-month,
 .post-title,
 .post-nav,
 thead,
@@ -20,9 +18,6 @@ dt {
   h6 {
     font-family: variables.$fontFamilyHeadings;
   }
-}
-.contents-title {
-  font-family: variables.$fontFamilyHeadings;
 }
 
 code,

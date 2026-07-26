@@ -81,24 +81,11 @@ blockquote {
   }
 }
 
-.caption {
-  display: block;
-  text-align: center;
-  margin: -1em 0 0;
-  font-size: 90%;
-  color: var(--color-contrast-medium);
-}
-
 .contents {
   margin-top: 4em;
   padding: 1rem 1.25rem;
   border: 1px solid var(--color-contrast-lower);
   border-radius: 0.5rem;
-
-  .contents-title {
-    margin: 0 0 0.75rem;
-  }
-
   ol,
   ul {
     list-style: none;
@@ -197,7 +184,7 @@ pre {
   font-size: 0.8rem;
   margin: 2rem 0;
   padding: 1em;
-  line-height: 1.618;
+  line-height: variables.$lineHeightBase;
   background-color: functions.alpha(var(--color-contrast-lower), 0.5);
   max-height: variables.$maxHeight;
   code {

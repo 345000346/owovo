@@ -26,7 +26,7 @@ body {
   background-color: var(--color-bg);
   overflow-wrap: break-word;
   word-wrap: break-word;
-  line-height: 1.618;
+  line-height: variables.$lineHeightBase;
   transition:
     color variables.$duration,
     background-color variables.$duration;

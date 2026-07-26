@@ -44,7 +44,8 @@
 
 /* variables.$siteBrandFontSize * {body line-height} */
 $brandHeight: variables.$fontSize *
-  functions.strip-unit(variables.$siteBrandFontSize) * 1.618;
+  functions.strip-unit(variables.$siteBrandFontSize) *
+  functions.strip-unit(variables.$lineHeightBase);
 
 :root {
   /* This is an approximate calculation, it won't cover all scenarios */
@@ -59,6 +60,6 @@ $brandHeight: variables.$fontSize *
 }
 
 /* Scrolling fix for anchors being hidden below the header */
-:where(h1, h2, h3, h4, h5, h6, [data-anchor-target]) {
+:where(h1, h2, h3, h4, h5, h6) {
   scroll-margin-top: var(--header-height);
 }

@@ -27,11 +27,11 @@
   align-items: baseline;
   &:hover {
     border-bottom-color: var(--color-primary);
-    ::before {
+    &::before {
       background: var(--color-primary);
     }
   }
-  ::before {
+  &::before {
     content: " ";
     position: absolute;
     left: 0.618em;
@@ -58,19 +58,9 @@
   color: var(--color-contrast-medium);
   line-height: 1.5;
 }
-.list-read-more {
-  margin-top: 1em;
-  font-size: 1.2em;
-  line-height: 1.5;
-}
 
 .list-year {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-}
-
-.term-count {
-  color: var(--color-contrast-medium);
-  font-size: 0.7em;
 }

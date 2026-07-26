@@ -2,6 +2,8 @@
 // No Hugo ExecuteAsTemplate injection.
 
 $fontSize: 18px;
+// Body/chrome metric used by header height math; article body uses $lineHeight.
+$lineHeightBase: 1.618;
 $lineHeight: 1.8;
 $navHeight: 20em;
 $maxHeight: 80em;
@@ -28,6 +30,9 @@ $fontFamilyBody: "Noto Serif SC", serif;
 $tabSize: 4;
 $postWidth: 42em;
 $listWidth: 42em;
+$breakpoint-sm: 600px;
+$breakpoint-md: 900px;
+$breakpoint-about-sm: 700px;
 $duration: 0.5s;
 $primaryColorLightH: 220;
 $primaryColorLightS: 90%;

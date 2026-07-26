@@ -35,7 +35,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: variables.$breakpoint-sm) {
   .fof {
     h1 {
       font-size: 2rem;

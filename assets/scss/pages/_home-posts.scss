@@ -11,7 +11,7 @@ article.content.post.home {
     overflow: hidden;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: variables.$breakpoint-sm) {
     .summary {
       -webkit-line-clamp: 3;
     }
