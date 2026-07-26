@@ -42,9 +42,6 @@ const initBadgeFallback = () => {
 syncThemedBadges();
 initBadgeFallback();
 
-window.addEventListener("themechange", (event) => {
-  if (event?.detail?.theme) {
-    document.documentElement.setAttribute("data-theme", event.detail.theme);
-  }
+window.addEventListener("themechange", () => {
   syncThemedBadges();
 });

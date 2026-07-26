@@ -126,56 +126,67 @@
   letter-spacing: 0.02em;
 }
 
-[data-theme="dark"] .post-body .about-social-showcase {
-  border-color: rgba(255, 255, 255, 0.08);
-  background:
-    radial-gradient(
-      circle at top right,
-      rgba(185, 151, 118, 0.12),
-      transparent 36%
-    ),
-    linear-gradient(180deg, #24201c 0%, #1b1815 100%);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+@mixin about-socials-dark {
+  .post-body .about-social-showcase {
+    border-color: rgba(255, 255, 255, 0.08);
+    background:
+      radial-gradient(
+        circle at top right,
+        rgba(185, 151, 118, 0.12),
+        transparent 36%
+      ),
+      linear-gradient(180deg, #24201c 0%, #1b1815 100%);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  }
+
+  .post-body .about-social-card {
+    border-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 12px 22px rgba(0, 0, 0, 0.16);
+  }
+
+  .post-body .about-social-card:hover {
+    border-color: functions.alpha(var(--color-primary), 0.28);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.24);
+  }
+
+  .post-body .about-social-intro {
+    color: functions.alpha(var(--color-contrast-medium), 0.96);
+  }
+
+  .post-body .about-social-mark {
+    color: #e7d6c0;
+    background: linear-gradient(180deg, #5a4b3a 0%, #473a2d 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .post-body .about-social-mark-weibo {
+    color: #ffd5ce;
+    background: linear-gradient(180deg, #6f4038 0%, #5a332d 100%);
+  }
+
+  .post-body .about-social-mark-zhihu {
+    color: #d8e7ff;
+    background: linear-gradient(180deg, #2f4b73 0%, #253b59 100%);
+  }
 }
 
-[data-theme="dark"] .post-body .about-social-card {
-  border-color: rgba(255, 255, 255, 0.08);
-  background-color: rgba(255, 255, 255, 0.03);
-  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.16);
+:root[data-theme="dark"] {
+  @include about-socials-dark;
 }
 
-[data-theme="dark"] .post-body .about-social-card:hover {
-  border-color: functions.alpha(var(--color-primary), 0.28);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.24);
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    @include about-socials-dark;
+  }
 }
-
-[data-theme="dark"] .post-body .about-social-intro {
-  color: functions.alpha(var(--color-contrast-medium), 0.96);
-}
-
-[data-theme="dark"] .post-body .about-social-mark {
-  color: #e7d6c0;
-  background: linear-gradient(180deg, #5a4b3a 0%, #473a2d 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-[data-theme="dark"] .post-body .about-social-mark-weibo {
-  color: #ffd5ce;
-  background: linear-gradient(180deg, #6f4038 0%, #5a332d 100%);
-}
-
-[data-theme="dark"] .post-body .about-social-mark-zhihu {
-  color: #d8e7ff;
-  background: linear-gradient(180deg, #2f4b73 0%, #253b59 100%);
-}
-
-@media (max-width: 900px) {
+@media (max-width: variables.$breakpoint-md) {
   .post-body .about-social-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: variables.$breakpoint-about-sm) {
   .post-body .about-social-showcase {
     padding: 1.1rem;
     border-radius: 1.25rem;
