@@ -5,11 +5,10 @@
   display: none;
   z-index: 3;
   position: absolute;
-  top: 1em;
-  right: 1em;
-  margin-right: 1em;
-  width: 1em;
-  height: 1em;
+  top: 10px;
+  right: 10px;
+  width: 45px;
+  height: 45px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -18,44 +17,53 @@
 }
 
 .nav-toggle-inner {
-  padding: 1em;
-  display: inline-block;
-}
+  position: relative;
+  display: block;
+  width: 1.1em;
+  height: 0.8em;
+  margin: auto;
 
-.nav-toggle {
-  span {
-    display: block;
+  > span {
     position: absolute;
+    left: 0;
+    display: block;
+    width: 1.1em;
     height: 0.1em;
-    width: 1em;
     background-color: var(--color-contrast-high);
-    transition: all variables.$duration;
+    transition:
+      top variables.$duration,
+      opacity variables.$duration,
+      transform variables.$duration,
+      width variables.$duration;
+
     &:nth-child(1) {
-      top: 0.4em;
+      top: 0;
     }
+
     &:nth-child(2) {
+      top: 0.35em;
+    }
+
+    &:nth-child(3) {
       top: 0.7em;
     }
-    &:nth-child(3) {
-      top: 1em;
-    }
   }
-  &.open {
-    span {
-      &:nth-child(1) {
-        top: 75%;
-        transform: rotate(225deg);
-      }
-      &:nth-child(2) {
-        width: 0;
-        opacity: 0;
-        transform: rotate(-135deg);
-      }
-      &:nth-child(3) {
-        top: 75%;
-        transform: rotate(-45deg);
-      }
-    }
+}
+
+.nav-toggle.open .nav-toggle-inner > span {
+  &:nth-child(1) {
+    top: 0.35em;
+    transform: rotate(45deg);
+  }
+
+  &:nth-child(2) {
+    width: 0;
+    opacity: 0;
+  }
+
+  &:nth-child(3) {
+    top: 0.35em;
+    transform: rotate(-45deg);
   }
 }
 

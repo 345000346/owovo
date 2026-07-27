@@ -27,6 +27,10 @@
   }
 }
 
+.theme-switcher-label {
+  display: none;
+}
+
 // Default before preference attribute exists: light icon.
 html:not([data-theme-preference]) #theme-switcher .theme-icon-light {
   display: inline-block;

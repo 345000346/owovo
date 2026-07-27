@@ -11,9 +11,12 @@
 }
 
 .header-wrapper {
+  position: relative;
+  z-index: 2;
   padding: 1em 0;
   @include mixins.blur;
-  background: variables.$headerBackground;
+  background-color: var(--color-bg);
+  background-image: variables.$headerBackground;
   transition: background variables.$duration;
 }
 

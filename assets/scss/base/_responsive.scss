@@ -39,7 +39,7 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
   }
   .menu {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     align-items: center;
   }
   .menu-item {
@@ -50,6 +50,9 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
     }
   }
   .menu-item-name {
+    display: block;
+  }
+  .theme-switcher-label {
     display: block;
   }
   .header.open {
