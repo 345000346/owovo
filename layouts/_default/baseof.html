@@ -14,5 +14,8 @@
             {{ partial "components/back-to-top.html" . }}
             {{ partial "footer.html" . }}
         </div>
+        {{- if ne .Section "search" -}}
+            {{ partial "components/search-dialog.html" . }}
+        {{- end -}}
     </body>
 </html>

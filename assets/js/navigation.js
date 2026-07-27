@@ -14,11 +14,11 @@
       'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
     const backgroundTabIndexes = new Map();
 
-    navToggle.addEventListener("click", () => {
+    navToggle.addEventListener("click", (event) => {
       if (isOpen()) {
         closeNav(false, true);
       } else {
-        openNav();
+        openNav(event.detail === 0);
       }
     });
 
@@ -35,6 +35,11 @@
       closeNav(false, true);
     });
 
+    document.addEventListener("site:close-navigation", () => {
+      if (isOpen()) {
+        closeNav(true, false);
+      }
+    });
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && isOpen()) {
         closeNav(false, true);
@@ -139,7 +144,7 @@
       }
     }
 
-    function openNav() {
+    function openNav(focusFirstItem = true) {
       window.clearTimeout(closeTimer);
       header.classList.add("open");
       header.classList.remove("fade");
@@ -149,10 +154,12 @@
       navCurtain.hidden = false;
       setBackgroundInert(true);
 
-      requestAnimationFrame(() => {
-        const firstMenuItem = header.querySelector(".nav a, .nav button");
-        (firstMenuItem || navToggle).focus();
-      });
+      if (focusFirstItem) {
+        requestAnimationFrame(() => {
+          const firstMenuItem = header.querySelector(".nav a, .nav button");
+          (firstMenuItem || navToggle).focus();
+        });
+      }
     }
 
     function finishClose() {

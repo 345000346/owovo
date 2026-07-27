@@ -10,7 +10,7 @@
                 {{- $isCurrent := or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) -}}
                 <li class="menu-item{{ if $isCurrent }} active{{ end }}">
                     {{- $isExternal := strings.HasPrefix .URL "http" -}}
-                    <a href="{{ .URL }}"{{ if $isExternal }} target="_blank" rel="external noopener"{{ end }}{{ if $isCurrent }} aria-current="page"{{ end }}>
+                    <a href="{{ .URL }}"{{ if eq .URL "/search/" }} data-search-trigger{{ end }}{{ if $isExternal }} target="_blank" rel="external noopener"{{ end }}{{ if $isCurrent }} aria-current="page"{{ end }}>
                         {{- $iconName := (string .Post) -}}
                         {{- partial "utils/icon.html" (dict "$" $ "name" $iconName "class" .Identifier) -}}
                         {{- with .Name -}}

@@ -7,6 +7,10 @@
     | resources.Fingerprint
 -}}
 <script type="module" src="{{ $site.RelPermalink }}" integrity="{{ $site.Data.Integrity }}" crossorigin="anonymous"></script>
+{{- if ne .Section "search" -}}
+    {{- $searchDialog := resources.Get "js/search-dialog.js" | resources.Minify | resources.Fingerprint -}}
+    <script type="module" src="{{ $searchDialog.RelPermalink }}" integrity="{{ $searchDialog.Data.Integrity }}" crossorigin="anonymous"></script>
+{{- end -}}
 {{- if partial "utils/is-about.html" . -}}
     {{- $badges := resources.Get "js/themed-badges.js" | resources.Minify | resources.Fingerprint -}}
     <script type="module" src="{{ $badges.RelPermalink }}" integrity="{{ $badges.Data.Integrity }}" crossorigin="anonymous"></script>
