@@ -139,9 +139,6 @@ jobs:
       - name: Install root dependencies
         run: npm ci
 
-      - name: Check format
-        run: npm run format:check
-
       - name: Build site
         run: npm run build:site -- --panicOnWarning --logLevel warn
 
@@ -233,7 +230,7 @@ CI 使用 `npm run build:site -- --panicOnWarning --logLevel warn`：警告直�
 
 **6. PR 只验证、不上传**
 
-`pull_request` 仍跑 format 与完整构建；`Upload Pages artifact` 与 `deploy` 都带 `if: github.event_name != 'pull_request'`，避免 PR 占用 artifact 存储。
+`pull_request` 仍跑完整构建；`Upload Pages artifact` 与 `deploy` 都带 `if: github.event_name != 'pull_request'`，避免 PR 占用 artifact 存储。
 
 ### 按需裁剪
 
@@ -242,7 +239,6 @@ CI 使用 `npm run build:site -- --panicOnWarning --logLevel warn`：警告直�
 - `Setup Hugo resource cache`
 - `Setup Node.js`
 - `Install root dependencies`
-- `Check format`
 - `Build search`
 - `Verify Pagefind artifacts`
 
