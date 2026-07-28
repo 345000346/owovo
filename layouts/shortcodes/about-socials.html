@@ -1,18 +1,18 @@
 {{- $items := sort (where hugo.Data.Socials.items "about" true) "weight" -}}
 {{- if $items -}}
 <div class="about-social-showcase">
-  <p class="about-social-intro">在不同的平台，保留不同的表达方式。</p>
-  <div class="about-social-grid">
-    {{- range $items }}
-    {{- $platform := .platform -}}
-    <a target="_blank" rel="external noopener noreferrer" href="{{ .url | safeURL }}" class="about-social-card">
-      <span class="about-social-mark{{ with .markClass }} {{ . }}{{ end }}" aria-hidden="true">{{ .mark }}</span>
-      <span class="about-social-copy">
-        <span class="about-social-platform">{{ $platform }}</span>
-        <span class="about-social-role">{{ .role }}</span>
-      </span>
-    </a>
-    {{- end }}
-  </div>
+    <p class="about-social-intro">在不同的平台，保留不同的表达方式。</p>
+    <div class="about-social-grid">
+        {{- range $items }}
+        {{- $platform := .platform -}}
+        <a target="_blank" rel="external noopener noreferrer" href="{{ .url | safeURL }}" class="about-social-card">
+            <span class="about-social-mark{{ with .markClass }} {{ . }}{{ end }}" aria-hidden="true">{{ .mark }}</span>
+            <span class="about-social-copy">
+                <span class="about-social-platform">{{ $platform }}</span>
+                <span class="about-social-role">{{ .role }}</span>
+            </span>
+        </a>
+        {{- end }}
+    </div>
 </div>
 {{- end -}}
