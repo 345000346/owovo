@@ -24,9 +24,9 @@ npm run build:search   # 仅 Pagefind 索引
 npm run smoke          # 对 public/ 做构建后断言（需先 build）
 npm run sync:fonts:stats  # 字体分片体积统计
 npm run preview        # 构建后启动 Pagefind 预览
-npm run format         # Prettier 格式化
-npm run format:check   # 格式检查（CI 会跑）
 ```
+
+代码风格不使用 Prettier；遵守 `.editorconfig` 与 **[AGENTS.md](./AGENTS.md)** 中的写法约定。
 
 涉及样式 / 模板时，建议本地用 `npm run dev` 检查：首页、文章、归档、标签、搜索 Dialog、关于。  
 模板变更也可用：
@@ -42,6 +42,7 @@ npm run build:site -- --panicOnWarning --logLevel warn
 - slug 建议全小写 kebab-case
 - 站内文章列表入口为 **`/archives/`**（菜单「文章」）；`/post/` 仅重定向，不是第二套列表
 - 搜索为全站 Dialog（无独立 `/search/` 页）；分类只用 `tags`，不要写 `categories`
+- 文章 TOC 默认开启，不要写 `toc: true`；关闭时写 `toc: false`
 - 转载填 `source: <https url>`；过时文可设 `outdated: true` 与 `outdatedNote`
 - 本地图片放在文章目录内引用，Hugo 会生成响应式 WebP
 

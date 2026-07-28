@@ -14,12 +14,12 @@ npm run build             # 完整生产构建（site + search + smoke）
 npm run sync:fonts        # 同步 Fontsource 分片 → static/fonts + assets/css/fonts.css + data/font_preload.json
 npm run sync:fonts:stats  # 同上并打印分片体积统计
 npm run preview           # 构建后启动 Pagefind 预览服务
-npm run format            # Prettier 格式化
-npm run format:check      # 格式检查
+npm run cf:setup          # Cloudflare DNS / 代理一键配置（需环境变量）
 ```
 
 - `build:site` **必须**带 `--environment production`，以便 `layouts/robots.txt` 输出 `Allow: /` 与正确 `baseURL` Sitemap。
 - 若本机正在跑 `hugo server`，勿与 `build` 共用被污染的 `public/`（server 会写入 livereload）；构建前先停 server。
+- **不使用 Prettier** 或其它自动格式化工具；缩进/换行遵守 `.editorconfig`，其余按下文「代码写法约定」手写对齐。
 
 - Node 版本见 `.node-version`（`>=24.18.0`）
 - Hugo 版本见 `.hugo-version`（`0.164.0`，需 **extended** 版）
@@ -44,9 +44,11 @@ assets/
 data/                     # Socials.toml、SVG.toml；font_preload.json 由 sync-fonts 生成（gitignore）
 content/                  # 内容
 static/                   # 原样发布的静态资源（fonts/ 由构建生成，gitignore）；love.* 为同域独立项目
-scripts/sync-fonts.mjs    # 同步 Fontsource 全部分片 + latin/CJK 白名单 preload
-scripts/smoke-public.mjs  # 构建后 public/ 断言
-archetypes/default.md     # 新文章 front matter 模板
+scripts/sync-fonts.mjs            # 同步 Fontsource 全部分片 + latin/CJK 白名单 preload
+scripts/smoke-public.mjs          # 构建后 public/ 断言
+scripts/setup-cloudflare.mjs      # Cloudflare DNS / 代理
+scripts/normalize-frontmatter.mjs # 维护：重排 content front matter（toc 默认 true）
+archetypes/default.md             # 新文章 front matter 模板
 ```
 
 ## 架构要点
@@ -65,8 +67,71 @@ archetypes/default.md     # 新文章 front matter 模板
   - SEO 出口：`partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）
 - **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 同步官方 `index.css` 中的**全部** `@font-face` 分片（不做站点用字扫描），不重写模板结构，只改 family 名与 `url(/fonts/…)`。`data/font_preload.json` 预载 **latin + 固定 CJK 白名单**（缺文件则跳过）；其余 CJK 靠 `unicode-range` 按需加载。调试：`npm run sync:fonts:stats`。
 - **Pagefind 搜索**：构建后 `pagefind --site public`；UI 入口为全站 Dialog + Default UI。
-- **CI/CD**：GitHub Actions 在 main 推送时 `format:check` → `build` → deploy Pages；PR 只构建不部署。
+- **CI/CD**：GitHub Actions 在 main 推送时 `build`（site + search + smoke）→ deploy Pages；PR 只构建不部署。
 - **域名 / CDN**：生产域 `owovo.xyz`（`baseURL` + `static/CNAME`）；无备案时用 Cloudflare 代理 GitHub Pages，步骤见 `docs/cloudflare.md`。一键：`CLOUDFLARE_API_TOKEN` + `GITHUB_PAGES_HOST` 后 `npm run cf:setup`（会删 apex/www 冲突 DNS；默认严格 exit 1；`CF_DRY_RUN=1` 预览；勿改 baseURL 为 `*.github.io`）。`/post/` → `/archives/` 仅用站点内 HTML/JS 重定向，**不做** Cloudflare 301。
+
+## 代码写法约定
+
+不使用 Prettier / ESLint 格式化。`.editorconfig` 管缩进与换行；逻辑与命名按下列规范手写。**改到的文件须符合约定；存量已按此对齐。**
+
+### 通用
+
+- 编码 UTF-8，换行 LF，文件末换行。
+- JS / SCSS / YAML / 脚本：2 空格；`layouts/**`：4 空格。
+- 提交信息中文、按变更类型拆分（勿整库纯风格大爆改与功能混在同一提交意图不清时）。
+
+### JavaScript（`assets/js`，`type="module"`）
+
+- 文件头：职责说明；有跨文件契约时列 bullet（如 `theme.js` ↔ FOUC）。
+- 结构：常量/选择器 → 纯函数 → `init…()` → 文件末调用 init。
+- 使用 `const`/`let`，不用 `var`（`head.html` FOUC 内联脚本除外，可保留 `var`）。
+- 字符串优先双引号；语句带分号；不用脚本级 `{ … }` 块或 IIFE 包一层。
+- 模块已自动 strict，**不要**写 `"use strict"`。
+- DOM 缺失时静默 `return`；仅错误路径 `console.error`。
+- 与模板的 `id` / `class` / `data-*` 为公开契约，改名须同 PR 改两侧。
+
+### JavaScript（`scripts/*.mjs`，Node ESM）
+
+- `node:` 前缀 import；文件头注明用途与用法。
+- 结构：常量 → 工具函数 → `main` → 启动；公共函数补 JSDoc。
+- 失败：stderr + 非零退出码。
+
+### SCSS
+
+- 仅 `@use` / `@forward`，禁止 `@import`。
+- partial 以 `_` 开头；入口只有 `main.scss`。
+- token 进 `utils/_variables.scss` 与 themes 的 CSS 变量。
+- **class 用连字符**（`post-meta-item`、`code-block-status`）；自有代码禁止 `__` BEM。
+- 第三方（Pagefind `pagefind-ui__*`）仅在嵌套中适配。
+- 嵌套建议 ≤ 3 层；新组件 = partial + `_components/*.scss`（+ 必要时 JS）并在 `main.scss` 登记。
+
+### Hugo 模板
+
+- 缩进 4 空格；输出敏感处用 `{{-` / `-}}`。
+- 多参 partial 用 `dict`；文章/关于判断只用 `utils/is-post.html` / `is-about.html`。
+- UI 文案硬编码简体中文；不引入 i18n。
+- JS/CSS：`Minify | Fingerprint`，输出 `integrity` 与 `crossorigin="anonymous"`。
+- 外链 render hook：`target="_blank" rel="external noopener"`。
+
+### Front matter（文章）
+
+标准字段序：
+
+```yaml
+title: "..."
+date: YYYY-MM-DDTHH:mm:ss+08:00
+lastmod: ...          # 仅有实质修改时
+slug: "kebab-case"    # 与目录名一致
+description: "..."
+tags: ["..."]
+# toc: false          # 文章 TOC 默认 true，勿写 toc: true；仅关闭时写 false
+# source / author     # 仅转载
+# outdated / outdatedNote
+```
+
+- 必填：`title` `date` `slug` `description` `tags`
+- 禁止 `categories`
+- 普通页 TOC 仍为 opt-in（如 about 写 `toc: true`）
 
 ## 内容模型（列表职责）
 
@@ -95,14 +160,14 @@ archetypes/default.md     # 新文章 front matter 模板
 - UI 文案直接写简体中文，不要再引入 `i18n/` 或 `{{ i18n }}`
 - 外链在 render hook 中统一 `target="_blank" rel="external noopener"`
 - JS / CSS 经 `resources.Minify | resources.Fingerprint`，模板输出 `integrity` 与 `crossorigin="anonymous"`
-- `layouts/` 不纳入 Prettier（Go template 与 Prettier 不兼容）；其余文件走 `format:check`
 
 ## 文章操作
 
 - 新文章：`content/post/<slug>/index.md`，front matter 参考 `archetypes/default.md`
 - 新 slug 必须全小写 kebab-case（已关闭 `disablePathToLower`，路径会规范为小写）
 - 只用 `tags`，**不要**写 `categories`
-- 转载用 `source: <url>`；`outdated: true` 显示归档提示；`toc: false` 可关闭目录（文章默认开 TOC）
+- **文章 TOC 默认开启**：不要写 `toc: true`；仅关闭时写 `toc: false`
+- 转载用 `source: <url>`（可选 `author`）；`outdated: true` 显示归档提示（建议 `outdatedNote`）
 - 关于页须带 `layout: about`（及通常 `type: page`）；普通独立页用 `type: page` 即可
 - permalink：`/post/:slug/`
 - 本地图片放在文章目录内引用；Hugo 会生成响应式 WebP
@@ -112,7 +177,6 @@ archetypes/default.md     # 新文章 front matter 模板
 提交前至少运行：
 
 ```bash
-npm run format:check
 npm run build            # 已含 smoke；勿在 hugo server 占用 public 时执行
 ```
 
@@ -126,6 +190,7 @@ npm run build:site -- --panicOnWarning --logLevel warn
 
 ## 已知技术选择
 
+- **无 Prettier**：风格靠 EditorConfig + 本文约定；CI 只跑构建与 smoke。
 - **搜索只保留全站 Dialog**：Pagefind Default UI 懒加载；菜单 / `Ctrl+K` / `/` 打开；**无**独立 `/search/` 页。
 - **搜索结果页内高亮（`?hl=`）保留**：Dialog 的 `processResult` 为结果 URL 追加 `hl`；页内见 `partials/components/search-highlight-loader.html`；资源 URL 放在 `<template id="search-highlight-config">` 的 `data-*`，loader 用 `getAttribute` 读取（勿把 Fingerprint URL 写进 JS 字面量 / `dataset.x =`，Hugo `--minify` 会破坏）。
 - **仅 tags taxonomy**：已关闭 `categories`；菜单「标签」为唯一分类入口。
