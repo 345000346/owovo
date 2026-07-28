@@ -2,6 +2,7 @@ archetypes/
 content/
 node_modules/
 public/
+.tmp-public/
 resources/
 .claude/
 .hugo_build.lock
