@@ -2,21 +2,21 @@
 {{- $destination := .Destination -}}
 {{- $path := strings.TrimPrefix "./" $destination -}}
 {{- with .Page.Resources.GetMatch $path -}}
-    {{- if in (slice "jpeg" "png" "tiff" "webp") .MediaType.SubType -}}
-        {{- $targetWidth := .Width -}}
+    {{- $image := . -}}
+    {{- if in (slice "jpeg" "png" "tiff" "webp") $image.MediaType.SubType -}}
+        {{- $targetWidth := $image.Width -}}
         {{- if gt $targetWidth 1600 -}}
             {{- $targetWidth = 1600 -}}
         {{- end -}}
-        {{- $fallback := .Resize (printf "%dx q82" $targetWidth) -}}
+        {{- $fallback := $image.Resize (printf "%dx q82" $targetWidth) -}}
         {{- $srcset := slice -}}
         {{- range slice 640 960 1440 -}}
             {{- if lt . $targetWidth -}}
-                {{- $image := $.Page.Resources.GetMatch $path -}}
                 {{- $variant := $image.Resize (printf "%dx webp q75" .) -}}
                 {{- $srcset = $srcset | append (printf "%s %dw" $variant.RelPermalink $variant.Width) -}}
             {{- end -}}
         {{- end -}}
-        {{- $webp := .Resize (printf "%dx webp q75" $targetWidth) -}}
+        {{- $webp := $image.Resize (printf "%dx webp q75" $targetWidth) -}}
         {{- $srcset = $srcset | append (printf "%s %dw" $webp.RelPermalink $webp.Width) -}}
         <picture>
             <source type="image/webp" srcset="{{ delimit $srcset ", " }}" sizes="(max-width: 768px) 100vw, 768px" />
@@ -25,7 +25,7 @@
             />
         </picture>
     {{- else -}}
-        <img src="{{ .RelPermalink }}" alt="{{ $.Text }}" decoding="async" loading="lazy"
+        <img src="{{ $image.RelPermalink }}" alt="{{ $.Text }}" decoding="async" loading="lazy"
         {{- with $.Title }} title="{{ . }}"{{ end -}}
         />
     {{- end -}}
