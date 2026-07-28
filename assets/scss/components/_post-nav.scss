@@ -1,8 +1,11 @@
+@use "../utils/variables";
+
 .post-nav {
   list-style: none;
   padding: 0;
   display: flex;
   justify-content: space-between;
+  gap: 1em;
   border-top: 1px solid var(--color-contrast-lower);
   font-weight: 700;
   margin-top: 5em;
@@ -11,9 +14,29 @@
 .post-nav-prev {
   margin-right: auto;
   max-width: 42%;
+  min-width: 0;
 }
 .post-nav-next {
   margin-left: auto;
   text-align: right;
   max-width: 42%;
+  min-width: 0;
+}
+
+.post-nav a {
+  display: inline-block;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: variables.$breakpoint-sm) {
+  .post-nav {
+    flex-direction: column;
+    gap: 0.85em;
+  }
+  .post-nav-prev,
+  .post-nav-next {
+    max-width: none;
+    margin: 0;
+    text-align: left;
+  }
 }
