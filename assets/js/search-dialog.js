@@ -1,5 +1,8 @@
-// Full-site search dialog + lazy Pagefind Default UI.
-// Opens from menu [data-search-trigger], Ctrl/Cmd+K, /, or #search hash.
+// 全站搜索 Dialog + 懒加载 Pagefind UI。
+// 打开：[data-search-trigger]、Ctrl/Cmd+K、/、#search。
+//
+// 契约：#search-dialog、#search-dialog-config 的 data-pagefind-*；
+// 结果加 ?hl=；打开时派发 site:close-navigation；路径只放 data-*（防 --minify）。
 
 function initSearchDialog() {
   const dialog = document.getElementById("search-dialog");
@@ -38,7 +41,7 @@ function initSearchDialog() {
       const url = new URL(rawUrl, window.location.origin);
       url.searchParams.delete("hl");
       url.searchParams.append("hl", term);
-      // Preserve absolute result URLs from Pagefind when present.
+      // 保留 Pagefind 绝对 URL。
       return rawUrl.startsWith("http")
         ? url.toString()
         : `${url.pathname}${url.search}${url.hash}`;
@@ -134,7 +137,7 @@ function initSearchDialog() {
   function openDialog() {
     document.dispatchEvent(new CustomEvent("site:close-navigation"));
     if (location.hash !== "#search") {
-      // Keep menu href="#search" shareable without forcing scroll jump noise.
+      // 写入 #search 可分享，且不强制滚顶。
       const { pathname, search } = window.location;
       history.replaceState(null, "", `${pathname}${search}#search`);
     }
@@ -204,7 +207,7 @@ function initSearchDialog() {
     }
   });
 
-  // Deep link: /#search or hashchange to #search opens the dialog.
+  // /#search 与 hashchange 打开。
   if (location.hash === "#search") {
     openDialog();
   }

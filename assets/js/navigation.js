@@ -1,6 +1,11 @@
-// Mobile navigation (open / close / focus trap / inert background / scroll lock).
+// 移动端导航：开合、焦点陷阱、背景 inert、滚动锁定。
+//
+// 契约：.nav-toggle / .header / .nav-curtain / .nav；
+// --max-width 与 _responsive.scss $maxWidth 同步；关闭兜底 ≥ $duration（0.5s）；
+// 监听 site:close-navigation（搜索打开时关菜单）。
+// Concat：与 theme.js / scroll-ui.js 同 module，顶层仅常量 + initNavigation。
 
-const FOCUSABLE_SELECTOR =
+const NAV_FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function initNavigation() {
@@ -22,7 +27,7 @@ function initNavigation() {
     .getComputedStyle(document.documentElement, null)
     .getPropertyValue("--max-width")
     .trim();
-  // Keep in sync with assets/scss/base/_responsive.scss $maxWidth (fontSize * (max(post,list)+5)).
+  // 与 _responsive.scss $maxWidth 同步（fontSize * (max(post,list)+5)）。
   const maxWidth = maxWidthRaw || "846px";
   const navMediaQuery = window.matchMedia(`(max-width: ${maxWidth})`);
 
@@ -38,7 +43,7 @@ function initNavigation() {
   }
 
   function syncNavAvailability() {
-    // On mobile the menu stays in layout for transitions; inert keeps it out of tab order when closed.
+    // 移动端保留布局做过渡；关闭时 inert 移出 Tab 序。
     if (!navMediaQuery.matches) {
       nav.inert = false;
       return;
@@ -47,7 +52,7 @@ function initNavigation() {
   }
 
   function isScrollAllowedTarget(target) {
-    // touchmove can target a Text node when the finger is on link text.
+    // touchmove 点在文字上时 target 可能是 Text。
     const element =
       target instanceof Element
         ? target
@@ -57,7 +62,7 @@ function initNavigation() {
     if (!element) {
       return false;
     }
-    // Allow scrolling only inside the open nav panel when it actually overflows.
+    // 仅面板自身溢出时允许内部滚动。
     if (!nav.contains(element)) {
       return false;
     }
@@ -92,9 +97,8 @@ function initNavigation() {
       }
       lockedScrollY = window.scrollY || window.pageYOffset || 0;
       body.classList.add("nav-open");
-      // Do not use overflow:hidden / position:fixed on body:
-      // overflow:hidden can jump scrollY to 0; position:fixed shifts fixed header.
-      // Block background touch/wheel and pin scrollY for any residual scroll.
+      // 勿用 body overflow:hidden / position:fixed（会跳滚动或顶栏错位）；
+      // 拦截背景 touch/wheel，并钉住 scrollY。
       document.addEventListener("touchmove", preventBackgroundScroll, {
         passive: false,
       });
@@ -122,7 +126,7 @@ function initNavigation() {
     background.forEach((element) => {
       element.inert = inert;
       element.setAttribute("aria-hidden", String(inert));
-      element.querySelectorAll(FOCUSABLE_SELECTOR).forEach((focusable) => {
+      element.querySelectorAll(NAV_FOCUSABLE_SELECTOR).forEach((focusable) => {
         if (inert) {
           backgroundTabIndexes.set(
             focusable,
@@ -147,7 +151,7 @@ function initNavigation() {
   function getFocusableElements() {
     return [
       navToggle,
-      ...header.querySelectorAll(`.nav ${FOCUSABLE_SELECTOR}`),
+      ...header.querySelectorAll(`.nav ${NAV_FOCUSABLE_SELECTOR}`),
     ].filter(
       (element) => !element.hidden && element.getClientRects().length > 0,
     );
@@ -175,12 +179,11 @@ function initNavigation() {
     window.clearTimeout(closeTimer);
     header.classList.remove("fade");
     navToggle.classList.add("open");
-    // Keep aria/inert/trap active for the whole open + fade cycle so focus
-    // is not yanked mid-animation and Tab still stays inside the menu.
+    // 开合与淡出全程保持 aria/inert/陷阱，避免动画中焦点被抽走。
     navToggle.setAttribute("aria-expanded", "true");
     navToggle.setAttribute("aria-label", "关闭菜单");
     navCurtain.hidden = false;
-    // Force layout so opacity/visibility transitions can run after [hidden] is cleared.
+    // 清 [hidden] 后强制回流，过渡才能生效。
     void navCurtain.offsetWidth;
     header.classList.add("open");
     setScrollLock(true);
@@ -210,7 +213,7 @@ function initNavigation() {
       navToggle.focus({ preventScroll: true });
       restoreFocusOnClose = false;
     }
-    // Layout reflow after menu collapse can nudge scroll; re-pin once more.
+    // 收起回流可能微移滚动，再钉一次。
     window.scrollTo(0, lockedScrollY);
     requestAnimationFrame(() => {
       window.scrollTo(0, lockedScrollY);
@@ -222,8 +225,7 @@ function initNavigation() {
       return;
     }
     restoreFocusOnClose ||= restoreFocus;
-    // Visual close starts now (header + hamburger). a11y teardown waits for
-    // finishClose so the fading menu stays focusable and inert is not applied mid-transition.
+    // 视觉先关；a11y 等 finishClose，淡出中仍可聚焦。
     header.classList.remove("open");
     navToggle.classList.remove("open");
 
@@ -234,7 +236,7 @@ function initNavigation() {
 
     header.classList.add("fade");
     window.clearTimeout(closeTimer);
-    // Must be >= CSS $duration (0.5s); transitionend on curtain opacity also calls finishClose.
+    // 须 ≥ $duration（0.5s）；幕布 transitionend 也会 finishClose。
     closeTimer = window.setTimeout(finishClose, 600);
   }
 
@@ -246,7 +248,7 @@ function initNavigation() {
   }
 
   navToggle.addEventListener("click", (event) => {
-    // Fade keeps aria-expanded true; treat a mid-fade click as re-open.
+    // 淡出中 aria-expanded 仍 true；中途点击视为重开。
     if (header.classList.contains("fade")) {
       openNav(event.detail === 0);
       return;
@@ -262,7 +264,7 @@ function initNavigation() {
     if (event.target !== navCurtain || event.propertyName !== "opacity") {
       return;
     }
-    // Closing keeps aria-expanded true until finishClose; detect fade instead.
+    // 关闭中 aria-expanded 仍 true，用 fade 判断收尾。
     if (header.classList.contains("fade")) {
       finishClose();
     }

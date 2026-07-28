@@ -1,6 +1,7 @@
-// Loaded only when ?hl= is present (see head loader).
-// Dynamic import keeps the common path free of Pagefind highlight cost;
-// failures degrade silently (no highlight) rather than breaking the page.
+// 仅 ?hl= 时由 head loader 注入；动态 import，失败静默降级。
+//
+// 契约：hl 参数；data-pagefind-highlight 脚本路径；
+// 命中 mark.search-highlight（样式 _search-highlight.scss）。
 
 function initSearchHighlight() {
   const highlightTerms = new URLSearchParams(window.location.search).getAll(
