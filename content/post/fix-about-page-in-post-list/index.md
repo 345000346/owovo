@@ -5,7 +5,6 @@ lastmod: 2026-05-18T00:00:00+08:00
 slug: "fix-about-page-in-post-list"
 description: "about.md 等自定义页面意外出现在首页文章列表中？本文分析 .Site.RegularPages 遍历的原因，并给出 Hugo + MemE 主题的解决方案。"
 tags: ["Hugo", "自定义页面"]
-categories: ["技术"]
 toc: true
 ---
 

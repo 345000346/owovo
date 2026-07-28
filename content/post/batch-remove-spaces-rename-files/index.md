@@ -5,7 +5,6 @@ slug: "batch-remove-spaces-rename-files"
 description: "用 .bat 批处理脚本批量去除文件名中的空格、批量重命名文件，两步搞定，简单实用。"
 toc: true
 tags: ["Windows", "批处理", "脚本"]
-categories: ["技术"]
 ---
 
 本次介绍一下批量去除文件名中的空格、批量重命名的方法。

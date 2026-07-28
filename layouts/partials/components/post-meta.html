@@ -10,12 +10,6 @@
         {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "edit" "class" "post-meta-icon") }}
         <time datetime="{{ $.Lastmod.Format "2006-01-02T15:04:05-07:00" }}" class="post-meta-item">{{ $icon }}&nbsp;{{ $.Lastmod.Format $.Site.Params.postMetaDateFormat }}</time>
     {{ end }}
-    {{ with $.Params.categories }}
-        <span class="post-meta-item category">
-            {{- partial "utils/icon.html" (dict "$" $ "name" "folder" "class" "post-meta-icon") -}}&nbsp;
-            {{- partial "utils/taxonomy-links.html" (dict "$" $ "taxonomy" "categories" "terms" . "class" "category-link" "delimiter" "/") -}}
-        </span>
-    {{ end }}
     {{ if $isPost }}
         {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "clock" "class" "post-meta-icon") }}
         <span class="post-meta-item reading-time">{{ $icon }}&nbsp;{{ $.ReadingTime }}&nbsp;分钟</span>
