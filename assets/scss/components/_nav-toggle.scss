@@ -68,7 +68,7 @@
 }
 
 .nav-curtain {
-  display: none;
+  display: block;
   position: fixed;
   z-index: 1;
   inset: 0;
@@ -76,8 +76,11 @@
   border: 0;
   @include mixins.blur;
   background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-.nav-curtain:not([hidden]) {
-  display: block;
+.nav-curtain[hidden] {
+  display: none;
 }

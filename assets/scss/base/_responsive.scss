@@ -32,19 +32,30 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
   .nav-toggle {
     display: block;
   }
+  // Keep display:block so open/close can transition; hide with max-height/opacity/visibility.
   .nav {
-    display: none;
+    display: block;
+    visibility: hidden;
     text-align: center;
-    margin: 2em 0;
+    margin: 0;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      max-height variables.$duration ease,
+      opacity variables.$duration ease,
+      margin variables.$duration ease,
+      visibility 0s linear variables.$duration;
   }
   .menu {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    align-items: center;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
   }
   .menu-item {
     margin: 0;
-    padding: 1em;
+    padding: 0.85em 0.35em;
     .icon {
       margin: 0;
     }
@@ -55,92 +66,62 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
   .theme-switcher-label {
     display: block;
   }
+  // JS owns the real scroll lock (touch/wheel prevent + scrollY pin).
+  body.nav-open {
+    overscroll-behavior: none;
+  }
   .header.open {
     .nav {
-      display: block;
-      animation: appear variables.$duration;
-      animation-iteration-count: 1;
-      animation-fill-mode: forwards;
-    }
-    @keyframes appear {
-      0% {
-        opacity: 0;
-        height: 0;
-        margin: 0;
-        transform: scaleY(0);
-        transform-origin: top;
-      }
-      100% {
-        opacity: 1;
-        height: variables.$navHeight;
-        margin: 2em 0;
-        transform: scaleY(1);
-        transform-origin: top;
-      }
+      visibility: visible;
+      max-height: min(70vh, 24em);
+      margin: 0.75em 0 0;
+      opacity: 1;
+      pointer-events: auto;
+      // Match JS isScrollAllowedTarget: panel may scroll when items overflow.
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      transition:
+        max-height variables.$duration ease,
+        opacity variables.$duration ease,
+        margin variables.$duration ease,
+        visibility 0s linear 0s;
     }
     .nav-curtain {
-      animation: appearCurtain variables.$duration;
-      animation-iteration-count: 1;
-      animation-fill-mode: forwards;
-    }
-    @keyframes appearCurtain {
-      0% {
-        visibility: hidden;
-        opacity: 0;
-      }
-      100% {
-        visibility: visible;
-        opacity: 1;
-      }
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transition:
+        opacity variables.$duration ease,
+        visibility 0s linear 0s;
     }
   }
   .header.fade {
     .nav {
-      display: block;
-      animation: fade variables.$duration;
-      animation-iteration-count: 1;
-      animation-fill-mode: forwards;
-    }
-    @keyframes fade {
-      0% {
-        opacity: 1;
-        height: variables.$navHeight;
-        margin: 2em 0;
-        transform: scaleY(1);
-        transform-origin: top;
-      }
-      100% {
-        opacity: 0;
-        height: 0;
-        margin: 0;
-        transform: scaleY(0);
-        transform-origin: top;
-      }
+      visibility: hidden;
+      max-height: 0;
+      margin: 0;
+      opacity: 0;
+      pointer-events: none;
     }
     .nav-curtain {
-      animation: fadeCurtain variables.$duration;
-      animation-iteration-count: 1;
-      animation-fill-mode: forwards;
-    }
-    @keyframes fadeCurtain {
-      0% {
-        visibility: visible;
-        opacity: 1;
-      }
-      100% {
-        visibility: hidden;
-        opacity: 0;
-      }
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        opacity variables.$duration ease,
+        visibility 0s linear variables.$duration;
     }
   }
 }
 
 @media (max-width: $maxWidth) and (prefers-reduced-motion: reduce) {
-  .header.open,
-  .header.fade {
-    .nav,
-    .nav-curtain {
-      animation: none !important;
-    }
+  .nav,
+  .header.open .nav,
+  .header.fade .nav,
+  .header.open .nav-curtain,
+  .header.fade .nav-curtain {
+    transition: none !important;
   }
 }
