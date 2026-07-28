@@ -1,12 +1,13 @@
 {{- $source := .Params.source -}}
+{{- $isHttpSource := and $source (or (strings.HasPrefix $source "https://") (strings.HasPrefix $source "http://")) -}}
 {{- $author := partial "utils/author.html" . -}}
 {{ with $author.name }}
     <ul class="post-copyright">
         <li class="copyright-item author">
             <span class="copyright-item-text">作者</span>：{{ . }}
         </li>
-        {{ if $source }}
-            <li class="copyright-item link"><span class="copyright-item-text">链接</span>：<a href="{{ $source }}" target="_blank" rel="external noopener">{{ $source }}</a></li>
+        {{ if $isHttpSource }}
+            <li class="copyright-item link"><span class="copyright-item-text">链接</span>：<a href="{{ $source | safeURL }}" target="_blank" rel="external noopener noreferrer">{{ $source }}</a></li>
         {{ else }}
             <li class="copyright-item link"><span class="copyright-item-text">链接</span>：<a href="{{ $.RelPermalink }}">{{ $.Permalink }}</a></li>
         {{ end }}
