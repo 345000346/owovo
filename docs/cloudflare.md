@@ -206,7 +206,7 @@ Cloudflare → **Caching → Cache Rules**（免费档可用），建议建两�
 | `X-Frame-Options`        | `DENY`                                                 |
 | `Permissions-Policy`     | `camera=(), microphone=(), geolocation=()`（按需收紧） |
 
-**Content-Security-Policy** 需单独设计：本站有 head 内联 FOUC / `?hl=` loader、标签云 inline `style`、关于页 `img.shields.io` 与 substats 动态图。建议先 **Content-Security-Policy-Report-Only**，确认无误伤再 enforce；`script-src` / `style-src` 至少短期内需要 `'unsafe-inline'` 或改为 hash/nonce。
+**Content-Security-Policy** 需单独设计：本站有 head 内联 FOUC / `?hl=` loader、标签云 inline `style`。建议先 **Content-Security-Policy-Report-Only**，确认无误伤再 enforce；`script-src` / `style-src` 至少短期内需要 `'unsafe-inline'` 或改为 hash/nonce。
 
 ---
 
@@ -257,4 +257,4 @@ curl.exe -sI https://owovo.xyz/css/ 2>$null
 
 - **能改善**：TLS 终结在边缘、静态 HIT、减少部分直连 GitHub 的抖动、HTTPS 与压缩统一。
 - **不能保证**：全国任意运营商都快；无备案就不能用国内牌照 CDN 做合规「国内加速」。
-- **站点内仍值得做**（与 CF 互补）：减少 shields 等大陆慢外链、控制字体体积——见站点性能讨论，不在本文展开。
+- **站点内仍值得做**（与 CF 互补）：控制字体体积与第三方外链——见站点性能讨论，不在本文展开。

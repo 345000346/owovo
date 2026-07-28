@@ -133,6 +133,14 @@ async function main() {
     sitemap.includes(`${siteHost}/archives/`),
     "sitemap.xml must include /archives/",
   );
+  assert(
+    !sitemap.includes(`${siteHost}/search`),
+    "sitemap.xml must not list removed /search/ page",
+  );
+  assert(
+    !sitemap.includes(`${siteHost}/categories`),
+    "sitemap.xml must not list removed /categories/ taxonomy",
+  );
 
   const indexHtml = await readPublic("index.html");
   assert(
@@ -160,8 +168,35 @@ async function main() {
   assert(
     /rel="?preload"?/.test(indexHtml) &&
       /as="?font"?/.test(indexHtml) &&
-      /fonts\/noto-serif-sc-/.test(indexHtml),
-    "index.html missing critical font preload (run sync:fonts before build)",
+      /fonts\/noto-serif-sc-latin-/.test(indexHtml),
+    "index.html missing latin font preload (run sync:fonts before build)",
+  );
+  assert(
+    /fonts\/noto-serif-sc-11[789]-/.test(indexHtml),
+    "index.html missing fixed CJK font preload whitelist (117/118/119)",
+  );
+  assert(
+    /id="?search-dialog"?/.test(indexHtml) &&
+      /data-search-trigger/.test(indexHtml),
+    "index.html missing search dialog or menu trigger",
+  );
+
+  if (await exists("404.html")) {
+    const notFound = await readPublic("404.html");
+    assert(
+      /id="?search-dialog"?/.test(notFound) &&
+        /data-search-trigger/.test(notFound) &&
+        /search-dialog\.min\./.test(notFound),
+      "404.html must include search dialog, trigger, and search-dialog script",
+    );
+    assert(
+      !/id="?search-highlight-config"?/.test(notFound),
+      "404.html should not include search-highlight-config",
+    );
+  }
+  assert(
+    !/themed-badge|shields\.io|substats/.test(indexHtml),
+    "index.html must not reference removed shields/themed badges",
   );
 
   const cssDir = publicPath("css");
@@ -207,6 +242,14 @@ async function main() {
       /rel="?external noopener noreferrer"?/.test(postHtml) ||
         !/target="?_blank"?/.test(postHtml),
       `post external links should use noopener noreferrer when target=_blank: ${postRel}`,
+    );
+    assert(
+      /id="?search-dialog"?/.test(postHtml),
+      `post page missing search dialog: ${postRel}`,
+    );
+    assert(
+      /id="?search-highlight-config"?/.test(postHtml),
+      `post page missing search-highlight-config (hl= loader): ${postRel}`,
     );
   }
 

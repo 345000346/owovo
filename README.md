@@ -22,13 +22,13 @@ npm run build          # 生产构建：站点 + Pagefind 搜索 + smoke 校验
 npm run build:site     # 仅 Hugo（--environment production；先 sync 字体）
 npm run build:search   # 仅 Pagefind 索引
 npm run smoke          # 对 public/ 做构建后断言（需先 build）
-npm run sync:fonts:stats  # 字体分片命中统计（体积排查）
+npm run sync:fonts:stats  # 字体分片体积统计
 npm run preview        # 构建后启动 Pagefind 预览
 npm run format         # Prettier 格式化
 npm run format:check   # 格式检查（CI 会跑）
 ```
 
-涉及样式 / 模板时，建议本地用 `npm run dev` 检查：首页、文章、归档、搜索、关于。  
+涉及样式 / 模板时，建议本地用 `npm run dev` 检查：首页、文章、归档、标签、搜索 Dialog、关于。  
 模板变更也可用：
 
 ```bash
@@ -41,6 +41,7 @@ npm run build:site -- --panicOnWarning --logLevel warn
 - 模板参考：`archetypes/default.md`
 - slug 建议全小写 kebab-case
 - 站内文章列表入口为 **`/archives/`**（菜单「文章」）；`/post/` 仅重定向，不是第二套列表
+- 搜索为全站 Dialog（无独立 `/search/` 页）；分类只用 `tags`，不要写 `categories`
 - 转载填 `source: <https url>`；过时文可设 `outdated: true` 与 `outdatedNote`
 - 本地图片放在文章目录内引用，Hugo 会生成响应式 WebP
 
