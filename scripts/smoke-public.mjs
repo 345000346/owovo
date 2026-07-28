@@ -1,5 +1,5 @@
 /**
- * Post-build smoke checks against ./public.
+ * Post-build smoke checks against ./public (or SMOKE_PUBLIC_DIR / argv[2]).
  * Run after `build:site` (+ `build:search` when asserting Pagefind).
  *
  * Usage: node scripts/smoke-public.mjs
@@ -17,29 +17,38 @@ const siteHost = "https://owovo.xyz";
 /** @type {string[]} */
 const failures = [];
 
-/**
- * @param {string} cond
- * @param {string} message
- */
+/** @param {unknown} cond @param {string} message */
 function assert(cond, message) {
   if (!cond) {
     failures.push(message);
   }
 }
 
-/**
- * @param {string} rel
- */
-async function readPublic(rel) {
-  return readFile(join(publicDir, rel), "utf8");
+function exitIfFailed() {
+  if (!failures.length) {
+    return;
+  }
+  console.error("smoke-public: FAILED");
+  for (const f of failures) {
+    console.error(`  ✗ ${f}`);
+  }
+  process.exit(1);
 }
 
-/**
- * @param {string} rel
- */
+/** @param {string} rel */
+function publicPath(rel) {
+  return join(publicDir, rel);
+}
+
+/** @param {string} rel */
+async function readPublic(rel) {
+  return readFile(publicPath(rel), "utf8");
+}
+
+/** @param {string} rel */
 async function exists(rel) {
   try {
-    await stat(join(publicDir, rel));
+    await stat(publicPath(rel));
     return true;
   } catch {
     return false;
@@ -65,27 +74,40 @@ async function findFirstFile(dir, pred) {
   return null;
 }
 
+/** First post section page with an index.html, if any. */
+async function findSamplePostHtml() {
+  let entries;
+  try {
+    entries = await readdir(publicPath("post"), { withFileTypes: true });
+  } catch {
+    return null;
+  }
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const rel = join("post", entry.name, "index.html");
+    if (await exists(rel)) {
+      return rel;
+    }
+  }
+  return null;
+}
+
 async function main() {
   console.log(`smoke-public: checking ${publicDir}`);
+
   try {
     await stat(publicDir);
   } catch {
-    console.error("smoke-public: FAILED");
-    console.error(`  ✗ ${publicDir} does not exist (run build first)`);
-    process.exit(1);
+    failures.push(`${publicDir} does not exist (run build first)`);
+    exitIfFailed();
   }
 
-  const required = ["index.html", "robots.txt", "sitemap.xml"];
-  for (const rel of required) {
-    if (!(await exists(rel))) {
-      failures.push(`${rel} missing under ${publicDir}`);
-    }
+  for (const rel of ["index.html", "robots.txt", "sitemap.xml"]) {
+    assert(await exists(rel), `${rel} missing under ${publicDir}`);
   }
-  if (failures.length) {
-    console.error("smoke-public: FAILED");
-    for (const f of failures) console.error(`  ✗ ${f}`);
-    process.exit(1);
-  }
+  exitIfFailed();
 
   const robots = await readPublic("robots.txt");
   assert(
@@ -118,7 +140,8 @@ async function main() {
     "index.html must not contain livereload (stop `hugo server` before build; it rewrites public/)",
   );
   assert(
-    indexHtml.includes('name="theme-color"'),
+    indexHtml.includes('name="theme-color"') ||
+      indexHtml.includes("name=theme-color"),
     "index.html missing theme-color meta",
   );
   // Hugo --minify may drop attribute quotes: class=skip-link href=#main
@@ -141,14 +164,14 @@ async function main() {
     "index.html missing critical font preload (run sync:fonts before build)",
   );
 
-  const cssDir = join(publicDir, "css");
+  const cssDir = publicPath("css");
   const mainCss = await findFirstFile(cssDir, (n) => n.startsWith("main."));
   const fontsCss = await findFirstFile(
     cssDir,
     (n) => n.startsWith("fonts.") && n.endsWith(".css"),
   );
-  assert(mainCss !== null, "public/css/main.*.css missing");
-  assert(fontsCss !== null, "public/css/fonts.*.css missing");
+  assert(mainCss, "css/main.*.css missing");
+  assert(fontsCss, "css/fonts.*.css missing");
   if (fontsCss) {
     const fonts = await readFile(fontsCss, "utf8");
     assert(
@@ -159,60 +182,35 @@ async function main() {
 
   assert(
     await exists("pagefind/pagefind.js"),
-    "public/pagefind/pagefind.js missing (run build:search)",
+    "pagefind/pagefind.js missing (run build:search)",
   );
   assert(
     await exists("pagefind/pagefind-entry.json"),
-    "public/pagefind/pagefind-entry.json missing",
+    "pagefind/pagefind-entry.json missing",
   );
 
-  // Spot-check one post page if present.
-  const postRoot = join(publicDir, "post");
-  let postHtmlPath = null;
-  try {
-    const postEntries = await readdir(postRoot, { withFileTypes: true });
-    for (const entry of postEntries) {
-      if (!entry.isDirectory()) continue;
-      const candidate = join(postRoot, entry.name, "index.html");
-      try {
-        await stat(candidate);
-        postHtmlPath = candidate;
-        break;
-      } catch {
-        // try next
-      }
-    }
-  } catch {
-    // no posts
-  }
-
-  if (postHtmlPath) {
-    const postHtml = await readFile(postHtmlPath, "utf8");
+  const postRel = await findSamplePostHtml();
+  if (!postRel) {
+    failures.push("no post/*/index.html found to spot-check");
+  } else {
+    const postHtml = await readPublic(postRel);
     assert(
       postHtml.includes("application/ld+json"),
-      `post page missing JSON-LD: ${postHtmlPath}`,
+      `post page missing JSON-LD: ${postRel}`,
     );
     assert(
       postHtml.includes("data-pagefind-body"),
-      `post page missing data-pagefind-body: ${postHtmlPath}`,
+      `post page missing data-pagefind-body: ${postRel}`,
     );
+    // Minify may drop quotes on rel=...
     assert(
-      postHtml.includes('rel="external noopener noreferrer"') ||
-        !postHtml.includes('target="_blank"'),
-      `post external links should use noopener noreferrer when target=_blank: ${postHtmlPath}`,
+      /rel="?external noopener noreferrer"?/.test(postHtml) ||
+        !/target="?_blank"?/.test(postHtml),
+      `post external links should use noopener noreferrer when target=_blank: ${postRel}`,
     );
-  } else {
-    failures.push("no public/post/*/index.html found to spot-check");
   }
 
-  if (failures.length) {
-    console.error("smoke-public: FAILED");
-    for (const f of failures) {
-      console.error(`  ✗ ${f}`);
-    }
-    process.exit(1);
-  }
-
+  exitIfFailed();
   console.log("smoke-public: ok");
 }
 

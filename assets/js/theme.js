@@ -41,6 +41,8 @@
     return preference === "dark" ? "dark" : "light";
   }
 
+  const themeSwitcher = document.getElementById("theme-switcher");
+
   function preferenceLabel(preference) {
     switch (preference) {
       case "light":
@@ -54,7 +56,6 @@
   }
 
   function syncThemeSwitcherLabel(preference) {
-    const themeSwitcher = document.getElementById("theme-switcher");
     if (!themeSwitcher) {
       return;
     }
@@ -142,7 +143,6 @@
     applyThemeFromPreference(event.newValue || "system", { force: true });
   });
 
-  const themeSwitcher = document.getElementById("theme-switcher");
   if (themeSwitcher) {
     themeSwitcher.addEventListener("click", (e) => {
       e.preventDefault();
