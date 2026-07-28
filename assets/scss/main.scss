@@ -1,12 +1,16 @@
 // Entry: pure SCSS — no Hugo template injection.
+// Groups: base → themes → layout chrome → post components → pages → responsive.
 
+// Base
 @use "base/base";
 @use "base/font-family";
 
+// Themes + switcher
 @use "themes/light";
 @use "themes/dark";
 @use "components/theme-switcher";
 
+// Layout chrome
 @use "layout/header";
 @use "components/nav-toggle";
 @use "layout/menu";
@@ -14,6 +18,7 @@
 @use "layout/single";
 @use "layout/footer";
 
+// Post / shared components
 @use "components/post-meta";
 @use "components/post-copyright";
 @use "components/post-outdated";
@@ -27,7 +32,10 @@
 @use "components/about-socials";
 @use "components/search-dialog";
 
+// Pages
 @use "pages/home-posts";
 @use "pages/tag-cloud";
 @use "pages/404" as page404;
+
+// Breakpoints last so overrides win where needed
 @use "base/responsive";
