@@ -1,3 +1,16 @@
+/**
+ * Sync self-hosted fonts from Fontsource packages.
+ *
+ * Policy (no site-wide code-point scan):
+ * - Copy every @font-face from Noto Serif SC variable index.css (latin + all CJK chunks)
+ * - Always ship Source Code Pro latin 400/700 normal+italic
+ * - Preload: latin + fixed CJK whitelist (if present in the package)
+ *
+ * Outputs:
+ * - static/fonts/*.woff2
+ * - assets/css/fonts.css
+ * - data/font_preload.json
+ */
 import {
   cp,
   mkdir,
@@ -7,7 +20,7 @@ import {
   stat,
   writeFile,
 } from "node:fs/promises";
-import { extname, join, resolve } from "node:path";
+import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const notoSource = resolve(
@@ -22,169 +35,50 @@ const fontDirectory = resolve(root, "static/fonts");
 const cssDirectory = resolve(root, "assets/css");
 const preloadDataPath = resolve(root, "data/font_preload.json");
 
-// Visible copy only — not assets source that is mostly ASCII.
-const SCAN_ROOTS = ["content", "layouts", "config", "data"];
-const SCAN_EXTS = new Set([".md", ".html", ".toml", ".yaml", ".yml", ".txt"]);
-// Always ship basic Latin so brand / English snippets never fall back.
-// latin-ext is NOT forced: include only when site code points hit its range.
-const ALWAYS_FILE = /-latin-wght-normal\.woff2$/;
 const FACE_BLOCK = /(?:\/\*[\s\S]*?\*\/\s*)?@font-face\s*\{[^}]*\}/g;
-// Critical-path preloads: latin + top CJK subsets by content frequency (keep small).
-const PRELOAD_CJK_MAX = 2;
-const PRELOAD_TOTAL_MAX = 3;
+const LATIN_FILE = /-latin-wght-normal\.woff2$/;
+// Fixed critical-path CJK chunks (no content scan). Update only when Fontsource
+// renames subsets; missing names are skipped quietly.
+const PRELOAD_CJK_FILES = [
+  "noto-serif-sc-119-wght-normal.woff2",
+  "noto-serif-sc-118-wght-normal.woff2",
+  "noto-serif-sc-117-wght-normal.woff2",
+];
+const PRELOAD_TOTAL_MAX = 4; // latin + up to 3 CJK
 const wantStats =
   process.argv.includes("--stats") || process.env.SYNC_FONTS_STATS === "1";
 
-async function walkFiles(dir, acc = []) {
-  let entries;
-  try {
-    entries = await readdir(dir, { withFileTypes: true });
-  } catch {
-    return acc;
-  }
-  for (const entry of entries) {
-    const fullPath = join(dir, entry.name);
-    if (entry.isDirectory()) {
-      await walkFiles(fullPath, acc);
-      continue;
-    }
-    if (SCAN_EXTS.has(extname(entry.name).toLowerCase())) {
-      acc.push(fullPath);
-    }
-  }
-  return acc;
-}
-
 /**
- * @returns {Promise<{ chars: Set<number>, freq: Map<number, number>, perRoot: Map<string, number> }>}
- */
-async function collectSiteCodePoints() {
-  const chars = new Set();
-  /** @type {Map<number, number>} */
-  const freq = new Map();
-  /** @type {Map<string, number>} */
-  const perRoot = new Map();
-
-  for (const rel of SCAN_ROOTS) {
-    let rootChars = 0;
-    for (const file of await walkFiles(resolve(root, rel))) {
-      const text = await readFile(file, "utf8");
-      for (const ch of text) {
-        const cp = ch.codePointAt(0);
-        chars.add(cp);
-        freq.set(cp, (freq.get(cp) || 0) + 1);
-        rootChars += 1;
-      }
-    }
-    perRoot.set(rel, rootChars);
-  }
-  return { chars, freq, perRoot };
-}
-
-/** Parse `U+xxxx` / `U+aaaa-U+bbbb` lists into closed intervals (no expansion). */
-function parseIntervals(rangeStr) {
-  const intervals = [];
-  for (const part of rangeStr.split(",")) {
-    const token = part.trim();
-    const rangeMatch = token.match(/^U\+([0-9A-Fa-f]+)-([0-9A-Fa-f]+)$/i);
-    if (rangeMatch) {
-      intervals.push([
-        Number.parseInt(rangeMatch[1], 16),
-        Number.parseInt(rangeMatch[2], 16),
-      ]);
-      continue;
-    }
-    const singleMatch = token.match(/^U\+([0-9A-Fa-f]+)$/i);
-    if (singleMatch) {
-      const cp = Number.parseInt(singleMatch[1], 16);
-      intervals.push([cp, cp]);
-    }
-  }
-  return intervals;
-}
-
-/**
- * @param {string} rangeStr
- * @param {Set<number>} siteChars
- * @param {Map<number, number>} freq
- */
-function rangeStats(rangeStr, siteChars, freq) {
-  const intervals = parseIntervals(rangeStr);
-  let hitCodepoints = 0;
-  let hitWeight = 0;
-  for (const cp of siteChars) {
-    for (const [start, end] of intervals) {
-      if (cp >= start && cp <= end) {
-        hitCodepoints += 1;
-        hitWeight += freq.get(cp) || 1;
-        break;
-      }
-    }
-  }
-  return { hitCodepoints, hitWeight, hits: hitCodepoints > 0 };
-}
-
-/**
- * Keep Fontsource as the CSS source of truth: filter @font-face blocks by
- * site code points (plus forced latin), and collect the woff2 files.
- *
+ * Keep Fontsource as CSS source of truth: take all @font-face blocks,
+ * rewrite family name + url to /fonts/, collect woff2 basenames.
  * @param {string} vendorCss
- * @param {Set<number>} siteChars
- * @param {Map<number, number>} freq
  */
-function filterNotoFaces(vendorCss, siteChars, freq) {
-  /** @type {{ block: string, file: string, always: boolean, hitWeight: number, hitCodepoints: number }[]} */
-  const kept = [];
+function collectNotoFaces(vendorCss) {
+  /** @type {{ block: string, file: string, isLatin: boolean }[]} */
+  const faces = [];
 
   for (const match of vendorCss.matchAll(FACE_BLOCK)) {
     const block = match[0];
     const fileMatch = block.match(/url\(\.\/files\/([^)\s]+\.woff2)\)/);
-    const rangeMatch = block.match(/unicode-range:\s*([^;]+);/);
-    if (!fileMatch || !rangeMatch) {
+    if (!fileMatch) {
       continue;
     }
-
     const file = fileMatch[1];
-    if (ALWAYS_FILE.test(file)) {
-      kept.push({
-        block,
-        file,
-        always: true,
-        hitWeight: 0,
-        hitCodepoints: 0,
-      });
-      continue;
-    }
-
-    const stats = rangeStats(rangeMatch[1].trim(), siteChars, freq);
-    if (!stats.hits) {
-      continue;
-    }
-
-    kept.push({
+    faces.push({
       block,
       file,
-      always: false,
-      hitWeight: stats.hitWeight,
-      hitCodepoints: stats.hitCodepoints,
+      isLatin: LATIN_FILE.test(file),
     });
   }
 
-  if (kept.length === 0) {
-    throw new Error("sync-fonts: no Noto subsets matched site content");
+  if (faces.length === 0) {
+    throw new Error("sync-fonts: no @font-face blocks in Noto index.css");
   }
 
-  return kept;
+  return faces;
 }
 
-/** @param {{ always: boolean, hitWeight: number, file: string }[]} kept */
-function rankCjkByWeight(kept) {
-  return kept
-    .filter((k) => !k.always)
-    .slice()
-    .sort((a, b) => b.hitWeight - a.hitWeight || a.file.localeCompare(b.file));
-}
-
+/** @param {string[]} blocks */
 function rewriteNotoCss(blocks) {
   return blocks
     .join("\n\n")
@@ -193,35 +87,20 @@ function rewriteNotoCss(blocks) {
     .replaceAll(".woff2) format", '.woff2") format');
 }
 
-/**
- * Pick a small critical-path preload set: forced latin + top CJK by frequency.
- * @param {{ file: string, always: boolean, hitWeight: number }[]} kept
- * @param {Map<string, number>} sizes
- */
-function selectPreloads(kept, sizes) {
-  const latin = kept.filter((k) => k.always).map((k) => k.file);
-  const cjk = rankCjkByWeight(kept)
-    .slice(0, PRELOAD_CJK_MAX)
-    .map((k) => k.file);
-  const files = [...latin, ...cjk].slice(0, PRELOAD_TOTAL_MAX);
-  const bytes = files.reduce((sum, f) => sum + (sizes.get(f) || 0), 0);
-  return { files, bytes };
-}
-
 await rm(fontDirectory, { force: true, recursive: true });
 await mkdir(fontDirectory, { recursive: true });
 await mkdir(cssDirectory, { recursive: true });
 await mkdir(resolve(root, "data"), { recursive: true });
 
-const { chars: siteChars, freq, perRoot } = await collectSiteCodePoints();
 const vendorCss = await readFile(resolve(notoSource, "index.css"), "utf8");
-const kept = filterNotoFaces(vendorCss, siteChars, freq);
+const faces = collectNotoFaces(vendorCss);
 
 /** @type {Map<string, number>} */
 const notoSizes = new Map();
 let copiedBytes = 0;
 const notoFilesDir = resolve(notoSource, "files");
-for (const { file: name } of kept) {
+
+for (const { file: name } of faces) {
   const source = resolve(notoFilesDir, name);
   await cp(source, resolve(fontDirectory, name));
   const size = (await stat(source)).size;
@@ -257,37 +136,52 @@ const sourceCodeCss = sourceCodeFiles
 
 await writeFile(
   resolve(cssDirectory, "fonts.css"),
-  `${rewriteNotoCss(kept.map((k) => k.block))}\n\n${sourceCodeCss}\n`,
+  `${rewriteNotoCss(faces.map((f) => f.block))}\n\n${sourceCodeCss}\n`,
 );
 
-const preload = selectPreloads(kept, notoSizes);
+// Critical path: latin + fixed CJK whitelist. Remaining CJK still on-demand via unicode-range.
+const faceFiles = new Set(faces.map((f) => f.file));
+const latinFiles = faces.filter((f) => f.isLatin).map((f) => f.file);
+if (latinFiles.length === 0) {
+  throw new Error("sync-fonts: latin subset missing from Noto index.css");
+}
+const preloadCjk = PRELOAD_CJK_FILES.filter((name) => faceFiles.has(name));
+const preloadFiles = [...latinFiles, ...preloadCjk].slice(0, PRELOAD_TOTAL_MAX);
+const preloadBytes = preloadFiles.reduce(
+  (sum, f) => sum + (notoSizes.get(f) || 0),
+  0,
+);
+
 // Generated artifact — do not hand-edit data/font_preload.json.
 await writeFile(
   preloadDataPath,
-  `${JSON.stringify({ files: preload.files }, null, 2)}\n`,
+  `${JSON.stringify({ files: preloadFiles }, null, 2)}\n`,
 );
 
 const mb = (copiedBytes / 1024 / 1024).toFixed(2);
-const preloadMb = (preload.bytes / 1024 / 1024).toFixed(2);
-const alwaysCount = kept.filter((k) => k.always).length;
+const preloadMb = (preloadBytes / 1024 / 1024).toFixed(2);
+const latinCount = faces.filter((f) => f.isLatin).length;
+const cjkCount = faces.length - latinCount;
 console.log(
-  `sync-fonts: ${kept.length} Noto subsets (always latin=${alwaysCount}) + ${sourceCodeFiles.length} Source Code Pro files (${mb} MB)`,
+  `sync-fonts: ${faces.length} Noto faces (latin=${latinCount}, cjk=${cjkCount}) + ${sourceCodeFiles.length} Source Code Pro (${mb} MB)`,
 );
 console.log(
-  `sync-fonts: preload ${preload.files.length} files (${preloadMb} MB): ${preload.files.join(", ")}`,
+  `sync-fonts: preload ${preloadFiles.length} file(s) (${preloadMb} MB): ${preloadFiles.join(", ")}`,
 );
 
 if (wantStats) {
+  const onDisk = await readdir(fontDirectory);
   console.log("sync-fonts stats:");
-  console.log(`  unique code points: ${siteChars.size}`);
-  for (const [rel, n] of perRoot) {
-    console.log(`  scanned chars in ${rel}/: ${n}`);
-  }
-  console.log("  top CJK subsets by content frequency:");
-  for (const row of rankCjkByWeight(kept).slice(0, 8)) {
-    const sizeKb = ((notoSizes.get(row.file) || 0) / 1024).toFixed(0);
-    console.log(
-      `    ${sizeKb}KB weight=${row.hitWeight} cps=${row.hitCodepoints} ${row.file}`,
+  console.log(`  files in static/fonts: ${onDisk.length}`);
+  console.log("  Noto by size (desc, top 8 CJK):");
+  const cjkSorted = faces
+    .filter((f) => !f.isLatin)
+    .slice()
+    .sort(
+      (a, b) => (notoSizes.get(b.file) || 0) - (notoSizes.get(a.file) || 0),
     );
+  for (const row of cjkSorted.slice(0, 8)) {
+    const sizeKb = ((notoSizes.get(row.file) || 0) / 1024).toFixed(0);
+    console.log(`    ${sizeKb}KB ${row.file}`);
   }
 }
