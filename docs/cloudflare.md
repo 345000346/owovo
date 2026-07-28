@@ -195,6 +195,19 @@ Cloudflare → **Caching → Cache Rules**（免费档可用），建议建两�
 - Bot Fight Mode：可开；若误伤再关
 - 不必为静态博客强上 WAF 付费规则
 
+### 建议的安全响应头（Transform Rules / Response Header Transform）
+
+静态站可在边缘统一加头（GitHub Pages 本身难配任意头）。示例：
+
+| 头                       | 建议值                                                 |
+| ------------------------ | ------------------------------------------------------ |
+| `Referrer-Policy`        | `strict-origin-when-cross-origin`                      |
+| `X-Content-Type-Options` | `nosniff`                                              |
+| `X-Frame-Options`        | `DENY`                                                 |
+| `Permissions-Policy`     | `camera=(), microphone=(), geolocation=()`（按需收紧） |
+
+**Content-Security-Policy** 需单独设计：本站有 head 内联 FOUC / `?hl=` loader、标签云 inline `style`、关于页 `img.shields.io` 与 substats 动态图。建议先 **Content-Security-Policy-Report-Only**，确认无误伤再 enforce；`script-src` / `style-src` 至少短期内需要 `'unsafe-inline'` 或改为 hash/nonce。
+
 ---
 
 ## 7. 验收清单

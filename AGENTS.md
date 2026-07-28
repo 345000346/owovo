@@ -7,17 +7,23 @@
 ```bash
 npm ci                    # 首次安装依赖（始终用 ci，勿用 npm install 漂移 lock）
 npm run dev               # 启动本地 Hugo 开发服务器（含草稿，先同步字体）
-npm run build:site        # 仅构建 Hugo 站点（--gc --minify --cleanDestinationDir）
+npm run build:site        # 仅构建 Hugo（--environment production --gc --minify --cleanDestinationDir）
 npm run build:search      # 仅生成 Pagefind 搜索索引
-npm run build             # 完整生产构建（site + search）
+npm run smoke             # 对 public/ 做构建后断言（robots/sitemap/SRI/Pagefind/字体 preload 等）
+npm run build             # 完整生产构建（site + search + smoke）
+npm run sync:fonts        # 同步 Fontsource 分片 → static/fonts + assets/css/fonts.css + data/font_preload.json
+npm run sync:fonts:stats  # 同上并打印分片命中统计
 npm run preview           # 构建后启动 Pagefind 预览服务
 npm run format            # Prettier 格式化
 npm run format:check      # 格式检查
 ```
 
+- `build:site` **必须**带 `--environment production`，以便 `layouts/robots.txt` 输出 `Allow: /` 与正确 `baseURL` Sitemap。
+- 若本机正在跑 `hugo server`，勿与 `build` 共用被污染的 `public/`（server 会写入 livereload）；构建前先停 server。
+
 - Node 版本见 `.node-version`（`>=24.18.0`）
 - Hugo 版本见 `.hugo-version`（`0.164.0`，需 **extended** 版）
-- 字体在每次 `dev` / `build:site` 前由 `scripts/sync-fonts.mjs` 同步
+- 字体在每次 `dev` / `build:site` 前由 `scripts/sync-fonts.mjs` 同步（并生成 `data/font_preload.json`）
 
 ## 项目结构
 
@@ -36,10 +42,11 @@ assets/
   js/                     # ES modules：theme / navigation / scroll-ui（Concat 为 site.js）、article、badges、search
   scss/                   # Dart Sass：main.scss 为入口，视觉 token 在 utils/_variables.scss
   css/fonts.css           # 由 sync-fonts 生成（gitignore）
-data/                     # Socials.toml、SVG.toml
+data/                     # Socials.toml、SVG.toml；font_preload.json 由 sync-fonts 生成（gitignore）
 content/                  # 内容
 static/                   # 原样发布的静态资源（fonts/ 由构建生成，gitignore）
-scripts/sync-fonts.mjs    # 按站点用字子集同步 Fontsource 字体
+scripts/sync-fonts.mjs    # 按站点用字子集同步 Fontsource；输出 preload 列表
+scripts/smoke-public.mjs  # 构建后 public/ 断言
 archetypes/default.md     # 新文章 front matter 模板
 ```
 
@@ -58,7 +65,7 @@ archetypes/default.md     # 新文章 front matter 模板
   - 带 `?hl=` 时：`search-highlight-loader`（`<template data-*>` + 内联 loader）注入 `search-highlight.js` → `import` Pagefind highlight（URL 只放 data-*，不进 JS 字面量）
   - taxonomy 列表页仅支持 `tags` / `categories`（其它 `warnf` + 可见兜底文案）
   - SEO 出口：`partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）
-- **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 扫描可见文案（`content` / `layouts`），按 `unicode-range` 过滤 Fontsource 官方 `index.css` 并只复制命中分片（始终包含 latin / latin-ext），不重写 `@font-face` 模板。
+- **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 扫描可见文案（`content` / `layouts` / `config` / `data`），按 `unicode-range` 过滤官方 `index.css` 并只复制命中分片（**始终包含 latin**；latin-ext 仅在码点命中时纳入），不重写 `@font-face` 模板。另写 `data/font_preload.json`（latin + 频次最高的至多 2 个 CJK 分片），由 `head.html` 输出 `rel=preload`。分片总数主要由**正文用字**决定，收紧扫描根目录几乎不降体积；`unicode-range` 仍保证单页只拉所需分片。调试：`npm run sync:fonts:stats`。
 - **Pagefind 搜索**：构建后 `pagefind --site public`；**Default UI 为有意选择**，请勿擅自迁移 Component UI。
 - **CI/CD**：GitHub Actions 在 main 推送时 `format:check` → `build` → deploy Pages；PR 只构建不部署。
 - **域名 / CDN**：生产域 `owovo.xyz`（`baseURL` + `static/CNAME`）；无备案时用 Cloudflare 代理 GitHub Pages，步骤见 `docs/cloudflare.md`。一键：`CLOUDFLARE_API_TOKEN` + `GITHUB_PAGES_HOST` 后 `npm run cf:setup`（会删 apex/www 冲突 DNS；默认严格 exit 1；`CF_DRY_RUN=1` 预览；勿改 baseURL 为 `*.github.io`）。
@@ -93,7 +100,7 @@ archetypes/default.md     # 新文章 front matter 模板
 ## 文章操作
 
 - 新文章：`content/post/<slug>/index.md`，front matter 参考 `archetypes/default.md`
-- 新 slug 建议全小写 kebab-case；`disablePathToLower: true` 仅为兼容历史含大写 slug，勿扩大债务
+- 新 slug 必须全小写 kebab-case（已关闭 `disablePathToLower`，路径会规范为小写）
 - 转载用 `source: <url>`；`outdated: true` 显示归档提示；`toc: false` 可关闭目录（文章默认开 TOC）
 - 关于页须带 `layout: about`（及通常 `type: page`）；普通独立页用 `type: page` 即可
 - permalink：`/post/:slug/`
@@ -105,7 +112,7 @@ archetypes/default.md     # 新文章 front matter 模板
 
 ```bash
 npm run format:check
-npm run build
+npm run build            # 已含 smoke；勿在 hugo server 占用 public 时执行
 ```
 
 涉及样式 / 模板变更时，用 `npm run dev` 检查：首页、文章页、列表页、搜索页、关于页。
