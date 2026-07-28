@@ -1,7 +1,4 @@
-{{/*
-  Prev/next within the post section. Call only from layouts/post/single.html
-  (or pass an explicit post page); no is-post guard needed at call sites.
-*/}}
+{{/* 同 section 上下篇；从 post/single 调用，调用方无需 is-post。 */}}
 {{ $prev := .PrevInSection }}
 {{ $next := .NextInSection }}
 {{ if or $prev $next }}

@@ -1,4 +1,4 @@
-{{- /* RSS/HTML: rewrite root-relative and fragment links to absolute URLs for feed consumers. */ -}}
+{{- /* RSS 等：把根相对与片段链接改写为绝对 URL，供订阅端使用。dict "$" content。 */ -}}
 {{- $ := index . "$" -}}
 {{- $content := .content -}}
 {{- $baseURL := "" | absLangURL | strings.TrimSuffix "/" -}}

@@ -1,8 +1,4 @@
-{{- /*
-  Optional ?hl= page highlight. Config lives in a <template> data-* bag so Hugo
-  --minify cannot mangle URL strings inside JS literals. Loader only injects the
-  heavy module when ?hl= is present at runtime.
-*/ -}}
+{{- /* ?hl= 高亮：路径放 template data-*（防 --minify）；有 hl 才注入 search-highlight。 */ -}}
 {{- $highlightPath := "pagefind/pagefind-highlight.js" | relURL -}}
 {{- $highlight := resources.Get "js/search-highlight.js" | resources.Minify | resources.Fingerprint -}}
 <template

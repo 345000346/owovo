@@ -1,3 +1,4 @@
+{{/* 过时提示：front matter outdated + 可选 outdatedNote。 */}}
 {{- if .Params.outdated -}}
     {{- $note := .Params.outdatedNote | default "本文内容可能已经过时，仅作归档保留。请结合发布时间和当前环境自行判断。" -}}
     <aside class="post-outdated" role="note">

@@ -1,3 +1,4 @@
+{{/* 元信息（日期/修改/阅读时长；首页可出标签）。dict "$" isHome isPost。 */}}
 {{- $ := index . "$" -}}
 {{- $isHome := .isHome -}}
 {{- $isPost := .isPost | default (partial "utils/is-post.html" $) -}}

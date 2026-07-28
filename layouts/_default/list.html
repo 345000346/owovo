@@ -1,3 +1,4 @@
+{{/* 列表：term 用 .Pages；section=archives 时取全部 Section==post 再按年分组。 */}}
 {{ define "main" }}
     <main class="main list" id="main">
         <div class="main-inner">
@@ -12,7 +13,7 @@
                     {{ $pages = .Pages }}
                 {{ else if eq .Kind "section" }}
                     {{ if eq .Section "archives" }}
-                        {{- /* Canonical post list: all section=post regular pages, year groups. */ -}}
+                        {{- /* 权威文章列表：全部 section=post 常规页，按年分组。 */ -}}
                         {{ $pages = where .Site.RegularPages "Section" "eq" "post" }}
                     {{ else }}
                         {{ $pages = .Pages }}

@@ -1,7 +1,4 @@
-{{- /*
-  SEO: author meta + Open Graph + Twitter Cards + JSON-LD.
-  Call: partial "utils/seo.html" (dict "$" $ "description" $description)
-*/ -}}
+{{- /* SEO：author / OG / Twitter / JSON-LD。dict "$" description；404 勿调。 */ -}}
 {{- $ := index . "$" -}}
 {{- $description := .description -}}
 {{- $isPost := partial "utils/is-post.html" $ -}}

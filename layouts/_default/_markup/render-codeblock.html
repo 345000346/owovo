@@ -1,4 +1,4 @@
-{{- /* Chrome only — highlighter defaults live in config/_default/markup.yaml. */ -}}
+{{- /* 代码块外壳（复制按钮）；高亮默认见 config/_default/markup.yaml。 */ -}}
 {{- $lang := .Type | default "" -}}
 {{- $result := transform.HighlightCodeBlock . -}}
 <div class="code-block"{{ with $lang }} data-lang="{{ . }}"{{ end }}>

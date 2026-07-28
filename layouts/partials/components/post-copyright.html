@@ -1,3 +1,4 @@
+{{/* 文末版权：作者 / 链接（转载 source 或本页）/ 许可。 */}}
 {{- $source := .Params.source -}}
 {{- $isHttpSource := and $source (or (strings.HasPrefix $source "https://") (strings.HasPrefix $source "http://")) -}}
 {{- $author := partial "utils/author.html" . -}}

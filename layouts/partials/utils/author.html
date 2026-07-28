@@ -1,3 +1,4 @@
+{{/* 解析作者 dict（name / avatar / copyright）：页级 author 覆盖站点 params。 */}}
 {{- $author := dict -}}
 {{- with .Params.author -}}
     {{- $author = merge $author (dict "name" .) -}}

@@ -1,3 +1,4 @@
+{{/* 关于页社交名片：data/Socials.toml 中 about=true；样式 about-socials。 */}}
 {{- $items := sort (where hugo.Data.Socials.items "about" true) "weight" -}}
 {{- if $items -}}
 <div class="about-social-showcase">

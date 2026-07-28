@@ -1,3 +1,4 @@
+{{/* 外链：target=_blank + rel=external noopener noreferrer（与 smoke 一致）。 */}}
 {{- $href := .Destination -}}
 {{- $isRemote := or (strings.HasPrefix $href "http://") (strings.HasPrefix $href "https://") -}}
 <a href="{{ $href | safeURL }}"

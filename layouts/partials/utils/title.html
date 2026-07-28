@@ -1,21 +1,18 @@
+{{/* 页面标题：返回 dict rawTitle / title（带站点名）/ htmlTitle。调用方 dict "$" page "title" ... */}}
 {{- $ := index . "$" -}}
 
 {{- $path := .Path -}}
 
 {{- $htmlTitle := .title -}}
-<!-- Home -->
 {{- if eq $.Kind "home" -}}
     {{- $htmlTitle = $htmlTitle | default $.Site.Title -}}
-<!-- Taxonomy -->
 {{- else if eq $.Kind "taxonomy" -}}
     {{- $htmlTitle = $htmlTitle | default ($.Type | title) -}}
-<!-- Taxonomy Term -->
 {{- else if eq $.Kind "term" -}}
     {{- $taxonomyTermTitle := $htmlTitle | default $.Data.Term | default (delimit (last 1 (split (strings.TrimSuffix "/_index.md" $path) "/")) " ") -}}
     {{- with $.Site.GetPage (printf "/%s" $.Data.Plural) -}}
         {{- $htmlTitle = printf "%s：%s" (.Title | default (.Type | title)) $taxonomyTermTitle -}}
     {{- end -}}
-<!-- Section -->
 {{- else if eq $.Kind "section" -}}
     {{- $htmlTitle = $htmlTitle | default (delimit (last 1 (split (strings.TrimSuffix "/_index.md" $path) "/")) " ") -}}
 {{- end -}}

@@ -1,3 +1,4 @@
+{{/* 主样式：Dart Sass 编译 main.scss → Minify 路径 + Fingerprint。 */}}
 {{- $path := strings.TrimPrefix "/" (printf `%s/css/main.min.css` .Site.LanguagePrefix) -}}
 {{- /* 仓库统一使用 Dart Sass，确保本地与 CI 走同一条编译链。 */ -}}
 {{- $options := dict

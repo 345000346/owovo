@@ -1,3 +1,4 @@
+# 生产域名；勿改成 *.github.io（CNAME + Cloudflare 见 docs/cloudflare.md）。
 baseURL: "https://owovo.xyz"
 
 defaultContentLanguage: "zh-cn"
@@ -31,6 +32,7 @@ menu:
       post: "rss"
     - identifier: "theme-switcher"
       weight: 7
+    # identifier=search + url=#search → 菜单触发搜索 Dialog（非独立 /search/ 页）
     - name: "搜索"
       url: "#search"
       identifier: "search"
@@ -49,7 +51,7 @@ summaryLength: 260
 permalinks:
   post: "/post/:slug/"
 
-# 仅保留 tags；不再使用 categories taxonomy
+# 仅 tags；禁止 categories taxonomy
 taxonomies:
   tag: tags
 
@@ -59,6 +61,7 @@ outputs:
   taxonomy: ["HTML"]
   term: ["HTML"]
 
+# 首页 RSS 输出为 /rss.xml（非 index.xml）
 outputFormats:
   RSS:
     baseName: "rss"

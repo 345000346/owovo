@@ -1,3 +1,4 @@
+{{/* production: Allow + Sitemap；否则 Disallow。build:site 须 --environment production。 */}}
 User-agent: *
 {{- if ne hugo.Environment "production" }}
 Disallow: /

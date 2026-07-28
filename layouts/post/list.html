@@ -1,9 +1,5 @@
 {{ define "main" }}
-    {{- /*
-      /post/ is the article section root, not a public list.
-      Canonical list is /archives/ (year groups). Redirect so the section URL
-      is not a second, divergent index.
-    */ -}}
+    {{- /* /post/ 非列表；重定向到权威 /archives/，避免第二套索引。 */ -}}
     {{- $archives := "/archives/" | relLangURL -}}
     <main class="main list" id="main">
         <div class="main-inner">

@@ -1,5 +1,2 @@
-{{- /*
-  About page: explicit front matter layout: about (see content/about.md).
-  Prefer this over ContentBaseName / path checks so renames do not break badges.
-*/ -}}
+{{- /* 关于页：layout: about（勿用路径/ContentBaseName 特判）。 */ -}}
 {{- return and .IsPage (eq .Layout "about") -}}

@@ -1,3 +1,4 @@
+{{/* 主题切换按钮；图标由 data-theme-preference CSS 显隐，逻辑在 theme.js。 */}}
 <button id="theme-switcher" type="button" aria-label="切换主题，当前：跟随系统">
     {{- partial "utils/icon.html" (dict "$" $ "name" "sun" "class" "theme-icon-light") -}}
     {{- partial "utils/icon.html" (dict "$" $ "name" "moon" "class" "theme-icon-dark") -}}

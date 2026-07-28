@@ -1,3 +1,4 @@
+{{/* 首页 RSS：Section==post；输出 /rss.xml（outputFormats.RSS.baseName）。链接经 make-links-absolute。 */}}
 {{ `<?xml version="1.0" encoding="utf-8"?>` | safeHTML }}
 {{- $pages := where .Site.RegularPages "Section" "eq" "post" -}}
 {{- $limit := .Site.Config.Services.RSS.Limit -}}

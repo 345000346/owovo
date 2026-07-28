@@ -1,3 +1,4 @@
+{{/* 目录：有条目时输出；nav/ol 类名改为 contents/toc。 */}}
 {{- $toc := .TableOfContents -}}
 {{- $hasTOCItems := gt (len (findRE `<li>` $toc)) 0 -}}
 {{- if $hasTOCItems -}}
