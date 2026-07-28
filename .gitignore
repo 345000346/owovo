@@ -1,42 +1,14 @@
-# Build outputs (Hugo)
+# Hugo
 /public/
-# Hugo 资源缓存（自动生成，请勿手动放置文件）
 /resources/
 .hugo_build.lock
-hugo_stats.json
-/static/css/
+
+# sync-fonts 生成物
 /static/fonts/
 /assets/css/fonts.css
-/static/js/
+/data/font_preload.json
 
-# Environment files
-.env
-.env.local
-.env.*.local
-
-# Dependencies
+# 依赖与本地密钥
 node_modules/
-vendor/
-
-# Editor / IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Runtime state
-.omc/
-
-# Claude local workspace (only local overrides)
-.claude/
-.worktrees/
-
-# Logs
-*.log
-npm-debug.log*
-yarn-*.log*
-pnpm-debug.log*
+.env
+.env.*

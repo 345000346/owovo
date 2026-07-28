@@ -63,8 +63,8 @@ jobs:
       - name: Build search
         run: npm run build:search
 
-      - name: Verify Pagefind artifacts
-        run: test -f public/pagefind/pagefind.js && test -f public/pagefind/pagefind-entry.json
+      - name: Smoke public output
+        run: npm run smoke
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
