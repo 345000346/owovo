@@ -38,12 +38,20 @@
       openDialog();
     });
 
-    closeButton.addEventListener("click", () => dialog.close());
+    closeButton.addEventListener("click", () => {
+      dialog.close();
+      clearSearchHash();
+    });
 
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) {
         dialog.close();
+        clearSearchHash();
       }
+    });
+
+    dialog.addEventListener("close", () => {
+      clearSearchHash();
     });
 
     document.addEventListener("keydown", (event) => {
@@ -62,8 +70,23 @@
       }
     });
 
+    // Deep link: /#search or hashchange to #search opens the dialog.
+    if (location.hash === "#search") {
+      openDialog();
+    }
+    window.addEventListener("hashchange", () => {
+      if (location.hash === "#search") {
+        openDialog();
+      }
+    });
+
     function openDialog() {
       document.dispatchEvent(new CustomEvent("site:close-navigation"));
+      if (location.hash !== "#search") {
+        // Keep menu href="#search" shareable without forcing scroll jump noise.
+        const { pathname, search } = window.location;
+        history.replaceState(null, "", `${pathname}${search}#search`);
+      }
       if (!dialog.open) {
         dialog.showModal();
       }
@@ -75,8 +98,16 @@
         .catch((error) => {
           console.error(error);
           dialog.querySelector(".search-dialog-search").textContent =
-            "搜索暂时不可用，请前往完整搜索页。";
+            "搜索暂时不可用，请稍后重试。";
         });
+    }
+
+    function clearSearchHash() {
+      if (location.hash !== "#search") {
+        return;
+      }
+      const { pathname, search } = window.location;
+      history.replaceState(null, "", `${pathname}${search}`);
     }
 
     function loadUI() {
@@ -168,7 +199,10 @@
         const url = new URL(rawUrl, window.location.origin);
         url.searchParams.delete("hl");
         url.searchParams.append("hl", term);
-        return `${url.pathname}${url.search}${url.hash}`;
+        // Preserve absolute result URLs from Pagefind when present.
+        return rawUrl.startsWith("http")
+          ? url.toString()
+          : `${url.pathname}${url.search}${url.hash}`;
       } catch {
         return rawUrl;
       }

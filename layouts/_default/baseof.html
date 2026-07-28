@@ -15,8 +15,7 @@
             {{ partial "components/back-to-top.html" . }}
             {{ partial "footer.html" . }}
         </div>
-        {{- if ne .Section "search" -}}
-            {{ partial "components/search-dialog.html" . }}
-        {{- end -}}
+        {{/* 含 404：菜单「搜索」在错误页也可用 */}}
+        {{ partial "components/search-dialog.html" . }}
     </body>
 </html>

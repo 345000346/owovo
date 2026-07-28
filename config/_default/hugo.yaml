@@ -32,7 +32,8 @@ menu:
     - identifier: "theme-switcher"
       weight: 7
     - name: "搜索"
-      pageRef: "/search/"
+      url: "#search"
+      identifier: "search"
       weight: 8
       post: "search"
 
@@ -47,6 +48,10 @@ summaryLength: 260
 
 permalinks:
   post: "/post/:slug/"
+
+# 仅保留 tags；不再使用 categories taxonomy
+taxonomies:
+  tag: tags
 
 outputs:
   home: ["HTML", "RSS"]

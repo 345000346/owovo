@@ -103,15 +103,11 @@
 }
 
 .search-dialog-footer {
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
   border-top: 1px solid var(--color-contrast-lower);
   color: var(--color-contrast-medium);
   font-size: 0.72rem;
-
-  a {
-    margin-left: auto;
-    color: var(--color-primary);
-  }
 }
 
 .search-dialog kbd {
@@ -143,7 +139,8 @@
     max-height: 100dvh;
   }
 
-  .search-dialog-footer span {
+  // 小屏快捷键大多无用；只留 Esc 提示，避免 footer 空条
+  .search-dialog-footer span:not(:last-child) {
     display: none;
   }
 }

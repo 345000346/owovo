@@ -70,13 +70,13 @@
     {{- $fonts := resources.Get "css/fonts.css" | resources.Minify | resources.Fingerprint -}}
     <link rel="stylesheet" href="{{ $fonts.RelPermalink }}" integrity="{{ $fonts.Data.Integrity }}" crossorigin="anonymous" />
 
-    {{- if and (ne .Section "search") (ne .Kind "404") -}}
+    {{- /* hl= 高亮：404 无正文，跳过 */ -}}
+    {{- if ne .Kind "404" -}}
         {{- partial "components/search-highlight-loader.html" . -}}
     {{- end }}
 
-    {{ if ne .Kind "404" }}
-        {{ partial "script.html" . }}
-    {{ end }}
+    {{/* 含 404：主题/导航/搜索 Dialog 在错误页仍可用 */}}
+    {{ partial "script.html" . }}
 
     {{- $description := .Description | default (.Summary | plainify | htmlUnescape | strings.TrimSpace) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
     <meta name="description" content="{{ $description }}" />
