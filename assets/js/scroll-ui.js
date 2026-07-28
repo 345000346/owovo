@@ -1,14 +1,18 @@
 // 滚动 UI：--header-height、阅读进度、回到顶部。
 //
 // 契约：
-// - --header-height ← .header 计算高度
+// - --header-height ← .header 计算高度（初始化 + resize + 字体就绪重算）
 // - #reading-progress：--progress（0–1）、aria-valuenow（0–100）
 // - #back-to-top：scrollY > 100 时加 .show
 // Concat：与 theme.js / navigation.js 同 module，顶层仅 initScrollUi。
 
 function initScrollUi() {
   const headerEl = document.querySelector(".header");
-  if (headerEl) {
+
+  function updateHeaderHeight() {
+    if (!headerEl) {
+      return;
+    }
     const headerHeight = window
       .getComputedStyle(headerEl)
       .getPropertyValue("height");
@@ -16,6 +20,24 @@ function initScrollUi() {
       "--header-height",
       headerHeight,
     );
+  }
+
+  updateHeaderHeight();
+
+  // 字体异步加载与窗口缩放后重算 --header-height（锚点 scroll-margin 依赖）。
+  let resizeScheduled = false;
+  window.addEventListener("resize", () => {
+    if (resizeScheduled) {
+      return;
+    }
+    resizeScheduled = true;
+    requestAnimationFrame(() => {
+      resizeScheduled = false;
+      updateHeaderHeight();
+    });
+  });
+  if (document.fonts && typeof document.fonts.ready === "object") {
+    document.fonts.ready.then(updateHeaderHeight).catch(() => {});
   }
 
   const progressBar = document.querySelector("#reading-progress");
