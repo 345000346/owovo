@@ -3,7 +3,6 @@ title: "怎样的关系才是长久的"
 date: 2021-12-27T01:25:17+08:00
 slug: "what-makes-relationship-last"
 description: "现代社会给女性贴上了各种标签，一段长久关系的关键不在于性别角色，而在于懂得接纳、善于沟通、可以共情、习惯感恩。"
-toc: true
 tags: ["情感", "亲密关系", "沟通"]
 ---
 

@@ -4,7 +4,6 @@ date: 2020-12-16T16:25:02+08:00
 slug: "how-to-know-if-leo-likes-you"
 description: "转载一篇关于狮子座喜欢一个人的表现的文章，作者自嘲「我特喵的竟然相信星座了？这不科学」——转载是因为很多描述和自己很相似。"
 tags: ["情感", "星座", "转载"]
-toc: true
 source: "https://www.zhihu.com/question/28670334/answer/1326929485"
 author: "大琦"
 ---

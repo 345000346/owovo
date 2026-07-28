@@ -3,7 +3,6 @@ title: "在闲置手机上安装 AdGuardHome"
 date: 2020-12-20T22:19:10+08:00
 slug: "install-adguard-home-on-old-phone"
 description: "在 root 后的小米 3（cancro）上安装 AdGuardHome，利用闲置手机搭建局域网 DNS 去广告服务器。"
-toc: true
 tags: ["AdGuard Home", "DNS", "小米", "路由器"]
 ---
 

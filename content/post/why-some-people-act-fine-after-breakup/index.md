@@ -3,7 +3,6 @@ title: "为什么分手后有些人还能像没事人一样？"
 date: 2019-10-21T11:12:57+08:00
 slug: "why-some-people-act-fine-after-breakup"
 description: "谈了十年的朋友分手后表面平静，这并不意味着不难过。成年人的伤痛往往藏在平静之下，本文分析分手后看似没事的几种情况。"
-toc: true
 tags: ["情感", "分手", "随想"]
 ---
 

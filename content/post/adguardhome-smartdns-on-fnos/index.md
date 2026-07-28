@@ -5,7 +5,6 @@ lastmod: 2026-05-16T15:00:00+08:00
 slug: "adguardhome-smartdns-on-fnos"
 description: "在飞牛 NAS (FnOS) 上通过 Docker Compose 部署 AdGuard Home + SmartDNS，SmartDNS 智能解析选优，AdGuard Home 过滤广告跟踪器，实现局域网 DNS 加速与去广告。"
 tags: ["飞牛NAS", "AdGuard Home", "SmartDNS", "DNS", "Docker", "去广告"]
-toc: true
 ---
 
 飞牛NAS（FnOS）的 Docker 应用自带 Compose 功能，通过"新增项目"界面填写 YAML 即可部署，无需命令行操作。本文将介绍如何通过这种方式搭建 AdGuard Home + SmartDNS 组合，实现局域网广告过滤和 DNS 解析加速。

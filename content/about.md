@@ -2,10 +2,10 @@
 title: "关于我"
 date: 2020-04-27T20:53:11+08:00
 lastmod: 2026-05-27T00:00:00+08:00
+description: "LIGT 的个人简介：技术栈、兴趣、数码设备与博客历程。"
 type: page
 layout: about
 toc: true
-description: "LIGT 的个人简介：技术栈、兴趣、数码设备与博客历程。"
 ---
 
 <!--more-->

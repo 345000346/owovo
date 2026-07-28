@@ -4,7 +4,6 @@ date: 2019-08-29T20:09:11+08:00
 lastmod: 2026-05-18T00:00:00+08:00
 slug: "upgrade-proxmox-ve-5-to-6"
 description: "Proxmox VE 5.4 升级到 6.0 的完整步骤，使用国内镜像源加速下载。已归档，Proxmox 当前主流版本为 8.x。"
-toc: true
 tags: ["虚拟机", "Proxmox", "Debian", "升级"]
 outdated: true
 outdatedNote: "本文内容已过时。Proxmox VE 当前主流版本为 8.x，本文涉及的 Proxmox VE 5→6 升级步骤和 Debian stretch 源均已终止生命周期。本文仅作归档保留，不再更新。"
