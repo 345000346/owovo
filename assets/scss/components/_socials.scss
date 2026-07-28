@@ -13,6 +13,14 @@
   background-color: var(--color-contrast-medium);
   transition: background-color variables.$duration;
 
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75em;
+    min-height: 2.75em;
+  }
+
   &:hover {
     background-color: var(--color-primary);
   }
