@@ -19,7 +19,8 @@
                             {{ end }}
                             {{ $currentFontSize := (add $smallestFontSize (mul (sub $largestFontSize $smallestFontSize) $weight)) }}
                             {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
-                                <a href="{{ .RelPermalink }}" class="tag-cloud-item" style="font-size: {{ $currentFontSize }}{{ $fontUnit }}">{{ .LinkTitle | default .Data.Term | default $name }}</a>
+                                {{- $label := .LinkTitle | default .Data.Term | default $name -}}
+                                <a href="{{ .RelPermalink }}" class="tag-cloud-item" style="font-size: {{ $currentFontSize }}{{ $fontUnit }}" aria-label="标签 {{ $label }}，{{ $count }} 篇文章">{{ $label }}</a>
                             {{ end }}
                         {{ end }}
                     {{ end }}

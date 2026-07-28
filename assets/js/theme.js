@@ -41,6 +41,29 @@
     return preference === "dark" ? "dark" : "light";
   }
 
+  function preferenceLabel(preference) {
+    switch (preference) {
+      case "light":
+        return "浅色";
+      case "dark":
+        return "深色";
+      case "system":
+      default:
+        return "跟随系统";
+    }
+  }
+
+  function syncThemeSwitcherLabel(preference) {
+    const themeSwitcher = document.getElementById("theme-switcher");
+    if (!themeSwitcher) {
+      return;
+    }
+    themeSwitcher.setAttribute(
+      "aria-label",
+      `切换主题，当前：${preferenceLabel(preference)}`,
+    );
+  }
+
   function applyThemeFromPreference(preference, { force = false } = {}) {
     const normalized =
       preference === "light" || preference === "dark" || preference === "system"
@@ -54,11 +77,13 @@
       root.getAttribute("data-theme") === theme &&
       root.getAttribute("data-theme-preference") === normalized
     ) {
+      syncThemeSwitcherLabel(normalized);
       return;
     }
 
     root.setAttribute("data-theme", theme);
     root.setAttribute("data-theme-preference", normalized);
+    syncThemeSwitcherLabel(normalized);
 
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) {

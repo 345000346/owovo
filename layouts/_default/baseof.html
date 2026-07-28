@@ -5,6 +5,7 @@
         {{ block "head-extra" . }}{{ end }}
     </head>
     <body id="top">
+        <a class="skip-link" href="#main">跳到正文</a>
         {{- if partial "utils/is-post.html" . -}}
             <div id="reading-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="阅读进度"></div>
         {{- end -}}
