@@ -11,8 +11,7 @@
     "smoke": "node scripts/smoke-public.mjs",
     "build": "npm run build:site && npm run build:search && npm run smoke",
     "preview": "npm run build:site && npm run build:search -- --serve",
-    "hugo:env": "hugo env",
-    "cf:setup": "node scripts/setup-cloudflare.mjs"
+    "hugo:env": "hugo env"
   },
   "keywords": [
     "hugo",
