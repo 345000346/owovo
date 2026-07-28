@@ -17,8 +17,8 @@
   @include mixins.defineColorHSL(--color-contrast-medium, 80, 2%, 69%);
   @include mixins.defineColorHSL(--color-contrast-high, 69, 9%, 84%);
   @include mixins.defineColorHSL(--color-contrast-higher, 60, 6%, 90%);
-  // Skip themed badges / explicit opt-outs — they already ship dark assets.
-  img:not(.themed-badge):not([data-no-dark-filter]) {
+  // Explicit opt-out for images that already ship dark-ready assets.
+  img:not([data-no-dark-filter]) {
     filter: brightness(75%);
   }
 
