@@ -1,3 +1,4 @@
+// 站点顶栏（.header / .header-inner / 品牌区）。
 @use "../utils/functions";
 @use "../utils/mixins";
 @use "../utils/variables";
@@ -54,18 +55,18 @@ $brandHeight: variables.$fontSize *
   functions.strip-unit(variables.$lineHeightBase);
 
 :root {
-  /* This is an approximate calculation, it won't cover all scenarios */
+  /* 近似高度；运行时 scroll-ui 再写实测值 */
   --header-height: calc(
     max(
-        /* brand */ #{$brandHeight},
-        /* menu */ #{variables.$fontSize * 0.8 * 1.5}
+        /* 品牌 */ #{$brandHeight},
+        /* 菜单 */ #{variables.$fontSize * 0.8 * 1.5}
           /* {.nav font-size} * {.menu line-height} */
       )
-      /* .header-wrapper top+bottom margin */ + #{variables.$fontSize * 2}
+      /* .header-wrapper 上下 margin */ + #{variables.$fontSize * 2}
   );
 }
 
-/* Scrolling fix for anchors being hidden below the header */
+/* 锚点滚动时不被 fixed 顶栏挡住 */
 :where(h1, h2, h3, h4, h5, h6) {
   scroll-margin-top: var(--header-height);
 }

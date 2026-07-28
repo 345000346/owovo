@@ -1,7 +1,7 @@
+// 关于页社交名片（shortcode about-socials）；与页脚 .socials 分离。
 @use "../utils/functions";
 @use "../utils/variables";
 
-// about 页社交展示区：做成安静的名片式陈列，不影响页脚社交图标
 .post-body .about-social-showcase {
   margin: 1.75rem 0 0;
   padding: 1.35rem;

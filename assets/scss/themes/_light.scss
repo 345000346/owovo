@@ -1,7 +1,7 @@
+// 浅色主题 CSS 变量（data-theme=light）。
+// 参考：https://codyhouse.co/ds/globals/colors
 @use "../utils/mixins";
 @use "../utils/variables";
-
-// https://codyhouse.co/ds/globals/colors
 
 @mixin light-theme {
   @include mixins.defineColorHSL(
@@ -36,12 +36,12 @@
   --chroma-output-color: #aaaaaa;
 }
 
-// FOUC bootstrap sets data-theme before paint; these cover no-JS and explicit light.
+// FOUC 在绘制前写入 data-theme；此处覆盖显式 light 与无 JS 回退。
 :root[data-theme="light"] {
   @include light-theme;
 }
 
-// No-JS / pre-bootstrap fallback (dark media query in _dark.scss overrides when OS is dark).
+// 无 JS / 引导前回退；OS 为深色时由 _dark.scss 的 media 覆盖。
 :root:not([data-theme]) {
   @include light-theme;
 }

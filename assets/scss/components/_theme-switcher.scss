@@ -1,3 +1,4 @@
+// 主题切换按钮图标（由 data-theme-preference 驱动）。
 @use "../utils/variables";
 
 #theme-switcher {
@@ -19,7 +20,7 @@
     margin-right: 0 !important;
   }
 
-  // Preference is the single source of truth for which icon is shown.
+  // 以 preference 为唯一真相，决定显示哪枚图标。
   .theme-icon-light,
   .theme-icon-dark,
   .theme-icon-system {
@@ -31,7 +32,7 @@
   display: none;
 }
 
-// Default before preference attribute exists: light icon.
+// 尚无 data-theme-preference 时默认浅色图标。
 html:not([data-theme-preference]) #theme-switcher .theme-icon-light {
   display: inline-block;
 }

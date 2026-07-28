@@ -1,8 +1,8 @@
+// 深色主题 CSS 变量（data-theme=dark）。
+// 参考：https://codyhouse.co/ds/globals/colors
+// https://github.com/dracula/dracula-theme/
 @use "../utils/mixins";
 @use "../utils/variables";
-
-// https://codyhouse.co/ds/globals/colors
-// https://github.com/dracula/dracula-theme/
 
 @mixin dark-theme {
   @include mixins.defineColorHSL(
@@ -17,13 +17,13 @@
   @include mixins.defineColorHSL(--color-contrast-medium, 80, 2%, 69%);
   @include mixins.defineColorHSL(--color-contrast-high, 69, 9%, 84%);
   @include mixins.defineColorHSL(--color-contrast-higher, 60, 6%, 90%);
-  // Explicit opt-out for images that already ship dark-ready assets.
+  // 已为深色准备的图片可加 data-no-dark-filter 跳过压暗。
   img:not([data-no-dark-filter]) {
     filter: brightness(75%);
   }
 
   /* https://xyproto.github.io/splash/docs/all.html */
-  /* Color values matching dracula style */
+  /* 色值对齐 dracula 风格 */
 
   --chroma-line-numbers-background: #44475a;
   --chroma-line-numbers-color: #6272a4;

@@ -1,3 +1,4 @@
+// Chroma 代码高亮与 .code-block 外壳（复制按钮样式）。
 @use "../utils/functions";
 @use "../utils/variables";
 
@@ -37,8 +38,7 @@ span.lnt {
   max-height: variables.$maxHeight;
 }
 
-/* The following is the output of `hugo gen chromastyles --style=dracula` */
-/* with color values replaced by variables. */
+/* 以下源自 `hugo gen chromastyles --style=dracula`，颜色已换成 CSS 变量。 */
 
 /* LineTableTD */
 .chroma .lntd {

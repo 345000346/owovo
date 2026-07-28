@@ -1,3 +1,4 @@
+// 全局基础：html/body、链接、排版重置与通用元素。
 @use "../utils/functions";
 @use "../utils/mixins";
 @use "../utils/variables";
@@ -12,7 +13,7 @@ html {
   }
 }
 
-// Keyboard-first skip link: off-screen until focused (see baseof.html).
+// 键盘优先跳过链接：未聚焦时移出视口（见 baseof.html）。
 .skip-link {
   position: absolute;
   top: 0.75rem;
@@ -88,7 +89,7 @@ body {
 }
 
 .icon {
-  width: 1.05em; // fixes svg icon get cut off on safari
+  width: 1.05em; // 避免 Safari 裁切 SVG 图标
   height: 1em;
   fill: currentColor;
   display: inline-block;

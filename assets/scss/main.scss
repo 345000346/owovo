@@ -1,16 +1,15 @@
-// Entry: pure SCSS — no Hugo template injection.
-// Groups: base → themes → layout chrome → post components → pages → responsive.
+// 入口：纯 SCSS。顺序 base → themes → layout → 组件 → pages → responsive。
 
-// Base
+// 基础
 @use "base/base";
 @use "base/font-family";
 
-// Themes + switcher
+// 主题 + 切换器
 @use "themes/light";
 @use "themes/dark";
 @use "components/theme-switcher";
 
-// Layout chrome
+// 布局骨架
 @use "layout/header";
 @use "components/nav-toggle";
 @use "layout/menu";
@@ -18,7 +17,7 @@
 @use "layout/single";
 @use "layout/footer";
 
-// Post / shared components
+// 文章 / 共享组件
 @use "components/post-meta";
 @use "components/post-copyright";
 @use "components/post-outdated";
@@ -32,10 +31,10 @@
 @use "components/about-socials";
 @use "components/search-dialog";
 
-// Pages
+// 页面
 @use "pages/home-posts";
 @use "pages/tag-cloud";
 @use "pages/404" as page404;
 
-// Breakpoints last so overrides win where needed
+// 断点放最后，便于覆盖
 @use "base/responsive";

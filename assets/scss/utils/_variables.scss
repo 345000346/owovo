@@ -1,11 +1,13 @@
-// Site design tokens — fixed values for this single-site blog.
-// No Hugo ExecuteAsTemplate injection.
+// 设计 token（单站固定；无 Hugo 注入）。
 
+// 字号 / 行高
 $fontSize: 18px;
-// Body/chrome metric used by header height math; article body uses $lineHeight.
+// chrome 用 $lineHeightBase；正文用 $lineHeight。
 $lineHeightBase: 1.618;
 $lineHeight: 1.8;
 $maxHeight: 80em;
+
+// 顶栏与品牌
 $headerBackground: linear-gradient(
   90deg,
   #f795331a 0,
@@ -21,18 +23,23 @@ $siteBrandFontSize: 1em;
 $siteBrandFontColor: var(--color-contrast-high);
 $iconColor: #f06292;
 
+// 字体
 $fontFamilyTitle: "Noto Serif SC", serif;
 $fontFamilyHeadings: "Noto Serif SC", serif;
 $fontFamilyCode: "Source Code Pro", "Noto Serif SC", monospace;
 $fontFamilyBody: "Noto Serif SC", serif;
 
+// 宽度 / 断点 / 动效
 $tabSize: 4;
 $postWidth: 42em;
 $listWidth: 42em;
 $breakpoint-sm: 600px;
 $breakpoint-md: 900px;
 $breakpoint-about-sm: 700px;
+// 导航过渡；navigation.js 关闭兜底须 ≥ 此值。
 $duration: 0.5s;
+
+// 主题主色 HSL（light / dark）
 $primaryColorLightH: 220;
 $primaryColorLightS: 90%;
 $primaryColorLightL: 56%;
