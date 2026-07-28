@@ -4,6 +4,10 @@
 @use "sass:string";
 
 // 返回带不同透明度的 CSS 颜色变量。
+// 契约：$color 必须是经 mixins.defineColorHSL 定义的颜色变量
+//（该 mixin 同时生成 --color-x 与 --color-x-hsl 两个变量）。
+// 本函数把 var(--color-x) 改写为 hsl(var(--color-x-hsl) / $opacity)；
+// 若 $color 未配套生成 -hsl 变量，会输出无效 CSS 且静默失败。
 @function alpha($color, $opacity) {
   $color: str-replace($color, "var(");
   $color: str-replace($color, ")");
