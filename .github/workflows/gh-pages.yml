@@ -54,9 +54,6 @@ jobs:
       - name: Install root dependencies
         run: npm ci
 
-      - name: Check format
-        run: npm run format:check
-
       - name: Build site
         run: npm run build:site -- --panicOnWarning --logLevel warn
 

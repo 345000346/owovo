@@ -12,9 +12,7 @@
     "build": "npm run build:site && npm run build:search && npm run smoke",
     "preview": "npm run build:site && npm run build:search -- --serve",
     "hugo:env": "hugo env",
-    "cf:setup": "node scripts/setup-cloudflare.mjs",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "cf:setup": "node scripts/setup-cloudflare.mjs"
   },
   "keywords": [
     "hugo",
@@ -30,7 +28,6 @@
     "@fontsource-variable/noto-serif-sc": "5.2.10",
     "@fontsource/source-code-pro": "5.2.7",
     "pagefind": "^1.5.2",
-    "prettier": "^3.9.5",
     "sass-embedded": "^1.100.0"
   }
 }
