@@ -1,4 +1,6 @@
-{{/* 同 section 上下篇；从 post/single 调用，调用方无需 is-post。 */}}
+{{/* 同 section 上下篇；从 post/single 调用，调用方无需 is-post。
+     Hugo 默认按日期降序：PrevInSection 指向更旧文章（上一篇）、NextInSection 指向更新文章（下一篇）。
+     本站设计：左侧 prev 槽放「下一篇」（更新）、右侧 next 槽放「上一篇」（更旧）。 */}}
 {{ $prev := .PrevInSection }}
 {{ $next := .NextInSection }}
 {{ if or $prev $next }}
