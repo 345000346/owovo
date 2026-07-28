@@ -1,10 +1,8 @@
 /**
- * One-shot / maintenance: normalize content front matter field order.
- * - Posts: drop toc: true (default on); keep toc: false
- * - Drop categories
- * - Stable key order
+ * 规范化 content front matter 字段序。
+ * 文章丢掉 toc: true；去掉 categories；键序对齐 AGENTS / archetypes。
  *
- * Usage: node scripts/normalize-frontmatter.mjs
+ * 用法：node scripts/normalize-frontmatter.mjs
  */
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { join, relative } from "node:path";
@@ -79,6 +77,7 @@ function splitFrontMatter(text) {
 }
 
 /**
+ * 按顶层键切块（含多行缩进值）。
  * @param {string} fmBody
  * @returns {{ key: string | null, raw: string }[]}
  */

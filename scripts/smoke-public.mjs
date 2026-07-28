@@ -1,8 +1,8 @@
 /**
- * Post-build smoke checks against ./public (or SMOKE_PUBLIC_DIR / argv[2]).
- * Run after `build:site` (+ `build:search` when asserting Pagefind).
+ * 构建后对 ./public（或 SMOKE_PUBLIC_DIR / argv[2]）做冒烟断言。
+ * 应在 build:site 之后运行；涉及 Pagefind 的断言需先 build:search。
  *
- * Usage: node scripts/smoke-public.mjs
+ * 用法：node scripts/smoke-public.mjs [publicDir]
  */
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
@@ -74,7 +74,7 @@ async function findFirstFile(dir, pred) {
   return null;
 }
 
-/** First post section page with an index.html, if any. */
+/** 任选一篇 post 的 index.html 做抽样检查。 */
 async function findSamplePostHtml() {
   let entries;
   try {
@@ -104,11 +104,13 @@ async function main() {
     exitIfFailed();
   }
 
+  // 基础产物
   for (const rel of ["index.html", "robots.txt", "sitemap.xml"]) {
     assert(await exists(rel), `${rel} missing under ${publicDir}`);
   }
   exitIfFailed();
 
+  // robots.txt（production：Allow + Sitemap 主机）
   const robots = await readPublic("robots.txt");
   assert(
     /Allow:\s*\//.test(robots) && !/Disallow:\s*\//.test(robots),
@@ -119,6 +121,7 @@ async function main() {
     `robots.txt Sitemap must be ${siteHost}/sitemap.xml`,
   );
 
+  // sitemap（/archives/；不含 /post 根、/search、/categories）
   const sitemap = await readPublic("sitemap.xml");
   assert(
     sitemap.includes(`${siteHost}/`),
@@ -142,6 +145,7 @@ async function main() {
     "sitemap.xml must not list removed /categories/ taxonomy",
   );
 
+  // 首页（无 livereload；主题色 / skip-link / SRI / 字体 preload / 搜索）
   const indexHtml = await readPublic("index.html");
   assert(
     !indexHtml.includes("livereload"),
@@ -152,7 +156,7 @@ async function main() {
       indexHtml.includes("name=theme-color"),
     "index.html missing theme-color meta",
   );
-  // Hugo --minify may drop attribute quotes: class=skip-link href=#main
+  // Hugo --minify 可能去掉属性引号：class=skip-link href=#main
   assert(
     /class="?skip-link"?/.test(indexHtml) && /href="?#main"?/.test(indexHtml),
     "index.html missing skip link to #main",
@@ -181,6 +185,7 @@ async function main() {
     "index.html missing search dialog or menu trigger",
   );
 
+  // 404（有搜索 Dialog，无 ?hl= 配置）
   if (await exists("404.html")) {
     const notFound = await readPublic("404.html");
     assert(
@@ -199,6 +204,7 @@ async function main() {
     "index.html must not reference removed shields/themed badges",
   );
 
+  // 样式产物
   const cssDir = publicPath("css");
   const mainCss = await findFirstFile(cssDir, (n) => n.startsWith("main."));
   const fontsCss = await findFirstFile(
@@ -215,6 +221,7 @@ async function main() {
     );
   }
 
+  // Pagefind
   assert(
     await exists("pagefind/pagefind.js"),
     "pagefind/pagefind.js missing (run build:search)",
@@ -224,6 +231,7 @@ async function main() {
     "pagefind/pagefind-entry.json missing",
   );
 
+  // 文章抽样（JSON-LD / pagefind-body / 外链 rel / 搜索与 hl）
   const postRel = await findSamplePostHtml();
   if (!postRel) {
     failures.push("no post/*/index.html found to spot-check");
@@ -237,7 +245,7 @@ async function main() {
       postHtml.includes("data-pagefind-body"),
       `post page missing data-pagefind-body: ${postRel}`,
     );
-    // Minify may drop quotes on rel=...
+    // minify 可能去掉 rel 引号
     assert(
       /rel="?external noopener noreferrer"?/.test(postHtml) ||
         !/target="?_blank"?/.test(postHtml),
