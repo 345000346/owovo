@@ -1,5 +1,3 @@
-"use strict";
-
 // Event-delegated copy for server-rendered .code-block wrappers
 // (layouts/_default/_markup/render-codeblock.html).
 
@@ -47,7 +45,7 @@ function initCopyDelegation() {
     }
 
     const labels = getCopyLabels(wrapper);
-    const status = wrapper.querySelector(".code-block__status");
+    const status = wrapper.querySelector(".code-block-status");
 
     try {
       await navigator.clipboard.writeText(getCodeText(wrapper));
