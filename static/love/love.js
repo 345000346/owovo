@@ -2,6 +2,7 @@ import { love } from "./data.js";
 
 (() => {
   const DAY_MS = 1000 * 60 * 60 * 24;
+  const TARGET_OFFSET_MS = 8 * 60 * 60 * 1000;
   const pageRoot = document.querySelector(".memorial-page");
   if (!pageRoot) return;
 
@@ -38,29 +39,51 @@ import { love } from "./data.js";
     return value instanceof Date && !Number.isNaN(value.getTime());
   }
 
+  // 纪念册日期按 Asia/Shanghai 的固定东八区墙上时间计算，不随访客时区变化。
+  function toTargetWallTime(date) {
+    return new Date(date.getTime() + TARGET_OFFSET_MS);
+  }
+
+  function fromTargetWallTime(
+    year,
+    month,
+    day,
+    hour = 0,
+    minute = 0,
+    second = 0,
+    millisecond = 0,
+  ) {
+    return new Date(
+      Date.UTC(year, month, day, hour, minute, second, millisecond) -
+        TARGET_OFFSET_MS,
+    );
+  }
+
   /** 日历年差 + 自上次周年日起的整天数（与「满 x 年 y 天」口语一致）。 */
   function diffCalendar(from, to) {
-    let years = to.getFullYear() - from.getFullYear();
-    let anniversary = new Date(
-      to.getFullYear(),
-      from.getMonth(),
-      from.getDate(),
-      from.getHours(),
-      from.getMinutes(),
-      from.getSeconds(),
-      from.getMilliseconds(),
+    const fromWall = toTargetWallTime(from);
+    const toWall = toTargetWallTime(to);
+    let years = toWall.getUTCFullYear() - fromWall.getUTCFullYear();
+    let anniversary = fromTargetWallTime(
+      toWall.getUTCFullYear(),
+      fromWall.getUTCMonth(),
+      fromWall.getUTCDate(),
+      fromWall.getUTCHours(),
+      fromWall.getUTCMinutes(),
+      fromWall.getUTCSeconds(),
+      fromWall.getUTCMilliseconds(),
     );
 
     if (anniversary > to) {
       years -= 1;
-      anniversary = new Date(
-        to.getFullYear() - 1,
-        from.getMonth(),
-        from.getDate(),
-        from.getHours(),
-        from.getMinutes(),
-        from.getSeconds(),
-        from.getMilliseconds(),
+      anniversary = fromTargetWallTime(
+        toWall.getUTCFullYear() - 1,
+        fromWall.getUTCMonth(),
+        fromWall.getUTCDate(),
+        fromWall.getUTCHours(),
+        fromWall.getUTCMinutes(),
+        fromWall.getUTCSeconds(),
+        fromWall.getUTCMilliseconds(),
       );
     }
 
@@ -75,12 +98,18 @@ import { love } from "./data.js";
   }
 
   function daysBetween(from, to) {
+    const fromWall = toTargetWallTime(from);
+    const toWall = toTargetWallTime(to);
     const fromUtc = Date.UTC(
-      from.getFullYear(),
-      from.getMonth(),
-      from.getDate(),
+      fromWall.getUTCFullYear(),
+      fromWall.getUTCMonth(),
+      fromWall.getUTCDate(),
     );
-    const toUtc = Date.UTC(to.getFullYear(), to.getMonth(), to.getDate());
+    const toUtc = Date.UTC(
+      toWall.getUTCFullYear(),
+      toWall.getUTCMonth(),
+      toWall.getUTCDate(),
+    );
     return Math.round((toUtc - fromUtc) / DAY_MS);
   }
 
@@ -90,7 +119,7 @@ import { love } from "./data.js";
     const year = Number(matched[1]);
     const month = Number(matched[2]) - 1;
     const day = Number(matched[3]);
-    return new Date(year, month, day, 0, 0, 0, 0);
+    return fromTargetWallTime(year, month, day);
   }
 
   function formatDotDate(dateStr) {
@@ -192,7 +221,7 @@ import { love } from "./data.js";
       const eventDate = parseEventDate(event.date);
       if (!eventDate) return;
 
-      const year = eventDate.getFullYear();
+      const year = toTargetWallTime(eventDate).getUTCFullYear();
       if (year !== lastYear) {
         const yearItem = document.createElement("li");
         yearItem.className = "timeline-year";

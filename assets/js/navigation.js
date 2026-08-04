@@ -126,24 +126,26 @@ function initNavigation() {
     background.forEach((element) => {
       element.inert = inert;
       element.setAttribute("aria-hidden", String(inert));
-      element.querySelectorAll(NAV_FOCUSABLE_SELECTOR).forEach((focusable) => {
-        if (inert) {
-          backgroundTabIndexes.set(
-            focusable,
-            focusable.getAttribute("tabindex"),
-          );
-          focusable.setAttribute("tabindex", "-1");
-        } else {
-          const originalTabIndex = backgroundTabIndexes.get(focusable);
-          if (originalTabIndex === null) {
-            focusable.removeAttribute("tabindex");
-          } else if (originalTabIndex !== undefined) {
-            focusable.setAttribute("tabindex", originalTabIndex);
+      if (inert) {
+        element.querySelectorAll(NAV_FOCUSABLE_SELECTOR).forEach((focusable) => {
+          if (!backgroundTabIndexes.has(focusable)) {
+            backgroundTabIndexes.set(
+              focusable,
+              focusable.getAttribute("tabindex"),
+            );
           }
-        }
-      });
+          focusable.setAttribute("tabindex", "-1");
+        });
+      }
     });
     if (!inert) {
+      backgroundTabIndexes.forEach((originalTabIndex, focusable) => {
+        if (originalTabIndex === null) {
+          focusable.removeAttribute("tabindex");
+        } else {
+          focusable.setAttribute("tabindex", originalTabIndex);
+        }
+      });
       backgroundTabIndexes.clear();
     }
   }
