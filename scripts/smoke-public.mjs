@@ -145,6 +145,21 @@ async function main() {
     "sitemap.xml must not list removed /categories/ taxonomy",
   );
 
+  // /post/ 是重定向页，不应作为独立页面进入搜索索引。
+  const postRootRel = "post/index.html";
+  assert(await exists(postRootRel), `${postRootRel} missing`);
+  if (await exists(postRootRel)) {
+    const postRootHtml = await readPublic(postRootRel);
+    assert(
+      /name="?robots"?[^>]*noindex/i.test(postRootHtml),
+      `${postRootRel} must be noindex (redirect-only section)`,
+    );
+    assert(
+      !/rel="?canonical"?/i.test(postRootHtml),
+      `${postRootRel} must not expose a canonical URL`,
+    );
+  }
+
   // 首页（无 livereload；主题色 / skip-link / SRI / 字体 preload / 搜索）
   const indexHtml = await readPublic("index.html");
   assert(
