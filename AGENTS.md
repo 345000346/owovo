@@ -6,7 +6,7 @@
 
 ```bash
 npm ci                    # 首次 / CI：按 lock 安装，勿用 npm install 漂移依赖
-npm run dev               # 本地 Hugo 开发服务器（含草稿，先同步字体）
+npm run dev               # 本地 Hugo 开发服务器（含草稿，先同步字体；不生成/更新 Pagefind）
 npm run build:site        # 仅 Hugo（--environment production --gc --minify --cleanDestinationDir）
 npm run build:search      # 仅 Pagefind 索引（--site public）
 npm run smoke             # 对 public/ 做构建后断言
@@ -20,7 +20,7 @@ npm run hugo:env          # 打印本机 Hugo 环境
 维护（不进默认 CI）：
 
 ```bash
-node scripts/normalize-frontmatter.mjs   # 重排 content front matter；文章侧丢掉 toc: true
+node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 lastmod/categories，文章侧丢掉 toc: true
 ```
 
 注意：
@@ -42,7 +42,8 @@ config/_default/          # Hugo 配置
   params.yaml             # 运营参数（作者、描述、主题色等）
 layouts/                  # 站点模板（已压平，无 themes/）
   _default/               # baseof、list、single、terms + render hooks
-  post/                   # 文章 single；section 列表重定向到 /archives/
+  post/                   # 文章 single
+  archives/               # 文章归档普通页（type: archives）
   partials/               # 组件与工具 partials
   shortcodes/             # 自定义 shortcodes
 assets/
@@ -50,13 +51,13 @@ assets/
   scss/                   # Dart Sass：main.scss 入口；token 在 utils/_variables.scss
   css/fonts.css           # sync-fonts 生成（gitignore）
 data/                     # Socials.toml、SVG.toml；font_preload.json 由 sync-fonts 生成
-content/                  # 内容（文章、关于、想法、归档 section 等）
+content/                  # 内容（文章、关于、想法、普通归档页等）
 static/                   # 原样发布（fonts/ 构建生成）；love.* 为同域独立项目
 docs/cloudflare.md        # Cloudflare 代理 Pages 的手工配置（无仓库脚本）
 scripts/
   sync-fonts.mjs          # 字体全量分片 + latin/CJK 白名单 preload
   smoke-public.mjs        # 构建后 public/ 断言
-  normalize-frontmatter.mjs  # 维护：FM 字段序与 toc 默认
+  normalize-frontmatter.mjs  # 维护：FM 字段序、lastmod/categories 清理与 toc 默认
 archetypes/default.md     # 新文章 front matter 模板
 .github/workflows/        # GitHub Pages：build →（非 PR）deploy
 ```
@@ -75,9 +76,11 @@ archetypes/default.md     # 新文章 front matter 模板
   - SEO：`partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）。
   - taxonomy **仅** `tags`。
 - **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 拷贝官方 index **全部分片**（不做站点用字扫描）。`data/font_preload.json` = latin + 固定 CJK 白名单（缺文件则跳过）；其余 CJK 靠 `unicode-range`。调试：`npm run sync:fonts:stats`。
-- **搜索**：构建后 `pagefind --site public`；UI 为全站 Dialog + Default UI；**无**独立 `/search/` 页。
+- **搜索**：构建后 `pagefind --site public`；UI 为全站 Dialog + Default UI，但索引范围仅为文章；文章正文使用 `data-pagefind-body`，其它 Hugo 页面在 `<body>` 使用 `data-pagefind-ignore`；**无**独立 `/search/` 页。
+- **RSS**：首页输出 `/rss.xml`；只收录 `Section == post` 的最近 20 篇摘要，`pubDate` 使用文章 `date`，不使用构建时钟或全文。
+- **section 输出**：`disableKinds: ["section"]` 全局关闭 section 列表页；当前内容模型只需要文章实体与普通归档页。将来新增 section 时，必须显式评估是否需要重新启用对应输出。
 - **CI/CD**：`main` 推送：`npm ci` → `build:site --panicOnWarning` → `build:search` → `smoke` → deploy Pages；PR 只构建不部署。**无** format 步骤。
-- **域名 / CDN**：`baseURL` + `static/CNAME` → `https://owovo.xyz`。Cloudflare 代理见 `docs/cloudflare.md`（控制台手工配置）。**勿**把 `baseURL` 改成 `*.github.io`。`/post/` → `/archives/` 仅站点内重定向，**不做** Cloudflare 301。
+- **域名 / CDN**：`baseURL` + `static/CNAME` → `https://owovo.xyz`。Cloudflare 代理见 `docs/cloudflare.md`（控制台手工配置）。**勿**把 `baseURL` 改成 `*.github.io`；站点不为 `/post/` 根配置兼容重定向，也不做 Cloudflare 301。
 
 ## 代码写法约定
 
@@ -128,7 +131,6 @@ archetypes/default.md     # 新文章 front matter 模板
 ```yaml
 title: "..."
 date: YYYY-MM-DDTHH:mm:ss+08:00
-lastmod: ...          # 仅有实质修改时
 slug: "kebab-case"    # 与目录名一致
 description: "..."
 tags: ["..."]
@@ -147,12 +149,12 @@ tags: ["..."]
 | 角色         | 路径           | 说明                                                            |
 | ------------ | -------------- | --------------------------------------------------------------- |
 | 文章实体     | `/post/:slug/` | `content/post/<slug>/index.md`；`layouts/post/single.html`      |
-| 权威文章列表 | `/archives/`   | 菜单「文章」；`Section == post`，按年分组                       |
+| 权威文章列表 | `/archives/`   | `content/archives.md` + `type: archives`；按年分组             |
 | 首页         | `/`            | 同一批文章，摘要 + 分页                                         |
-| section 根   | `/post/`       | **不是列表**；`layouts/post/list.html` 重定向到 `/archives/`    |
+| 文章内容目录 | `content/post/` | 仅作为内容组织目录；不生成 `/post/` section 根页面            |
 | 关于         | `/about/`      | `layout: about`                                                 |
 | 普通页       | 如 `/ideas/`   | `type: page` → `layouts/_default/single.html`                   |
-| 搜索         | （无独立 URL） | 全站 Dialog                                                     |
+| 搜索         | （无独立 URL） | 全站 Dialog，结果仅文章                                       |
 | 标签         | `/tags/`       | 唯一 taxonomy                                                   |
 | 同域独立项目 | `/love.html`   | `static/love.html` + `static/love/`；不进模板与 Pagefind        |
 
@@ -161,9 +163,9 @@ tags: ["..."]
 - partial 字典传参：`{{ partial "utils/icon.html" (dict "$" . "name" "tag") }}`
 - 路径小写、连字符
 - 文章判断：`utils/is-post.html`；关于：`utils/is-about.html`（`layout: about`）
-- 文章壳只在 `layouts/post/single.html`；通用页不要复制文章壳
+- 文章壳只在 `layouts/post/single.html`；归档壳在 `layouts/archives/single.html`；通用页不要复制文章壳
 - 404：只 `define "main"`，共用 `baseof`（有搜索 Dialog；无 `?hl=` loader）
-- 高亮 loader：`partials/components/search-highlight-loader.html`；非 404 在 head 调用
+- 高亮 loader：`partials/components/search-highlight-loader.html`；仅文章页在 head 调用
 - 菜单搜索：`identifier: search`、`url: "#search"`、`data-search-trigger`；支持 `/#search` 与 hashchange
 - 不要新增 `/search/` 页或 `categories` taxonomy
 
@@ -171,6 +173,7 @@ tags: ["..."]
 
 - 路径：`content/post/<slug>/index.md`
 - slug：全小写 kebab-case（与目录名一致）
+- 日期只使用 front matter 的 `date`；不使用 `lastmod`、`.Lastmod` 或自动生成的修改日期
 - 只用 `tags`
 - TOC 默认开；关闭写 `toc: false`
 - 转载：`source`（可选 `author`）；过时：`outdated` + 建议 `outdatedNote`
@@ -185,6 +188,10 @@ tags: ["..."]
 ```bash
 npm run build
 ```
+
+`npm run dev` 仅启动 Hugo server，不会生成或更新 Pagefind 索引；需要验证搜索时使用 `npm run build` 或 `npm run preview`。
+
+`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流；不要将文章数量或 Pagefind 页数写死。
 
 模板改动建议：
 
@@ -204,5 +211,5 @@ npm run build:site -- --panicOnWarning --logLevel warn
 - **字体**：全量分片 + 固定 preload 白名单，不用字扫描。
 - **Favicon**：仅 `icons/favicon.svg` + `icons/apple-touch-icon.png`。
 - **无** Microformats / 访问统计脚本 / i18n。
-- **`static/love.*`**：独立同域项目，`noindex`，勿混主站 partial。
-- **列表入口唯一**：`/archives/`；`/post/` 只做站内重定向。
+- **`static/love.*`**：独立同域项目，`noindex`；动态主题与时间线数据只维护在 `static/love/data.js`，勿混主站 partial。
+- **列表入口唯一**：`/archives/`；不生成 `/post/` section 根兼容页，文章实体地址仍为 `/post/:slug/`。
