@@ -55,11 +55,16 @@ permalinks:
 taxonomies:
   tag: tags
 
+disableKinds: ["section"]
+
 outputs:
   home: ["HTML", "RSS"]
-  section: ["HTML"]
   taxonomy: ["HTML"]
   term: ["HTML"]
+
+services:
+  rss:
+    limit: 20
 
 # 首页 RSS 输出为 /rss.xml（非 index.xml）
 outputFormats:

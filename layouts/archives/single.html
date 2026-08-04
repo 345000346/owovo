@@ -1,0 +1,18 @@
+{{/* 文章归档：普通页，不生成 section 列表；只展示文章实体。 */}}
+{{ define "main" }}
+    <main class="main list" id="main">
+        <div class="main-inner">
+            <div class="content list-group">
+                {{ with .Content }}
+                    <div class="section-content">{{ . }}</div>
+                {{ end }}
+                {{ $pages := where .Site.RegularPages "Section" "eq" "post" }}
+                {{ $pages = $pages.ByDate.Reverse }}
+                {{ range $pages.GroupByDate "2006" }}
+                    <h2 class="list-year">{{ .Key }}</h2>
+                    {{ partial "utils/list-item.html" . }}
+                {{ end }}
+            </div>
+        </div>
+    </main>
+{{ end }}

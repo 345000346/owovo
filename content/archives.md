@@ -1,4 +1,5 @@
 ---
 title: "文章归档"
 description: "全部文章按年归档（站内文章列表的权威入口）"
+type: archives
 ---

@@ -1,13 +1,14 @@
-{{/* 全站壳：文章页挂阅读进度；所有页（含 404）挂搜索 Dialog。 */}}
+{{/* 全站壳：文章页挂阅读进度与 Pagefind 正文；其它页面整体排除出搜索。 */}}
+{{- $isPost := partial "utils/is-post.html" . -}}
 <!DOCTYPE html>
 <html lang="{{ .Site.Language.Locale }}">
     <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
         {{ partial "head.html" . }}
         {{ block "head-extra" . }}{{ end }}
     </head>
-    <body id="top">
+    <body id="top"{{ if not $isPost }} data-pagefind-ignore{{ end }}>
         <a class="skip-link" href="#main">跳到正文</a>
-        {{- if partial "utils/is-post.html" . -}}
+        {{- if $isPost -}}
             <div id="reading-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="阅读进度"></div>
         {{- end -}}
         <div class="container">

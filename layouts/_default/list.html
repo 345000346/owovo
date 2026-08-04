@@ -1,23 +1,11 @@
-{{/* 列表：term 用 .Pages；section=archives 时取全部 Section==post 再按年分组。 */}}
+{{/* taxonomy term 列表；文章归档使用 layouts/archives/single.html。 */}}
 {{ define "main" }}
     <main class="main list" id="main">
         <div class="main-inner">
             <div class="content list-group">
-                {{ if .Content }}
-                    <div class="section-content" data-pagefind-body>
-                        {{ .Content }}
-                    </div>
-                {{ end }}
                 {{ $pages := false }}
                 {{ if eq .Kind "term" }}
                     {{ $pages = .Pages }}
-                {{ else if eq .Kind "section" }}
-                    {{ if eq .Section "archives" }}
-                        {{- /* 权威文章列表：全部 section=post 常规页，按年分组。 */ -}}
-                        {{ $pages = where .Site.RegularPages "Section" "eq" "post" }}
-                    {{ else }}
-                        {{ $pages = .Pages }}
-                    {{ end }}
                 {{ end }}
                 {{ with $pages }}
                     {{ range .GroupByDate "2006" }}

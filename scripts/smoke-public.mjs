@@ -5,7 +5,7 @@
  * 用法：node scripts/smoke-public.mjs [publicDir]
  */
 import { readdir, readFile, stat } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const publicDir = resolve(
@@ -74,6 +74,31 @@ async function findFirstFile(dir, pred) {
   return null;
 }
 
+/** @param {string} dir */
+async function listFiles(dir) {
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  const files = [];
+  for (const entry of entries) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await listFiles(full)));
+    } else if (entry.isFile()) {
+      files.push(full);
+    }
+  }
+  return files;
+}
+
+/** @param {string} rel */
+function isArticleHtml(rel) {
+  return /^post\/[^/]+\/index\.html$/.test(rel);
+}
+
 /** 任选一篇 post 的 index.html 做抽样检查。 */
 async function findSamplePostHtml() {
   let entries;
@@ -130,7 +155,7 @@ async function main() {
   assert(
     !sitemap.includes(`${siteHost}/post/</loc>`) &&
       !sitemap.includes(`${siteHost}/post<`),
-    "sitemap.xml must not list section root /post/ (redirect-only; use /archives/)",
+    "sitemap.xml must not list section root /post/ (section output disabled; use /archives/)",
   );
   assert(
     sitemap.includes(`${siteHost}/archives/`),
@@ -145,20 +170,9 @@ async function main() {
     "sitemap.xml must not list removed /categories/ taxonomy",
   );
 
-  // /post/ 是重定向页，不应作为独立页面进入搜索索引。
+  // /post/ 根不再生成；文章实体仍使用 /post/:slug/。
   const postRootRel = "post/index.html";
-  assert(await exists(postRootRel), `${postRootRel} missing`);
-  if (await exists(postRootRel)) {
-    const postRootHtml = await readPublic(postRootRel);
-    assert(
-      /name="?robots"?[^>]*noindex/i.test(postRootHtml),
-      `${postRootRel} must be noindex (redirect-only section)`,
-    );
-    assert(
-      !/rel="?canonical"?/i.test(postRootHtml),
-      `${postRootRel} must not expose a canonical URL`,
-    );
-  }
+  assert(!(await exists(postRootRel)), `${postRootRel} must not exist`);
 
   // 首页（无 livereload；主题色 / skip-link / SRI / 字体 preload / 搜索）
   const indexHtml = await readPublic("index.html");
@@ -245,6 +259,41 @@ async function main() {
     await exists("pagefind/pagefind-entry.json"),
     "pagefind/pagefind-entry.json missing",
   );
+
+  // Pagefind 范围：每篇文章必须提供唯一正文标记，其它生成 HTML 必须整体排除。
+  const htmlFiles = (await listFiles(publicDir)).filter((file) =>
+    file.endsWith(".html"),
+  );
+  let articleHtmlCount = 0;
+  for (const file of htmlFiles) {
+    const rel = relative(publicDir, file).replaceAll("\\", "/");
+    const html = await readFile(file, "utf8");
+    const bodyMarkers = html.match(/data-pagefind-body/g) || [];
+    assert(
+      !html.includes("dateModified") &&
+        !html.includes("article:modified_time"),
+      `${rel} must not expose a modification date`,
+    );
+    if (isArticleHtml(rel)) {
+      articleHtmlCount += 1;
+      assert(
+        bodyMarkers.length === 1,
+        `${rel} must contain exactly one data-pagefind-body marker`,
+      );
+      continue;
+    }
+    assert(
+      bodyMarkers.length === 0,
+      `${rel} must not contain data-pagefind-body (Pagefind indexes articles only)`,
+    );
+    if (html.includes("<body")) {
+      assert(
+        html.includes("data-pagefind-ignore"),
+        `${rel} must contain data-pagefind-ignore`,
+      );
+    }
+  }
+  assert(articleHtmlCount > 0, "no article HTML found for Pagefind scope check");
 
   // 文章抽样（JSON-LD / pagefind-body / 外链 rel / 搜索与 hl）
   const postRel = await findSamplePostHtml();
