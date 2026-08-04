@@ -5,6 +5,7 @@
 @use "../utils/variables";
 
 @mixin dark-theme {
+  color-scheme: dark;
   @include mixins.defineColorHSL(
     --color-primary,
     variables.$primaryColorDarkH,

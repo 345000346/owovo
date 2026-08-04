@@ -6,32 +6,43 @@
 // - 解析后: "light" | "dark"（system → prefers-color-scheme）
 // - documentElement: data-theme、data-theme-preference
 // - meta[name=theme-color]: content + data-theme-color-light/dark
+// - meta[name=color-scheme]: content = "light" | "dark"
 // FOUC 只上色；本文件负责切换、存储、系统主题与 themechange。
 // 图标由 [data-theme-preference] CSS 驱动。
 // Concat：与 navigation.js / scroll-ui.js 同 module，顶层仅 initTheme。
 
 function initTheme() {
-  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  let transientPreference = null;
+  let mediaQuery = null;
+  try {
+    if (typeof window.matchMedia === "function") {
+      mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    }
+  } catch {
+    // matchMedia 不可用时按浅色作为系统主题的最终回退。
+  }
   const themeSwitcher = document.getElementById("theme-switcher");
 
   function safeGetTheme() {
     try {
-      return localStorage.getItem("theme") || "system";
+      return localStorage.getItem("theme") || transientPreference || "system";
     } catch {
-      return "system";
+      return transientPreference || "system";
     }
   }
 
   function safeSetTheme(value) {
     try {
       localStorage.setItem("theme", value);
+      transientPreference = null;
     } catch {
+      transientPreference = value;
       // 隐私模式或存储被拦截时忽略。
     }
   }
 
   function getSystemPreference() {
-    return mediaQuery.matches ? "dark" : "light";
+    return mediaQuery?.matches ? "dark" : "light";
   }
 
   function resolveTheme(preference) {
@@ -60,6 +71,13 @@ function initTheme() {
       "aria-label",
       `切换主题，当前：${preferenceLabel(preference)}`,
     );
+  }
+
+  function syncColorScheme(theme) {
+    const meta = document.querySelector('meta[name="color-scheme"]');
+    if (meta && meta.getAttribute("content") !== theme) {
+      meta.setAttribute("content", theme);
+    }
   }
 
   function applyThemeFromPreference(preference, { force = false } = {}) {
@@ -97,6 +115,7 @@ function initTheme() {
         meta.setAttribute("content", next);
       }
     }
+    syncColorScheme(theme);
 
     window.dispatchEvent(
       new CustomEvent("themechange", {
@@ -125,8 +144,12 @@ function initTheme() {
   // FOUC 已写过匹配属性；仅在与存储/系统不一致时重写。
   applyThemeFromPreference(safeGetTheme());
 
-  if (typeof mediaQuery.addEventListener === "function") {
-    mediaQuery.addEventListener("change", handleSystemThemeChange);
+  if (mediaQuery) {
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", handleSystemThemeChange);
+    } else if (typeof mediaQuery.addListener === "function") {
+      mediaQuery.addListener(handleSystemThemeChange);
+    }
   }
 
   window.addEventListener("storage", (event) => {

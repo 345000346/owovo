@@ -4,6 +4,7 @@
 @use "../utils/variables";
 
 @mixin light-theme {
+  color-scheme: light;
   @include mixins.defineColorHSL(
     --color-primary,
     variables.$primaryColorLightH,
