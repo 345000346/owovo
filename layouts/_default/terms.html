@@ -12,14 +12,16 @@
                         {{ $max := add (len (index $.Site.Taxonomies.tags.ByCount 0).Pages) 1 }}
                         {{ $min := len (index $.Site.Taxonomies.tags.ByCount.Reverse 0).Pages }}
                         {{ $denominator := sub (math.Log $max) (math.Log $min) }}
-                        {{ range $name, $taxonomy := $.Site.Taxonomies.tags }}
-                            {{ $count := len $taxonomy.Pages }}
+                        {{ range $.Site.Taxonomies.tags.ByCount }}
+                            {{ $termPage := .Page }}
+                            {{ $name := $termPage.Data.Term }}
+                            {{ $count := len $termPage.Pages }}
                             {{ $weight := 0.5 }}
                             {{ if gt $denominator 0 }}
                                 {{ $weight = div (sub (math.Log $count) (math.Log $min)) $denominator }}
                             {{ end }}
                             {{ $currentFontSize := (add $smallestFontSize (mul (sub $largestFontSize $smallestFontSize) $weight)) }}
-                            {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
+                            {{ with $termPage }}
                                 {{- $label := .LinkTitle | default .Data.Term | default $name -}}
                                 <a href="{{ .RelPermalink }}" class="tag-cloud-item" style="font-size: {{ $currentFontSize }}{{ $fontUnit }}" aria-label="标签 {{ $label }}，{{ $count }} 篇文章">{{ $label }}</a>
                             {{ end }}

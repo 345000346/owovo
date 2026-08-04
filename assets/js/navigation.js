@@ -152,10 +152,14 @@ function initNavigation() {
 
   function getFocusableElements() {
     return [
+      ...nav.querySelectorAll(NAV_FOCUSABLE_SELECTOR),
       navToggle,
-      ...header.querySelectorAll(`.nav ${NAV_FOCUSABLE_SELECTOR}`),
+      navCurtain,
     ].filter(
-      (element) => !element.hidden && element.getClientRects().length > 0,
+      (element) =>
+        !element.hidden &&
+        element.tabIndex >= 0 &&
+        element.getClientRects().length > 0,
     );
   }
 
@@ -184,6 +188,7 @@ function initNavigation() {
     // 开合与淡出全程保持 aria/inert/陷阱，避免动画中焦点被抽走。
     navToggle.setAttribute("aria-expanded", "true");
     navToggle.setAttribute("aria-label", "关闭菜单");
+    navCurtain.tabIndex = 0;
     navCurtain.hidden = false;
     // 清 [hidden] 后强制回流，过渡才能生效。
     void navCurtain.offsetWidth;
@@ -208,6 +213,7 @@ function initNavigation() {
     navToggle.classList.remove("open");
     navToggle.setAttribute("aria-expanded", "false");
     navToggle.setAttribute("aria-label", "打开菜单");
+    navCurtain.tabIndex = -1;
     setScrollLock(false);
     setBackgroundInert(false);
     syncNavAvailability();

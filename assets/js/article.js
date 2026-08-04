@@ -28,10 +28,14 @@ function getCodeText(wrapper) {
 }
 
 function initCopyDelegation() {
+  const copyButtons = document.querySelectorAll(".code-block .copy-button");
   if (
     !navigator.clipboard ||
     typeof navigator.clipboard.writeText !== "function"
   ) {
+    copyButtons.forEach((button) => {
+      button.hidden = true;
+    });
     return;
   }
 
