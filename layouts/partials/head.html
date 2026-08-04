@@ -1,4 +1,5 @@
-{{/* head：FOUC 主题、字体 preload、样式/脚本、SEO（404 无 canonical/SEO）。 */}}
+{{/* head：FOUC 主题、字体 preload、样式/脚本、SEO（404 / 重定向页无 canonical/SEO）。 */}}
+    {{- $isPostRedirect := and (eq .Kind "section") (eq .Section "post") -}}
     <meta charset="UTF-8" />
 
     {{ hugo.Generator }}
@@ -78,7 +79,7 @@
 
     {{- $description := .Description | default (.Summary | plainify | htmlUnescape | strings.TrimSpace) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
     <meta name="description" content="{{ $description }}" />
-    {{- if eq .Kind "404" }}
+    {{- if or (eq .Kind "404") $isPostRedirect }}
         <meta name="robots" content="noindex,follow" />
     {{- end }}
 
@@ -89,7 +90,7 @@
         <link rel="{{ .Rel }}" type="{{ .MediaType }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}" />
     {{ end }}
 
-    {{- if ne .Kind "404" }}
+    {{- if and (ne .Kind "404") (not $isPostRedirect) }}
         <link rel="canonical" href="{{ .Permalink }}" />
         {{ partial "utils/seo.html" (dict "$" $ "description" $description) }}
     {{- end }}
