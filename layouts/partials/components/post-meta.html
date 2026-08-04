@@ -3,13 +3,9 @@
 {{- $isHome := .isHome -}}
 {{- $isPost := .isPost | default (partial "utils/is-post.html" $) -}}
 <div class="post-meta">
-    {{ if not $.PublishDate.IsZero }}
+    {{ if not $.Date.IsZero }}
         {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "calendar-alt" "class" "post-meta-icon") }}
-        <time datetime="{{ $.PublishDate.Format "2006-01-02T15:04:05-07:00" }}" class="post-meta-item">{{ $icon }}&nbsp;{{ $.PublishDate.Format $.Site.Params.postMetaDateFormat }}</time>
-    {{ end }}
-    {{ if and $isPost (not $.Lastmod.IsZero) (ne ($.Lastmod.Format "2006-01-02") ($.PublishDate.Format "2006-01-02")) }}
-        {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "edit" "class" "post-meta-icon") }}
-        <time datetime="{{ $.Lastmod.Format "2006-01-02T15:04:05-07:00" }}" class="post-meta-item">{{ $icon }}&nbsp;{{ $.Lastmod.Format $.Site.Params.postMetaDateFormat }}</time>
+        <time datetime="{{ $.Date.Format "2006-01-02T15:04:05-07:00" }}" class="post-meta-item">{{ $icon }}&nbsp;{{ $.Date.Format $.Site.Params.postMetaDateFormat }}</time>
     {{ end }}
     {{ if $isPost }}
         {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "clock" "class" "post-meta-icon") }}

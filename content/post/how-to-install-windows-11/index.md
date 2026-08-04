@@ -1,7 +1,6 @@
 ---
 title: "如何安装 Windows 11 系统"
 date: 2026-05-16T12:00:00+08:00
-lastmod: 2026-05-16T12:00:00+08:00
 slug: "how-to-install-windows-11"
 description: "从硬件要求到安装步骤，手把手教你安装一个干净的 Windows 11 系统，适合重装或新装。"
 tags: ["Windows", "系统安装"]

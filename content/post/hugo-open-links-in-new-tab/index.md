@@ -1,7 +1,6 @@
 ---
 title: "在 Hugo 文章页面中使用新标签页打开外部链接"
 date: 2019-09-05T12:55:49+08:00
-lastmod: 2026-05-18T00:00:00+08:00
 slug: "hugo-open-links-in-new-tab"
 description: "Markdown 语法本身不支持指定链接打开方式。本文介绍如何用 Hugo 的 render hook 让外部链接自动在新标签页打开，无需 JavaScript。"
 tags: ["Hugo", "Markdown", "Render Hook"]

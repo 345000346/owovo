@@ -1,13 +1,14 @@
 ---
 title: "Windows 常用软件"
 date: 2019-08-23T10:05:47+08:00
-lastmod: 2026-05-27T00:00:00+08:00
 slug: "windows-apps"
-description: "个人常用的 Windows 软件推荐清单，涵盖视频播放、下载工具、压缩解压、系统优化等类别，帮你从优秀软件中找到最适合自己的。"
+description: "2019 年整理的个人 Windows 软件清单，涵盖视频播放、下载工具、压缩解压、系统优化等类别。"
 tags: ["Windows", "软件", "效率工具"]
+outdated: true
+outdatedNote: "这是一份 2019 年整理的软件清单。软件版本、价格、维护状态和官网地址都可能变化，请以各项目当前信息为准；本文仅作历史记录和选型线索。"
 ---
 
-这里是一些我常用的 Windows 软件，可以让你相对轻松的从几款知名或者优秀的软件中，寻找到最适合自己的。
+这里是我在 2019 年常用的一些 Windows 软件，保留这份清单作为历史记录和选型线索。
 
 <!--more-->
 
@@ -69,7 +70,7 @@ tags: ["Windows", "软件", "效率工具"]
 
 ## Markdown
 
-[Typora](https://typora.io/)：实时预览，所见即所得。付费软件（$14.99，最多 3 台设备）。
+[Typora](https://typora.io/)：实时预览，所见即所得。付费软件，价格和授权规则以官网当前信息为准。
 
 [MarkText](https://github.com/marktext/marktext)：开源免费的 Markdown 编辑器，可作为 Typora 的替代品。
 

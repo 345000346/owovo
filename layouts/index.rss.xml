@@ -1,4 +1,4 @@
-{{/* 首页 RSS：Section==post；输出 /rss.xml（outputFormats.RSS.baseName）。链接经 make-links-absolute。 */}}
+{{/* 首页 RSS：仅文章摘要；输出 /rss.xml（outputFormats.RSS.baseName）。 */}}
 {{ `<?xml version="1.0" encoding="utf-8"?>` | safeHTML }}
 {{- $pages := where .Site.RegularPages "Section" "eq" "post" -}}
 {{- $limit := .Site.Config.Services.RSS.Limit -}}
@@ -17,7 +17,6 @@
         {{ with .Site.Copyright }}
             <copyright>{{ . | plainify | htmlUnescape }}</copyright>
         {{ end }}
-        <lastBuildDate>{{ now.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</lastBuildDate>
         {{ with .OutputFormats.Get "RSS" }}
             <atom:link rel="self" type="{{ .MediaType }}" href="{{ .Permalink }}" />
         {{ end }}
@@ -28,12 +27,12 @@
                 <title>{{ (partial "utils/title.html" (dict "$" . "title" .Title)).rawTitle }}</title>
                 <link>{{ .Permalink }}</link>
                 <guid isPermaLink="true">{{ .Permalink }}</guid>
-                <pubDate>{{ .PublishDate.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
+                <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
                 {{ with $author.copyright -}}
                     <copyright>{{ . | plainify | htmlUnescape }}</copyright>
                 {{- end }}
                 <description>
-                    {{ partial "utils/make-links-absolute.html" (dict "$" . "content" $page.Content) | html }}
+                    {{ partial "utils/make-links-absolute.html" (dict "$" . "content" $page.Summary) | html }}
                 </description>
                 {{ with $.Site.Taxonomies }}
                     {{ range $taxonomy, $terms := . }}

@@ -1,7 +1,6 @@
 ---
 title: "Impeccable.style 使用教程：给 AI 前端设计装上专业技能包"
 date: 2026-05-27T00:00:00+08:00
-lastmod: 2026-05-27T00:00:00+08:00
 slug: "impeccable-style-guide"
 description: "Impeccable.style 是面向 AI coding tools 的前端设计技能系统（v3.1.1，23 个命令），把界面评估、结构调整、排版优化、适配补强等能力拆成可调用的命令。本文从安装到实战，带你完整上手。"
 tags: ["AI", "前端设计", "Impeccable.style", "Claude Code", "工具"]

@@ -1,6 +1,6 @@
 /**
  * 规范化 content front matter 字段序。
- * 文章丢掉 toc: true；去掉 categories；键序对齐 AGENTS / archetypes。
+ * 文章丢掉 toc: true / lastmod；去掉 categories；键序对齐 AGENTS / archetypes。
  *
  * 用法：node scripts/normalize-frontmatter.mjs
  */
@@ -13,7 +13,6 @@ const contentRoot = join(root, "content");
 const POST_ORDER = [
   "title",
   "date",
-  "lastmod",
   "slug",
   "description",
   "tags",
@@ -28,7 +27,6 @@ const POST_ORDER = [
 const PAGE_ORDER = [
   "title",
   "date",
-  "lastmod",
   "description",
   "type",
   "layout",
@@ -134,6 +132,9 @@ function rebuild(blocks, order, isPost) {
       continue;
     }
     if (block.key === "categories") {
+      continue;
+    }
+    if (block.key === "lastmod") {
       continue;
     }
     if (isPost && block.key === "toc") {

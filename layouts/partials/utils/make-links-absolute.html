@@ -2,6 +2,6 @@
 {{- $ := index . "$" -}}
 {{- $content := .content -}}
 {{- $baseURL := "" | absLangURL | strings.TrimSuffix "/" -}}
-{{- $content = $content | replaceRE ` (href|src)="/` (printf ` $1="%s/` $baseURL) -}}
-{{- $content = $content | replaceRE ` (href|src)="#` (printf ` $1="%s#` $.Permalink) -}}
+{{- $content = $content | replaceRE `((href|src)=["'])/` (printf `$1%s/` $baseURL) -}}
+{{- $content = $content | replaceRE `(href="?)#` (printf `$1%s#` $.Permalink) -}}
 {{- $content | safeHTML -}}

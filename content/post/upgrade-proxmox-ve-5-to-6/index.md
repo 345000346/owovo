@@ -1,12 +1,11 @@
 ---
 title: "将 Proxmox VE 5.4 升级到 Proxmox VE 6（使用国内源）"
 date: 2019-08-29T20:09:11+08:00
-lastmod: 2026-05-18T00:00:00+08:00
 slug: "upgrade-proxmox-ve-5-to-6"
-description: "Proxmox VE 5.4 升级到 6.0 的完整步骤，使用国内镜像源加速下载。已归档，Proxmox 当前主流版本为 8.x。"
+description: "记录 Proxmox VE 5.4 升级到 6.0 的历史步骤，使用国内镜像源加速下载。"
 tags: ["虚拟机", "Proxmox", "Debian", "升级"]
 outdated: true
-outdatedNote: "本文内容已过时。Proxmox VE 当前主流版本为 8.x，本文涉及的 Proxmox VE 5→6 升级步骤和 Debian stretch 源均已终止生命周期。本文仅作归档保留，不再更新。"
+outdatedNote: "本文仅记录 Proxmox VE 5.4→6.0 的历史升级过程。文中的 Debian stretch/buster、软件源和命令只适用于当时的版本，不适用于当前系统；实际升级请以目标版本的官方文档和检查工具为准。"
 ---
 
 Proxmox VE 6.0 发布了正式版本，使用 Proxmox VE 5.4 的可通过官方提供的更新源升级到最新版本。
@@ -20,7 +19,7 @@ Proxmox 官方提供了更新升级指南：
 
 ## 一、更新 Proxmox VE 5.4 到最新版本
 
-Proxmox VE 目前的最新版本是 Proxmox VE 5.4.11。在升级到 Proxmox VE 6 之前需要将其更新到最新的 5.4 版本。
+当时的 Proxmox VE 5.4 系列最新版本是 5.4.11。在升级到 Proxmox VE 6 之前需要将其更新到该系列的最新版本。
 
 使用下面的命令将 Proxmox VE 5.4 更新源替换为中科大 USTC 镜像源再更新到最新版本。
 
@@ -93,7 +92,7 @@ deb-src https://mirrors.ustc.edu.cn/debian-security/ stretch/updates main contri
 
 ## 三、升级到 Proxmox 6.0
 
-### 1.执行以下更新命令确保最新
+### 1.执行以下更新命令确保 5.4 系列软件包已更新
 
 `apt update`
 

@@ -9,16 +9,10 @@
     <meta name="author" content="{{ . }}" />
 {{- end -}}
 
-{{- $pubDate := $.PublishDate -}}
-{{- if $pubDate.IsZero -}}
-    {{- $pubDate = $.Site.Params.siteCreatedTime -}}
+{{- $pubDate := "" -}}
+{{- if $isPost -}}
+    {{- $pubDate = dateFormat "2006-01-02T15:04:05-07:00" $.Date -}}
 {{- end -}}
-{{- $pubDate = dateFormat "2006-01-02T15:04:05-07:00" $pubDate -}}
-{{- $modDate := $.Lastmod -}}
-{{- if $modDate.IsZero -}}
-    {{- $modDate = $.Site.Params.siteCreatedTime -}}
-{{- end -}}
-{{- $modDate = dateFormat "2006-01-02T15:04:05-07:00" $modDate -}}
 
 {{- $images := slice -}}
 {{- with $.Params.images -}}
@@ -69,7 +63,6 @@
 {{- if $isPost -}}
     <meta property="og:type" content="article" />
     <meta property="article:published_time" content="{{ $pubDate }}" />
-    <meta property="article:modified_time" content="{{ $modDate }}" />
     {{- if not $.ExpiryDate.IsZero -}}
         <meta property="article:expiration_time" content="{{ $.ExpiryDate.Format "2006-01-02T15:04:05-07:00" }}" />
     {{- end }}
@@ -94,8 +87,6 @@
 {{- /* JSON-LD: branch-specific fields, then shared optional tail */ -}}
 {{- $ld := dict
     "@context" "https://schema.org"
-    "datePublished" $pubDate
-    "dateModified" $modDate
     "description" $description
 -}}
 {{- if $.IsHome -}}
@@ -109,6 +100,7 @@
 {{- else if $isPost -}}
     {{- $ld = merge $ld (dict
         "@type" "BlogPosting"
+        "datePublished" $pubDate
         "url" $.Permalink
         "headline" $title
         "inLanguage" $.Site.Language.Locale
