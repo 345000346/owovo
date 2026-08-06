@@ -1,211 +1,198 @@
 ---
-title: "Impeccable.style 使用教程：给 AI 前端设计装上专业技能包"
-date: 2026-05-27T00:00:00+08:00
+title: "Impeccable.style 使用指南：让 AI 前端工作有设计流程"
+date: 2026-08-07T00:00:00+08:00
 slug: "impeccable-style-guide"
-description: "Impeccable.style 是面向 AI coding tools 的前端设计技能系统（v3.1.1，23 个命令），把界面评估、结构调整、排版优化、适配补强等能力拆成可调用的命令。本文从安装到实战，带你完整上手。"
+description: "基于 impeccable@3.5.0 CLI 的 Impeccable.style 使用指南：安装跨工具设计 skill、调用 23 个设计命令，并用 detect 在交付前扫描 60 条界面反模式规则。"
 tags: ["AI", "前端设计", "Impeccable.style", "Claude Code", "工具"]
 ---
 
-AI 生成的前端页面往往千篇一律——Inter 字体、紫蓝渐变、卡片嵌套卡片。`Impeccable.style` 就是为了解决这个问题而生的：它不是几段 prompt，而是一套可以安装到本地、按问题拆分职责的前端设计技能系统，让 AI 做前端时更像一个真正懂设计质量的搭档。截至 2026 年 5 月，它已经发展到 **v3.1.1**，包含 **23 个命令**，支持 11 种 AI 编码工具。
+AI 能很快写出一个能运行的页面，却不一定能做出层级清楚、可访问、适配边界情况的界面。`Impeccable.style` 把这件事拆成一套跨 AI 开发工具使用的设计 skill，再配合可独立执行的 CLI 检测器：前者帮助 AI 规划、评审和改进界面，后者负责在代码层面发现常见的界面反模式。
+
+本文按 2026 年 8 月 7 日 npm 上的 `impeccable@3.5.0` CLI 文档整理。skill 与 CLI 会分别迭代，安装前仍应以 [官方仓库](https://github.com/pbakaus/impeccable) 和 `npx impeccable skills help` 的输出为准。
 
 <!--more-->
 
-## 它到底是什么
+## 它解决什么问题
 
-`Impeccable.style` 起源于 Anthropic 原始的 `frontend-design` 技能，由 Paul Bakaus 开发维护。它把"先审计界面、再调整结构、再补强适配与鲁棒性、最后做增强和精修"这些设计动作，拆成了 23 个可以直接调用的命令。
+Impeccable 不是一条“把页面做漂亮”的通用提示词。它把设计工作拆为可选的步骤：先明确产品、用户和界面目标，再评审当前实现，最后针对排版、布局、适配、性能或交互逐项改进。
 
-GitHub 仓库：[pbakaus/impeccable](https://github.com/pbakaus/impeccable)（截至 2026 年 5 月已有 30,000+ 星）。
+它包含两部分：
 
-> 命令数量会随版本迭代持续增加，以你实际安装时官方仓库的清单为准。本文基于 v3.1.1 编写。
+- **设计 skill**：安装到 Claude、Cursor、Gemini、GitHub Copilot、Codex 等 AI 开发工具后，在对话里调用设计命令。
+- **CLI 检测器**：使用 `npx impeccable detect` 扫描 HTML、CSS、JSX、TSX、Vue、Svelte 文件或 URL，发现可自动识别的界面质量问题。
 
-## 怎么安装
+两者适合配合使用：skill 负责判断和改进，CLI 用确定性规则做交付前检查。CLI 不是视觉设计的替代品，也不能替代人工对产品目标和真实用户的判断。
 
-### Claude Code 安装
+## 安装、更新与查看命令
 
-**方式一：从官网下载 ZIP**
-
-访问 [impeccable.style](https://impeccable.style/)，下载 ZIP 包，解压后将 `.claude/` 目录中的内容复制到你的项目中：
-
-```bash
-cp -r dist/claude-code/.claude your-project/
-```
-
-如果想全局安装（对所有项目生效）：
+在项目根目录执行以下命令安装 skill：
 
 ```bash
-cp -r dist/claude-code/.claude/* ~/.claude/
+npx impeccable skills install
 ```
 
-**方式二：从仓库安装**
-
-克隆 [pbakaus/impeccable](https://github.com/pbakaus/impeccable) 仓库后，将 `dist/claude-code/.claude/` 下的内容复制到对应位置。
-
-### 其他支持的工具
-
-Cursor、OpenCode、Pi、Gemini CLI、Codex CLI、VS Code Copilot、Kiro、Trae、Rovo Dev、Qoder——官网均提供了对应的安装路径。
-
-### 独立命令行工具
-
-还提供了独立的 CLI 工具，无需 AI 工具也能运行反模式检测：
+要非交互地安装到指定工具和项目范围：
 
 ```bash
-npx impeccable detect
+npx impeccable skills install -y --providers=claude,codex --scope=project
 ```
 
-## 怎么调用
+更新已安装的 skill：
 
-安装完成后，在 AI 对话中直接输入斜杠命令即可：
+```bash
+npx impeccable skills update
+```
+
+查看当前版本实际提供的命令和安装说明：
+
+```bash
+npx impeccable skills help
+```
+
+CLI 的帮助文本也保留了 `npx impeccable install`、`update`、`link` 等兼容入口；在文档和自动化脚本中，优先使用上面的 `skills` 完整写法，语义更明确。
+
+## 先建立项目上下文
+
+安装完成后，推荐先在 AI 工具里执行：
 
 ```text
-/audit
-/critique
-/polish
+/impeccable init
 ```
 
-也可以在需求描述中明确指定希望使用的命令，例如"请用 `typeset` 优化这段内容页的排版"。
+`init` 会通过多轮提问建立项目上下文。它适合新项目，也适合已有代码但尚未明确目标用户、核心任务、界面气质和明确禁忌的项目。
 
-你还可以通过 `/impeccable pin <command>` 将常用命令创建为独立快捷方式。
-
-## 新手推荐的起手路径
-
-不建议一上来把 23 个命令全试一遍。最稳的起步方式是走一条主线：
+已有页面需要先提取现有视觉系统时，可以使用：
 
 ```text
-/teach
-/audit 或 /critique
-/layout 或 /typeset 或 /distill 或 /clarify
-/adapt /harden /optimize
-/polish
+/impeccable document
 ```
 
-### 第一步：`/teach`
+新页面或功能还没开始实现时，用 `shape` 先做 UX/UI 规划：
 
-一次性收集项目的设计上下文，生成 `PRODUCT.md` 和 `DESIGN.md`：
+```text
+/impeccable shape
+```
 
-- 这个产品是给谁用的
-- 想呈现什么气质
-- 哪些风格是明确不要的
+不要把命令名当成固定流水线。先选最能描述当前问题的命令，再根据结果决定下一步，通常比一次连续执行所有命令有效。
 
-做完这一步后，后续所有改动都会更稳，因为 AI 不用每次都从零猜你的审美和边界。
+## 两条实用流程
 
-### 第二步：`/audit` 或 `/critique`
+### 从零做一个页面或功能
 
-先判断问题，而不是直接动手。
+```text
+/impeccable init
+/impeccable shape
+/impeccable audit
+/impeccable adapt
+/impeccable harden
+/impeccable polish
+```
 
-- `/audit`：技术质量检查——可访问性、性能、响应式、主题一致性。更像全面体检。
-- `/critique`：UX 设计审查——视觉层级、信息架构、情绪表达、整体体验。更像设计评审。
+`shape` 明确用户、任务和界面方向；`audit` 找技术质量问题；`adapt` 和 `harden` 分别检查多设备适配与生产边界；`polish` 放在最后处理对齐、间距和一致性。
 
-### 第三步：按症状选对应命令
+### 改进已有项目
 
-- 布局松散、间距混乱、层级不清：`/layout`
-- 字体普通、层级模糊、阅读不顺：`/typeset`
-- 页面太满、太杂、抓不住重点：`/distill`
-- 文案、标签、说明、错误提示不清楚：`/clarify`
+```text
+/impeccable document
+/impeccable critique
+/impeccable layout
+/impeccable typeset
+/impeccable polish
+```
 
-### 第四步：交付前补强
+`critique` 更关注视觉层级、信息架构和体验判断，`layout` 与 `typeset` 分别处理结构和文字阅读。若问题同时涉及可访问性、性能、响应式或主题一致性，在 `critique` 后补一次 `audit`。
 
-- 多端是不是成立：`/adapt`
-- 边界情况是不是扛得住：`/harden`
-- 加载和动画是不是够顺：`/optimize`
+## 23 个设计命令
 
-### 第五步：最后打磨
+当前 CLI 帮助列出 23 个具体设计命令；另有 `/impeccable` 作为统一的调度入口。`craft` 是普通新建流程的弃用兼容别名，新项目优先使用 `shape`。
 
-方向、结构、稳定性都差不多以后，再上 `/polish`。它适合处理对齐、间距、细节一致性——是上线前的 final pass，不适合代替前面的诊断和结构调整。
-
-## 23 个命令速查
-
-| 你现在遇到的问题 | 命令 | 可以怎么理解 |
+| 类别 | 命令 | 适用场景 |
 | --- | --- | --- |
-| 根本不知道页面差在哪 | `/audit` | 全面体检，找出质量问题 |
-| 想知道为什么看起来不够好 | `/critique` | 设计评审，看层级和体验 |
-| 布局单调、间距混乱、节奏弱 | `/layout` | 修复布局和视觉节奏 |
-| 字体选择普通、字号层级不清 | `/typeset` | 修复字体和排版 |
-| 页面太满、太杂、抓不住重点 | `/distill` | 去掉不必要的复杂性 |
-| 文案、标签、错误提示不清楚 | `/clarify` | 把 UX copy 讲明白 |
-| 桌面端正常但换设备就变形 | `/adapt` | 多设备、多场景适配 |
-| 正常情况没问题但边界扛不住 | `/harden` | 补强错误态、溢出、多语言 |
-| 页面加载慢、动画卡、图片重 | `/optimize` | 性能和流畅度 |
-| 页面方向没问题但细节不够顺 | `/polish` | 最后一轮打磨 |
-| 页面太安全、太普通、没记忆点 | `/bolder` | 放大视觉冲击力 |
-| 页面太吵、太硬、强调过多 | `/quieter` | 降噪，保留重点 |
-| 页面太灰、太白、太平 | `/colorize` | 增加策略性色彩 |
-| 交互太"死"，没有反馈感 | `/animate` | 有目的的动效和微交互 |
-| 已经能用但缺少温度和记忆点 | `/delight` | 加一些讨喜的细节 |
-| 做了很多页面想沉淀设计系统 | `/extract` | 提炼组件和 tokens |
-| 新用户上来不知道干什么 | `/onboard` | 优化首次体验和空状态 |
-| 想做超出常规的界面体验 | `/overdrive` | 高级转场、重交互、惊艳效果 |
-| 从零构建一个新页面 | `/craft` | 先塑形再构建，含视觉迭代 |
-| 编码前先规划 UX/UI | `/shape` | 先规划再动手 |
-| 从现有代码生成设计文档 | `/document` | 自动生成 DESIGN.md |
-| 实时浏览器中迭代视觉 | `/live` | 实时预览模式微调 |
+| Build | `init` | 建立产品、用户和设计上下文 |
+| Build | `shape` | 编码前规划 UX/UI |
+| Build | `document` | 从现有代码提取视觉设计系统 |
+| Build | `extract` | 提取可复用的模式、组件和设计 token |
+| Build | `craft` | 兼容旧用法的普通新建流程别名 |
+| Evaluate | `critique` | 评审层级、信息架构、认知负担和体验 |
+| Evaluate | `audit` | 检查可访问性、性能、主题、响应式和反模式 |
+| Refine | `polish` | 交付前处理对齐、间距和一致性 |
+| Refine | `bolder` | 加强过于保守或平淡的视觉表现 |
+| Refine | `quieter` | 降低过强、过密或过度刺激的视觉元素 |
+| Refine | `distill` | 删除不必要的复杂性，突出重点 |
+| Refine | `harden` | 补齐错误态、国际化、溢出和边界情况 |
+| Refine | `onboard` | 设计首次使用、空状态和激活流程 |
+| Enhance | `animate` | 添加有目的的动效和微交互 |
+| Enhance | `colorize` | 为单调界面补充策略性色彩 |
+| Enhance | `typeset` | 改善字体、层级、字号和阅读节奏 |
+| Enhance | `layout` | 改善布局、间距和视觉节奏 |
+| Enhance | `delight` | 增加恰当的个性与记忆点 |
+| Enhance | `overdrive` | 探索技术复杂度更高的界面体验 |
+| Fix | `clarify` | 改善标签、说明、错误信息和 UX 文案 |
+| Fix | `adapt` | 适配不同屏幕尺寸、设备和使用场景 |
+| Fix | `optimize` | 诊断并修复界面加载、渲染和交互性能 |
+| Iterate | `live` | 在浏览器中交互式比较和迭代视觉变体 |
 
-> 完整命令列表随版本迭代更新，以安装时官方仓库的清单为准。上面这张表基于 v3.1.1 整理。
+## 常见命令怎么选
 
-## 几个容易混淆的命令
+### `audit` 与 `critique`
 
-### `audit` vs `critique`
+- `audit` 面向技术质量，重点是可访问性、性能、响应式、主题和可检测的反模式。
+- `critique` 面向 UX 与视觉判断，重点是层级、信息架构、认知负担和整体体验。
 
-- `/audit`：偏技术维度——有没有问题（可访问性、性能、响应式）
-- `/critique`：偏设计维度——为什么不够好（视觉层级、信息架构、情绪表达）
+页面“看起来不对”但原因不明时，先用 `critique`；上线前或需要建立质量基线时，使用 `audit`。复杂项目中两者可以连续使用。
 
-### `bolder` vs `quieter`
+### `layout`、`typeset` 与 `polish`
 
-方向相反的两个命令。先判断自己需要"加力"还是"降噪"，比盲目增强更重要。
+- `layout` 处理结构：内容分组、栅格、留白、间距和视觉节奏。
+- `typeset` 处理阅读：字体选择、字号、字重、行长和层级。
+- `polish` 处理收尾：对齐、细小间距、视觉一致性和完成度。
 
-### `layout` vs `polish`
+结构尚未成立时不要先 `polish`，否则只是把错误方向的细节做得更精致。
 
-- `/layout`：处理结构性问题——布局、间距、视觉节奏
-- `/polish`：处理细节性问题——对齐、一致性、质感微调
+### `shape` 与 `document`
 
-`layout` 偏前期结构调整，`polish` 偏上线前收尾。
+- `shape` 从需求出发，适合新页面和新功能。
+- `document` 从已有实现出发，适合接手旧项目或补齐设计文档。
 
-### `distill` vs `clarify`
+## 用 CLI 做交付前检测
 
-- `/distill`：问题是太满太杂，需要做减法
-- `/clarify`：问题是表达不清楚，需要改善文案
-
-## 进阶用法
-
-### `/craft` 一站式流程
-
-如果你想一次性走完"先规划再构建"的完整流程，可以直接用 `/craft`。它会把 `shape` → 构建 → `critique` → 迭代串在一起，适合从零开始做一个新页面。
-
-### `/live` 实时视觉迭代
-
-`/live` 会在浏览器中启动一个实时预览模式，让你可以直接看到设计变更的效果，适合需要反复微调视觉细节的场景。
-
-### 反模式检测
-
-`Impeccable.style` 内置了 29 条确定性反模式规则和 12 条 LLM 批评规则（共 41 条），能自动识别常见的 AI 生成界面问题。可以通过独立 CLI 运行：
+扫描目录：
 
 ```bash
-npx impeccable detect
+npx impeccable detect src/
 ```
 
-### 领域参考知识
+扫描单个页面或线上 URL：
 
-系统内置了 7 个领域的参考知识：typography（字体）、color-and-contrast（色彩与对比）、spatial-design（空间设计）、motion-design（动效设计）、interaction-design（交互设计）、responsive-design（响应式）、ux-writing（UX 文案）。当你使用 `/teach` 或 `/critique` 等命令时，这些参考知识会自动参与指导。
+```bash
+npx impeccable detect index.html
+npx impeccable detect https://example.com
+```
+
+CI 或其他工具需要机器可读结果时：
+
+```bash
+npx impeccable detect --json src/
+```
+
+当前 CLI 有 60 条确定性检测规则，覆盖 AI 生成界面的常见痕迹、可访问性、颜色与对比度、排版、布局、动效和基础质量问题。检测到反模式时退出码为 `2`；未发现问题时为 `0`。部分建议性发现会单独列出，但不会计入失败数或改变退出码。
+
+检测器支持项目配置、内联忽略规则和 `DESIGN.md` 上下文。面对经过验证的品牌规范或刻意设计，可以记录原因后局部忽略；不要为了让检查通过而机械地移除所有被标记的实现。
 
 ## 总结
 
-如果只用一句话总结：
+把 Impeccable 用好的关键不是记住全部命令，而是让设计决策有顺序：
 
-> `Impeccable.style` 不是一个"教 AI 把页面做漂亮"的小插件，而是一套可以本地安装、持续更新、按问题拆分职责的前端设计技能系统。
-
-对新手最重要的，不是背命令名字，而是跑顺这条逻辑：
-
-1. 先建立设计上下文：`/teach`
-2. 再做问题诊断：`/audit` 或 `/critique`
-3. 再按症状下手：`/layout`、`/typeset`、`/distill`、`/clarify`
-4. 再做交付补强：`/adapt`、`/harden`、`/optimize`
-5. 最后收尾：`/polish`
-6. 真要上强度时，再考虑 `/overdrive`
+1. 用 `init` 或 `document` 补齐上下文。
+2. 用 `shape`、`critique` 或 `audit` 判断当前最重要的问题。
+3. 用对应的专项命令完成改进，并以 `polish` 收尾。
+4. 在提交前运行 `npx impeccable detect`，把可自动识别的问题纳入检查。
 
 ## 参考链接
 
 - 官网首页：<https://impeccable.style/>
 - 官方文档：<https://impeccable.style/docs/>
 - 官方仓库：<https://github.com/pbakaus/impeccable>
-- 独立 CLI：<https://www.npmjs.com/package/impeccable>
+- CLI 包与完整选项：<https://www.npmjs.com/package/impeccable>
 
-> 说明：本文基于 2026 年 5 月 27 日对官方仓库（v3.1.1）和官网的整理。涉及命令数量、版本号等表述均以该日期为准。
+> 核验范围：本文依据 2026 年 8 月 7 日 npm `latest` 标签的 `impeccable@3.5.0` README 与 CLI 帮助输出整理。命令和规则会继续演进，使用前请以本机 `npx impeccable skills help` 与 `npx impeccable detect --help` 为准。

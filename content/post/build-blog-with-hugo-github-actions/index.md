@@ -130,7 +130,7 @@ jobs:
             ${{ runner.os }}-hugo-${{ steps.hugo-version.outputs.version }}-
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: ".node-version"
           cache: "npm"
