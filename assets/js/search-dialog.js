@@ -26,6 +26,7 @@ function initSearchDialog() {
   const stylePath =
     config.getAttribute("data-pagefind-css") ||
     `${bundlePath}pagefind-ui.css`;
+  const searchContainer = dialog.querySelector(".search-dialog-search");
   let uiPromise;
 
   function clearSearchHash() {
@@ -116,6 +117,7 @@ function initSearchDialog() {
           throw new Error("Pagefind UI 未正确加载");
         }
 
+        searchContainer?.replaceChildren();
         new window.PagefindUI({
           element: "#search-dialog-search",
           bundlePath,
@@ -150,9 +152,14 @@ function initSearchDialog() {
         dialog.querySelector(".pagefind-ui__search-input")?.focus();
       })
       .catch((error) => {
+        // 允许临时网络失败后再次打开时重新加载 Pagefind。
+        uiPromise = null;
+        document.querySelector("script[data-search-dialog-pagefind]")?.remove();
         console.error(error);
-        dialog.querySelector(".search-dialog-search").textContent =
-          "搜索暂时不可用，请稍后重试。";
+        if (searchContainer) {
+          searchContainer.textContent =
+            "搜索暂时不可用，请稍后重试。";
+        }
       });
   }
 
