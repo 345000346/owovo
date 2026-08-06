@@ -169,11 +169,22 @@ import { love } from "./data.js";
 
   function setupTimer() {
     if (!timerRoot || !isValidDate(startDate)) return;
-    updateTimer();
-    timerIntervalId = window.setInterval(updateTimer, 1000);
+    startTimer();
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) updateTimer();
     });
+  }
+
+  function startTimer() {
+    if (!timerRoot || !isValidDate(startDate) || timerIntervalId) return;
+    updateTimer();
+    timerIntervalId = window.setInterval(updateTimer, 1000);
+  }
+
+  function stopTimer() {
+    if (!timerIntervalId) return;
+    window.clearInterval(timerIntervalId);
+    timerIntervalId = 0;
   }
 
   function renderThemes() {
@@ -396,11 +407,6 @@ import { love } from "./data.js";
     init();
   }
 
-  window.addEventListener(
-    "pagehide",
-    () => {
-      if (timerIntervalId) window.clearInterval(timerIntervalId);
-    },
-    { once: true },
-  );
+  window.addEventListener("pagehide", stopTimer);
+  window.addEventListener("pageshow", startTimer);
 })();
