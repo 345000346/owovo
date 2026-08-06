@@ -56,7 +56,8 @@ function initScrollUi() {
       const scrollHeight =
         document.documentElement.scrollHeight -
         document.documentElement.clientHeight;
-      const progress = scrollHeight <= 0 ? 0 : scrollY / scrollHeight;
+      const progress =
+        scrollHeight <= 0 ? 0 : Math.min(1, Math.max(0, scrollY / scrollHeight));
       progressBar.style.setProperty("--progress", String(progress));
       progressBar.setAttribute(
         "aria-valuenow",
