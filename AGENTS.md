@@ -28,7 +28,7 @@ node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 
 - `build:site` **必须**带 `--environment production`，以便 `layouts/robots.txt` 输出 `Allow: /` 与正确 `baseURL` Sitemap。
 - 若本机正在跑 `hugo server`，勿与 `build` 共用被污染的 `public/`（server 会写入 livereload）；构建前先停 server。
 - **不使用 Prettier** 或其它自动格式化；缩进/换行遵守 `.editorconfig`，其余按「代码写法约定」手写。
-- **无** `cf:setup` / Cloudflare 一键脚本；CDN 手工步骤见 `docs/cloudflare.md`。
+- **无** `cf:setup` / Cloudflare 一键脚本；Cloudflare 控制台配置不在仓库维护。
 - Node：`.node-version`（`>=24.18.0`，`package.json` `engines` 一致）
 - Hugo：**extended**，版本见 `.hugo-version`（当前 `0.164.0`）
 - 字体在每次 `dev` / `build:site` 前由 `scripts/sync-fonts.mjs` 同步
@@ -52,14 +52,14 @@ assets/
   css/fonts.css           # sync-fonts 生成（gitignore）
 data/                     # Socials.toml、SVG.toml；font_preload.json 由 sync-fonts 生成
 content/                  # 内容（文章、关于、想法、普通归档页等）
-static/                   # 原样发布（fonts/ 构建生成）；love.* 为同域独立项目
-docs/cloudflare.md        # Cloudflare 代理 Pages 的手工配置（无仓库脚本）
+static/                   # 原样发布；fonts/ 由构建生成
 scripts/
   sync-fonts.mjs          # 字体全量分片 + latin/CJK 白名单 preload
   smoke-public.mjs        # 构建后 public/ 断言
   normalize-frontmatter.mjs  # 维护：FM 字段序、lastmod/categories 清理与 toc 默认
 archetypes/default.md     # 新文章 front matter 模板
 .github/workflows/        # GitHub Pages：build →（非 PR）deploy
+LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 ```
 
 ## 架构要点
@@ -72,7 +72,7 @@ archetypes/default.md     # 新文章 front matter 模板
   - **全站一包**：`theme.js` + `navigation.js` + `scroll-ui.js` → `resources.Concat` 为 `js/site.js` → Minify + Fingerprint（一个请求、源码分文件）。
   - **Concat 作用域**：三文件拼成**同一个** `type="module"`，顶层 `const` / `function` **共用作用域**。标识符必须在三文件间**全局唯一**（禁止两个文件都导出顶层 `init` / 同名 helper）。实现尽量收进各自 `init…()` 内部。
   - **独立模块**（各一请求）：`search-dialog.js`（全站）；`article.js`（仅文章页）；`search-highlight.js`（仅 `?hl=`，由 loader 注入）。
-  - FOUC 内联脚本在 `layouts/partials/head.html`，与 `theme.js` 契约必须同步（见 `theme.js` 文件头）。
+  - FOUC 内联脚本在 `layouts/partials/head.html`，与 `theme.js` 契约必须同步（见 `theme.js` 文件头）；同时给 `<html>` 标记 `.js`，移动导航只在该标记存在时折叠。
   - SEO：`partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）。
   - taxonomy **仅** `tags`。
 - **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 拷贝官方 index **全部分片**（不做站点用字扫描）。`data/font_preload.json` = latin + 固定 CJK 白名单（缺文件则跳过）；其余 CJK 靠 `unicode-range`。调试：`npm run sync:fonts:stats`。
@@ -80,7 +80,7 @@ archetypes/default.md     # 新文章 front matter 模板
 - **RSS**：首页输出 `/rss.xml`；只收录 `Section == post` 的最近 20 篇摘要，`pubDate` 使用文章 `date`，不使用构建时钟或全文。
 - **section 输出**：`disableKinds: ["section"]` 全局关闭 section 列表页；当前内容模型只需要文章实体与普通归档页。将来新增 section 时，必须显式评估是否需要重新启用对应输出。
 - **CI/CD**：`main` 推送：`npm ci` → `build:site --panicOnWarning` → `build:search` → `smoke` → deploy Pages；PR 只构建不部署。**无** format 步骤。
-- **域名 / CDN**：`baseURL` + `static/CNAME` → `https://owovo.xyz`。Cloudflare 代理见 `docs/cloudflare.md`（控制台手工配置）。**勿**把 `baseURL` 改成 `*.github.io`；站点不为 `/post/` 根配置兼容重定向，也不做 Cloudflare 301。
+- **域名 / CDN**：`baseURL` + `static/CNAME` → `https://owovo.xyz`；Cloudflare 代理仅在外部控制台维护。**勿**把 `baseURL` 改成 `*.github.io`；站点不为 `/post/` 根配置兼容重定向，也不做 Cloudflare 301。
 
 ## 代码写法约定
 
@@ -156,7 +156,6 @@ tags: ["..."]
 | 普通页       | 如 `/ideas/`   | `type: page` → `layouts/_default/single.html`                   |
 | 搜索         | （无独立 URL） | 全站 Dialog，结果仅文章                                       |
 | 标签         | `/tags/`       | 唯一 taxonomy                                                   |
-| 同域独立项目 | `/love.html`   | `static/love.html` + `static/love/`；不进模板与 Pagefind        |
 
 ## 模板约定
 
@@ -205,11 +204,10 @@ npm run build:site -- --panicOnWarning --logLevel warn
 
 - **无 README**：说明只维护本文件 + 必要 `docs/`。
 - **无 Prettier / format:check**：CI 只构建与 smoke。
-- **无 Cloudflare 一键脚本**：仅 `docs/cloudflare.md` 手工步骤。
+- **无 Cloudflare 一键脚本或仓库内配置指南**：相关设置仅在外部控制台维护。
 - **搜索仅 Dialog**；保留 `?hl=` 页内高亮（URL 放 `data-*`，勿写入 JS 字面量，避免 `--minify` 破坏）。
 - **仅 tags**；关于页社交为静态名片（无 shields.io / substats）。
 - **字体**：全量分片 + 固定 preload 白名单，不用字扫描。
 - **Favicon**：仅 `icons/favicon.svg` + `icons/apple-touch-icon.png`。
 - **无** Microformats / 访问统计脚本 / i18n。
-- **`static/love.*`**：独立同域项目，`noindex`；动态主题与时间线数据只维护在 `static/love/data.js`，勿混主站 partial。
 - **列表入口唯一**：`/archives/`；不生成 `/post/` section 根兼容页，文章实体地址仍为 `/post/:slug/`。
