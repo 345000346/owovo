@@ -31,11 +31,11 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
   .site-brand {
     margin-left: 1em;
   }
-  .nav-toggle {
+  .js .nav-toggle {
     display: block;
   }
   // 保持 display:block 以便开合过渡；用 max-height/opacity/visibility 隐藏。
-  .nav {
+  .js .nav {
     display: block;
     visibility: hidden;
     text-align: center;
@@ -72,7 +72,7 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
   body.nav-open {
     overscroll-behavior: none;
   }
-  .header.open {
+  .js .header.open {
     .nav {
       visibility: visible;
       max-height: min(70vh, 24em);
@@ -99,7 +99,7 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
         visibility 0s linear 0s;
     }
   }
-  .header.fade {
+  .js .header.fade {
     .nav {
       visibility: hidden;
       max-height: 0;
@@ -116,14 +116,17 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
         visibility 0s linear variables.$duration;
     }
   }
+  :root:not(.js) .header {
+    position: static;
+  }
 }
 
 @media (max-width: $maxWidth) and (prefers-reduced-motion: reduce) {
-  .nav,
-  .header.open .nav,
-  .header.fade .nav,
-  .header.open .nav-curtain,
-  .header.fade .nav-curtain {
+  .js .nav,
+  .js .header.open .nav,
+  .js .header.fade .nav,
+  .js .header.open .nav-curtain,
+  .js .header.fade .nav-curtain {
     transition: none !important;
   }
 }

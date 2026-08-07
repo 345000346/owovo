@@ -40,6 +40,20 @@ function publicPath(rel) {
   return join(publicDir, rel);
 }
 
+/** @param {string} tag @param {string} name */
+function getAttribute(tag, name) {
+  const match = tag.match(
+    new RegExp(`${name}=(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i"),
+  );
+  return match ? match[1] ?? match[2] ?? match[3] : null;
+}
+
+/** @param {string} html @param {RegExp} pattern @param {string} name */
+function getTagAttribute(html, pattern, name) {
+  const tag = html.match(pattern)?.[0];
+  return tag ? getAttribute(tag, name) : null;
+}
+
 /** @param {string} rel */
 async function readPublic(rel) {
   return readFile(publicPath(rel), "utf8");
@@ -213,6 +227,37 @@ async function main() {
       /data-search-trigger/.test(indexHtml),
     "index.html missing search dialog or menu trigger",
   );
+  assert(/<h1(?:\s|>)/i.test(indexHtml), "index.html must contain an h1");
+  assert(
+    indexHtml.includes('.classList.add("js")'),
+    "index.html must enable JS-only navigation styles before first paint",
+  );
+
+  // 首页分页必须使用当前页 URL 和页码，避免 canonical / OG 折叠回首页。
+  for (let pageNumber = 2; ; pageNumber += 1) {
+    const rel = `page/${pageNumber}/index.html`;
+    if (!(await exists(rel))) {
+      break;
+    }
+    const html = await readPublic(rel);
+    const expectedURL = `${siteHost}/page/${pageNumber}/`;
+    const canonical = getTagAttribute(
+      html,
+      /<link\b[^>]*\brel=(?:"canonical"|'canonical'|canonical)[^>]*>/i,
+      "href",
+    );
+    const ogURL = getTagAttribute(
+      html,
+      /<meta\b[^>]*\bproperty=(?:"og:url"|'og:url'|og:url)[^>]*>/i,
+      "content",
+    );
+    assert(canonical === expectedURL, `${rel} canonical must be ${expectedURL}`);
+    assert(ogURL === expectedURL, `${rel} og:url must be ${expectedURL}`);
+    assert(
+      html.includes(`第 ${pageNumber} 页`),
+      `${rel} title or description missing page number`,
+    );
+  }
 
   // 404（有搜索 Dialog，无 ?hl= 配置）
   if (await exists("404.html")) {
@@ -249,6 +294,40 @@ async function main() {
       "fonts CSS missing font-display (expect swap)",
     );
   }
+  if (mainCss) {
+    const css = await readFile(mainCss, "utf8");
+    assert(
+      css.includes(".js .nav{") &&
+        css.includes(":root:not(.js) .header{position:static}"),
+      "main CSS must keep mobile navigation visible when JavaScript is unavailable",
+    );
+  }
+
+  // 标签页使用中文标题和标签专属描述。
+  const tagEntries = await readdir(publicPath("tags"), { withFileTypes: true });
+  const sampleTag = tagEntries.find((entry) => entry.isDirectory());
+  if (sampleTag) {
+    const rel = join("tags", sampleTag.name, "index.html");
+    const html = await readPublic(rel);
+    assert(/<title>标签：/.test(html), `${rel} title must start with 标签：`);
+    assert(
+      /<h1(?:\s[^>]*)?>标签：/.test(html),
+      `${rel} must contain a Chinese tag h1`,
+    );
+    assert(
+      html.includes("标签下的文章，共") && !html.includes('name=description content="分享一些日常'),
+      `${rel} must use a term-specific description`,
+    );
+  }
+
+  // RSS 版权必须是纯文本，不能泄露 Markdown 链接语法。
+  if (await exists("rss.xml")) {
+    const rss = await readPublic("rss.xml");
+    assert(
+      !/<copyright>\[[^\]]+\]\([^)]+\)<\/copyright>/.test(rss),
+      "rss.xml copyright must not contain raw Markdown link syntax",
+    );
+  }
 
   // Pagefind
   assert(
@@ -269,6 +348,12 @@ async function main() {
     const rel = relative(publicDir, file).replaceAll("\\", "/");
     const html = await readFile(file, "utf8");
     const bodyMarkers = html.match(/data-pagefind-body/g) || [];
+    const isRedirect = /<meta\b[^>]*http-equiv=(?:"refresh"|'refresh'|refresh)/i.test(
+      html,
+    );
+    if (html.includes("<main") && !isRedirect) {
+      assert(/<h1(?:\s|>)/i.test(html), `${rel} must contain an h1`);
+    }
     assert(
       !html.includes("dateModified") &&
         !html.includes("article:modified_time"),

@@ -1,5 +1,4 @@
 // 页脚布局。
-@use "../utils/functions";
 @use "../utils/variables";
 
 .footer {
@@ -7,9 +6,9 @@
   bottom: 0;
   width: 100%;
   font-size: 90%;
-  color: functions.alpha(var(--color-contrast-medium), 0.8);
+  color: var(--color-contrast-medium);
   a {
-    color: functions.alpha(var(--color-contrast-medium), 0.8);
+    color: var(--color-contrast-medium);
     &:hover {
       color: var(--color-primary);
     }

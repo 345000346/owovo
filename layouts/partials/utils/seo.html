@@ -2,7 +2,8 @@
 {{- $ := index . "$" -}}
 {{- $description := .description -}}
 {{- $isPost := partial "utils/is-post.html" $ -}}
-{{- $title := (partial "utils/title.html" (dict "$" $ "title" $.Title)).rawTitle -}}
+{{- $title := .title | default (partial "utils/title.html" (dict "$" $ "title" $.Title)).rawTitle -}}
+{{- $pageURL := .pageURL | default $.Permalink -}}
 {{- $author := partial "utils/author.html" $ -}}
 
 {{- with $author.name -}}
@@ -48,7 +49,7 @@
 {{- /* Open Graph */ -}}
 <meta property="og:title" content="{{ $title }}" />
 <meta property="og:description" content="{{ $description }}" />
-<meta property="og:url" content="{{ $.Permalink }}" />
+<meta property="og:url" content="{{ $pageURL }}" />
 <meta property="og:site_name" content="{{ $.Site.Title }}" />
 {{- $localeParts := split $.Site.Language.Lang "-" -}}
 {{- $ogLocale := lower (index $localeParts 0) -}}
@@ -90,7 +91,7 @@
     "description" $description
 -}}
 {{- if $.IsHome -}}
-    {{- $ld = merge $ld (dict "@type" "WebSite" "url" $baseURL "name" $title) -}}
+    {{- $ld = merge $ld (dict "@type" "WebSite" "url" $pageURL "name" $title) -}}
     {{- with $images -}}
         {{- $ld = merge $ld (dict "image" (index . 0)) -}}
     {{- end -}}
@@ -101,13 +102,13 @@
     {{- $ld = merge $ld (dict
         "@type" "BlogPosting"
         "datePublished" $pubDate
-        "url" $.Permalink
+        "url" $pageURL
         "headline" $title
         "inLanguage" $.Site.Language.Locale
         "articleSection" $.Section
         "wordCount" $.WordCount
         "publisher" $publisher
-        "mainEntityOfPage" (dict "@type" "WebPage" "@id" $.Permalink)
+        "mainEntityOfPage" (dict "@type" "WebPage" "@id" $pageURL)
     ) -}}
     {{- with $images -}}
         {{- $ld = merge $ld (dict "image" .) -}}
@@ -118,7 +119,7 @@
 {{- else -}}
     {{- $ld = merge $ld (dict
         "@type" "WebPage"
-        "url" $.Permalink
+        "url" $pageURL
         "name" $title
         "publisher" $publisher
         "mainEntityOfPage" (dict "@type" "WebSite" "@id" $baseURL)

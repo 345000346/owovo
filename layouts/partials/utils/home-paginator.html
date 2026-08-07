@@ -1,0 +1,7 @@
+{{/* 首页文章分页：head 与 main 共用，确保分页 URL / 标题 / 列表使用同一 Paginator。 */}}
+{{- $paginator := false -}}
+{{- if .IsHome -}}
+    {{- $pages := where .Site.RegularPages "Section" "eq" "post" -}}
+    {{- $paginator = .Paginate $pages -}}
+{{- end -}}
+{{- return $paginator -}}

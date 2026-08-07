@@ -37,11 +37,24 @@ function initSearchDialog() {
     history.replaceState(null, "", `${pathname}${search}`);
   }
 
+  function highlightTerms(term) {
+    const matches = term.match(/"[^"]+"|\S+/g) || [];
+    return [
+      ...new Set(
+        matches
+          .map((match) => match.replace(/^"|"$/g, "").trim())
+          .filter(Boolean),
+      ),
+    ];
+  }
+
   function withHighlight(rawUrl, term) {
     try {
       const url = new URL(rawUrl, window.location.origin);
       url.searchParams.delete("hl");
-      url.searchParams.append("hl", term);
+      highlightTerms(term).forEach((highlightTerm) => {
+        url.searchParams.append("hl", highlightTerm);
+      });
       // 保留 Pagefind 绝对 URL。
       return rawUrl.startsWith("http")
         ? url.toString()

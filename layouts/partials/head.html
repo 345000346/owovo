@@ -19,6 +19,8 @@
     {{/* FOUC：读 preference → light|dark → data-* / theme-color（与 theme.js 同步；无切换/事件）。 */}}
     <script>
       (function () {
+        document.documentElement.classList.add("js");
+
         function syncThemeMeta(theme) {
           var themeMeta = document.querySelector('meta[name="theme-color"]');
           if (themeMeta) {
@@ -73,7 +75,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
 
-    <title>{{ (partial "utils/title.html" (dict "$" . "title" .Title)).title }}</title>
+    {{- $paginator := partial "utils/home-paginator.html" . -}}
+    {{- $pageNumber := 1 -}}
+    {{- $pageURL := .Permalink -}}
+    {{- with $paginator -}}
+        {{- $pageNumber = .PageNumber -}}
+        {{- if gt .PageNumber 1 -}}
+            {{- $pageURL = .URL | absURL -}}
+        {{- end -}}
+    {{- end -}}
+    {{- $title := partial "utils/title.html" (dict "$" . "title" .Title "pageNumber" $pageNumber) -}}
+    <title>{{ $title.title }}</title>
 
     {{- /* 关键字体 preload：scripts/sync-fonts.mjs → data/font_preload.json */ -}}
     {{- with hugo.Data.font_preload -}}
@@ -96,6 +108,11 @@
     {{ partial "script.html" . }}
 
     {{- $description := .Description | default (.Summary | plainify | htmlUnescape | strings.TrimSpace) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
+    {{- if eq .Kind "term" -}}
+        {{- $description = printf "“%s”标签下的文章，共 %d 篇。" .Data.Term (len .Pages) -}}
+    {{- else if gt $pageNumber 1 -}}
+        {{- $description = printf "%s（第 %d 页）" $description $pageNumber -}}
+    {{- end -}}
     <meta name="description" content="{{ $description }}" />
     {{- if eq .Kind "404" }}
         <meta name="robots" content="noindex,follow" />
@@ -109,6 +126,6 @@
     {{ end }}
 
     {{- if ne .Kind "404" }}
-        <link rel="canonical" href="{{ .Permalink }}" />
-        {{ partial "utils/seo.html" (dict "$" $ "description" $description) }}
+        <link rel="canonical" href="{{ $pageURL }}" />
+        {{ partial "utils/seo.html" (dict "$" $ "description" $description "pageURL" $pageURL "title" $title.rawTitle) }}
     {{- end }}

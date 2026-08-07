@@ -2,8 +2,8 @@
 {{ define "main" }}
     <main class="main single" id="main">
         <div class="main-inner">
-            {{ $pages := where .Site.RegularPages "Section" "eq" "post" }}
-            {{ $paginator := .Paginate $pages }}
+            {{ $paginator := partial "utils/home-paginator.html" . }}
+            <h1 class="visually-hidden">{{ (partial "utils/title.html" (dict "$" . "title" .Title "pageNumber" $paginator.PageNumber)).htmlTitle }}</h1>
             {{ range $paginator.Pages }}
                 <article class="content post home">
                     <h2 class="post-title">

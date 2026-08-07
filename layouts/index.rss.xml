@@ -15,7 +15,7 @@
             <language>{{ . }}</language>
         {{ end }}
         {{ with .Site.Copyright }}
-            <copyright>{{ . | plainify | htmlUnescape }}</copyright>
+            <copyright>{{ . | markdownify | plainify | htmlUnescape }}</copyright>
         {{ end }}
         {{ with .OutputFormats.Get "RSS" }}
             <atom:link rel="self" type="{{ .MediaType }}" href="{{ .Permalink }}" />
@@ -29,7 +29,7 @@
                 <guid isPermaLink="true">{{ .Permalink }}</guid>
                 <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
                 {{ with $author.copyright -}}
-                    <copyright>{{ . | plainify | htmlUnescape }}</copyright>
+                    <copyright>{{ . | markdownify | plainify | htmlUnescape }}</copyright>
                 {{- end }}
                 <description>
                     {{ partial "utils/make-links-absolute.html" (dict "$" . "content" $page.Summary) | html }}

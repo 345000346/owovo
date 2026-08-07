@@ -3,6 +3,7 @@
     <main class="main list" id="main">
         <div class="main-inner">
             <div class="content list-group">
+                <h1 class="list-title">{{ (partial "utils/title.html" (dict "$" . "title" .Title)).htmlTitle }}</h1>
                 {{ with .Content }}
                     <div class="section-content">{{ . }}</div>
                 {{ end }}
