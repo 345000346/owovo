@@ -1,6 +1,9 @@
-// 文章页：事件委托复制 .code-block（外壳：render-codeblock.html）。
+// 文章页：事件委托复制 .code-block（外壳：render-codeblock.html）；
+// TOC 滚动定位（.toc a.active + aria-current）与文末淡出（.contents.bottom）。
 //
 // 契约：.copy-button / .code-block-status；.post-body 的 data-copy-* 文案；
+// details.contents / summary.contents-title；nav a[href^="#"]；
+// .contents.bottom：文章区底部进入视口后淡出让位（fixed 悬浮时）。
 // 仅文章页由 script.html 注入。
 // 每个按钮独立复位计时器；点击递增版本号，并发写入时仅最后一次点击生效，
 // 状态（成功/失败）统一在 1s 后复位。
@@ -118,4 +121,90 @@ function initCopyDelegation() {
   });
 }
 
+function initTocSpy() {
+  const contents = document.querySelector(".contents");
+  if (!contents) {
+    return;
+  }
+
+  // 以 TOC 链接反向定位 heading，保证高亮与目录严格对应。
+  const links = Array.from(contents.querySelectorAll("nav a[href^='#']"));
+  const linkByHeading = new Map();
+  for (const link of links) {
+    const heading = document.getElementById(
+      link.getAttribute("href").slice(1),
+    );
+    if (heading) {
+      linkByHeading.set(heading, link);
+    }
+  }
+  if (linkByHeading.size === 0) {
+    return;
+  }
+  const headings = Array.from(linkByHeading.keys());
+
+  let activeLink = null;
+
+  function updateActive() {
+    // 判定线：--header-height（scroll-ui 维护）+ 少量余量。
+    const headerHeight = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--header-height",
+      ),
+    );
+    const threshold =
+      (Number.isFinite(headerHeight) ? headerHeight : 0) + 12;
+    let current = null;
+    for (const heading of headings) {
+      if (heading.getBoundingClientRect().top <= threshold) {
+        current = heading;
+      } else {
+        break;
+      }
+    }
+    const link = current ? linkByHeading.get(current) : null;
+    if (link === activeLink) {
+      return;
+    }
+    if (activeLink) {
+      activeLink.classList.remove("active");
+      activeLink.removeAttribute("aria-current");
+    }
+    if (link) {
+      link.classList.add("active");
+      link.setAttribute("aria-current", "location");
+    }
+    activeLink = link;
+  }
+
+  // fixed 悬浮时：文章区底部进入视口即淡出让位（footer 区域）。
+  const mainEl = document.querySelector("main.single");
+  function updateTocExit() {
+    if (!mainEl) {
+      return;
+    }
+    contents.classList.toggle(
+      "bottom",
+      mainEl.getBoundingClientRect().bottom <= window.innerHeight,
+    );
+  }
+
+  let scheduled = false;
+  function updateTocUi() {
+    scheduled = false;
+    updateActive();
+    updateTocExit();
+  }
+  function scheduleTocUi() {
+    if (!scheduled) {
+      scheduled = true;
+      requestAnimationFrame(updateTocUi);
+    }
+  }
+  window.addEventListener("scroll", scheduleTocUi, { passive: true });
+
+  updateTocUi();
+}
+
 initCopyDelegation();
+initTocSpy();

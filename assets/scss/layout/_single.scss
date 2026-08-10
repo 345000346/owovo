@@ -7,6 +7,33 @@
   width: variables.$postWidth;
 }
 
+// 桌面宽屏：TOC fixed 悬浮于正文右侧空白（正文始终 42em 居中，与无 TOC 文章一致）。
+// 断点 = 正文右缘 21em + 间隙 2em + TOC 20em + 余量；以下保持单栏顶部卡片。
+$tocSideBreakpoint: 68em;
+
+@media (min-width: $tocSideBreakpoint) {
+  // TOC 脱离文档流固定悬浮；宽度自适应：视口不足以放 20em 时压缩，不溢出。
+  .single .contents {
+    margin-top: 0;
+    position: fixed;
+    top: calc(var(--header-height) + 1.5em);
+    left: calc(50% + 21em + 2em);
+    width: min(20em, calc(50% - 24em));
+    max-height: calc(100vh - var(--header-height) - 3em);
+    overflow-y: auto;
+    transition:
+      opacity 0.3s ease,
+      visibility 0s linear 0.3s;
+    // 文章区底部进入视口后淡出让位（footer；article.js 加 .bottom）。
+    // visibility 延迟到淡出结束，避免键盘仍能聚焦不可见链接。
+    &.bottom {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+  }
+}
+
 .post-title {
   text-align: center;
   overflow-wrap: anywhere;
@@ -86,9 +113,13 @@ blockquote {
 
 .contents {
   margin-top: 4em;
-  padding: 1rem 1.25rem;
   border: 1px solid var(--color-contrast-lower);
   border-radius: 0.5rem;
+
+  > nav {
+    padding: 0 1.25rem 1rem;
+  }
+
   ol,
   ul {
     list-style: none;
@@ -102,7 +133,11 @@ blockquote {
 
     &:hover {
       color: var(--color-primary);
-      text-decoration: underline;
+    }
+
+    // 当前章节（article.js scrollspy）：仅文字高亮，不加下划线。
+    &.active {
+      color: var(--color-primary);
     }
 
     &:focus-visible {
@@ -112,6 +147,61 @@ blockquote {
     }
   }
 }
+
+// 折叠标题：去默认 marker，自绘箭头（details[open] 朝下 / 收起朝右）。
+.contents-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 700;
+  color: var(--color-contrast-high);
+  list-style: none;
+  &::-webkit-details-marker {
+    display: none;
+  }
+  &::marker {
+    content: none;
+  }
+  &::after {
+    content: "";
+    width: 0.45em;
+    height: 0.45em;
+    margin-left: auto;
+    border-right: 2px solid var(--color-contrast-medium);
+    border-bottom: 2px solid var(--color-contrast-medium);
+    transform: rotate(45deg);
+    transition: transform variables.$duration ease;
+  }
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+.contents[open] > .contents-title::after {
+  transform: rotate(225deg);
+}
+
+// 锚点跳转后目标章节闪亮提示（纯 CSS）。
+@keyframes target-flash {
+  from {
+    background-color: functions.alpha(var(--color-primary), 0.16);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+.post-body :target {
+  animation: target-flash 1.4s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .post-body :target {
+    animation: none;
+  }
+}
+
 ol,
 ul {
   &.toc {

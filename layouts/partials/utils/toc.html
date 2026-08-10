@@ -1,8 +1,11 @@
-{{/* 目录：有条目时输出；nav/ol 类名改为 contents/toc。 */}}
+{{/* 目录：有条目时输出；details 折叠（默认展开）+ nav 语义 + toc 类名。 */}}
 {{- $toc := .TableOfContents -}}
 {{- $hasTOCItems := gt (len (findRE `<li>` $toc)) 0 -}}
 {{- if $hasTOCItems -}}
-    {{- $toc = $toc | replaceRE `<nav id="TableOfContents">` `<nav class="contents">` -}}
-    {{- $toc = $toc | replaceRE `(?s)(<nav class="contents">.*?)(<(ol|ul)>)` `$1<$3 class="toc">` -}}
-    {{- $toc | safeHTML -}}
+    {{- $toc = $toc | replaceRE `<nav id="TableOfContents">` `<nav aria-label="目录">` -}}
+    {{- $toc = $toc | replaceRE `(?s)(<nav aria-label="目录">.*?)(<(ol|ul)>)` `$1<$3 class="toc">` -}}
+    <details class="contents" open>
+        <summary class="contents-title">目录</summary>
+        {{- $toc | safeHTML -}}
+    </details>
 {{- end -}}

@@ -10,7 +10,7 @@
 <script type="module" src="{{ $site.RelPermalink }}" integrity="{{ $site.Data.Integrity }}" crossorigin="anonymous"></script>
 {{- $searchDialog := resources.Get "js/search-dialog.js" | resources.Minify | resources.Fingerprint -}}
 <script type="module" src="{{ $searchDialog.RelPermalink }}" integrity="{{ $searchDialog.Data.Integrity }}" crossorigin="anonymous"></script>
-{{- if partial "utils/is-post.html" . -}}
+{{- if or (partial "utils/is-post.html" .) .Params.toc -}}
     {{- $article := resources.Get "js/article.js" | resources.Minify | resources.Fingerprint -}}
     <script type="module" src="{{ $article.RelPermalink }}" integrity="{{ $article.Data.Integrity }}" crossorigin="anonymous"></script>
 {{- end -}}
