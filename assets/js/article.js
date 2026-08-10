@@ -3,7 +3,8 @@
 //
 // 契约：.copy-button / .code-block-status；.post-body 的 data-copy-* 文案；
 // details.contents / summary.contents-title；nav a[href^="#"]；
-// .contents.bottom：文章区底部进入视口后淡出让位（fixed 悬浮时）。
+// .contents.bottom：文章区底部进入视口后淡出让位（fixed 悬浮时）；
+// 移动端（<68em）默认折叠 TOC（桌面由模板 open 展开）。
 // 仅文章页由 script.html 注入。
 // 每个按钮独立复位计时器；点击递增版本号，并发写入时仅最后一次点击生效，
 // 状态（成功/失败）统一在 1s 后复位。
@@ -126,6 +127,21 @@ function initTocSpy() {
   if (!contents) {
     return;
   }
+
+  // 折叠默认：移动端（<68em，与 SCSS $tocSideBreakpoint 同步）折叠，
+  // 桌面端由模板 open 默认展开；跨断点（旋转/分屏）恢复默认。
+  // 无记忆（用户要求）；无 JS 时维持模板默认（全部展开）。
+  function initTocCollapse() {
+    const wide = window.matchMedia("(min-width: 68em)");
+    function applyDefault() {
+      contents.open = wide.matches;
+    }
+    applyDefault();
+    if (typeof wide.addEventListener === "function") {
+      wide.addEventListener("change", applyDefault);
+    }
+  }
+  initTocCollapse();
 
   // 以 TOC 链接反向定位 heading，保证高亮与目录严格对应。
   const links = Array.from(contents.querySelectorAll("nav a[href^='#']"));
