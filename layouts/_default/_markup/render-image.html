@@ -18,8 +18,10 @@
         {{- end -}}
         {{- $webp := $image.Resize (printf "%dx webp q75" $targetWidth) -}}
         {{- $srcset = $srcset | append (printf "%s %dw" $webp.RelPermalink $webp.Width) -}}
+        {{- /* sizes：断点与取值均 = $postWidth(42em) × 根字号 18px = 756px；改 $postWidth/$fontSize 需同步。
+             不用 em：媒体查询中的 em 基于 UA 默认字号（≈16px）而非根字号，会偏离实际内容宽。 */ -}}
         <picture>
-            <source type="image/webp" srcset="{{ delimit $srcset ", " }}" sizes="(max-width: 768px) 100vw, 768px" />
+            <source type="image/webp" srcset="{{ delimit $srcset ", " }}" sizes="(max-width: 756px) 100vw, 756px" />
             <img src="{{ $fallback.RelPermalink }}" alt="{{ $.Text }}" width="{{ $fallback.Width }}" height="{{ $fallback.Height }}" decoding="async" loading="lazy"
             {{- with $.Title }} title="{{ . }}"{{ end -}}
             />
