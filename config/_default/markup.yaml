@@ -8,7 +8,7 @@ goldmark:
 # 显式声明，避免依赖 Hugo 默认值导致行为漂移
 tableOfContents:
   startLevel: 2
-  endLevel: 6
+  endLevel: 3
   ordered: true
 
 # Hugo Chroma 代码高亮配置
