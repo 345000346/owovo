@@ -92,11 +92,9 @@ function initTheme() {
     const theme = resolveTheme(normalized);
     const root = document.documentElement;
 
-    if (
-      !force &&
-      root.getAttribute("data-theme") === theme &&
-      root.getAttribute("data-theme-preference") === normalized
-    ) {
+    // 早退：FOUC 已写过匹配的 preference，信任其解析结果（system 时不再重解析，
+    // 防 matchMedia 初始值与 FOUC 翻转时把深色覆盖回浅色）。force 路径（点击/存储/系统变化）仍完整重写。
+    if (!force && root.getAttribute("data-theme-preference") === normalized) {
       syncThemeSwitcherLabel(normalized);
       return;
     }
