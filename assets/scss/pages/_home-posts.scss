@@ -3,6 +3,11 @@
 
 article.content.post.home {
   margin-top: 5em;
+  // 长列表离屏优化：跳过不可见摘要的布局/绘制。
+  // auto 关键字按上次渲染高度估值（不支持时回退固定估值）。
+  content-visibility: auto;
+  contain-intrinsic-size: 260px;
+  contain-intrinsic-size: auto 260px;
 
   // 摘要为纯文本：行数截断（桌面 4 行，移动 3 行）
   .summary {

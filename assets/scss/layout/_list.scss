@@ -20,6 +20,11 @@
 .list-item {
   line-height: 2;
   position: relative;
+  // 长列表离屏优化：跳过不可见条目的布局/绘制。
+  // auto 关键字按上次渲染高度估值（不支持时回退固定估值）。
+  content-visibility: auto;
+  contain-intrinsic-size: 80px;
+  contain-intrinsic-size: auto 80px;
   transition: border variables.$duration;
   border-bottom: 1px dashed var(--color-contrast-low);
   margin-top: 1em;
