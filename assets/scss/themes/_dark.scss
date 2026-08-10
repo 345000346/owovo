@@ -23,6 +23,13 @@
     filter: brightness(75%);
   }
 
+  // 打印输出不压暗（深色主题下打印到浅色纸张）。
+  @media print {
+    img {
+      filter: none;
+    }
+  }
+
   /* https://xyproto.github.io/splash/docs/all.html */
   /* 色值对齐 dracula 风格 */
 
