@@ -2,6 +2,8 @@
 //
 // 契约：.copy-button / .code-block-status；.post-body 的 data-copy-* 文案；
 // 仅文章页由 script.html 注入。
+// 每个按钮独立复位计时器；点击递增版本号，并发写入时仅最后一次点击生效，
+// 状态（成功/失败）统一在 1s 后复位。
 
 function getCopyLabels(root) {
   const scope =
@@ -39,6 +41,43 @@ function initCopyDelegation() {
     return;
   }
 
+  // 每个按钮一个复位计时器：连续点击时先清旧计时器，避免“已复制”被提前复位。
+  const resetTimers = new WeakMap();
+  // 每个按钮一个点击版本号：写入重叠时只有最后一次点击能写 UI 状态。
+  const clickCounters = new WeakMap();
+
+  function clearResetTimer(button) {
+    const timer = resetTimers.get(button);
+    if (timer !== undefined) {
+      window.clearTimeout(timer);
+      resetTimers.delete(button);
+    }
+  }
+
+  function nextClickId(button) {
+    const next = (clickCounters.get(button) || 0) + 1;
+    clickCounters.set(button, next);
+    return next;
+  }
+
+  function scheduleReset(button, labels, status) {
+    const timer = window.setTimeout(() => {
+      // 仅当仍是当前计时器时清理条目，避免误删新点击设置的计时器。
+      if (resetTimers.get(button) === timer) {
+        resetTimers.delete(button);
+      }
+      button.textContent = labels.copy;
+      if (status) {
+        status.textContent = "";
+      }
+    }, 1000);
+    resetTimers.set(button, timer);
+  }
+
+  function isCurrentClick(button, clickId) {
+    return clickCounters.get(button) === clickId;
+  }
+
   document.addEventListener("click", async (event) => {
     const button = event.target.closest(".code-block .copy-button");
     if (!button) {
@@ -53,23 +92,27 @@ function initCopyDelegation() {
     const labels = getCopyLabels(wrapper);
     const status = wrapper.querySelector(".code-block-status");
 
+    const clickId = nextClickId(button);
+    clearResetTimer(button);
     try {
       await navigator.clipboard.writeText(getCodeText(wrapper));
+      if (!isCurrentClick(button, clickId)) {
+        return; // 期间有更新的点击，放弃本次状态写入。
+      }
       button.textContent = labels.copied;
       if (status) {
         status.textContent = labels.copied;
       }
-      setTimeout(() => {
-        button.textContent = labels.copy;
-        if (status) {
-          status.textContent = "";
-        }
-      }, 1000);
+      scheduleReset(button, labels, status);
     } catch (error) {
+      if (!isCurrentClick(button, clickId)) {
+        return; // 被更新的点击取代：本次失败不再写 UI（状态已由新点击接管）。
+      }
       button.textContent = labels.failed;
       if (status) {
         status.textContent = labels.failed;
       }
+      scheduleReset(button, labels, status);
       console.error(error);
     }
   });

@@ -236,6 +236,12 @@ pre {
   white-space: nowrap;
   border: 0;
 }
+
+// 无 JS：复制依赖 navigator.clipboard，直接隐藏按钮（有 JS 时由 article.js 处理）。
+:root:not(.js) .copy-button {
+  display: none;
+}
+
 @media (hover: none), (pointer: coarse) {
   .code-block .copy-button {
     opacity: 0.85;
