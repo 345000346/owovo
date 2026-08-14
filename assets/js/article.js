@@ -5,7 +5,7 @@
 // details.contents / summary.contents-title；nav a[href^="#"]；
 // .contents.bottom：文章区底部进入视口后淡出让位（fixed 悬浮时）；
 // 移动端（<68em）默认折叠 TOC（桌面由模板 open 展开）。
-// 仅文章页由 script.html 注入。
+// 由 script.html 注入：文章页，以及开启 TOC 的普通页（or (partial "utils/is-post.html" .) .Params.toc）。
 // 每个按钮独立复位计时器；点击递增版本号，并发写入时仅最后一次点击生效，
 // 状态（成功/失败）统一在 1s 后复位。
 

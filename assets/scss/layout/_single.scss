@@ -9,6 +9,7 @@
 
 // 桌面宽屏：TOC fixed 悬浮于正文右侧空白（正文始终 42em 居中，与无 TOC 文章一致）。
 // 断点 = 正文右缘 21em + 间隙 2em + TOC 20em + 余量；以下保持单栏顶部卡片。
+// 与 article.js 的折叠默认同步（matchMedia "min-width: 68em"，改动须两侧一致）。
 $tocSideBreakpoint: 68em;
 
 @media (min-width: $tocSideBreakpoint) {
