@@ -119,7 +119,7 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 ### Hugo 模板
 
 - 缩进 4 空格；输出敏感处 `{{-` / `-}}`。
-- 多参 partial 用 `dict`；文章/关于只用 `utils/is-post.html` / `is-about.html`。
+- 多参 partial 用 `dict`；文章判断只用 `utils/is-post.html`。
 - UI 简体中文硬编码。
 - JS/CSS：`Minify | Fingerprint`，`integrity` + `crossorigin="anonymous"`。
 - 外链 render hook：`target="_blank" rel="external noopener"`（实现里可含 `noreferrer`，与 smoke 一致即可）。
@@ -161,7 +161,7 @@ tags: ["..."]
 
 - partial 字典传参：`{{ partial "utils/icon.html" (dict "$" . "name" "tag") }}`
 - 路径小写、连字符
-- 文章判断：`utils/is-post.html`；关于：`utils/is-about.html`（`layout: about`）
+- 文章判断：`utils/is-post.html`；关于：按 `layout: about` 识别（无独立判断 partial）
 - 文章壳只在 `layouts/post/single.html`；归档壳在 `layouts/archives/single.html`；通用页不要复制文章壳
 - 404：只 `define "main"`，共用 `baseof`（有搜索 Dialog；无 `?hl=` loader）
 - 高亮 loader：`partials/components/search-highlight-loader.html`；仅文章页在 head 调用
