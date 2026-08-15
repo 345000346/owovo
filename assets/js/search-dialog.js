@@ -28,13 +28,15 @@ function initSearchDialog() {
     `${bundlePath}pagefind-ui.css`;
   const searchContainer = dialog.querySelector(".search-dialog-search");
   let uiPromise;
+  let previousHash = "";
 
   function clearSearchHash() {
     if (location.hash !== "#search") {
       return;
     }
+    // 恢复打开前的锚点，避免破坏 TOC 深链等原 hash。
     const { pathname, search } = window.location;
-    history.replaceState(null, "", `${pathname}${search}`);
+    history.replaceState(null, "", `${pathname}${search}${previousHash}`);
   }
 
   function highlightTerms(term) {
@@ -152,7 +154,8 @@ function initSearchDialog() {
   function openDialog() {
     document.dispatchEvent(new CustomEvent("site:close-navigation"));
     if (location.hash !== "#search") {
-      // 写入 #search 可分享，且不强制滚顶。
+      // 写入 #search 可分享，且不强制滚顶；先记下原 hash 以便关闭时恢复。
+      previousHash = location.hash;
       const { pathname, search } = window.location;
       history.replaceState(null, "", `${pathname}${search}#search`);
     }
@@ -231,10 +234,18 @@ function initSearchDialog() {
   if (location.hash === "#search") {
     openDialog();
   }
-  window.addEventListener("hashchange", () => {
-    if (location.hash === "#search") {
-      openDialog();
+  window.addEventListener("hashchange", (event) => {
+    if (location.hash !== "#search") {
+      return;
     }
+    // 记录 hashchange 打开前（如手改地址为 /#search）的真实锚点。
+    try {
+      const oldHash = new URL(event.oldURL, window.location.href).hash;
+      if (oldHash !== "#search") {
+        previousHash = oldHash;
+      }
+    } catch {}
+    openDialog();
   });
 }
 
