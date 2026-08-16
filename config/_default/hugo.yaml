@@ -28,10 +28,11 @@ menu:
       post: "user-circle"
     - name: "RSS"
       url: "/rss.xml"
+      identifier: "rss"
       weight: 6
       post: "rss"
     - identifier: "theme-switcher"
-      weight: 7
+      weight: 9
     # identifier=search + url=#search → 菜单触发搜索 Dialog（非独立 /search/ 页）
     - name: "搜索"
       url: "#search"

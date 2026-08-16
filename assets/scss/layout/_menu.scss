@@ -26,6 +26,16 @@
   .icon {
     margin: 0 0.3em 0.2em 0;
   }
+  // 工具组（RSS/搜索/主题）起点分隔线，与内容导航分组（移动端隐藏）。
+  &.tools-start::before {
+    content: "";
+    display: inline-block;
+    width: 1px;
+    height: 1em;
+    margin: 0 0.55em 0.2em;
+    vertical-align: middle;
+    background-color: var(--color-contrast-low);
+  }
 }
 
 .active {

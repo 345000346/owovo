@@ -9,7 +9,9 @@
                 </li>
             {{ else }}
                 {{- $isCurrent := or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) -}}
-                <li class="menu-item{{ if $isCurrent }} active{{ end }}">
+                {{- /* 工具组（RSS/搜索/主题）起点：RSS 前的 li 画分组分隔线（桌面端）。 */ -}}
+                {{- $toolsStart := eq .Identifier "rss" -}}
+                <li class="menu-item{{ if $isCurrent }} active{{ end }}{{ if $toolsStart }} tools-start{{ end }}">
                     {{- $isExternal := strings.HasPrefix .URL "http" -}}
                     <a href="{{ .URL }}"{{ if eq .Identifier "search" }} data-search-trigger{{ end }}{{ if $isExternal }} target="_blank" rel="external noopener noreferrer"{{ end }}{{ if and $isCurrent (ne .Identifier "search") }} aria-current="page"{{ end }}>
                         {{- $iconName := (string .Post) -}}

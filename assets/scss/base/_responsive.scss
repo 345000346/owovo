@@ -61,6 +61,10 @@ $maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
     .icon {
       margin: 0;
     }
+    // 分组分隔线仅桌面端；移动端网格中隐藏。
+    &.tools-start::before {
+      display: none;
+    }
   }
   .menu-item-name {
     display: block;
