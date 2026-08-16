@@ -6,6 +6,13 @@
             <div class="fof-footer">
                 <a href="{{ "" | relLangURL }}">送我回主页</a>
             </div>
+            {{- $recent := where .Site.RegularPages "Section" "eq" "post" | first 5 -}}
+            {{- if $recent -}}
+                <section class="fof-recent" aria-label="最近文章">
+                    <h2>最近文章</h2>
+                    {{ partial "utils/list-item.html" (dict "pages" $recent) }}
+                </section>
+            {{- end -}}
         </div>
     </main>
 {{ end }}

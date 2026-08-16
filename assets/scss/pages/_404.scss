@@ -36,6 +36,22 @@
   }
 }
 
+.fof-recent {
+  margin-top: 3rem;
+  text-align: left;
+
+  h2 {
+    font-size: 1.4em;
+    text-align: center;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+
 @media (max-width: variables.$breakpoint-sm) {
   .fof {
     h1 {
