@@ -9,14 +9,19 @@
 // - meta[name=color-scheme]: content = "light" | "dark"
 // FOUC 只上色；本文件负责切换、存储、系统主题与 themechange。
 // 图标由 [data-theme-preference] CSS 驱动。
+// 切换用 View Transition 做背景扩散渐变（reduced motion / 无 API 时直接应用）。
 // Concat：与 navigation.js / scroll-ui.js 同 module，顶层仅 initTheme。
 
 function initTheme() {
   let transientPreference = null;
   let mediaQuery = null;
+  let reducedMotionQuery = null;
   try {
     if (typeof window.matchMedia === "function") {
       mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      reducedMotionQuery = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
     }
   } catch {
     // matchMedia 不可用时按浅色作为系统主题的最终回退。
@@ -67,10 +72,12 @@ function initTheme() {
     if (!themeSwitcher) {
       return;
     }
-    themeSwitcher.setAttribute(
-      "aria-label",
-      `切换主题，当前：${preferenceLabel(preference)}`,
-    );
+    const label = preferenceLabel(preference);
+    themeSwitcher.setAttribute("aria-label", `切换主题，当前：${label}`);
+    const text = themeSwitcher.querySelector(".theme-switcher-label");
+    if (text && text.textContent !== label) {
+      text.textContent = label;
+    }
   }
 
   function syncColorScheme(theme) {
@@ -80,25 +87,12 @@ function initTheme() {
     }
   }
 
-  function applyThemeFromPreference(preference, { force = false } = {}) {
-    let normalized = "system";
-    if (
-      preference === "light" ||
-      preference === "dark" ||
-      preference === "system"
-    ) {
-      normalized = preference;
-    }
-    const theme = resolveTheme(normalized);
+  function prefersReducedMotion() {
+    return reducedMotionQuery?.matches === true;
+  }
+
+  function writeThemeState(normalized, theme) {
     const root = document.documentElement;
-
-    // 早退：FOUC 已写过匹配的 preference，信任其解析结果（system 时不再重解析，
-    // 防 matchMedia 初始值与 FOUC 翻转时把深色覆盖回浅色）。force 路径（点击/存储/系统变化）仍完整重写。
-    if (!force && root.getAttribute("data-theme-preference") === normalized) {
-      syncThemeSwitcherLabel(normalized);
-      return;
-    }
-
     root.setAttribute("data-theme", theme);
     root.setAttribute("data-theme-preference", normalized);
     syncThemeSwitcherLabel(normalized);
@@ -122,7 +116,72 @@ function initTheme() {
     );
   }
 
-  function cycleTheme() {
+  function applyThemeFromPreference(
+    preference,
+    { force = false, spreadFrom = null } = {},
+  ) {
+    let normalized = "system";
+    if (
+      preference === "light" ||
+      preference === "dark" ||
+      preference === "system"
+    ) {
+      normalized = preference;
+    }
+    const theme = resolveTheme(normalized);
+    const root = document.documentElement;
+
+    // 早退：FOUC 已写过匹配的 preference，信任其解析结果（system 时不再重解析，
+    // 防 matchMedia 初始值与 FOUC 翻转时把深色覆盖回浅色）。force 路径（点击/存储/系统变化）仍完整重写。
+    if (!force && root.getAttribute("data-theme-preference") === normalized) {
+      syncThemeSwitcherLabel(normalized);
+      return;
+    }
+
+    // 切换用 View Transition 做扩散渐变；reduced motion 或 API 缺失时直接应用。
+    // VT 期间临时禁用元素过渡（CSS 变量变化会触发 body/a 等的 0.5s 过渡），
+    // 否则新快照拍到的是过渡中间值，扩散窗口内颜色会滞后。
+    // spreadFrom：真实点击事件（detail>0）时把坐标写入 --spread-x/y，扩散从点击处开始。
+    const apply = () => {
+      if (
+        spreadFrom &&
+        spreadFrom.detail > 0 &&
+        typeof spreadFrom.clientX === "number"
+      ) {
+        root.style.setProperty("--spread-x", `${spreadFrom.clientX}px`);
+        root.style.setProperty("--spread-y", `${spreadFrom.clientY}px`);
+      }
+      writeThemeState(normalized, theme);
+    };
+    if (
+      force &&
+      typeof document.startViewTransition === "function" &&
+      !prefersReducedMotion()
+    ) {
+      let transition;
+      try {
+        transition = document.startViewTransition(() => {
+          document.documentElement.classList.add("theme-transitioning");
+          apply();
+        });
+      } catch {
+        // 过渡进行中再次切换会抛 InvalidStateError：直接应用，保证存储与 UI 一致。
+        apply();
+        return;
+      }
+      transition?.finished
+        ?.then(() =>
+          document.documentElement.classList.remove("theme-transitioning"),
+        )
+        .catch(() =>
+          document.documentElement.classList.remove("theme-transitioning"),
+        );
+      return;
+    }
+    apply();
+  }
+
+  function cycleTheme(event) {
     const nextByPreference = {
       light: "dark",
       dark: "system",
@@ -130,7 +189,7 @@ function initTheme() {
     };
     const newPreference = nextByPreference[safeGetTheme()] || "light";
     safeSetTheme(newPreference);
-    applyThemeFromPreference(newPreference, { force: true });
+    applyThemeFromPreference(newPreference, { force: true, spreadFrom: event });
   }
 
   function handleSystemThemeChange() {
@@ -160,7 +219,7 @@ function initTheme() {
   if (themeSwitcher) {
     themeSwitcher.addEventListener("click", (event) => {
       event.preventDefault();
-      cycleTheme();
+      cycleTheme(event);
     });
   }
 }

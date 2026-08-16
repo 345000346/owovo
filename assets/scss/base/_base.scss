@@ -25,6 +25,41 @@ html {
   }
 }
 
+// 主题切换的 View Transition（theme.js 触发）：新主题整页快照以圆形从点击处
+// 扩散覆盖旧主题（内容静止不翻转，视觉为颜色蔓延）。未提供坐标时从默认左下角。
+// --spread-x/--spread-y 由 theme.js 在真实点击时写入（px）；键盘/跨标签/系统变化走默认角。
+// reduced motion 时 JS 不调用 startViewTransition，无需在此额外处理。
+::view-transition-old(root) {
+  animation: none;
+}
+::view-transition-new(root) {
+  clip-path: circle(
+    150% at var(--spread-x, 0px) var(--spread-y, 100%)
+  );
+  animation: theme-spread 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes theme-spread {
+  from {
+    clip-path: circle(
+      0% at var(--spread-x, 0px) var(--spread-y, 100%)
+    );
+  }
+  to {
+    clip-path: circle(
+      150% at var(--spread-x, 0px) var(--spread-y, 100%)
+    );
+  }
+}
+
+// VT 切换期间禁用元素过渡，避免 CSS 变量变化触发 0.5s 过渡、
+// 让新快照拍到中间值（theme.js 添加/移除该类）。
+:root.theme-transitioning *,
+:root.theme-transitioning *::before,
+:root.theme-transitioning *::after {
+  transition-duration: 0.01ms !important;
+}
+
 // 键盘优先跳过链接：未聚焦时移出视口（见 baseof.html）。
 .skip-link {
   position: absolute;

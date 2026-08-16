@@ -28,8 +28,10 @@
   }
 }
 
+// 文字：显示当前偏好（浅色/深色/跟随系统，theme.js 更新），桌面与移动端均可见。
 .theme-switcher-label {
-  display: none;
+  margin-left: 0.2em;
+  white-space: nowrap;
 }
 
 // 尚无 data-theme-preference 时默认浅色图标。
