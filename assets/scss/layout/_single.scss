@@ -315,6 +315,22 @@ pre {
   .copy-button:focus-visible {
     opacity: 1;
   }
+  // 语言徽标：render-codeblock.html 已写 data-lang，这里用伪元素展示。
+  &[data-lang]::before {
+    content: attr(data-lang);
+    display: block;
+    padding: 0.3em 1em;
+    font-family: variables.$fontFamilyCode;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--color-contrast-medium);
+    background-color: functions.alpha(var(--color-contrast-lower), 0.5);
+    border-bottom: 1px solid
+      functions.alpha(var(--color-contrast-low), 0.3);
+  }
+  &[data-lang] .highlight {
+    margin-top: 0;
+  }
 }
 .code-block-status {
   position: absolute;
