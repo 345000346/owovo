@@ -1,18 +1,18 @@
 {{/* 同 section 上下篇；从 post/single 调用，调用方无需 is-post。
-     Hugo 默认按日期降序：PrevInSection 指向更旧文章（上一篇）、NextInSection 指向更新文章（下一篇）。
-     本站设计：左侧 prev 槽放「下一篇」（更新）、右侧 next 槽放「上一篇」（更旧）。 */}}
+     Hugo 按日期升序排：PrevInSection 指向更旧文章（上一篇）、NextInSection 指向更新文章（下一篇）。
+     本站设计：左侧 prev 槽放「上一篇」（更旧，rel=prev）、右侧 next 槽放「下一篇」（更新，rel=next）。 */}}
 {{ $prev := .PrevInSection }}
 {{ $next := .NextInSection }}
 {{ if or $prev $next }}
     <ul class="post-nav">
-        {{ if $next }}
+        {{ if $prev }}
             <li class="post-nav-prev">
-                <a href="{{ $next.RelPermalink }}" rel="prev">&lt; {{ (partial "utils/title.html" (dict "$" $next "title" $next.LinkTitle)).htmlTitle }}</a>
+                <a href="{{ $prev.RelPermalink }}" rel="prev">&lt; {{ (partial "utils/title.html" (dict "$" $prev "title" $prev.LinkTitle)).htmlTitle }}</a>
             </li>
         {{ end }}
-        {{ if $prev }}
+        {{ if $next }}
             <li class="post-nav-next">
-                <a href="{{ $prev.RelPermalink }}" rel="next">{{ (partial "utils/title.html" (dict "$" $prev "title" $prev.LinkTitle)).htmlTitle }} &gt;</a>
+                <a href="{{ $next.RelPermalink }}" rel="next">{{ (partial "utils/title.html" (dict "$" $next "title" $next.LinkTitle)).htmlTitle }} &gt;</a>
             </li>
         {{ end }}
     </ul>
