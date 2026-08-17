@@ -71,7 +71,7 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 - **JS 拆分与 Concat**（`layouts/partials/script.html`）：
   - **全站一包**：`theme.js` + `navigation.js` + `scroll-ui.js` → `resources.Concat` 为 `js/site.js` → Minify + Fingerprint（一个请求、源码分文件）。
   - **Concat 作用域**：三文件拼成**同一个** `type="module"`，顶层 `const` / `function` **共用作用域**。标识符必须在三文件间**全局唯一**（禁止两个文件都导出顶层 `init` / 同名 helper）。实现尽量收进各自 `init…()` 内部。
-  - **独立模块**（各一请求）：`search-dialog.js`（全站）；`article.js`（仅文章页）；`search-highlight.js`（仅 `?hl=`，由 loader 注入）。
+  - **独立模块**（各一请求）：`search-dialog.js`（全站）；`article.js`（文章页，以及 `toc: true` 的普通页）；`search-highlight.js`（仅 `?hl=`，由 loader 注入）。
   - FOUC 内联脚本在 `layouts/partials/head.html`，与 `theme.js` 契约必须同步（见 `theme.js` 文件头）；同时给 `<html>` 标记 `.js`，移动导航只在该标记存在时折叠。
   - SEO：`partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）。
   - taxonomy **仅** `tags`。
