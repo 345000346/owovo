@@ -108,6 +108,39 @@ async function listFiles(dir) {
   return files;
 }
 
+/** @param {string} html */
+function extractJsonLdTexts(html) {
+  const texts = [];
+  const pattern =
+    /<script\b[^>]*\btype=(?:"application\/ld\+json"|'application\/ld\+json'|application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/gi;
+  for (const match of html.matchAll(pattern)) {
+    texts.push(match[1].trim());
+  }
+  return texts;
+}
+
+/** @param {string} html @param {string} rel */
+function assertJsonLdSafe(html, rel) {
+  const texts = extractJsonLdTexts(html);
+  assert(texts.length > 0, `${rel} missing JSON-LD script`);
+  for (const [index, text] of texts.entries()) {
+    const label = texts.length === 1 ? rel : `${rel} JSON-LD #${index + 1}`;
+    assert(
+      !text.includes("</script") && !text.includes("<script"),
+      `${label} JSON-LD must not contain raw script tags`,
+    );
+    try {
+      const parsed = JSON.parse(text);
+      assert(
+        typeof parsed === "object" && parsed !== null && !Array.isArray(parsed),
+        `${label} JSON-LD must parse to a non-null object (double-encoded JSON produces a string)`,
+      );
+    } catch (error) {
+      assert(false, `${label} JSON-LD is not valid JSON: ${error.message}`);
+    }
+  }
+}
+
 /** @param {string} rel */
 function isArticleHtml(rel) {
   return /^post\/[^/]+\/index\.html$/.test(rel);
@@ -232,6 +265,7 @@ async function main() {
     indexHtml.includes('.classList.add("js")'),
     "index.html must enable JS-only navigation styles before first paint",
   );
+  assertJsonLdSafe(indexHtml, "index.html");
 
   // 首页分页必须使用当前页 URL 和页码，避免 canonical / OG 折叠回首页。
   for (let pageNumber = 2; ; pageNumber += 1) {
@@ -386,10 +420,7 @@ async function main() {
     failures.push("no post/*/index.html found to spot-check");
   } else {
     const postHtml = await readPublic(postRel);
-    assert(
-      postHtml.includes("application/ld+json"),
-      `post page missing JSON-LD: ${postRel}`,
-    );
+    assertJsonLdSafe(postHtml, postRel);
     assert(
       postHtml.includes("data-pagefind-body"),
       `post page missing data-pagefind-body: ${postRel}`,

@@ -19,13 +19,13 @@ function initSearchDialog() {
   }
 
   const closeButton = dialog.querySelector(".search-dialog-close");
-  const bundlePath =
-    config.getAttribute("data-pagefind-bundle") || "/pagefind/";
-  const scriptPath =
-    config.getAttribute("data-pagefind-js") || `${bundlePath}pagefind-ui.js`;
-  const stylePath =
-    config.getAttribute("data-pagefind-css") ||
-    `${bundlePath}pagefind-ui.css`;
+  const bundlePath = config.getAttribute("data-pagefind-bundle");
+  const scriptPath = config.getAttribute("data-pagefind-js");
+  const stylePath = config.getAttribute("data-pagefind-css");
+  if (!bundlePath || !scriptPath || !stylePath) {
+    console.error("search-dialog: missing pagefind path on #search-dialog-config");
+    return;
+  }
   const searchContainer = dialog.querySelector(".search-dialog-search");
   let uiPromise;
   let previousHash = "";

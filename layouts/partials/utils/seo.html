@@ -131,4 +131,5 @@
 {{- with $license -}}
     {{- $ld = merge $ld (dict "license" .) -}}
 {{- end -}}
+{{- /* jsonify 默认转义 <>&（防 script breakout），返回 template.HTML；safeJS 防 <script> 上下文双重编码。 */ -}}
 <script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>

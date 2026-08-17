@@ -1,6 +1,6 @@
-// 仅 ?hl= 时由 head loader 注入；动态 import，失败静默降级。
+// 仅 ?hl= 时由 head loader 注入；动态 import，失败 console.error。
 //
-// 契约：hl 参数；data-pagefind-highlight 脚本路径；
+// 契约：hl 参数；data-pagefind-highlight 脚本路径（无绝对路径回退）；
 // 命中 mark.search-highlight（样式 _search-highlight.scss）。
 
 function initSearchHighlight() {
@@ -17,8 +17,11 @@ function initSearchHighlight() {
   );
   const highlightSrc =
     scriptEl?.getAttribute("data-pagefind-highlight") ||
-    document.documentElement.getAttribute("data-pagefind-highlight") ||
-    "/pagefind/pagefind-highlight.js";
+    document.documentElement.getAttribute("data-pagefind-highlight");
+  if (!highlightSrc) {
+    console.error("search-highlight: missing data-pagefind-highlight path");
+    return;
+  }
 
   import(highlightSrc)
     .then(({ default: PagefindHighlight }) => {
