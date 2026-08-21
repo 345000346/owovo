@@ -11,7 +11,8 @@
         {{- warnf "Missing SVG icon %q on %q" $name $.RelPermalink -}}
     {{- else -}}
         {{- $class := printf "icon %s" $class -}}
-        {{- $result = (replace $icon "icon" $class | safeHTML) -}}
+        {{- /* 仅精确替换占位 class="icon"；防止 SVG 数据中出现 "icon" 子串被误替换。 */ -}}
+        {{- $result = replace $icon `class="icon"` (printf `class="%s"` $class) | safeHTML -}}
     {{- end -}}
 {{- end -}}
 {{- return $result -}}
