@@ -31,9 +31,7 @@
                 {{ with $author.copyright -}}
                     <copyright>{{ . | markdownify | plainify | htmlUnescape }}</copyright>
                 {{- end }}
-                <description>
-                    {{ partial "utils/make-links-absolute.html" (dict "$" . "content" $page.Summary) | html }}
-                </description>
+                <description>{{ partial "utils/make-links-absolute.html" (dict "$" . "content" $page.Summary) | html }}</description>
                 {{ with $.Site.Taxonomies }}
                     {{ range $taxonomy, $terms := . }}
                         {{ with $page.Param $taxonomy }}
