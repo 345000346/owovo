@@ -1,6 +1,7 @@
 /**
  * 规范化 content front matter 字段序。
  * 文章丢掉 toc: true / lastmod；去掉 categories；键序对齐 AGENTS / archetypes。
+ * 字段间注释挂到其后第一个键随排序搬运；尾随注释与块标量逐字保留。
  *
  * 用法：node scripts/normalize-frontmatter.mjs
  */
@@ -16,12 +17,12 @@ const POST_ORDER = [
   "slug",
   "description",
   "tags",
+  "draft",
   "toc",
   "source",
   "author",
   "outdated",
   "outdatedNote",
-  "draft",
 ];
 
 const PAGE_ORDER = [
@@ -101,12 +102,23 @@ function parseBlocks(fmBody) {
     /** @type {string[]} */
     const chunk = [line];
     i += 1;
-    while (
-      i < lines.length &&
-      (lines[i].startsWith(" ") || lines[i].startsWith("\t"))
-    ) {
-      chunk.push(lines[i]);
-      i += 1;
+    while (i < lines.length) {
+      if (lines[i].startsWith(" ") || lines[i].startsWith("\t")) {
+        chunk.push(lines[i]);
+        i += 1;
+        continue;
+      }
+      // 块标量（| / >）内部的空行：后随缩进行则归属当前键，逐字保留。
+      if (
+        lines[i].trim() === "" &&
+        i + 1 < lines.length &&
+        (lines[i + 1].startsWith(" ") || lines[i + 1].startsWith("\t"))
+      ) {
+        chunk.push(lines[i]);
+        i += 1;
+        continue;
+      }
+      break;
     }
     blocks.push({ key, raw: chunk.join("\n") });
   }
@@ -123,16 +135,24 @@ function rebuild(blocks, order, isPost) {
   const byKey = new Map();
   /** @type {string[]} */
   const leadingComments = [];
+  /** 字段间注释：挂到其后第一个键，随键排序搬运。 */
+  let pendingComments = [];
 
   for (const block of blocks) {
     if (block.key === null) {
-      if (byKey.size === 0 && block.raw.trimStart().startsWith("#")) {
-        leadingComments.push(block.raw);
+      if (block.raw.trimStart().startsWith("#")) {
+        if (byKey.size === 0 && pendingComments.length === 0) {
+          leadingComments.push(block.raw);
+        } else {
+          pendingComments.push(block.raw);
+        }
       }
       continue;
     }
+    const attached = pendingComments;
+    pendingComments = [];
     if (block.key === "categories") {
-      continue;
+      continue; // 被移除键上的注释随键一并丢弃。
     }
     if (block.key === "lastmod") {
       continue;
@@ -143,7 +163,10 @@ function rebuild(blocks, order, isPost) {
         continue;
       }
     }
-    byKey.set(block.key, block.raw);
+    byKey.set(
+      block.key,
+      attached.length > 0 ? `${attached.join("\n")}\n${block.raw}` : block.raw,
+    );
   }
 
   /** @type {string[]} */
@@ -157,6 +180,8 @@ function rebuild(blocks, order, isPost) {
   for (const raw of byKey.values()) {
     out.push(raw);
   }
+  // 未挂到任何键的尾随注释原样保留。
+  out.push(...pendingComments);
   return `${out.join("\n").replace(/\n+$/, "")}\n`;
 }
 
