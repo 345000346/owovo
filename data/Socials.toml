@@ -1,5 +1,4 @@
 [[items]]
-id = "rss"
 url = "/rss.xml"
 icon = "rss"
 title = "RSS"
@@ -7,7 +6,6 @@ weight = 1
 footer = true
 
 [[items]]
-id = "github"
 url = "https://github.com/345000346"
 icon = "github"
 title = "GitHub"
@@ -20,7 +18,6 @@ platform = "GitHub"
 role = "代码与仓库"
 
 [[items]]
-id = "weibo"
 url = "https://weibo.com/u/1733321624"
 icon = "weibo"
 title = "微博"
@@ -33,7 +30,6 @@ platform = "微博"
 role = "日常与碎片"
 
 [[items]]
-id = "zhihu"
 url = "https://www.zhihu.com/people/Hibernate_"
 icon = "zhihu"
 title = "知乎"
