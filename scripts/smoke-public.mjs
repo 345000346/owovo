@@ -177,7 +177,7 @@ async function main() {
   }
 
   // 基础产物
-  for (const rel of ["index.html", "robots.txt", "sitemap.xml"]) {
+  for (const rel of ["index.html", "404.html", "robots.txt", "sitemap.xml"]) {
     assert(await exists(rel), `${rel} missing under ${publicDir}`);
   }
   exitIfFailed();
@@ -293,20 +293,18 @@ async function main() {
     );
   }
 
-  // 404（有搜索 Dialog，无 ?hl= 配置）
-  if (await exists("404.html")) {
-    const notFound = await readPublic("404.html");
-    assert(
-      /id="?search-dialog"?/.test(notFound) &&
-        /data-search-trigger/.test(notFound) &&
-        /search-dialog\.min\./.test(notFound),
-      "404.html must include search dialog, trigger, and search-dialog script",
-    );
-    assert(
-      !/id="?search-highlight-config"?/.test(notFound),
-      "404.html should not include search-highlight-config",
-    );
-  }
+  // 404（有搜索 Dialog，无 ?hl= 配置）；缺失已在基础产物清单显式失败。
+  const notFound = await readPublic("404.html");
+  assert(
+    /id="?search-dialog"?/.test(notFound) &&
+      /data-search-trigger/.test(notFound) &&
+      /search-dialog\.min\./.test(notFound),
+    "404.html must include search dialog, trigger, and search-dialog script",
+  );
+  assert(
+    !/id="?search-highlight-config"?/.test(notFound),
+    "404.html should not include search-highlight-config",
+  );
   assert(
     !/themed-badge|shields\.io|substats/.test(indexHtml),
     "index.html must not reference removed shields/themed badges",
@@ -335,6 +333,37 @@ async function main() {
         css.includes(":root:not(.js) .header{position:static}"),
       "main CSS must keep mobile navigation visible when JavaScript is unavailable",
     );
+    // 跨文件契约数字（改动须三处同步：SCSS token ↔ JS 回退 ↔ 此处断言）：
+    // 导航断点 --max-width(846px)、TOC 悬浮/折叠断点 68em、导航过渡 $duration 0.5s。
+    assert(
+      /--max-width:\s*846px/.test(css) &&
+        /--toc-side-breakpoint:\s*68em/.test(css) &&
+        /\(min-width:\s*68em\)/.test(css),
+      "main CSS contract literals drifted (--max-width: 846px / --toc-side-breakpoint: 68em / min-width: 68em)",
+    );
+    // JS 侧：site.js（concat）持导航关闭兜底；article.js（独立模块）持 TOC 断点回退。
+    const siteJs = await findFirstFile(publicPath("js"), (n) =>
+      n.startsWith("site."),
+    );
+    const articleJs = await findFirstFile(publicPath("js"), (n) =>
+      n.startsWith("article."),
+    );
+    assert(siteJs, "js/site.*.js missing");
+    assert(articleJs, "js/article.*.js missing");
+    if (siteJs) {
+      const js = await readFile(siteJs, "utf8");
+      assert(
+        /\b600\b/.test(js),
+        "site JS contract literal drifted (nav close fallback 600ms >= SCSS $duration 0.5s)",
+      );
+    }
+    if (articleJs) {
+      const js = await readFile(articleJs, "utf8");
+      assert(
+        js.includes("68em") && js.includes("--toc-side-breakpoint"),
+        "article JS contract literals drifted (TOC breakpoint fallback 68em read from --toc-side-breakpoint)",
+      );
+    }
   }
 
   // 标签页使用中文标题和标签专属描述。
@@ -392,6 +421,10 @@ async function main() {
       !html.includes("dateModified") &&
         !html.includes("article:modified_time"),
       `${rel} must not expose a modification date`,
+    );
+    assert(
+      !html.includes("ZgotmplZ"),
+      `${rel} contains ZgotmplZ (a content link scheme was filtered; use http/https/mailto)`,
     );
     if (isArticleHtml(rel)) {
       articleHtmlCount += 1;
