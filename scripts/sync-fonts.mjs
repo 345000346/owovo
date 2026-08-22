@@ -19,6 +19,7 @@ import {
   mkdir,
   readdir,
   readFile,
+  rename,
   rm,
   stat,
   writeFile,
@@ -47,6 +48,14 @@ const PRELOAD_CJK_FILES = [
   "noto-serif-sc-117-wght-normal.woff2",
 ];
 const PRELOAD_TOTAL_MAX = 4; // latin + 至多 3 个 CJK
+
+// Source Code Pro 固定附带 latin 400/700 normal+italic。
+const SOURCE_CODE_FILES = [
+  "source-code-pro-latin-400-normal.woff2",
+  "source-code-pro-latin-400-italic.woff2",
+  "source-code-pro-latin-700-normal.woff2",
+  "source-code-pro-latin-700-italic.woff2",
+];
 const wantStats =
   process.argv.includes("--stats") || process.env.SYNC_FONTS_STATS === "1";
 
@@ -88,11 +97,14 @@ function rewriteNotoCss(blocks) {
     .replaceAll(".woff2) format", '.woff2") format');
 }
 
-async function main() {
-  await rm(fontDirectory, { force: true, recursive: true });
-  await mkdir(fontDirectory, { recursive: true });
-  await mkdir(cssDirectory, { recursive: true });
-  await mkdir(resolve(root, "data"), { recursive: true });
+/**
+ * 拷贝全部 woff2 到暂存目录；全部成功后由调用方原子替换正式目录。
+ * @param {string} stagingDirectory
+ * @returns {Promise<{ faces: { block: string, file: string, isLatin: boolean }[], notoSizes: Map<string, number>, copiedBytes: number }>}
+ */
+async function stageFonts(stagingDirectory) {
+  await rm(stagingDirectory, { force: true, recursive: true });
+  await mkdir(stagingDirectory, { recursive: true });
 
   const vendorCss = await readFile(resolve(notoSource, "index.css"), "utf8");
   const faces = collectNotoFaces(vendorCss);
@@ -104,26 +116,40 @@ async function main() {
 
   for (const { file: name } of faces) {
     const source = resolve(notoFilesDir, name);
-    await cp(source, resolve(fontDirectory, name));
+    await cp(source, resolve(stagingDirectory, name));
     const size = (await stat(source)).size;
     notoSizes.set(name, size);
     copiedBytes += size;
   }
 
-  const sourceCodeFiles = [
-    "source-code-pro-latin-400-normal.woff2",
-    "source-code-pro-latin-400-italic.woff2",
-    "source-code-pro-latin-700-normal.woff2",
-    "source-code-pro-latin-700-italic.woff2",
-  ];
-
-  for (const file of sourceCodeFiles) {
+  for (const file of SOURCE_CODE_FILES) {
     const source = resolve(sourceCodeSource, file);
-    await cp(source, resolve(fontDirectory, file));
+    await cp(source, resolve(stagingDirectory, file));
     copiedBytes += (await stat(source)).size;
   }
 
-  const sourceCodeCss = sourceCodeFiles
+  return { faces, notoSizes, copiedBytes };
+}
+
+async function main() {
+  // 先写仓库根暂存目录再整体替换：失败清理暂存且不破坏既有 static/fonts；
+  // 暂存目录不在 static/ 下，Hugo 不会把它当静态文件发布。
+  const stagingDirectory = resolve(root, ".fonts-staging");
+  let stageResult;
+  try {
+    stageResult = await stageFonts(stagingDirectory);
+    await rm(fontDirectory, { force: true, recursive: true });
+    await rename(stagingDirectory, fontDirectory);
+  } catch (error) {
+    await rm(stagingDirectory, { force: true, recursive: true }).catch(() => {});
+    throw error;
+  }
+  await mkdir(cssDirectory, { recursive: true });
+  await mkdir(resolve(root, "data"), { recursive: true });
+
+  const { faces, notoSizes, copiedBytes } = stageResult;
+
+  const sourceCodeCss = SOURCE_CODE_FILES
     .map((file) => {
       const [, weight, style] = file.match(/-(400|700)-(normal|italic)\.woff2$/);
       return `@font-face {
@@ -168,7 +194,7 @@ async function main() {
   const latinCount = faces.filter((f) => f.isLatin).length;
   const cjkCount = faces.length - latinCount;
   console.log(
-    `sync-fonts: ${faces.length} Noto faces (latin=${latinCount}, cjk=${cjkCount}) + ${sourceCodeFiles.length} Source Code Pro (${mb} MB)`,
+    `sync-fonts: ${faces.length} Noto faces (latin=${latinCount}, cjk=${cjkCount}) + ${SOURCE_CODE_FILES.length} Source Code Pro (${mb} MB)`,
   );
   console.log(
     `sync-fonts: preload ${preloadFiles.length} file(s) (${preloadMb} MB): ${preloadFiles.join(", ")}`,
