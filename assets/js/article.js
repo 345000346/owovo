@@ -128,11 +128,16 @@ function initTocSpy() {
     return;
   }
 
-  // 折叠默认：移动端（<68em，与 SCSS $tocSideBreakpoint 同步）折叠，
-  // 桌面端由模板 open 默认展开；跨断点（旋转/分屏）恢复默认。
+  // 折叠默认：移动端（<断点）折叠，桌面端由模板 open 默认展开；
+  // 跨断点（旋转/分屏）恢复默认。断点同源自 SCSS --toc-side-breakpoint。
   // 无记忆（用户要求）；无 JS 时维持模板默认（全部展开）。
   function initTocCollapse() {
-    const wide = window.matchMedia("(min-width: 68em)");
+    const breakpointRaw = window
+      .getComputedStyle(document.documentElement, null)
+      .getPropertyValue("--toc-side-breakpoint")
+      .trim();
+    // 与 _single.scss $tocSideBreakpoint 同源；CSS 变量缺失时回退。
+    const wide = window.matchMedia(`(min-width: ${breakpointRaw || "68em"})`);
     function applyDefault() {
       contents.open = wide.matches;
     }
