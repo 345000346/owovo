@@ -20,7 +20,7 @@ npm run hugo:env          # 打印本机 Hugo 环境
 维护（不进默认 CI）：
 
 ```bash
-node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 lastmod/categories，文章侧丢掉 toc: true
+node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 lastmod/categories，文章侧丢掉 toc: true；字段间注释挂到其后键随排序搬运
 ```
 
 注意：
@@ -134,6 +134,7 @@ date: YYYY-MM-DDTHH:mm:ss+08:00
 slug: "kebab-case"    # 与目录名一致
 description: "..."
 tags: ["..."]
+draft: true           # 仅脚手架新建时；发布前删除
 # toc: false          # 默认开启 TOC：勿写 toc: true；仅关闭时写 false
 # source / author     # 仅转载
 # outdated / outdatedNote
@@ -190,7 +191,7 @@ npm run build
 
 `npm run dev` 仅启动 Hugo server，不会生成或更新 Pagefind 索引；需要验证搜索时使用 `npm run build` 或 `npm run preview`。
 
-`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流；不要将文章数量或 Pagefind 页数写死。
+`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流；校验跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 68em、导航关闭兜底 600ms ≥ 过渡时长）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
 
 模板改动建议：
 
@@ -211,3 +212,4 @@ npm run build:site -- --panicOnWarning --logLevel warn
 - **Favicon**：仅 `icons/favicon.svg` + `icons/apple-touch-icon.png`。
 - **无** Microformats / 访问统计脚本 / i18n。
 - **列表入口唯一**：`/archives/`；不生成 `/post/` section 根兼容页，文章实体地址仍为 `/post/:slug/`。
+- **版本文件手动升级**：Hugo（`.hugo-version`）/ Node（`.node-version`）不在 Dependabot 覆盖内，升级靠手动改文件，CI 动态读取；本地 engines 由 `.npmrc` engine-strict 强制。
