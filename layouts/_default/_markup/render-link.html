@@ -1,7 +1,9 @@
 {{/* 外链：target=_blank + rel=external noopener noreferrer（与 smoke 一致）。 */}}
 {{- $href := .Destination -}}
+{{- /* 协议白名单：http(s)/mailto 才 safeURL；其余交给 Hugo urlFilter（javascript: 等被中和为 #ZgotmplZ），相对路径原样。 */ -}}
 {{- $isRemote := or (strings.HasPrefix $href "http://") (strings.HasPrefix $href "https://") -}}
-<a href="{{ $href | safeURL }}"
+{{- $trustedHref := or $isRemote (strings.HasPrefix $href "mailto:") -}}
+<a href="{{ cond $trustedHref ($href | safeURL) $href }}"
 {{- with .Title }} title="{{ . }}"{{ end -}}
 {{- if $isRemote }} target="_blank" rel="external noopener noreferrer"{{ end -}}
 >{{ .Text | safeHTML }}</a>
