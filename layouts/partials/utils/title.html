@@ -15,6 +15,8 @@
     {{- $htmlTitle = printf "%s：%s" $taxonomyTitle $taxonomyTermTitle -}}
 {{- else if eq $.Kind "section" -}}
     {{- $htmlTitle = $htmlTitle | default (delimit (last 1 (split (strings.TrimSuffix "/_index.md" $path) "/")) " ") -}}
+{{- else if eq $.Kind "404" -}}
+    {{- $htmlTitle = "页面不存在" -}}
 {{- end -}}
 
 {{- $pageNumber := .pageNumber | default 1 -}}
@@ -22,7 +24,12 @@
     {{- $htmlTitle = printf "%s - 第 %d 页" $htmlTitle $pageNumber -}}
 {{- end -}}
 
-{{- $htmlTitle = $htmlTitle | markdownify | safeHTML -}}
+{{- /* 站点名是纯文本配置：不经 markdownify（smartypants 会把撇号变弯引号，与 og:site_name/RSS/页脚的直引号不一致）；仅内容标题需要排版变换。 */ -}}
+{{- if eq $.Kind "home" -}}
+    {{- $htmlTitle = $htmlTitle | plainify | htmlUnescape | strings.TrimSpace | safeHTML -}}
+{{- else -}}
+    {{- $htmlTitle = $htmlTitle | markdownify | safeHTML -}}
+{{- end -}}
 
 {{- $rawTitle := $htmlTitle | plainify | htmlUnescape | strings.TrimSpace -}}
 

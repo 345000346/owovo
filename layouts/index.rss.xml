@@ -22,15 +22,11 @@
         {{ end }}
         {{ range $pages }}
             {{ $page := . }}
-            {{- $author := partial "utils/author.html" $page -}}
             <item>
                 <title>{{ (partial "utils/title.html" (dict "$" . "title" .Title)).rawTitle }}</title>
                 <link>{{ .Permalink }}</link>
                 <guid isPermaLink="true">{{ .Permalink }}</guid>
                 <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
-                {{ with $author.copyright -}}
-                    <copyright>{{ . | markdownify | plainify | htmlUnescape }}</copyright>
-                {{- end }}
                 <description>{{ partial "utils/make-links-absolute.html" (dict "$" . "content" $page.Summary) | html }}</description>
                 {{ with $.Site.Taxonomies }}
                     {{ range $taxonomy, $terms := . }}
