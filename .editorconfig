@@ -17,6 +17,3 @@ trim_trailing_whitespace = false
 # Hugo 模板与现有 layouts 一致，使用 4 空格
 [layouts/**]
 indent_size = 4
-
-[Makefile]
-indent_style = tab
