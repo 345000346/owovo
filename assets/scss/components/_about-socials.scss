@@ -72,6 +72,11 @@
   background-color: #dbe8f7;
 }
 
+.post-body .about-social-mark-github {
+  color: #24292f;
+  background-color: #e8eaed;
+}
+
 .post-body .about-social-copy {
   display: grid;
   gap: 0.3rem;
@@ -123,6 +128,11 @@
   .post-body .about-social-mark-zhihu {
     color: #d8e7ff;
     background-color: #2b456a;
+  }
+
+  .post-body .about-social-mark-github {
+    color: #e6edf3;
+    background-color: #2f353c;
   }
 }
 
