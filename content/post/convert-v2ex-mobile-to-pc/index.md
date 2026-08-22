@@ -18,7 +18,7 @@ tags: ["V2ex", "油猴", "脚本"]
 
 ### 2.1 在线安装
 
-将 Tampermonkey 安装好后，打开[将 V2ex 移动版网页转为 PC 版网页](https://greasyfork.org/zh-CN/scripts/389572-将v2ex移动版网页转为pc版网页)这个网页
+将 Tampermonkey 安装好后，打开[将 V2ex 移动版网页转为 PC 版网页](https://greasyfork.org/zh-CN/scripts/389572-%E5%B0%86v2ex%E7%A7%BB%E5%8A%A8%E7%89%88%E7%BD%91%E9%A1%B5%E8%BD%AC%E4%B8%BApc%E7%89%88%E7%BD%91%E9%A1%B5)这个网页
 
 点击 `安装`按钮，就安装成功了，后续脚本更新也会自动更新。
 

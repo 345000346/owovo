@@ -13,7 +13,7 @@ tags: ["今日诗词", "API", "古诗词"]
 ## 通用简单安装代码
 在 HTML 中需要加载诗词的地方放置以下加载代码即可，和 网站统计 的安装方法一致。
 
-```HTML
+```html
 <span id="jinrishici-sentence">正在加载今日诗词....</span>
 <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
 ```
@@ -22,7 +22,7 @@ SDK 会自动寻找 id 或者 class 为 `jinrishici-sentence` 的标签，将里
 ## 通用高级安装代码
 如果你有其他需求（如获取作者、朝代等），可以调用我们提供的加载函数`jinrishici.load` 并传入回调函数，每调用一次，会传入一个新的诗词
 
-```HTML
+```html
 <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
 <script type="text/javascript">
   jinrishici.load(function(result) {
@@ -114,7 +114,7 @@ SDK 会自动寻找 id 或者 class 为 `jinrishici-sentence` 的标签，将里
 
 可以复制到一个 HTML 文件用浏览器打开查看效果：
 
-```HTML
+```html
 <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
 <div id="poem_sentence"></div>
 <div id="poem_info"></div>

@@ -16,7 +16,7 @@ tags: ["Windows", "批处理", "脚本"]
 
 
 
-```c
+```bat
 @echo off&setlocal enabledelayedexpansion
 for /f "delims=" %%i in ('dir /s/b *.*') do (
     set "foo=%%~nxi"
@@ -35,7 +35,7 @@ exit
 
 
 
-```c
+```bat
 ren	demaxiya(01).jpg	demaxiya01.jpg
 ren	demaxiya(02).jpg	demaxiya02.jpg
 ren	demaxiya(03).jpg	demaxiya03.jpg
@@ -51,6 +51,6 @@ ren	demaxiya(03).jpg	demaxiya03.jpg
 
 把以下代码保存成.bat 批处理文件，放到需要批量重命名的文件内，运行即可。
 
-```c
+```bat
 DIR *.*   /B >LIST.TXT
 ```
