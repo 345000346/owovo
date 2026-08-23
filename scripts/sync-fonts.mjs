@@ -41,13 +41,15 @@ const preloadDataPath = resolve(root, "data/font_preload.json");
 
 const FACE_BLOCK = /(?:\/\*[\s\S]*?\*\/\s*)?@font-face\s*\{[^}]*\}/g;
 const LATIN_FILE = /-latin-wght-normal\.woff2$/;
-// 关键路径 CJK 分片（无内容扫描）。仅在 Fontsource 改名子集时更新；缺失则静默跳过。
+// 关键路径 CJK 分片（无内容扫描）。119 为首页 LCP 主力切片，117/118/116 覆盖
+// 首屏导航与标题用字（缺 116 时标题局部字形晚到）；仅在 Fontsource 改名子集时更新。
 const PRELOAD_CJK_FILES = [
   "noto-serif-sc-119-wght-normal.woff2",
   "noto-serif-sc-118-wght-normal.woff2",
   "noto-serif-sc-117-wght-normal.woff2",
+  "noto-serif-sc-116-wght-normal.woff2",
 ];
-const PRELOAD_TOTAL_MAX = 4; // latin + 至多 3 个 CJK
+const PRELOAD_TOTAL_MAX = 5; // latin + 至多 4 个 CJK
 
 // Source Code Pro 固定附带 latin 400/700 normal+italic。
 const SOURCE_CODE_FILES = [

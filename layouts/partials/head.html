@@ -96,8 +96,13 @@
 
     {{- partial "style.html" . }}
 
+    {{- /* 字体表异步加载：105 条 @font-face 不再阻塞首绘（swap 下首绘本用回退字体）；
+           无 JS 经 noscript 回退为阻塞加载。 */ -}}
     {{- $fonts := resources.Get "css/fonts.css" | resources.Minify | resources.Fingerprint -}}
-    <link rel="stylesheet" href="{{ $fonts.RelPermalink }}" integrity="{{ $fonts.Data.Integrity }}" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{{ $fonts.RelPermalink }}" integrity="{{ $fonts.Data.Integrity }}" crossorigin="anonymous" media="print" onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet" href="{{ $fonts.RelPermalink }}" integrity="{{ $fonts.Data.Integrity }}" crossorigin="anonymous" />
+    </noscript>
 
     {{- /* hl= 高亮：只对可被 Pagefind 命中的文章注入。 */ -}}
     {{- if $isPost -}}
