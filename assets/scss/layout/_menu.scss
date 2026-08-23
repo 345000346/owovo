@@ -1,6 +1,6 @@
 // 主导航菜单（桌面右对齐；移动样式见 base/responsive）。
 .nav {
-  z-index: 3;
+  // 层叠契约见 _header.scss 顶部注释；.nav 处于 .header-wrapper 上下文内，z-index 不与外界比较。
   position: relative;
   text-align: right;
   font-size: 80%;

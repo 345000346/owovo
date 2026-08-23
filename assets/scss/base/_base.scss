@@ -224,6 +224,20 @@ a {
   *::after {
     animation: none !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
+}
+
+// 打印：固定定位界面构件不进纸面，避免渐变顶栏逐页重复。
+@media print {
+    .header,
+    .nav-curtain,
+    #reading-progress,
+    #back-to-top,
+    .copy-button,
+    .search-dialog,
+    .contents {
+        display: none !important;
+    }
 }

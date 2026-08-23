@@ -23,8 +23,6 @@
 span.lnt {
   user-select: none;
   display: block;
-  margin-right: -1em !important;
-  padding: 0 !important;
   text-align: right;
 }
 
@@ -63,16 +61,14 @@ span.lnt {
   width: 100%;
   background-color: var(--chroma-line-numbers-background);
 }
-/* LineNumbersTable */
+/* LineNumbersTable（gutter 几何单源在此；负边距使行号贴向正文列） */
 .chroma .lnt {
-  margin-right: 0.4em;
-  padding: 0 0.4em 0 0.4em;
+  margin-right: -1em;
+  padding: 0;
   color: var(--chroma-line-numbers-color);
 }
-/* LineNumbers */
+/* LineNumbers：markup.yaml 固定 table 行号方案，仅当改为 false 时才会触达 */
 .chroma .ln {
-  margin-right: 0.4em;
-  padding: 0 0.4em 0 0.4em;
   color: var(--chroma-line-numbers-color);
 }
 /* Keyword */

@@ -3,6 +3,10 @@
 @use "../utils/mixins";
 @use "../utils/variables";
 
+// 层叠契约（全局有效值）：search-dialog 走原生 top layer > #reading-progress 4 >
+// .header 3 { .header-wrapper 2 > .nav-curtain/.back-to-top 1、.nav-toggle 3 }；
+// .skip-link 1000 为可访问性置顶例外。
+// .nav/#theme-switcher 的内部 z-index 不与外界比较，勿在此之外的节点上写 z-index。
 .header {
   z-index: 3;
   position: fixed;
