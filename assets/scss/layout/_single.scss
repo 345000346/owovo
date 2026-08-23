@@ -11,6 +11,7 @@
 // 断点 = 正文右缘 21em + 间隙 2em + TOC 20em + 余量；以下保持单栏顶部卡片。
 // 与 article.js 的折叠默认同步：断点经下方 --toc-side-breakpoint 同源输出，
 // article.js 运行时 getComputedStyle 读取；改值只动这里。
+// 注意：媒体查询中的 em 基于 UA 初始字号（默认 16px → 1088px），非站点根字号 18px。
 $tocSideBreakpoint: 68em;
 
 :root {
@@ -300,16 +301,18 @@ pre {
   border: 0;
   font-size: inherit;
   color: var(--color-bg);
-  background-color: functions.alpha(var(--color-contrast-medium), 0.5);
+  // 实心底色保证标签在明暗主题下均达 WCAG AA（半透明混合曾低至 2.19:1）。
+  background-color: var(--color-contrast-medium);
   transition:
     color variables.$duration,
     background-color variables.$duration,
     opacity variables.$duration;
   cursor: pointer;
   opacity: 0;
+  // 实心主色底：前景沿用 --color-bg，明暗主题均 ≥4.5:1（半透明混合曾低至 2.19:1）。
   &:hover,
   &:focus-visible {
-    background-color: functions.alpha(var(--color-primary), 0.5);
+    background-color: var(--color-primary);
   }
 }
 

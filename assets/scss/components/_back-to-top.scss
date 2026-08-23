@@ -4,7 +4,11 @@
   right: 0;
   z-index: 1;
   bottom: -3.6em;
-  transition: bottom 0.3s ease-in-out;
+  // 未显示时同步移出 Tab 序与渲染树，避免键盘焦点落进不可见按钮。
+  visibility: hidden;
+  transition:
+    bottom 0.3s ease-in-out,
+    visibility 0s linear 0.3s;
   a {
     display: block;
     padding: 1em;
@@ -15,5 +19,7 @@
   }
   &.show {
     bottom: 0;
+    visibility: visible;
+    transition-delay: 0s, 0s;
   }
 }

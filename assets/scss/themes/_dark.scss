@@ -18,15 +18,18 @@
   @include mixins.defineColorHSL(--color-contrast-medium, 80, 2%, 69%);
   @include mixins.defineColorHSL(--color-contrast-high, 69, 9%, 84%);
   @include mixins.defineColorHSL(--color-contrast-higher, 60, 6%, 90%);
-  // 已为深色准备的图片可加 data-no-dark-filter 跳过压暗。
-  img:not([data-no-dark-filter]) {
+  // 已为深色准备的图片/视频可加 data-no-dark-filter 跳过压暗（仅原生 video，
+  // 外嵌 iframe 视频不适用滤镜）。
+  img:not([data-no-dark-filter]),
+  .post video:not([data-no-dark-filter]) {
     filter: brightness(75%);
   }
 
   // 打印输出不压暗（深色主题下打印到浅色纸张）。
   @media print {
-    img {
-      filter: none;
+    img,
+    video {
+      filter: none !important;
     }
   }
 
@@ -34,16 +37,17 @@
   /* 色值对齐 dracula 风格 */
 
   --chroma-line-numbers-background: #44475a;
-  --chroma-line-numbers-color: #6272a4;
+  // 行号与注释原 dracula 色 #6272a4 在代码底上仅 3.58:1，提亮至 ≥4.5:1；输出色近隐形改可读灰。
+  --chroma-line-numbers-color: #8b9cd8;
   --chroma-keyword-color: #ff79c6;
   --chroma-declaration-color: #8be9fd;
   --chroma-name-color: #8be9fd;
   --chroma-attribute-color: #50fa7b;
   --chroma-literal-color: #f1fa8c;
   --chroma-number-color: #bd93f9;
-  --chroma-comment-color: #6272a4;
+  --chroma-comment-color: #8b9cd8;
   --chroma-deleted-color: #8b080b;
-  --chroma-output-color: #44475a;
+  --chroma-output-color: #c8cad4;
 }
 
 @media (prefers-color-scheme: dark) {

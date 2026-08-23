@@ -25,16 +25,17 @@
   /* Color values matching manni style */
 
   --chroma-line-numbers-background: #ffffcc;
-  --chroma-line-numbers-color: #7f7f7f;
+  // 行号/名称/数字/注释/输出为 manni 原值的高对比变体，按代码底 #f9f9f9 校验 ≥4.5:1。
+  --chroma-line-numbers-color: #6e6e6e;
   --chroma-keyword-color: #006699;
   --chroma-declaration-color: #006699;
-  --chroma-name-color: #9999ff;
+  --chroma-name-color: #5555cc;
   --chroma-attribute-color: #330099;
   --chroma-literal-color: #cc3300;
-  --chroma-number-color: #ff6600;
-  --chroma-comment-color: #0099ff;
+  --chroma-number-color: #b35000;
+  --chroma-comment-color: #0066aa;
   --chroma-deleted-color: #ffcccc;
-  --chroma-output-color: #aaaaaa;
+  --chroma-output-color: #707070;
 }
 
 // FOUC 在绘制前写入 data-theme；此处覆盖显式 light 与无 JS 回退。

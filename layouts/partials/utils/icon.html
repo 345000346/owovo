@@ -11,8 +11,9 @@
         {{- warnf "Missing SVG icon %q on %q" $name $.RelPermalink -}}
     {{- else -}}
         {{- $class := printf "icon %s" $class -}}
-        {{- /* 仅精确替换占位 class="icon"；防止 SVG 数据中出现 "icon" 子串被误替换。 */ -}}
-        {{- $result = replace $icon `class="icon"` (printf `class="%s"` $class) | safeHTML -}}
+        {{- /* 仅精确替换占位 class="icon"；防止 SVG 数据中出现 "icon" 子串被误替换。
+               全站图标均为装饰性（可读文本在相邻节点或按钮 aria-label 上），统一隐藏。 */ -}}
+        {{- $result = replace $icon `class="icon"` (printf `class="%s" aria-hidden="true"` $class) | safeHTML -}}
     {{- end -}}
 {{- end -}}
 {{- return $result -}}

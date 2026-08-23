@@ -44,7 +44,8 @@
 }
 
 .post-body .about-social-card:focus-visible {
-  outline: 2px solid functions.alpha(var(--color-primary), 0.5);
+  // 与全局焦点环同色同宽（半透明描边在明暗两态均偏弱），仅保留更大外扩间距。
+  outline: 2px solid var(--color-primary);
   outline-offset: 4px;
 }
 

@@ -5,7 +5,7 @@
             {{- range .THead }}
                 <tr>
                     {{- range . }}
-                        <th{{ with .Alignment }} style="text-align: {{ . }}"{{ end }}>{{ .Text }}</th>
+                        <th scope="col"{{ with .Alignment }} style="text-align: {{ . }}"{{ end }}>{{ .Text }}</th>
                     {{- end }}
                 </tr>
             {{- end }}
