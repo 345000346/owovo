@@ -8,4 +8,14 @@
         <summary class="contents-title">目录</summary>
         {{- $toc | safeHTML -}}
     </details>
+    {{- /* 折叠默认态与断点在首帧前对齐：窄屏移除 open，避免移动端冷加载「展开→收起」闪烁
+           （断点读同一 CSS 变量，与 article.js 的运行时折叠同源）。 */ -}}
+    <script>
+        (function () {
+            var d = document.currentScript.previousElementSibling;
+            if (!d || d.tagName !== "DETAILS") return;
+            var bp = getComputedStyle(document.documentElement).getPropertyValue("--toc-side-breakpoint").trim() || "68em";
+            if (!window.matchMedia("(min-width: " + bp + ")").matches) d.removeAttribute("open");
+        })();
+    </script>
 {{- end -}}

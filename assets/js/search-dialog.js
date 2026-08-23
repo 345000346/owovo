@@ -151,6 +151,7 @@ function initSearchDialog() {
     return uiPromise;
   }
 
+  let opener = null;
   function openDialog() {
     document.dispatchEvent(new CustomEvent("site:close-navigation"));
     if (location.hash !== "#search") {
@@ -160,6 +161,11 @@ function initSearchDialog() {
       history.replaceState(null, "", `${pathname}${search}#search`);
     }
     if (!dialog.open) {
+      const current = document.activeElement;
+      opener =
+        current instanceof HTMLElement && current !== document.body
+          ? current
+          : null;
       dialog.showModal();
     }
 
@@ -212,6 +218,10 @@ function initSearchDialog() {
 
   dialog.addEventListener("close", () => {
     clearSearchHash();
+    // 原生关闭后焦点可能落回 body，显式归还到触发元素供键盘用户继续操作。
+    if (opener && document.activeElement === document.body) {
+      opener.focus();
+    }
   });
 
   document.addEventListener("keydown", (event) => {
@@ -236,6 +246,8 @@ function initSearchDialog() {
   }
   window.addEventListener("hashchange", (event) => {
     if (location.hash !== "#search") {
+      // 后退/前进离开 #search 时模态随 URL 同步关闭；close 触发上方监听完成清理。
+      if (dialog.open) dialog.close();
       return;
     }
     // 记录 hashchange 打开前（如手改地址为 /#search）的真实锚点。

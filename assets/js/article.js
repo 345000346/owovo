@@ -223,6 +223,8 @@ function initTocSpy() {
     }
   }
   window.addEventListener("scroll", scheduleTocUi, { passive: true });
+  // 旋转/分屏改变视口后，高亮判定线与底部淡出不依赖下一次滚动。
+  window.addEventListener("resize", scheduleTocUi, { passive: true });
 
   updateTocUi();
 }
