@@ -1,4 +1,11 @@
 <!doctype html>
+<!--
+  我们的纪念册（独立静态项目，仅随仓库 static/ 原样发布，不走 Hugo 模板）。
+  与 scripts/smoke-public.mjs 全站 HTML 扫描存在隐性契约，改动时请保持：
+    - <h1> 与 body 上的 data-pagefind-ignore 必须保留
+    - 不得引入 Pagefind 正文标记、修改日期元数据，或协议过滤占位符字样
+  页面文案与时间线数据见 love/ 目录（data.js 为时间线数据源）。
+-->
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
@@ -11,6 +18,7 @@
       name="robots"
       content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai"
     />
+    <meta name="theme-color" content="#140e10" />
     <meta
       name="googlebot"
       content="noindex, nofollow, noarchive, nosnippet, noimageindex"
@@ -20,6 +28,11 @@
       content="noindex, nofollow, noarchive, nosnippet, noimageindex"
     />
     <title>我们的纪念册</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='24'%20fill='%23140e10'/%3E%3Cpath%20d='M50%2074c-18-14-30-24-30-38%200-9%207-16%2016-16%206%200%2011%203%2014%208%203-5%208-8%2014-8%209%200%2016%207%2016%2016%200%2014-12%2024-30%2038z'%20fill='%23d9a59c'/%3E%3C/svg%3E"
+    />
+    <link rel="apple-touch-icon" href="/love/apple-touch-icon.png" />
     <link
       rel="preload"
       as="font"
@@ -48,7 +61,8 @@
           </p>
           <h1 class="cover-title" id="coverTitle">我们的纪念册</h1>
           <p class="cover-subtitle">
-            把喜欢过成日常，把日常写成值得回看的纪念。
+            把喜欢过成日常，把日常写成<span class="subtitle-break"><br /></span
+            >值得回看的纪念。
           </p>
 
           <div class="cover-timer" aria-labelledby="loveTimerLabel">
@@ -101,7 +115,7 @@
       </nav>
 
       <section class="section letter" id="letter" aria-labelledby="letterTitle">
-        <div class="section-inner intro-layout" data-mount="letter">
+        <div class="section-inner intro-layout">
           <header class="section-head">
             <p class="section-index">扉页</p>
             <h2 id="letterTitle">写在最前面的几句话</h2>
@@ -125,16 +139,54 @@
       </section>
 
       <section class="section themes" id="themes" aria-labelledby="themesTitle">
-        <div class="section-inner" data-mount="themes">
+        <div class="section-inner">
           <header class="section-head section-head--center">
             <p class="section-index">相处章节</p>
-            <h2 id="themesTitle">把爱拆开来看，原来每一页都很具体</h2>
+            <h2 id="themesTitle">
+              把爱拆开来看，<span class="heading-break"><br /></span
+              >原来每一页都很具体
+            </h2>
             <p class="section-lead">
               不是所有温柔都需要惊天动地，很多时候，爱只是刚好懂你，也刚好想陪你久一点。
             </p>
           </header>
-          <div class="theme-list" data-theme-list>
-            <!-- enhanced by love.js -->
+          <div class="theme-list">
+            <article class="theme-piece">
+              <p class="theme-order" aria-hidden="true">01</p>
+              <div class="theme-copy">
+                <h3>默契与了解</h3>
+                <p>
+                  我们俩能互相 get 到对方的点，大概是因为我足够了解你，你也足够了解我。
+                </p>
+                <p>
+                  有些情绪不用解释太多，一个眼神、一句玩笑、一个停顿，彼此就已经懂了。
+                </p>
+              </div>
+            </article>
+            <article class="theme-piece">
+              <p class="theme-order" aria-hidden="true">02</p>
+              <div class="theme-copy">
+                <h3>陪伴与幸福</h3>
+                <p>
+                  我愿意和你一起“幼稚”，也愿意和你一起玩到老；有你陪伴的日子，即使平淡，也觉得浪漫。
+                </p>
+                <p>
+                  深情不及久伴，厚爱无需多言。一路走来有苦有甜、有吵有闹，但想到身边一直是你，心里就很安稳。
+                </p>
+              </div>
+            </article>
+            <article class="theme-piece">
+              <p class="theme-order" aria-hidden="true">03</p>
+              <div class="theme-copy">
+                <h3>分享与未来</h3>
+                <p>
+                  我想和你分享各种无关紧要的小事，因为世界很大，能遇见一个愿意认真听你说话的人，真的很难得。
+                </p>
+                <p>
+                  我也想和你去更多美好的地方，以爱之名看遍万水千山，未来的每一天都一起慢慢过。
+                </p>
+              </div>
+            </article>
           </div>
         </div>
       </section>
@@ -147,7 +199,10 @@
         <div class="section-inner">
           <header class="section-head section-head--center">
             <p class="section-index">纪念节点</p>
-            <h2 id="chronicleTitle">那些值得一遍遍回看的日子</h2>
+            <h2 id="chronicleTitle">
+              那些值得一遍遍<span class="heading-break"><br /></span
+              >回看的日子
+            </h2>
             <p class="section-lead">
               有些日期因为发生在日历上而被记住，有些日期因为发生在我们之间，而变得格外重要。
             </p>
@@ -169,7 +224,7 @@
         id="epilogue"
         aria-labelledby="epilogueTitle"
       >
-        <div class="section-inner epilogue-inner" data-mount="epilogue">
+        <div class="section-inner epilogue-inner">
           <p class="section-index">尾页</p>
           <h2 id="epilogueTitle">写给以后</h2>
           <p>
@@ -178,7 +233,13 @@
           <p>
             愿这个计时器一直走下去，也愿我们把往后的每一天，都继续过成值得珍藏的纪念。
           </p>
+          <p>
+            这本纪念册还没有写完——等新的日子到来，我们会回来，把更多值得记住的瞬间，继续写进这里。
+          </p>
           <p class="epilogue-endmark" aria-hidden="true">未完待续</p>
+          <p class="back-to-cover-wrap">
+            <a class="back-to-cover" href="#top">回到封面</a>
+          </p>
         </div>
       </section>
     </main>

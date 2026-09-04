@@ -1,3 +1,10 @@
+/**
+ * 纪念册交互：相爱计时器、时间线渲染、滚动揭示、目录高亮。
+ * 独立于 Hugo 的静态项目，仅随仓库 static/ 原样发布。
+ * 与 scripts/smoke-public.mjs 的隐性契约（全站 HTML 扫描会覆盖本页）：
+ *   - <h1> 与 data-pagefind-ignore 必须保留
+ *   - 不得引入 Pagefind 正文标记、修改日期元数据，或协议过滤占位符字样
+ */
 import { love } from "./data.js";
 
 (() => {
@@ -187,39 +194,6 @@ import { love } from "./data.js";
     timerIntervalId = 0;
   }
 
-  function renderThemes() {
-    const list = document.querySelector("[data-theme-list]");
-    if (!list || !love.themes?.items?.length) return;
-
-    const fragment = document.createDocumentFragment();
-    love.themes.items.forEach((item) => {
-      const article = document.createElement("article");
-      article.className = "theme-piece";
-
-      const order = document.createElement("p");
-      order.className = "theme-order";
-      order.textContent = item.order;
-
-      const copy = document.createElement("div");
-      copy.className = "theme-copy";
-
-      const title = document.createElement("h3");
-      title.textContent = item.title;
-      copy.append(title);
-
-      (item.paragraphs || []).forEach((text) => {
-        const p = document.createElement("p");
-        p.textContent = text;
-        copy.append(p);
-      });
-
-      article.append(order, copy);
-      fragment.append(article);
-    });
-
-    list.replaceChildren(fragment);
-  }
-
   function renderTimeline() {
     const timeline = document.querySelector("[data-timeline]");
     if (!timeline || !love.chronicle?.events?.length || !isValidDate(startDate))
@@ -380,7 +354,16 @@ import { love } from "./data.js";
     };
 
     sync();
-    window.addEventListener("scroll", sync, { passive: true });
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        sync();
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", sync);
     window.addEventListener("hashchange", sync);
     document.querySelector(".toc")?.addEventListener("click", (event) => {
@@ -394,7 +377,6 @@ import { love } from "./data.js";
 
   function init() {
     syncLoveStartDisplay();
-    renderThemes();
     renderTimeline();
     setupTimer();
     setupRevealAnimations();
