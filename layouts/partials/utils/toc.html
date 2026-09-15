@@ -12,7 +12,9 @@
            （断点读同一 CSS 变量，与 article.js 的运行时折叠同源）。 */ -}}
     <script>
         (function () {
-            var d = document.currentScript.previousElementSibling;
+            var s = document.currentScript;
+            if (!s) return;
+            var d = s.previousElementSibling;
             if (!d || d.tagName !== "DETAILS") return;
             var bp = getComputedStyle(document.documentElement).getPropertyValue("--toc-side-breakpoint").trim() || "68em";
             if (!window.matchMedia("(min-width: " + bp + ")").matches) d.removeAttribute("open");

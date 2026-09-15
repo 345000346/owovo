@@ -1,8 +1,6 @@
 {{/* 页面标题：返回 dict rawTitle / title（带站点名）/ htmlTitle。调用方 dict "$" page "title" ... */}}
 {{- $ := index . "$" -}}
 
-{{- $path := .Path -}}
-
 {{- $htmlTitle := .title -}}
 {{- if eq $.Kind "home" -}}
     {{- $htmlTitle = $htmlTitle | default $.Site.Title -}}
@@ -10,11 +8,9 @@
     {{- $taxonomyTitle := cond (eq $.Data.Plural "tags") "标签" ($.Type | title) -}}
     {{- $htmlTitle = $taxonomyTitle -}}
 {{- else if eq $.Kind "term" -}}
-    {{- $taxonomyTermTitle := $htmlTitle | default $.Data.Term | default (delimit (last 1 (split (strings.TrimSuffix "/_index.md" $path) "/")) " ") -}}
+    {{- $taxonomyTermTitle := $htmlTitle | default $.Data.Term -}}
     {{- $taxonomyTitle := cond (eq $.Data.Plural "tags") "标签" ($.Type | title) -}}
     {{- $htmlTitle = printf "%s：%s" $taxonomyTitle $taxonomyTermTitle -}}
-{{- else if eq $.Kind "section" -}}
-    {{- $htmlTitle = $htmlTitle | default (delimit (last 1 (split (strings.TrimSuffix "/_index.md" $path) "/")) " ") -}}
 {{- else if eq $.Kind "404" -}}
     {{- $htmlTitle = "页面不存在" -}}
 {{- end -}}
