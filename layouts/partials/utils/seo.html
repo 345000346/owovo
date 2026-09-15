@@ -72,8 +72,8 @@
     <meta property="og:type" content="website" />
 {{- end }}
 
-{{- /* Twitter Cards */ -}}
-{{- with $images -}}
+{{- /* Twitter Cards：仅页级 images 视为大图；站点 logo 兜底（头像）用 summary。 */ -}}
+{{- if $.Params.images -}}
     <meta name="twitter:card" content="summary_large_image" />
 {{- else -}}
     <meta name="twitter:card" content="summary" />
