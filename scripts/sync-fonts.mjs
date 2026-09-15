@@ -153,7 +153,11 @@ async function main() {
 
   const sourceCodeCss = SOURCE_CODE_FILES
     .map((file) => {
-      const [, weight, style] = file.match(/-(400|700)-(normal|italic)\.woff2$/);
+      const parts = file.match(/-(400|700)-(normal|italic)\.woff2$/);
+      if (!parts) {
+        throw new Error(`sync-fonts: 无法解析 Source Code Pro 文件名 ${file}`);
+      }
+      const [, weight, style] = parts;
       return `@font-face {
   font-family: "Source Code Pro";
   font-style: ${style};
