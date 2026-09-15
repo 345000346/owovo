@@ -46,7 +46,8 @@
   --chroma-literal-color: #f1fa8c;
   --chroma-number-color: #bd93f9;
   --chroma-comment-color: #8b9cd8;
-  --chroma-deleted-color: #8b080b;
+  // 删除行是前景色（dracula 原值 #8b080b 是背景色）；回归 dracula 前景红，对代码底 ≈5.1:1。
+  --chroma-deleted-color: #ff5555;
   --chroma-output-color: #c8cad4;
 }
 

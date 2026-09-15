@@ -231,13 +231,13 @@ a {
 
 // 打印：固定定位界面构件不进纸面，避免渐变顶栏逐页重复。
 @media print {
-    .header,
-    .nav-curtain,
-    #reading-progress,
-    #back-to-top,
-    .copy-button,
-    .search-dialog,
-    .contents {
-        display: none !important;
-    }
+  .header,
+  .nav-curtain,
+  #reading-progress,
+  #back-to-top,
+  .copy-button,
+  .search-dialog,
+  .contents {
+    display: none !important;
+  }
 }

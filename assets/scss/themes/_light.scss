@@ -34,7 +34,8 @@
   --chroma-literal-color: #cc3300;
   --chroma-number-color: #b35000;
   --chroma-comment-color: #0066aa;
-  --chroma-deleted-color: #ffcccc;
+  // 删除行是前景色（manni 原值 #ffcccc 是背景色，不能直接当前景用）；#cc0000 对代码底 ≈5.6:1。
+  --chroma-deleted-color: #cc0000;
   --chroma-output-color: #707070;
 }
 
