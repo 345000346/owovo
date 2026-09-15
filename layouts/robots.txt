@@ -1,9 +1,12 @@
-{{/* production: Allow + Sitemap；否则 Disallow。build:site 须 --environment production。 */}}
+{{- /* production: Allow + Sitemap；否则 Disallow。build:site 须 --environment production。 */ -}}
 User-agent: *
 {{- if ne hugo.Environment "production" }}
 Disallow: /
 {{- else }}
 Allow: /
+# 纪念册（static/love.html 与 /love/）：直接访问不受限，但不供搜索引擎与 AI 爬虫收录。
+Disallow: /love.html
+Disallow: /love/
 {{- end }}
 
 Sitemap: {{ "sitemap.xml" | absURL }}

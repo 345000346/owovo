@@ -185,8 +185,13 @@ async function main() {
   // robots.txt（production：Allow + Sitemap 主机）
   const robots = await readPublic("robots.txt");
   assert(
-    /Allow:\s*\//.test(robots) && !/Disallow:\s*\//.test(robots),
-    "robots.txt must Allow: / in production builds (got Disallow or missing Allow)",
+    /^\s*Allow:\s*\/\s*$/m.test(robots) &&
+      !/^\s*Disallow:\s*\/\s*$/m.test(robots),
+    "robots.txt must Allow: / in production builds (got whole-site Disallow or missing Allow)",
+  );
+  assert(
+    /^\s*Disallow:\s*\/love(\.html|\/)\s*$/m.test(robots),
+    "robots.txt must Disallow /love.html and /love/ (memorial page stays out of search & AI indexes)",
   );
   assert(
     robots.includes(`Sitemap: ${siteHost}/sitemap.xml`),
