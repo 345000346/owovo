@@ -153,7 +153,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 | 权威文章列表 | `/archives/`   | `content/archives.md` + `type: archives`；按年分组             |
 | 首页         | `/`            | 同一批文章，摘要 + 分页                                         |
 | 文章内容目录 | `content/post/` | 仅作为内容组织目录；不生成 `/post/` section 根页面            |
-| 关于         | `/about/`      | `layout: about`                                                 |
+| 关于         | `/about/`      | 通用单页（`type: page` + `toc: true`；无专壳）                   |
 | 普通页       | 如 `/ideas/`   | `type: page` → `layouts/_default/single.html`                   |
 | 搜索         | （无独立 URL） | 全站 Dialog，结果仅文章                                       |
 | 标签         | `/tags/`       | 唯一 taxonomy                                                   |
@@ -162,7 +162,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 
 - partial 字典传参：`{{ partial "utils/icon.html" (dict "$" . "name" "tag") }}`
 - 路径小写、连字符
-- 文章判断：`utils/is-post.html`；关于：按 `layout: about` 识别（无独立判断 partial）
+- 文章判断：`utils/is-post.html`；关于页无独立判断与专壳，按普通页（`type: page`）走 `_default/single.html`
 - 文章壳只在 `layouts/post/single.html`；归档壳在 `layouts/archives/single.html`；通用页不要复制文章壳
 - 404：只 `define "main"`，共用 `baseof`（有搜索 Dialog；无 `?hl=` loader）
 - 高亮 loader：`partials/components/search-highlight-loader.html`；仅文章页在 head 调用
@@ -177,7 +177,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 - 只用 `tags`
 - TOC 默认开；关闭写 `toc: false`
 - 转载：`source`（可选 `author`）；过时：`outdated` + 建议 `outdatedNote`
-- 关于页：`layout: about`（通常 `type: page`）
+- 关于页：`type: page` + `toc: true`（无专壳，走通用单页）
 - 图片放文章目录内引用（Hugo 可出响应式 WebP）
 - permalink：`/post/:slug/`
 
