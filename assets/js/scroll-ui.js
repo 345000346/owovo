@@ -2,7 +2,7 @@
 //
 // 契约：
 // - --header-height ← .header 计算高度（初始化 + resize + 字体就绪重算）
-// - #reading-progress：--progress（0–1）、aria-valuenow（0–100）
+// - #reading-progress：--progress（0–1）、aria-valuenow（0–100，仅整数变化时写入）
 // - #back-to-top：scrollY > 100 时加 .show
 // Concat：与 theme.js / navigation.js 同 module，顶层仅 initScrollUi。
 
@@ -47,6 +47,7 @@ function initScrollUi() {
   }
 
   let scheduled = false;
+  let lastProgressPercent = -1;
 
   function updateScrollUI() {
     scheduled = false;
@@ -59,10 +60,12 @@ function initScrollUi() {
       const progress =
         scrollHeight <= 0 ? 0 : Math.min(1, Math.max(0, scrollY / scrollHeight));
       progressBar.style.setProperty("--progress", String(progress));
-      progressBar.setAttribute(
-        "aria-valuenow",
-        String(Math.round(progress * 100)),
-      );
+      const percent = Math.round(progress * 100);
+      // aria-valuenow 只在整数变化时写入，避免每滚动帧重复 DOM 写。
+      if (percent !== lastProgressPercent) {
+        lastProgressPercent = percent;
+        progressBar.setAttribute("aria-valuenow", String(percent));
+      }
     }
 
     if (backToTop) {
