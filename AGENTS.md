@@ -13,7 +13,7 @@ npm run smoke             # 对 public/ 做构建后断言
 npm run build             # 生产全流程：site + search + smoke
 npm run sync:fonts        # Fontsource → static/fonts + assets/css/fonts.css + data/font_preload.json
 npm run sync:fonts:stats  # 同上并打印分片体积统计
-npm run preview           # 构建后启动 Pagefind 预览
+npm run preview           # 先构建 site + search 再 pagefind --serve 预览
 npm run hugo:env          # 打印本机 Hugo 环境
 ```
 
@@ -25,12 +25,13 @@ node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 
 
 注意：
 
-- `build:site` **必须**带 `--environment production`，以便 `layouts/robots.txt` 输出 `Allow: /` 与正确 `baseURL` Sitemap。
+- `build:site` **必须**带 `--environment production`，以便 `layouts/robots.txt` 输出 `Allow: /`、正确 `baseURL` Sitemap 以及纪念页 `Disallow: /love.html` 与 `/love/`（三项均由 smoke 断言）。
 - 若本机正在跑 `hugo server`，勿与 `build` 共用被污染的 `public/`（server 会写入 livereload）；构建前先停 server。
+- Windows / PowerShell：`build:search` 会向 stderr 打印 `Pagefind doesn't support stemming for the language zh-cn.`，可能令 npm/PS 管道伪报 `NativeCommandError` 或 exit 1；属已知噪音，最终以 `npm run smoke` 输出 `ok` 为准。
 - **不使用 Prettier** 或其它自动格式化；缩进/换行遵守 `.editorconfig`，其余按「代码写法约定」手写。
 - **无** `cf:setup` / Cloudflare 一键脚本；Cloudflare 控制台配置不在仓库维护。
-- Node：`.node-version`（`>=24.18.0`，`package.json` `engines` 一致）
-- Hugo：**extended**，版本见 `.hugo-version`（当前 `0.164.0`）
+- Node：`.node-version` 为**精确 pin**（CI / 本地按文件安装）；`package.json` `engines` 为最低线地板，本地由 `.npmrc` engine-strict 强制。两处分工不同，勿视为"一致"
+- Hugo：**extended**，版本见 `.hugo-version`（CI 动态读取；勿把具体版本号写进本文档）
 - 字体在每次 `dev` / `build:site` 前由 `scripts/sync-fonts.mjs` 同步：依赖/源码未变化时按 `.fonts-manifest.json`（gitignore）比对跳过拷贝，`--force` 强制重拷
 
 ## 项目结构
@@ -79,7 +80,7 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 - **搜索**：构建后 `pagefind --site public`；UI 为全站 Dialog + Default UI，但索引范围仅为文章；文章正文使用 `data-pagefind-body`，其它 Hugo 页面在 `<body>` 使用 `data-pagefind-ignore`；**无**独立 `/search/` 页。
 - **RSS**：首页输出 `/rss.xml`；只收录 `Section == post` 的最近 20 篇摘要，`pubDate` 使用文章 `date`，不使用构建时钟或全文。
 - **section 输出**：`disableKinds: ["section"]` 全局关闭 section 列表页；当前内容模型只需要文章实体与普通归档页。将来新增 section 时，必须显式评估是否需要重新启用对应输出。
-- **CI/CD**：`main` 推送：`npm ci` → `build:site --panicOnWarning` → `build:search` → `smoke` → deploy Pages；PR 只构建不部署。**无** format 步骤。
+- **CI/CD**：`main` 推送：`npm ci` → `build:site --panicOnWarning` → `build:search` → `smoke` → deploy Pages；PR 只构建不部署，`workflow_dispatch` 亦可手动触发。**无** format 步骤。
 - **域名 / CDN**：`baseURL` + `static/CNAME` → `https://owovo.xyz`；Cloudflare 代理仅在外部控制台维护。**勿**把 `baseURL` 改成 `*.github.io`；站点不为 `/post/` 根配置兼容重定向，也不做 Cloudflare 301。
 
 ## 代码写法约定
@@ -191,7 +192,7 @@ npm run build
 
 `npm run dev` 仅启动 Hugo server，不会生成或更新 Pagefind 索引；需要验证搜索时使用 `npm run build` 或 `npm run preview`。
 
-`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流；校验跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 68em、导航关闭兜底 600ms ≥ 过渡时长）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
+`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 三级兜底；校验跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 68em、导航关闭兜底 600ms ≥ 过渡时长）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
 
 模板改动建议：
 
