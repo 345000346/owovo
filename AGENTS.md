@@ -31,7 +31,7 @@ node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 
 - **无** `cf:setup` / Cloudflare 一键脚本；Cloudflare 控制台配置不在仓库维护。
 - Node：`.node-version`（`>=24.18.0`，`package.json` `engines` 一致）
 - Hugo：**extended**，版本见 `.hugo-version`（当前 `0.164.0`）
-- 字体在每次 `dev` / `build:site` 前由 `scripts/sync-fonts.mjs` 同步
+- 字体在每次 `dev` / `build:site` 前由 `scripts/sync-fonts.mjs` 同步：依赖/源码未变化时按 `.fonts-manifest.json`（gitignore）比对跳过拷贝，`--force` 强制重拷
 
 ## 项目结构
 
@@ -54,7 +54,7 @@ data/                     # Socials.toml、SVG.toml；font_preload.json 由 sync
 content/                  # 内容（文章、关于、想法、普通归档页等）
 static/                   # 原样发布；fonts/ 由构建生成
 scripts/
-  sync-fonts.mjs          # 字体全量分片 + latin/CJK 白名单 preload
+  sync-fonts.mjs          # 字体全量分片 + latin/CJK 白名单 preload（manifest 增量）
   smoke-public.mjs        # 构建后 public/ 断言
   normalize-frontmatter.mjs  # 维护：FM 字段序、lastmod/categories 清理与 toc 默认
 archetypes/default.md     # 新文章 front matter 模板

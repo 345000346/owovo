@@ -8,6 +8,7 @@
 /assets/css/fonts.css
 /data/font_preload.json
 /.fonts-staging/
+/.fonts-manifest.json
 
 # 依赖与本地密钥
 node_modules/
