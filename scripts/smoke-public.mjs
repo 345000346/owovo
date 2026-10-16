@@ -463,6 +463,11 @@ async function main() {
       postHtml.includes("data-pagefind-body"),
       `post page missing data-pagefind-body: ${postRel}`,
     );
+    // og:image 三级兜底（页级 images / 文章 bundle 首图 / siteLogo）必须至少落一级。
+    assert(
+      /property="?og:image"?/.test(postHtml),
+      `post page missing og:image: ${postRel}`,
+    );
     // minify 可能去掉 rel 引号
     assert(
       /rel="?external noopener noreferrer"?/.test(postHtml) ||

@@ -15,12 +15,22 @@
     {{- $pubDate = dateFormat "2006-01-02T15:04:05-07:00" $.Date -}}
 {{- end -}}
 
+{{- /* OG/Twitter 图优先级：页级 images → 文章 bundle 首图 → 站点 logo 兜底（头像）。 */ -}}
 {{- $images := slice -}}
-{{- with $.Params.images -}}
+{{- $hasContentImage := false -}}
+{{- if $.Params.images -}}
     {{- range . -}}
         {{- $images = $images | append (. | absURL) -}}
     {{- end -}}
-{{- else -}}
+{{- else if $isPost -}}
+    {{- with $.Resources.ByType "image" -}}
+        {{- with index . 0 -}}
+            {{- $images = slice .Permalink -}}
+            {{- $hasContentImage = true -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+{{- if not $images -}}
     {{- with $.Site.Params.siteLogo -}}
         {{- $images = slice (. | absURL) -}}
     {{- end -}}
@@ -72,8 +82,8 @@
     <meta property="og:type" content="website" />
 {{- end }}
 
-{{- /* Twitter Cards：仅页级 images 视为大图；站点 logo 兜底（头像）用 summary。 */ -}}
-{{- if $.Params.images -}}
+{{- /* Twitter Cards：页级 images 或文章正文首图视为大图；站点 logo 兜底（头像）用 summary。 */ -}}
+{{- if or $.Params.images $hasContentImage -}}
     <meta name="twitter:card" content="summary_large_image" />
 {{- else -}}
     <meta name="twitter:card" content="summary" />

@@ -73,7 +73,7 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
   - **Concat 作用域**：三文件拼成**同一个** `type="module"`，顶层 `const` / `function` **共用作用域**。标识符必须在三文件间**全局唯一**（禁止两个文件都导出顶层 `init` / 同名 helper）。实现尽量收进各自 `init…()` 内部。
   - **独立模块**（各一请求）：`search-dialog.js`（全站）；`article.js`（文章页，以及 `toc: true` 的普通页）；`search-highlight.js`（仅 `?hl=`，由 loader 注入）。
   - FOUC 内联脚本在 `layouts/partials/head.html`，与 `theme.js` 契约必须同步（见 `theme.js` 文件头）；同时给 `<html>` 标记 `.js`，移动导航只在该标记存在时折叠。
-  - SEO：`partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）。
+  - SEO：`partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）；OG/Twitter 图优先级：页级 `images` → 文章 bundle 首图 → `siteLogo` 兜底（头像）。
   - taxonomy **仅** `tags`。
 - **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 拷贝官方 index **全部分片**（不做站点用字扫描）。`data/font_preload.json` = latin + 固定 CJK 白名单（缺文件则跳过）；其余 CJK 靠 `unicode-range`。调试：`npm run sync:fonts:stats`。
 - **搜索**：构建后 `pagefind --site public`；UI 为全站 Dialog + Default UI，但索引范围仅为文章；文章正文使用 `data-pagefind-body`，其它 Hugo 页面在 `<body>` 使用 `data-pagefind-ignore`；**无**独立 `/search/` 页。
