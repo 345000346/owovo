@@ -1,5 +1,5 @@
 // 全站搜索 Dialog + 懒加载 Pagefind UI。
-// 打开：[data-search-trigger]、Ctrl/Cmd+K、/、#search。
+// 打开：[data-search-trigger]、Ctrl/Cmd+K、/、#search（repeat 自动重放被忽略）。
 //
 // 契约：#search-dialog、#search-dialog-config 的 data-pagefind-*；
 // 结果加 ?hl=；打开时派发 site:close-navigation；路径只放 data-*（防 --minify）。
@@ -225,6 +225,10 @@ function initSearchDialog() {
   });
 
   document.addEventListener("keydown", (event) => {
+    // 组合键/斜杠按住的自动 repeat 会反复重开 Dialog：一次性动作，忽略 repeat。
+    if (event.repeat) {
+      return;
+    }
     const target = event.target;
     const isTyping =
       target instanceof HTMLElement &&
