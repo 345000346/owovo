@@ -3,6 +3,8 @@
 // 契约：.nav-toggle / .header / .nav-curtain / .nav；
 // --max-width 与 _responsive.scss $maxWidth 同步；关闭兜底 ≥ $duration（0.5s）；
 // 监听 site:close-navigation（搜索打开时关菜单）。
+// 背景遮蔽只写 inert + aria-hidden（3 处固定元素）：inert 自 2022 起已包含
+// 移出 Tab 序与 AT 可达性语义，不再逐元素记账 tabindex。
 // Concat：与 theme.js / scroll-ui.js 同 module，顶层仅常量 + initNavigation。
 
 const NAV_FOCUSABLE_SELECTOR =
@@ -21,7 +23,6 @@ function initNavigation() {
   let closeTimer = 0;
   let restoreFocusOnClose = false;
   let lockedScrollY = 0;
-  const backgroundTabIndexes = new Map();
 
   const maxWidthRaw = window
     .getComputedStyle(document.documentElement, null)
@@ -122,32 +123,13 @@ function initNavigation() {
   }
 
   function setBackgroundInert(inert) {
+    // inert 已隐含移出 Tab 序与可聚焦性；aria-hidden 是旧 AT 的兜底。
+    // 键盘对不支持 inert 的旧浏览器的兜底由幕布（tabindex 0，点击即关）承接。
     const background = document.querySelectorAll("main, footer, #back-to-top");
     background.forEach((element) => {
       element.inert = inert;
       element.setAttribute("aria-hidden", String(inert));
-      if (inert) {
-        element.querySelectorAll(NAV_FOCUSABLE_SELECTOR).forEach((focusable) => {
-          if (!backgroundTabIndexes.has(focusable)) {
-            backgroundTabIndexes.set(
-              focusable,
-              focusable.getAttribute("tabindex"),
-            );
-          }
-          focusable.setAttribute("tabindex", "-1");
-        });
-      }
     });
-    if (!inert) {
-      backgroundTabIndexes.forEach((originalTabIndex, focusable) => {
-        if (originalTabIndex === null) {
-          focusable.removeAttribute("tabindex");
-        } else {
-          focusable.setAttribute("tabindex", originalTabIndex);
-        }
-      });
-      backgroundTabIndexes.clear();
-    }
   }
 
   function getFocusableElements() {
