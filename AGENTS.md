@@ -89,7 +89,7 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 
 - UTF-8、LF、文件末换行（`.editorconfig`）。
 - JS / SCSS / YAML / `scripts`：2 空格；`layouts/**`：4 空格。
-- 提交信息用中文，按变更类型拆分。
+- 提交信息：`type(scope): 一句话摘要` + 空行 + 正文；摘要与正文都用简单直白的中文说清楚改了什么、为什么改；按变更类型拆分提交。
 - 不引入 Prettier / 自动整库 format；不引入前端打包器或 TypeScript（除非另有明确决策）。
 
 ### JavaScript（`assets/js`）
