@@ -1,6 +1,7 @@
 {
   "name": "owovo-blog",
   "version": "1.0.0",
+  "private": true,
   "description": "Personal blog powered by Hugo",
   "scripts": {
     "sync:fonts": "node scripts/sync-fonts.mjs",
