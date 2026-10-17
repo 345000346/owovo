@@ -3,11 +3,15 @@
 // 契约：
 // - --header-height ← .header 计算高度（初始化 + resize + 字体就绪重算）
 // - #reading-progress：--progress（0–1）、aria-valuenow（0–100，仅整数变化时写入）
+// - resize 同时重算进度（视口变化改变 scrollHeight 分母），不依赖下一次滚动
 // - #back-to-top：scrollY > 100 时加 .show
 // Concat：与 theme.js / navigation.js 同 module，顶层仅 initScrollUi。
 
 function initScrollUi() {
   const headerEl = document.querySelector(".header");
+  const progressBar = document.querySelector("#reading-progress");
+  const backToTop = document.getElementById("back-to-top");
+  const hasScrollUi = Boolean(progressBar || backToTop);
 
   function updateHeaderHeight() {
     if (!headerEl) {
@@ -24,7 +28,8 @@ function initScrollUi() {
 
   updateHeaderHeight();
 
-  // 字体异步加载与窗口缩放后重算 --header-height（锚点 scroll-margin 依赖）。
+  // 字体异步加载与窗口缩放后重算 --header-height（锚点 scroll-margin 依赖）；
+  // 视口尺寸变化也会改变进度分母（scrollHeight），一并重算避免比例失真。
   let resizeScheduled = false;
   window.addEventListener("resize", () => {
     if (resizeScheduled) {
@@ -34,15 +39,16 @@ function initScrollUi() {
     requestAnimationFrame(() => {
       resizeScheduled = false;
       updateHeaderHeight();
+      if (hasScrollUi) {
+        updateScrollUI();
+      }
     });
   });
   if (document.fonts && typeof document.fonts.ready === "object") {
     document.fonts.ready.then(updateHeaderHeight).catch(() => {});
   }
 
-  const progressBar = document.querySelector("#reading-progress");
-  const backToTop = document.getElementById("back-to-top");
-  if (!progressBar && !backToTop) {
+  if (!hasScrollUi) {
     return;
   }
 
