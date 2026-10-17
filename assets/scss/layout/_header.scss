@@ -3,6 +3,14 @@
 @use "../utils/mixins";
 @use "../utils/variables";
 
+/* 品牌字号（px）与品牌盒高；$brandMinHeight 与 .brand 的 min-height 同源 */
+$brandFontSize: variables.$fontSize *
+  functions.strip-unit(variables.$siteBrandFontSize);
+/* 品牌一行文字的高度 */
+$brandHeight: $brandFontSize * functions.strip-unit(variables.$lineHeightBase);
+/* .brand min-height：2.75 倍品牌字号 */
+$brandMinHeight: $brandFontSize * 2.75;
+
 // 层叠契约（全局有效值）：search-dialog 走原生 top layer > #reading-progress 4 >
 // .header 3 { .header-wrapper 2 > .nav-curtain/.back-to-top 1、.nav-toggle 3 }；
 // .skip-link 1000 为可访问性置顶例外。
@@ -44,7 +52,7 @@
 .brand {
   display: inline-flex;
   align-items: center;
-  min-height: 2.75em;
+  min-height: $brandMinHeight;
   font-size: variables.$siteBrandFontSize;
   color: variables.$siteBrandFontColor;
   text-decoration: none;
@@ -53,16 +61,12 @@
   }
 }
 
-/* variables.$siteBrandFontSize * {body line-height} */
-$brandHeight: variables.$fontSize *
-  functions.strip-unit(variables.$siteBrandFontSize) *
-  functions.strip-unit(variables.$lineHeightBase);
-
 :root {
   /* 近似高度；运行时 scroll-ui 再写实测值 */
   --header-height: calc(
     max(
-        /* 品牌 */ #{$brandHeight},
+        /* 品牌文字行高 */ #{$brandHeight},
+        /* 品牌 min-height */ #{$brandMinHeight},
         /* 菜单 */ #{variables.$fontSize * 0.8 * 1.5}
           /* {.nav font-size} * {.menu line-height} */
       )
