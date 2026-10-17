@@ -167,11 +167,12 @@ function initTocSpy() {
   let activeLink = null;
 
   function updateActive() {
-    // 判定线：--header-height（scroll-ui 维护）+ 少量余量。
+    // 判定线：--header-height（scroll-ui 维护）+ 少量余量。优先读根节点
+    // inline 写入值，避免每滚动帧触发样式解析；未写入时回退 computed style。
+    const root = document.documentElement;
     const headerHeight = parseFloat(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--header-height",
-      ),
+      root.style.getPropertyValue("--header-height") ||
+        getComputedStyle(root).getPropertyValue("--header-height"),
     );
     const threshold =
       (Number.isFinite(headerHeight) ? headerHeight : 0) + 12;
