@@ -174,7 +174,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 
 - 路径：`content/post/<slug>/index.md`
 - slug：全小写 kebab-case（与目录名一致）
-- 日期只使用 front matter 的 `date`；不使用 `lastmod`、`.Lastmod` 或自动生成的修改日期
+- 日期只使用 front matter 的 `date`；不使用 `lastmod`、`.Lastmod` 或自动生成的修改日期（HTML 侧由 smoke 断言；例外：`sitemap.xml` 由 Hugo 默认模板输出 `<lastmod>`，值即 `date`，为爬虫调度保留，勿当修改日期回流处理）
 - 只用 `tags`
 - TOC 默认开；关闭写 `toc: false`
 - 转载：`source`（可选 `author`）；过时：`outdated` + 建议 `outdatedNote`
