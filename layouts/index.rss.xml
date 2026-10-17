@@ -1,6 +1,6 @@
 {{/* 首页 RSS：仅文章摘要；输出 /rss.xml（outputFormats.RSS.baseName）。 */}}
 {{ `<?xml version="1.0" encoding="utf-8"?>` | safeHTML }}
-{{- $pages := where .Site.RegularPages "Section" "eq" "post" -}}
+{{- $pages := partial "utils/post-pages.html" . -}}
 {{- $limit := .Site.Config.Services.RSS.Limit -}}
 {{- if ge $limit 1 -}}
     {{- $pages = $pages | first $limit -}}

@@ -1,0 +1,2 @@
+{{- /* 文章集合：Section==post 的常规页，显式按日期倒序（首页 / 归档 / RSS / 404 共用单源）。 */ -}}
+{{- return (where .Site.RegularPages "Section" "eq" "post").ByDate.Reverse -}}
