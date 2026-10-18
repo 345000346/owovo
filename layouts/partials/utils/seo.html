@@ -105,9 +105,6 @@
     {{- with $images -}}
         {{- $ld = merge $ld (dict "image" (index . 0)) -}}
     {{- end -}}
-    {{- if $hasPerson -}}
-        {{- $ld = merge $ld (dict "author" $person) -}}
-    {{- end -}}
 {{- else if $isPost -}}
     {{- $ld = merge $ld (dict
         "@type" "BlogPosting"
@@ -120,12 +117,6 @@
         "publisher" $publisher
         "mainEntityOfPage" (dict "@type" "WebPage" "@id" $pageURL)
     ) -}}
-    {{- with $images -}}
-        {{- $ld = merge $ld (dict "image" .) -}}
-    {{- end -}}
-    {{- if $hasPerson -}}
-        {{- $ld = merge $ld (dict "author" $person) -}}
-    {{- end -}}
 {{- else -}}
     {{- $ld = merge $ld (dict
         "@type" "WebPage"
@@ -134,9 +125,13 @@
         "publisher" $publisher
         "mainEntityOfPage" (dict "@type" "WebPage" "@id" $pageURL)
     ) -}}
-    {{- with $images -}}
-        {{- $ld = merge $ld (dict "image" .) -}}
-    {{- end -}}
+{{- end -}}
+{{- /* 首页只取首图（单值）；文章与普通页输出全部图（数组）。 */ -}}
+{{- if and $images (not $.IsHome) -}}
+    {{- $ld = merge $ld (dict "image" $images) -}}
+{{- end -}}
+{{- if and $hasPerson (or $.IsHome $isPost) -}}
+    {{- $ld = merge $ld (dict "author" $person) -}}
 {{- end -}}
 {{- with $license -}}
     {{- $ld = merge $ld (dict "license" .) -}}
