@@ -4,16 +4,7 @@
         <div class="main-inner">
             <div class="content list-group">
                 <h1 class="list-title">{{ (partial "utils/title.html" (dict "$" . "title" .Title)).htmlTitle }}</h1>
-                {{ $pages := false }}
-                {{ if eq .Kind "term" }}
-                    {{ $pages = .Pages }}
-                {{ end }}
-                {{ with $pages }}
-                    {{ range .GroupByDate "2006" }}
-                        <h2 class="list-year">{{ .Key }}</h2>
-                        {{ partial "utils/list-item.html" . }}
-                    {{ end }}
-                {{ end }}
+                {{ partial "utils/year-grouped-list.html" (dict "pages" .Pages) }}
             </div>
         </div>
     </main>
