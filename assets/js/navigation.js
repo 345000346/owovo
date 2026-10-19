@@ -28,7 +28,7 @@ function initNavigation() {
     .getComputedStyle(document.documentElement, null)
     .getPropertyValue("--max-width")
     .trim();
-  // 与 _responsive.scss $maxWidth 同步（fontSize * (max(post,list)+5)）。
+  // 与 _responsive.scss $maxWidth 同步（fontSize * ($contentWidth + 5)）。
   const maxWidth = maxWidthRaw || "846px";
   const navMediaQuery = window.matchMedia(`(max-width: ${maxWidth})`);
 
@@ -210,7 +210,7 @@ function initNavigation() {
     });
   }
 
-  function closeNav(noFade = false, restoreFocus = false) {
+  function closeNav({ noFade = false, restoreFocus = false } = {}) {
     if (!isOpen() && !header.classList.contains("fade")) {
       return;
     }
@@ -232,7 +232,7 @@ function initNavigation() {
 
   function handleViewportChange(event) {
     if (!event.matches) {
-      closeNav(true);
+      closeNav({ noFade: true });
     }
     syncNavAvailability();
   }
@@ -244,7 +244,7 @@ function initNavigation() {
       return;
     }
     if (isOpen()) {
-      closeNav(false, true);
+      closeNav({ restoreFocus: true });
     } else {
       openNav(event.detail === 0);
     }
@@ -261,18 +261,18 @@ function initNavigation() {
   });
 
   navCurtain.addEventListener("click", () => {
-    closeNav(false, true);
+    closeNav({ restoreFocus: true });
   });
 
   document.addEventListener("site:close-navigation", () => {
     if (isOpen()) {
-      closeNav(true, false);
+      closeNav({ noFade: true });
     }
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && isOpen()) {
-      closeNav(false, true);
+      closeNav({ restoreFocus: true });
       return;
     }
 
