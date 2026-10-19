@@ -1,6 +1,6 @@
 // 主题偏好：light → dark → system。
 //
-// 与 layouts/partials/head.html 的 FOUC 契约（须同步）：
+// 与 layouts/_partials/head.html 的 FOUC 契约（须同步）：
 // - localStorage key: "theme"
 // - preference: "light" | "dark" | "system"（非法 → "system"）
 // - 解析后: "light" | "dark"（system → prefers-color-scheme）

@@ -41,12 +41,18 @@ config/_default/          # Hugo 配置
   hugo.yaml               # 站点、菜单、输出格式、安全策略等
   markup.yaml             # Goldmark、Chroma、TOC
   params.yaml             # 运营参数（作者、描述、主题色等）
-layouts/                  # 站点模板（已压平，无 themes/）
-  _default/               # baseof、list、single、terms + render hooks
+layouts/                  # 站点模板（Hugo 0.146+ 新模板系统；已压平，无 themes/）
+  baseof.html             # 全站壳
+  home.html               # 首页
+  home.rss.xml            # 首页 RSS（/rss.xml）
+  single.html             # 通用单页（type: page）
+  term.html               # 标签 term 列表
+  taxonomy.html           # 标签总览（词云）
+  _markup/                # render hooks
+  _partials/              # 组件与工具 partials
+  _shortcodes/            # 自定义 shortcodes
   post/                   # 文章 single
   archives/               # 文章归档普通页（type: archives）
-  partials/               # 组件与工具 partials
-  shortcodes/             # 自定义 shortcodes
 assets/
   js/                     # 见下文「JS 拆分与 Concat」
   scss/                   # Dart Sass：main.scss 入口；token 在 utils/_variables.scss
@@ -69,12 +75,12 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 - **单语（简体中文）**：无 i18n；UI 文案写在模板里。`defaultContentLanguage: zh-cn` 与 `locale` 用于 `lang` / SEO / Pagefind。
 - **配置最小化**：视觉进 SCSS；功能默认写死在模板；`params` 只留作者、描述、主题色等。`themeColor` / `themeColorDark` **必填**。
 - **Dart Sass**：`css.Sass`（`dartsass` + `sass-embedded`）；只允许 `@use` / `@forward`。
-- **JS 拆分与 Concat**（`layouts/partials/script.html`）：
+- **JS 拆分与 Concat**（`layouts/_partials/script.html`）：
   - **全站一包**：`theme.js` + `navigation.js` + `scroll-ui.js` → `resources.Concat` 为 `js/site.js` → Minify + Fingerprint（一个请求、源码分文件）。
   - **Concat 作用域**：三文件拼成**同一个** `type="module"`，顶层 `const` / `function` **共用作用域**。标识符必须在三文件间**全局唯一**（禁止两个文件都导出顶层 `init` / 同名 helper）。实现尽量收进各自 `init…()` 内部。
   - **独立模块**（各一请求）：`search-dialog.js`（全站）；`article.js`（文章页，以及 `toc: true` 的普通页）；`search-highlight.js`（仅 `?hl=`，由 loader 注入）。
-  - FOUC 内联脚本在 `layouts/partials/head.html`，与 `theme.js` 契约必须同步（见 `theme.js` 文件头）；同时给 `<html>` 标记 `.js`，移动导航只在该标记存在时折叠。
-  - SEO：`partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）；OG/Twitter 图优先级：页级 `images` → 文章 bundle 首图 → `siteLogo` 兜底（头像）。
+  - FOUC 内联脚本在 `layouts/_partials/head.html`，与 `theme.js` 契约必须同步（见 `theme.js` 文件头）；同时给 `<html>` 标记 `.js`，移动导航只在该标记存在时折叠。
+  - SEO：`_partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）；OG/Twitter 图优先级：页级 `images` → 文章 bundle 首图 → `siteLogo` 兜底（头像）。
   - taxonomy **仅** `tags`。
 - **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 拷贝官方 index **全部分片**（不做站点用字扫描）。`data/font_preload.json` = latin + 固定 CJK 白名单（缺文件则跳过）；其余 CJK 靠 `unicode-range`。调试：`npm run sync:fonts:stats`。
 - **搜索**：构建后 `pagefind --site public`；UI 为全站 Dialog + Default UI，但索引范围仅为文章；文章正文使用 `data-pagefind-body`，其它 Hugo 页面在 `<body>` 使用 `data-pagefind-ignore`；**无**独立 `/search/` 页。
@@ -155,7 +161,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 | 首页         | `/`            | 同一批文章，摘要 + 分页                                         |
 | 文章内容目录 | `content/post/` | 仅作为内容组织目录；不生成 `/post/` section 根页面            |
 | 关于         | `/about/`      | 通用单页（`type: page` + `toc: true`；无专壳）                   |
-| 普通页       | 如 `/ideas/`   | `type: page` → `layouts/_default/single.html`                   |
+| 普通页       | 如 `/ideas/`   | `type: page` → `layouts/single.html`                            |
 | 搜索         | （无独立 URL） | 全站 Dialog，结果仅文章                                       |
 | 标签         | `/tags/`       | 唯一 taxonomy                                                   |
 
@@ -163,10 +169,10 @@ draft: true           # 仅脚手架新建时；发布前删除
 
 - partial 字典传参：`{{ partial "utils/icon.html" (dict "$" . "name" "tag") }}`
 - 路径小写、连字符
-- 文章判断：`utils/is-post.html`；关于页无独立判断与专壳，按普通页（`type: page`）走 `_default/single.html`
+- 文章判断：`utils/is-post.html`；关于页无独立判断与专壳，按普通页（`type: page`）走 `layouts/single.html`
 - 文章壳只在 `layouts/post/single.html`；归档壳在 `layouts/archives/single.html`；通用页不要复制文章壳
 - 404：只 `define "main"`，共用 `baseof`（有搜索 Dialog；无 `?hl=` loader）
-- 高亮 loader：`partials/components/search-highlight-loader.html`；仅文章页在 head 调用
+- 高亮 loader：`_partials/components/search-highlight-loader.html`；仅文章页在 head 调用
 - 菜单搜索：`identifier: search`、`url: "#search"`、`data-search-trigger`；支持 `/#search` 与 hashchange
 - 不要新增 `/search/` 页或 `categories` taxonomy
 
