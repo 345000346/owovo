@@ -4,7 +4,6 @@
 <html lang="{{ .Site.Language.Locale }}">
     <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
         {{ partial "head.html" . }}
-        {{ block "head-extra" . }}{{ end }}
     </head>
     <body id="top"{{ if not $isPost }} data-pagefind-ignore{{ end }}>
         <a class="skip-link" href="#main">跳到正文</a>

@@ -1,12 +1,10 @@
-{{/* taxonomy 词链接列表。dict: "$" taxonomy terms class [delimiter] [icon]。 */}}
+{{/* taxonomy 词链接列表。dict: "$" taxonomy terms class [icon]。 */}}
 {{- $ := index . "$" -}}
 {{- $taxonomy := .taxonomy -}}
 {{- $terms := .terms -}}
 {{- $class := .class -}}
-{{- $delimiter := .delimiter | default "" -}}
 {{- $icon := .icon -}}
-{{- range $index, $term := $terms -}}
-    {{- if and $delimiter (ne $index 0) -}}{{- $delimiter -}}{{- end -}}
+{{- range $term := $terms -}}
     {{- $path := (urls.Parse ($term | urlize)).Path -}}
     {{- with $.Site.GetPage (printf `/%s/%s` $taxonomy $path) -}}
         <a href="{{- .RelPermalink -}}"{{ with $class }} class="{{ . }}"{{ end }}>{{ with $icon }}{{ partial "utils/icon.html" (dict "$" $ "name" . "class" "tag-icon") }}{{ end }}{{- .LinkTitle | default $path -}}</a>
