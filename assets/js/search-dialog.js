@@ -205,14 +205,12 @@ function initSearchDialog() {
   if (closeButton) {
     closeButton.addEventListener("click", () => {
       dialog.close();
-      clearSearchHash();
     });
   }
 
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) {
       dialog.close();
-      clearSearchHash();
     }
   });
 
