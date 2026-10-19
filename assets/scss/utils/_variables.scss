@@ -31,8 +31,8 @@ $fontFamilyBody: "Noto Serif SC", serif;
 
 // 宽度 / 断点 / 动效
 $tabSize: 4;
-$postWidth: 42em;
-$listWidth: 42em;
+// 正文/列表/顶栏共用内容宽；移动端切换阈值据此推导（base/_responsive.scss）。
+$contentWidth: 42em;
 $breakpoint-sm: 600px;
 $breakpoint-md: 900px;
 $breakpoint-about-sm: 700px;

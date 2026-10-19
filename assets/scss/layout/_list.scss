@@ -1,10 +1,6 @@
-// 列表页内容宽度与列表项。
+// 列表页列表项与分组标题（内容宽度见 base/_base.scss .main-inner）。
 @use "sass:math";
 @use "../utils/variables";
-
-.list .main-inner {
-  width: variables.$listWidth;
-}
 
 .list-title {
   text-align: center;

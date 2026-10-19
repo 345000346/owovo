@@ -2,14 +2,8 @@
 @use "../utils/functions";
 @use "../utils/variables";
 
-// 取文章/列表内容宽的较大者，再加 5em 作为「桌面 → 移动」切换阈值。
-$greaterWidth: null;
-@if variables.$postWidth > variables.$listWidth {
-  $greaterWidth: variables.$postWidth;
-} @else {
-  $greaterWidth: variables.$listWidth;
-}
-$maxWidth: variables.$fontSize * (functions.strip-unit($greaterWidth) + 5);
+// 内容宽再加 5em 作为「桌面 → 移动」切换阈值。
+$maxWidth: variables.$fontSize * (functions.strip-unit(variables.$contentWidth) + 5);
 
 :root {
   --max-width: #{$maxWidth};

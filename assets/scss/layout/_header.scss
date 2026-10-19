@@ -38,11 +38,7 @@ $brandMinHeight: $brandFontSize * 2.75;
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
-  max-width: variables.$postWidth;
-}
-
-.header-inner.list {
-  max-width: variables.$listWidth;
+  max-width: variables.$contentWidth;
 }
 
 .site-brand {

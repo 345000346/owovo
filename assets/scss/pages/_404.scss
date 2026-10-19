@@ -8,7 +8,7 @@
   justify-content: center;
 
   .main-inner {
-    width: min(variables.$postWidth, calc(100% - 2rem));
+    width: min(variables.$contentWidth, calc(100% - 2rem));
     text-align: center;
     margin: 0 auto;
     padding: 20vh 1rem;
