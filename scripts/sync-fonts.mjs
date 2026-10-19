@@ -162,7 +162,7 @@ function computePreloadFiles(faces) {
  * 拷贝全部 woff2 到暂存目录；全部成功后由调用方原子替换正式目录。
  * @param {string} stagingDirectory
  * @param {{ block: string, file: string, isLatin: boolean }[]} faces
- * @returns {Promise<{ faces: { block: string, file: string, isLatin: boolean }[], fileSizes: Map<string, number>, copiedBytes: number }>}
+ * @returns {Promise<{ fileSizes: Map<string, number>, copiedBytes: number }>}
  */
 async function stageFonts(stagingDirectory, faces) {
   await rm(stagingDirectory, { force: true, recursive: true });
@@ -189,7 +189,7 @@ async function stageFonts(stagingDirectory, faces) {
     copiedBytes += size;
   }
 
-  return { faces, fileSizes, copiedBytes };
+  return { fileSizes, copiedBytes };
 }
 
 /** @returns {Promise<{ key?: string, cssHash?: string, preloadHash?: string, files?: { name: string, size: number }[] } | null>} */
@@ -257,6 +257,21 @@ async function matchManifest(manifest, expected) {
   return manifest.files;
 }
 
+/**
+ * 打印 Noto CJK 分片体积统计（跳过与重拷两条路径共用）。
+ * @param {number} fileCount
+ * @param {{ name: string, size: number }[]} cjkFiles
+ */
+function printStats(fileCount, cjkFiles) {
+  console.log("sync-fonts stats:");
+  console.log(`  files in static/fonts: ${fileCount}`);
+  console.log("  Noto by size (desc, top 8 CJK):");
+  const sorted = cjkFiles.slice().sort((a, b) => b.size - a.size);
+  for (const row of sorted.slice(0, 8)) {
+    console.log(`    ${(row.size / 1024).toFixed(0)}KB ${row.name}`);
+  }
+}
+
 async function main() {
   const vendorCss = await readFile(resolve(notoSource, "index.css"), "utf8");
   const faces = collectNotoFaces(vendorCss);
@@ -288,16 +303,12 @@ async function main() {
     );
 
     if (wantStats) {
-      console.log("sync-fonts stats:");
-      console.log(`  files in static/fonts: ${matchedFiles.length}`);
-      console.log("  Noto by size (desc, top 8 CJK):");
-      const cjkSorted = matchedFiles
-        .filter((f) => f.name.includes("noto-") && !f.name.includes("-latin-"))
-        .slice()
-        .sort((a, b) => b.size - a.size);
-      for (const row of cjkSorted.slice(0, 8)) {
-        console.log(`    ${(row.size / 1024).toFixed(0)}KB ${row.name}`);
-      }
+      printStats(
+        matchedFiles.length,
+        matchedFiles.filter(
+          (f) => f.name.includes("noto-") && !f.name.includes("-latin-"),
+        ),
+      );
     }
     return;
   }
@@ -317,7 +328,7 @@ async function main() {
   await mkdir(cssDirectory, { recursive: true });
   await mkdir(resolve(root, "data"), { recursive: true });
 
-  const { faces: stagedFaces, fileSizes, copiedBytes } = stageResult;
+  const { fileSizes, copiedBytes } = stageResult;
 
   await writeFile(resolve(cssDirectory, "fonts.css"), expectedCss);
 
@@ -334,7 +345,7 @@ async function main() {
   );
 
   // manifest 最后写入：前置步骤失败时不会留下“看似新鲜”的清单。
-  const files = [...stagedFaces.map((f) => f.file), ...SOURCE_CODE_FILES].map(
+  const files = [...faces.map((f) => f.file), ...SOURCE_CODE_FILES].map(
     (name) => ({ name, size: fileSizes.get(name) ?? 0 }),
   );
   await writeFile(
@@ -353,10 +364,10 @@ async function main() {
 
   const mb = (copiedBytes / 1024 / 1024).toFixed(2);
   const preloadMb = (preloadBytes / 1024 / 1024).toFixed(2);
-  const latinCount = stagedFaces.filter((f) => f.isLatin).length;
-  const cjkCount = stagedFaces.length - latinCount;
+  const latinCount = faces.filter((f) => f.isLatin).length;
+  const cjkCount = faces.length - latinCount;
   console.log(
-    `sync-fonts: ${stagedFaces.length} Noto faces (latin=${latinCount}, cjk=${cjkCount}) + ${SOURCE_CODE_FILES.length} Source Code Pro (${mb} MB)`,
+    `sync-fonts: ${faces.length} Noto faces (latin=${latinCount}, cjk=${cjkCount}) + ${SOURCE_CODE_FILES.length} Source Code Pro (${mb} MB)`,
   );
   console.log(
     `sync-fonts: preload ${preloadFiles.length} file(s) (${preloadMb} MB): ${preloadFiles.join(", ")}`,
@@ -364,19 +375,12 @@ async function main() {
 
   if (wantStats) {
     const onDisk = await readdir(fontDirectory);
-    console.log("sync-fonts stats:");
-    console.log(`  files in static/fonts: ${onDisk.length}`);
-    console.log("  Noto by size (desc, top 8 CJK):");
-    const cjkSorted = stagedFaces
-      .filter((f) => !f.isLatin)
-      .slice()
-      .sort(
-        (a, b) => (fileSizes.get(b.file) || 0) - (fileSizes.get(a.file) || 0),
-      );
-    for (const row of cjkSorted.slice(0, 8)) {
-      const sizeKb = ((fileSizes.get(row.file) || 0) / 1024).toFixed(0);
-      console.log(`    ${sizeKb}KB ${row.file}`);
-    }
+    printStats(
+      onDisk.length,
+      faces
+        .filter((f) => !f.isLatin)
+        .map((f) => ({ name: f.file, size: fileSizes.get(f.file) || 0 })),
+    );
   }
 }
 
