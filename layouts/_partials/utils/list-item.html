@@ -1,11 +1,5 @@
-{{- /* 列表项：接受 GroupBy 结果（.Pages）或显式 pages 集合。 */ -}}
-{{- $pages := .Pages -}}
-{{- if not $pages -}}
-    {{- with .pages -}}
-        {{- $pages = . -}}
-    {{- end -}}
-{{- end -}}
-{{- with $pages -}}
+{{- /* 列表项。dict: pages（显式文章集合）。 */ -}}
+{{- with .pages -}}
     <ul class="list-part">
         {{ range . }}
             <li class="list-item">

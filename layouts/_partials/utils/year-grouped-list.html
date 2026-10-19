@@ -2,6 +2,6 @@
 {{- with .pages -}}
     {{- range .GroupByDate "2006" }}
         <h2 class="list-year">{{ .Key }}</h2>
-        {{ partial "utils/list-item.html" . }}
+        {{ partial "utils/list-item.html" (dict "pages" .Pages) }}
     {{ end -}}
 {{- end -}}

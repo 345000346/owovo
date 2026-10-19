@@ -1,7 +1,7 @@
-{{/* 元信息（日期/修改/阅读时长；首页可出标签）。dict "$" isHome isPost。 */}}
+{{/* 元信息（日期/阅读时长；首页可出标签）。dict "$" isHome。 */}}
 {{- $ := index . "$" -}}
 {{- $isHome := .isHome -}}
-{{- $isPost := .isPost | default (partial "utils/is-post.html" $) -}}
+{{- $isPost := partial "utils/is-post.html" $ -}}
 <div class="post-meta">
     {{ if not $.Date.IsZero }}
         {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "calendar-alt" "class" "post-meta-icon") }}
