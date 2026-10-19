@@ -1,6 +1,7 @@
 // 单页/文章正文壳（.single / .post-body 等）。
 @use "sass:math";
 @use "../utils/functions";
+@use "../utils/mixins";
 @use "../utils/variables";
 
 // 桌面宽屏：TOC fixed 悬浮于正文右侧空白（正文始终 42em 居中，与无 TOC 文章一致）。
@@ -337,15 +338,7 @@ pre {
   }
 }
 .code-block-status {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  @include mixins.visuallyHidden;
 }
 
 // 无 JS：复制依赖 navigator.clipboard，直接隐藏按钮（有 JS 时由 article.js 处理）。
