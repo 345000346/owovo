@@ -52,6 +52,24 @@ export async function run(ctx) {
     "index.html must enable JS-only navigation styles before first paint",
   );
   ctx.assertJsonLdSafe(indexHtml, "index.html");
+  // 首页 JSON-LD 必须是 WebSite 分支：三分支模板（WebSite / BlogPosting / WebPage）
+  // 若因上下文传参错误落进 WebPage，普通断言（只是「能 parse」）发现不了。
+  {
+    const ldTexts = ctx.extractJsonLdTexts(indexHtml);
+    const homeType = ldTexts.length
+      ? (() => {
+          try {
+            return JSON.parse(ldTexts[0])?.["@type"];
+          } catch {
+            return null;
+          }
+        })()
+      : null;
+    ctx.assert(
+      homeType === "WebSite",
+      `index.html JSON-LD @type must be WebSite (got ${JSON.stringify(homeType)})`,
+    );
+  }
   ctx.assert(
     !/themed-badge|shields\.io|substats/.test(indexHtml),
     "index.html must not reference removed shields/themed badges",

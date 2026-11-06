@@ -47,8 +47,13 @@ export function createContext({ publicDir, siteHost }) {
 
   /** @param {string} tag @param {string} name */
   function getAttribute(tag, name) {
+    // 左边界必须带上：否则取 title= 会错拿 data-title= 的值（属性名是后缀关系）。
+    // \\s 会把「属性行首」也算匹配，但 tag 字符串总以 `<tagname` 开头，无实际影响。
     const match = tag.match(
-      new RegExp(`${name}=(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i"),
+      new RegExp(
+        `(?:\\s|["'])${name}=(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`,
+        "i",
+      ),
     );
     return match ? match[1] ?? match[2] ?? match[3] : null;
   }

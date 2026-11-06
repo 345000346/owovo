@@ -9,10 +9,10 @@ export async function run(ctx) {
   const tagEntries = await readdir(ctx.publicPath("tags"), {
     withFileTypes: true,
   });
-  const sampleTag = tagEntries.find((entry) => entry.isDirectory());
-  if (!sampleTag) {
-    return;
-  }
+  const tagDirs = tagEntries.filter((entry) => entry.isDirectory());
+  // 没有 tags 页本身就是异常：taxonomy 仅 tags，构建正常必然产出 tags/ 目录内容。
+  ctx.assert(tagDirs.length > 0, "public/tags/ has no term pages");
+  const sampleTag = tagDirs[0];
 
   const rel = join("tags", sampleTag.name, "index.html");
   const html = await ctx.readPublic(rel);

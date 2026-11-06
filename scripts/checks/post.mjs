@@ -14,6 +14,23 @@ export async function run(ctx) {
 
   const postHtml = await ctx.readPublic(postRel);
   ctx.assertJsonLdSafe(postHtml, postRel);
+  // 文章 JSON-LD 必须是 BlogPosting 分支（同 home 的 WebSite 断言，防分支错落）。
+  {
+    const ldTexts = ctx.extractJsonLdTexts(postHtml);
+    const postType = ldTexts.length
+      ? (() => {
+          try {
+            return JSON.parse(ldTexts[0])?.["@type"];
+          } catch {
+            return null;
+          }
+        })()
+      : null;
+    ctx.assert(
+      postType === "BlogPosting",
+      `${postRel} JSON-LD @type must be BlogPosting (got ${JSON.stringify(postType)})`,
+    );
+  }
   ctx.assert(
     postHtml.includes("data-pagefind-body"),
     `post page missing data-pagefind-body: ${postRel}`,
