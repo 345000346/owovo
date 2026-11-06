@@ -126,7 +126,7 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 - 跳转链接（skip link）保留在 `baseof.html` 首位，勿删。
 - 语义元素优先：`<nav>` 带 `aria-label`，阅读进度用 `role="progressbar"` + `aria-valuemin/max/now`，折叠用原生 `<details>/<summary>`。
 - 每页恰一个 `<h1>`；`<html lang>` 不可缺。二者由 smoke 的 `a11y` 模块全站断言（连同 `<main>` 地标、跳转链接目标存在、`<img alt>`、`<nav aria-label>`、`<button>` 可访问名）。
-- 动效尊重 `prefers-reduced-motion`（`theme.js` / `search-highlight.js` 已有判断）。
+- 动效尊重 `prefers-reduced-motion`：查询统一由 `assets/js/lib/env.js` 的 `prefersReducedMotion()` 提供，其它模块 import 后调用，不得自建 `matchMedia`（由 `npm run lint` 断言）。
 - 焦点可见：交互元素保留 `:focus-visible` 样式，勿用 `outline: none` 抹掉。
 
 ### 测试
@@ -220,7 +220,7 @@ npm run build     # site + search + smoke
 `smoke` 另有两组全站扫描，都属于「文档规则 → 构建后断言」的固化，加新页时自动生效：
 
 - `a11y`：每个非跳转桩页都必须有 `<html lang>`、恰一个 `<h1>`、`<main>` 地标、跳转链接（且 `href` 指向的 id 真实存在）、`<img>` 有 `alt`、`<nav>` 有 `aria-label`、`<button>` 有 `aria-label` 或可见文本。
-- `links`：产物里所有以 `/` 开头的 `href` / `src` 必须能在 `public/` 里找到对应文件（目录式链接按 `index.html` 解析，锚点与查询串先剥掉）。断链在本地构建就能拦住，不必等线上 404。
+- `links`：产物里所有以 `/` 开头的 `href` / `src` / `srcset` 候选（响应式图片的每个 `640w` 之类）都必须能在 `public/` 里找到对应文件（目录式链接按 `index.html` 解析，锚点与查询串先剥掉；畸形百分号编码按原样比对而不是抛错）。断链在本地构建就能拦住，不必等线上 404。
 
 跨文件契约数字的唯一真源是 SCSS token（`$fontSize` / `$contentWidth` / `$duration` / `$tocSideBreakpoint`），经 `assets/scss/base/_responsive.scss` 与 `assets/scss/layout/_single.scss` 的 `:root` 导出为 CSS 变量；JS 与模板只读不写回退值，读不到变量就不启用对应功能。改 token 只动这两处，`smoke` 会兜住下游漂移。
 
