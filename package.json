@@ -4,6 +4,8 @@
   "private": true,
   "description": "Personal blog powered by Hugo",
   "scripts": {
+    "lint": "node scripts/check-conventions.mjs",
+    "test": "node --test scripts/test/",
     "sync:fonts": "node scripts/sync-fonts.mjs",
     "sync:fonts:stats": "node scripts/sync-fonts.mjs --stats",
     "dev": "npm run sync:fonts && hugo server -D",
