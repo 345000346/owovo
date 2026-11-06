@@ -8,18 +8,9 @@
         <summary class="contents-title">目录</summary>
         {{- $toc | safeHTML -}}
     </details>
-    {{- /* 折叠默认态与断点在首帧前对齐：窄屏移除 open，避免移动端冷加载「展开→收起」闪烁。
-           断点唯一真源是 _single.scss $tocSideBreakpoint（经 :root 变量导出），
-           这里不写回退值：变量缺失就不改 DOM，维持模板默认展开。 */ -}}
-    <script>
-        (function () {
-            var s = document.currentScript;
-            if (!s) return;
-            var d = s.previousElementSibling;
-            if (!d || d.tagName !== "DETAILS") return;
-            var bp = getComputedStyle(document.documentElement).getPropertyValue("--toc-side-breakpoint").trim();
-            if (!bp) return;
-            if (!window.matchMedia("(min-width: " + bp + ")").matches) d.removeAttribute("open");
-        })();
-    </script>
+    {{- /* 折叠默认态与断点在首帧前对齐：源码在 assets/js/inline/toc-collapse.js，
+           这里编译成 IIFE 内联紧跟 <details>。断点唯一真源是 _single.scss $tocSideBreakpoint
+           （经 :root 变量导出），变量缺失就不改 DOM，维持模板默认展开。 */ -}}
+    {{- $tocCollapse := resources.Get "js/inline/toc-collapse.js" | js.Build (dict "format" "iife" "minify" true "target" "es2020") -}}
+    <script>{{ $tocCollapse.Content | safeJS }}</script>
 {{- end -}}

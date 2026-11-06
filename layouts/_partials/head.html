@@ -16,61 +16,10 @@
     <meta name="theme-color" content="{{ $themeColor }}" data-theme-color-light="{{ $themeColor }}" data-theme-color-dark="{{ $themeColorDark }}" />
     <meta name="color-scheme" content="light dark" />
 
-    {{/* FOUC：读 preference → light|dark → data-* / theme-color（与 theme.js 同步；无切换/事件）。 */}}
-    <script>
-      (function () {
-        document.documentElement.classList.add("js");
-
-        function syncThemeMeta(theme) {
-          var themeMeta = document.querySelector('meta[name="theme-color"]');
-          if (themeMeta) {
-            var nextColor =
-              theme === "dark"
-                ? themeMeta.getAttribute("data-theme-color-dark")
-                : themeMeta.getAttribute("data-theme-color-light");
-            if (nextColor) {
-              themeMeta.setAttribute("content", nextColor);
-            }
-          }
-          var colorSchemeMeta = document.querySelector('meta[name="color-scheme"]');
-          if (colorSchemeMeta) {
-            colorSchemeMeta.setAttribute("content", theme);
-          }
-        }
-
-        try {
-          var preference = localStorage.getItem("theme") || "system";
-          if (preference !== "light" && preference !== "dark" && preference !== "system") {
-            preference = "system";
-          }
-          var theme = preference;
-          if (preference === "system") {
-            theme =
-              window.matchMedia &&
-              window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-          } else if (theme !== "dark") {
-            theme = "light";
-          }
-          document.documentElement.setAttribute("data-theme", theme);
-          document.documentElement.setAttribute("data-theme-preference", preference);
-          syncThemeMeta(theme);
-        } catch (e) {
-          var fallbackTheme = "light";
-          try {
-            fallbackTheme =
-              typeof window.matchMedia === "function" &&
-              window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-          } catch (fallbackError) {}
-          document.documentElement.setAttribute("data-theme", fallbackTheme);
-          document.documentElement.setAttribute("data-theme-preference", "system");
-          syncThemeMeta(fallbackTheme);
-        }
-      })();
-    </script>
+    {{/* FOUC：读 preference → light|dark → data-* / theme-color（与 theme.js 同步；无切换/事件）。
+         源码在 assets/js/inline/fouc.js，这里编译成 IIFE 内联，避免模板里维护一份 JS。 */}}
+    {{- $fouc := resources.Get "js/inline/fouc.js" | js.Build (dict "format" "iife" "minify" true "target" "es2020") -}}
+    <script>{{ $fouc.Content | safeJS }}</script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
