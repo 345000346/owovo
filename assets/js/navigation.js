@@ -6,12 +6,14 @@
 // 监听 site:close-navigation（搜索打开时关菜单）。
 // 背景遮蔽只写 inert + aria-hidden（3 处固定元素）：inert 自 2022 起已包含
 // 移出 Tab 序与 AT 可达性语义，不再逐元素记账 tabindex。
-// Concat：与 theme.js / scroll-ui.js 同 module，顶层仅常量 + initNavigation。
+// 系统动效偏好统一来自 lib/env.js。
+
+import { prefersReducedMotion } from "./lib/env.js";
 
 const NAV_FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-function initNavigation() {
+export function initNavigation() {
   const navToggle = document.querySelector(".nav-toggle");
   const header = document.querySelector(".header");
   const navCurtain = document.querySelector(".nav-curtain");
@@ -40,13 +42,6 @@ function initNavigation() {
 
   function isOpen() {
     return navToggle.getAttribute("aria-expanded") === "true";
-  }
-
-  function prefersReducedMotion() {
-    return (
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    );
   }
 
   function syncNavAvailability() {
@@ -295,5 +290,3 @@ function initNavigation() {
   }
   syncNavAvailability();
 }
-
-initNavigation();

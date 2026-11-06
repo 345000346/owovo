@@ -15,8 +15,8 @@ const root = resolve(import.meta.dirname, "..");
 /** 参与文件层检查的目录（相对仓库根）。 */
 const TEXT_DIRS = ["assets/js", "assets/scss", "layouts", "scripts", "config"];
 
-/** Concat 成同一个 module 的三个文件：顶层标识符必须互不重名。 */
-const CONCAT_FILES = ["assets/js/theme.js", "assets/js/navigation.js", "assets/js/scroll-ui.js"];
+/** 系统偏好查询的唯一落点；其它 JS 只准 import 它，不准自建 matchMedia。 */
+const MEDIA_QUERY_OWNER = "assets/js/lib/env.js";
 
 /** 文章 front matter 必填字段。 */
 const POST_REQUIRED_FIELDS = ["title", "date", "slug", "description", "tags"];
@@ -103,38 +103,55 @@ function checkFileHygiene() {
   }
 }
 
-/** assets/js：禁用 var（module 内）与 "use strict"。 */
+/** assets/js：禁用 var 与 "use strict"；系统偏好查询只准集中在 lib/env.js。 */
 function checkScripts() {
-  for (const rel of listFiles("assets/js")) {
+  const jsFiles = listFiles("assets/js");
+
+  for (const rel of jsFiles) {
     if (!rel.endsWith(".js")) {
       continue;
     }
     assertNoLineMatch(rel, /^\s+var\s/, "使用了 var，应为 const / let");
     assertNoLineMatch(rel, /["']use strict["']/, "module 已 strict，不应写 use strict");
   }
+
+  // 同一份偏好重复探测会漂移（导航用自建查询、主题用变量，reduced motion 曾三处不同实现）。
+  for (const rel of jsFiles) {
+    if (rel === MEDIA_QUERY_OWNER || !rel.endsWith(".js")) {
+      continue;
+    }
+    assertNoLineMatch(
+      rel,
+      /prefers-(?:reduced-motion|color-scheme)\s*:/,
+      `自建了系统偏好查询，应 import ${MEDIA_QUERY_OWNER}`,
+    );
+  }
 }
 
-/** Concat 三文件共用顶层作用域，标识符不得重名。 */
-function checkConcatScope() {
-  /** @type {Map<string, string[]>} */
-  const owners = new Map();
-  const decl = /^(?:const|let|function|class)\s+([A-Za-z0-9_$]+)/gm;
+/** index.js 导入的模块：作用域已由 ESM 隔离，它们只准导出，不准自启动。 */
+const IMPORTED_MODULES = [
+  "assets/js/theme.js",
+  "assets/js/navigation.js",
+  "assets/js/scroll-ui.js",
+];
 
-  for (const rel of CONCAT_FILES) {
+/**
+ * 打包改成 ESM 后，只剩一条必须守住的约束：
+ * 被 index.js import 的模块不能在顶层自调用，否则会被启动两次；
+ * 它们必须 export 出 init 函数，由 index.js 决定顺序。
+ * 独立入口（article.js / search-dialog.js / search-highlight.js）各自成包，允许顶层自调用。
+ */
+function checkModuleEntries() {
+  for (const rel of IMPORTED_MODULES) {
     const text = read(rel);
-    for (const match of text.matchAll(decl)) {
-      const name = match[1];
-      const line = text.slice(0, match.index).split("\n").length;
-      const ref = `${rel}:${line}`;
-      const prev = owners.get(name) ?? [];
-      owners.set(name, [...prev, ref]);
-    }
-  }
-
-  for (const [name, refs] of owners) {
+    const topLevelCall = /^(?!\s)[A-Za-z_$][\w$]*\(\);\s*$/m.exec(text);
     assert(
-      refs.length === 1,
-      `Concat 顶层标识符 "${name}" 重复声明：${refs.join(" / ")}（三文件共用同一作用域）`,
+      !topLevelCall,
+      `${rel}: 顶层不应自调用（${topLevelCall?.[0].trim()}）；被 index.js import 后会启动两次`,
+    );
+    assert(
+      /\bexport\s+(?:function|const|let|class)\s/.test(text),
+      `${rel}: 应 export 出 init 函数供 index.js 调用`,
     );
   }
 }
@@ -187,7 +204,7 @@ function checkContent() {
 function main() {
   checkFileHygiene();
   checkScripts();
-  checkConcatScope();
+  checkModuleEntries();
   checkStyles();
   checkContent();
   exitIfFailed();

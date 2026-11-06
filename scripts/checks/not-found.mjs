@@ -7,7 +7,7 @@ export async function run(ctx) {
   ctx.assert(
     /id="?search-dialog"?/.test(notFound) &&
       /data-search-trigger/.test(notFound) &&
-      /search-dialog\.min\./.test(notFound),
+      /js\/search-dialog\.[^"']*\.js/.test(notFound),
     "404.html must include search dialog, trigger, and search-dialog script",
   );
   ctx.assert(

@@ -5,9 +5,9 @@
 // - #reading-progress：--progress（0–1）、aria-valuenow（0–100，仅整数变化时写入）
 // - resize 同时重算进度（视口变化改变 scrollHeight 分母），不依赖下一次滚动
 // - #back-to-top：scrollY > 100 时加 .show
-// Concat：与 theme.js / navigation.js 同 module，顶层仅 initScrollUi。
+// 由 index.js 导入并启动。
 
-function initScrollUi() {
+export function initScrollUi() {
   const headerEl = document.querySelector(".header");
   const progressBar = document.querySelector("#reading-progress");
   const backToTop = document.getElementById("back-to-top");
@@ -92,5 +92,3 @@ function initScrollUi() {
 
   updateScrollUI();
 }
-
-initScrollUi();

@@ -2,6 +2,9 @@
 //
 // 契约：hl 参数；data-pagefind-highlight 脚本路径（无绝对路径回退）；
 // 命中 mark.search-highlight（样式 _search-highlight.scss）。
+// 结果滚动行为取自 lib/env.js 的 reduced motion 偏好。
+
+import { prefersReducedMotion } from "./lib/env.js";
 
 function initSearchHighlight() {
   const highlightTerms = new URLSearchParams(window.location.search).getAll(
@@ -51,10 +54,7 @@ function initSearchHighlight() {
         return;
       }
 
-      const reducedMotion =
-        typeof window.matchMedia === "function" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const behavior = reducedMotion ? "auto" : "smooth";
+      const behavior = prefersReducedMotion() ? "auto" : "smooth";
 
       requestAnimationFrame(() => {
         firstMark.scrollIntoView({ block: "center", behavior });

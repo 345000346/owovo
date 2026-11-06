@@ -1,16 +1,10 @@
-{{/* 脚本：Concat site.js + 搜索；文章页 article.js；?hl= 由 head loader。 */}}
-{{- $site := slice
-    (resources.Get "js/theme.js")
-    (resources.Get "js/navigation.js")
-    (resources.Get "js/scroll-ui.js")
-    | resources.Concat "js/site.js"
-    | resources.Minify
-    | resources.Fingerprint
--}}
+{{/* 脚本：site.js（esbuild 解析 index.js 的 import 图）+ 搜索；文章页 article.js；?hl= 由 head loader。 */}}
+{{- $buildOpts := dict "format" "esm" "minify" true "target" "es2020" -}}
+{{- $site := resources.Get "js/index.js" | js.Build (merge $buildOpts (dict "targetPath" "js/site.js")) | resources.Fingerprint -}}
 <script type="module" src="{{ $site.RelPermalink }}" integrity="{{ $site.Data.Integrity }}" crossorigin="anonymous"></script>
-{{- $searchDialog := resources.Get "js/search-dialog.js" | resources.Minify | resources.Fingerprint -}}
+{{- $searchDialog := resources.Get "js/search-dialog.js" | js.Build (merge $buildOpts (dict "targetPath" "js/search-dialog.js")) | resources.Fingerprint -}}
 <script type="module" src="{{ $searchDialog.RelPermalink }}" integrity="{{ $searchDialog.Data.Integrity }}" crossorigin="anonymous"></script>
 {{- if or (partial "utils/is-post.html" .) .Params.toc -}}
-    {{- $article := resources.Get "js/article.js" | resources.Minify | resources.Fingerprint -}}
+    {{- $article := resources.Get "js/article.js" | js.Build (merge $buildOpts (dict "targetPath" "js/article.js")) | resources.Fingerprint -}}
     <script type="module" src="{{ $article.RelPermalink }}" integrity="{{ $article.Data.Integrity }}" crossorigin="anonymous"></script>
 {{- end -}}

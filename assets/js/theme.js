@@ -10,22 +10,12 @@
 // FOUC 只上色；本文件负责切换、存储、系统主题与 themechange。
 // 图标由 [data-theme-preference] CSS 驱动。
 // 切换用 View Transition 做背景扩散渐变（reduced motion / 无 API 时直接应用）。
-// Concat：与 navigation.js / scroll-ui.js 同 module，顶层仅 initTheme。
+// 系统偏好查询统一来自 lib/env.js；本文件不再自建 matchMedia。
 
-function initTheme() {
+import { darkSchemeQuery, prefersReducedMotion } from "./lib/env.js";
+
+export function initTheme() {
   let transientPreference = null;
-  let mediaQuery = null;
-  let reducedMotionQuery = null;
-  try {
-    if (typeof window.matchMedia === "function") {
-      mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      reducedMotionQuery = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      );
-    }
-  } catch {
-    // matchMedia 不可用时按浅色作为系统主题的最终回退。
-  }
   const themeSwitcher = document.getElementById("theme-switcher");
 
   function safeGetTheme() {
@@ -47,7 +37,7 @@ function initTheme() {
   }
 
   function getSystemPreference() {
-    return mediaQuery?.matches ? "dark" : "light";
+    return darkSchemeQuery?.matches ? "dark" : "light";
   }
 
   function resolveTheme(preference) {
@@ -85,10 +75,6 @@ function initTheme() {
     if (meta && meta.getAttribute("content") !== theme) {
       meta.setAttribute("content", theme);
     }
-  }
-
-  function prefersReducedMotion() {
-    return reducedMotionQuery?.matches === true;
   }
 
   function writeThemeState(normalized, theme) {
@@ -201,11 +187,11 @@ function initTheme() {
   // FOUC 已写过匹配属性；仅在与存储/系统不一致时重写。
   applyThemeFromPreference(safeGetTheme());
 
-  if (mediaQuery) {
-    if (typeof mediaQuery.addEventListener === "function") {
-      mediaQuery.addEventListener("change", handleSystemThemeChange);
-    } else if (typeof mediaQuery.addListener === "function") {
-      mediaQuery.addListener(handleSystemThemeChange);
+  if (darkSchemeQuery) {
+    if (typeof darkSchemeQuery.addEventListener === "function") {
+      darkSchemeQuery.addEventListener("change", handleSystemThemeChange);
+    } else if (typeof darkSchemeQuery.addListener === "function") {
+      darkSchemeQuery.addListener(handleSystemThemeChange);
     }
   }
 
@@ -223,5 +209,3 @@ function initTheme() {
     });
   }
 }
-
-initTheme();
