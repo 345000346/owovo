@@ -219,7 +219,7 @@ npm run build     # site + search + smoke
 
 `smoke` 另有两组全站扫描，都属于「文档规则 → 构建后断言」的固化，加新页时自动生效：
 
-- `a11y`：每个非跳转桩页都必须有 `<html lang>`、恰一个 `<h1>`、`<main>` 地标、跳转链接（且 `href` 指向的 id 真实存在）、`<img>` 有 `alt`、`<nav>` 有 `aria-label`、`<button>` 有 `aria-label` 或可见文本。
+- `a11y`：每个非跳转桩页都必须有 `<html lang>`、恰一个 `<h1>`、`<main>` 地标、跳转链接（且 `href` 指向的 id 真实存在）、全页 `id` 不重复（重复 id 会让 `aria-controls` / 锚点指向错节点）、`<img>` 有 `alt`、`<nav>` 有 `aria-label`、`<button>` 有 `aria-label` 或可见文本。
 - `links`：产物里所有以 `/` 开头的 `href` / `src` / `srcset` 候选（响应式图片的每个 `640w` 之类）都必须能在 `public/` 里找到对应文件（目录式链接按 `index.html` 解析，锚点与查询串先剥掉；畸形百分号编码按原样比对而不是抛错）。断链在本地构建就能拦住，不必等线上 404。
 
 跨文件契约数字的唯一真源是 SCSS token（`$fontSize` / `$contentWidth` / `$duration` / `$tocSideBreakpoint`），经 `assets/scss/base/_responsive.scss` 与 `assets/scss/layout/_single.scss` 的 `:root` 导出为 CSS 变量；JS 与模板只读不写回退值，读不到变量就不启用对应功能。改 token 只动这两处，`smoke` 会兜住下游漂移。

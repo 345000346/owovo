@@ -34,6 +34,8 @@ export const PAGE_ORDER = [
 
 /**
  * 切出 front matter 与正文。同时接受 LF / CRLF，正文逐字保留。
+ * 闭合 `---` 后可以没有换行（文件以 `---` EOF 结尾）：Hugo 接受这种形态，
+ * 解析不必强求尾换行；normalize 重排输出时本来就会补上。
  * @param {string} text
  * @returns {{ fm: string, body: string } | null}
  */
@@ -42,7 +44,8 @@ export function splitFrontMatter(text) {
     return null;
   }
   const start = text.startsWith("---\r\n") ? 5 : 4;
-  const endMatch = text.slice(start).match(/\r?\n---\r?\n/);
+  // `\r?\n---(\r?\n|$)`：闭合符独占一行，后随换行或直接 EOF。
+  const endMatch = text.slice(start).match(/\r?\n---(?:\r?\n|$)/);
   if (!endMatch || endMatch.index === undefined) {
     return null;
   }
@@ -71,9 +74,9 @@ export function parseBlocks(fmBody) {
     }
     const km = line.match(/^([A-Za-z0-9_]+)\s*:/);
     if (!km) {
-      blocks.push({ key: null, raw: line });
-      i += 1;
-      continue;
+      // 未识别形态不能静默当注释丢掉：normalize 的职责是重排而非筛选内容，
+      // 丢弃会让维护脚本悄悄改写用户数据（引号值、锚点行等都会走到这里）。
+      throw new Error(`frontmatter: unrecognized line: ${JSON.stringify(line)}`);
     }
     const key = km[1];
     /** @type {string[]} */
