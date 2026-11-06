@@ -39,6 +39,37 @@ $breakpoint-about-sm: 700px;
 // 导航过渡；navigation.js 关闭兜底须 ≥ 此值。
 $duration: 0.5s;
 
+// z-index 层叠（全局唯一来源，见 layout/_header.scss 的层叠契约注释）。
+// 各层之间必须保持下面的数值序；组件内部若确有局部上下文，用局部变量，勿在此新增。
+$zSkipLink: 1000; // 键盘跳过链接：可访问性置顶，压过一切
+$zReadingProgress: 4;
+$zHeader: 3;
+$zNavToggle: 3;
+$zHeaderWrapper: 2;
+$zNavCurtain: 1;
+$zBackToTop: 1;
+
+// 关于页社交名片品牌色（亮 / 暗两态成对出现，改一处要改一对）
+$brandMarkLightColor: #4b3f31;
+$brandMarkLightBg: #e8dccd;
+$brandMarkDarkColor: #e7d6c0;
+$brandMarkDarkBg: #514335;
+$brandWeiboLightColor: #8f463d;
+$brandWeiboLightBg: #f2d8d2;
+$brandWeiboDarkColor: #ffd5ce;
+$brandWeiboDarkBg: #603b35;
+$brandZhihuLightColor: #375786;
+$brandZhihuLightBg: #dbe8f7;
+$brandZhihuDarkColor: #d8e7ff;
+$brandZhihuDarkBg: #2b456a;
+$brandGithubLightColor: #24292f;
+$brandGithubLightBg: #e8eaed;
+$brandGithubDarkColor: #e6edf3;
+$brandGithubDarkBg: #2f353c;
+// 暗色卡片用的白色叠加（不用 alpha()：那是给 HSL 变量用的，这里是固定白色叠层）
+$brandDarkHairline: rgba(255, 255, 255, 0.08);
+$brandDarkCardBg: rgba(255, 255, 255, 0.03);
+
 // 主题主色 HSL（light / dark）
 $primaryColorLightH: 220;
 $primaryColorLightS: 90%;

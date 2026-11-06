@@ -1,8 +1,10 @@
 // 回到顶部按钮（滚动超过阈值时由 scroll-ui.js 加 .show）。
+@use "../utils/variables";
+
 .back-to-top {
   position: fixed;
   right: 0;
-  z-index: 1;
+  z-index: variables.$zBackToTop;
   bottom: -3.6em;
   // 未显示时同步移出 Tab 序与渲染树，避免键盘焦点落进不可见按钮。
   visibility: hidden;

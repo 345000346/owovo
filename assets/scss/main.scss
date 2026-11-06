@@ -1,40 +1,61 @@
-// 入口：纯 SCSS。顺序 base → themes → layout → 组件 → pages → responsive。
+// 入口：CSS cascade layers。
+//
+// 层序低 → 高：base → themes → layout → components → pages → utilities。
+// 层序一旦声明，优先级就由层决定，与选择器特异性无关；且 !important 会反向
+// （越早的层越强）。因此本仓库的规矩是：
+//   - 「必须压过一切」的规则（reduced-motion / print / 主题切换期禁用过渡）
+//     留在 base 或 themes，并保留 !important；
+//   - base/_responsive.scss 的媒体查询覆盖在最高层 utilities，不再需要 !important；
+//   - 新增组件放进对应层即可，不必再写 !important。
+// 改动层序等价于改变全站优先级，动之前先看这段注释。
+@use "sass:meta";
 
-// 基础
-@use "base/base";
-@use "base/font-family";
+@layer base, themes, layout, components, pages, utilities;
 
-// 主题 + 切换器
-@use "themes/light";
-@use "themes/dark";
-@use "components/theme-switcher";
+@layer base {
+  @include meta.load-css("base/base");
+  @include meta.load-css("base/font-family");
+}
 
-// 布局骨架
-@use "layout/header";
-@use "components/nav-toggle";
-@use "layout/menu";
-@use "layout/list";
-@use "layout/single";
-@use "layout/footer";
+@layer themes {
+  @include meta.load-css("themes/light");
+  @include meta.load-css("themes/dark");
+}
 
-// 文章 / 共享组件
-@use "components/post-meta";
-@use "components/post-copyright";
-@use "components/post-outdated";
-@use "components/post-tags";
-@use "components/post-nav";
-@use "components/back-to-top";
-@use "components/highlight";
-@use "components/socials";
-@use "components/reading-progress";
-@use "components/search-highlight";
-@use "components/about-socials";
-@use "components/search-dialog";
+@layer layout {
+  @include meta.load-css("layout/header");
+  @include meta.load-css("layout/menu");
+  @include meta.load-css("layout/list");
+  @include meta.load-css("layout/single");
+  @include meta.load-css("layout/footer");
+}
 
-// 页面
-@use "pages/home-posts";
-@use "pages/tag-cloud";
-@use "pages/404" as page404;
+@layer components {
+  @include meta.load-css("components/theme-switcher");
+  @include meta.load-css("components/nav-toggle");
+  @include meta.load-css("components/post-meta");
+  @include meta.load-css("components/post-copyright");
+  @include meta.load-css("components/post-outdated");
+  @include meta.load-css("components/post-tags");
+  @include meta.load-css("components/post-nav");
+  @include meta.load-css("components/back-to-top");
+  @include meta.load-css("components/highlight");
+  @include meta.load-css("components/socials");
+  @include meta.load-css("components/reading-progress");
+  @include meta.load-css("components/search-highlight");
+  @include meta.load-css("components/about-socials");
+  @include meta.load-css("components/search-dialog");
+}
 
-// 断点放最后，便于覆盖
-@use "base/responsive";
+@layer pages {
+  @include meta.load-css("pages/home-posts");
+  @include meta.load-css("pages/tag-cloud");
+  @include meta.load-css("pages/404");
+}
+
+// 响应式覆盖放最高层；:root 契约变量也在这里导出（见该文件头部）。
+// utils/layer-overrides 是「必须压过所有组件」的收容所，排在最后。
+@layer utilities {
+  @include meta.load-css("base/responsive");
+  @include meta.load-css("utils/layer-overrides");
+}

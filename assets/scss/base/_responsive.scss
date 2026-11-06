@@ -24,8 +24,10 @@ $navCloseTimeout: math.div(variables.$duration, 1s) * 1200;
 }
 
 @media (max-width: $maxWidth) {
+  // 本文件在 utilities 层（最高），pages 层 .fof .main-inner 的固定宽度压不过它，
+  // 因此不再需要 !important。
   .main-inner {
-    width: auto !important;
+    width: auto;
   }
   #back-to-top {
     display: none;
@@ -134,11 +136,13 @@ $navCloseTimeout: math.div(variables.$duration, 1s) * 1200;
 }
 
 @media (max-width: $maxWidth) and (prefers-reduced-motion: reduce) {
+  // 同一层内选择器特异性相同、本块更靠后，故可去掉 !important；
+  // 全局的 reduced-motion 兜底仍在 base/_base.scss。
   .js .nav,
   .js .header.open .nav,
   .js .header.fade .nav,
   .js .header.open .nav-curtain,
   .js .header.fade .nav-curtain {
-    transition: none !important;
+    transition: none;
   }
 }

@@ -1,0 +1,19 @@
+// 跨层覆盖（最后加载，属 utilities 层）。
+//
+// 这里只放「必须压过所有组件」的规则。它们原先靠 !important 硬压；
+// 现在靠层序（utilities 最高）自然胜出，写法和普通规则一样。
+// 判断标准：若某规则的竞争者在更低的层里、且层级关系是设计意图（而非巧合），
+// 就应该放在这里而不是给组件加 !important。
+// 标题内的锚点链接不显示下划线：正文链接的下划线来自 layout 层的 .post-body a，
+// 而这一条写在 base 层，层序低于 layout，故必须上提到本层。
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  a {
+    text-decoration: none;
+    color: var(--color-contrast-higher);
+  }
+}

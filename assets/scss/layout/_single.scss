@@ -45,7 +45,7 @@ $tocSideBreakpoint: 68em;
 }
 
 .post-body {
-  margin-top: 5em !important;
+  margin-top: 5em;
   a {
     text-decoration: underline;
     text-decoration-color: var(--color-contrast-low);
@@ -231,8 +231,9 @@ ul {
     }
   }
   ol {
-    margin: 1.618rem 0 0 !important;
-    padding: 0 1rem 0 2rem !important;
+    // 同层内 .footnotes ol 比 .post ol 特异性更高且更靠后，无需 !important。
+    margin: 1.618rem 0 0;
+    padding: 0 1rem 0 2rem;
   }
 }
 

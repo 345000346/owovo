@@ -6,7 +6,8 @@
   font-size: 0.8rem;
   margin: 2rem 0;
   pre {
-    margin: 0 !important;
+    // components 层高于 layout 层，压过 .post-body pre 的 margin。
+    margin: 0;
     max-height: unset;
   }
   .lntd pre {

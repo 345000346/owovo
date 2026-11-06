@@ -58,24 +58,24 @@
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: #4b3f31;
+  color: variables.$brandMarkLightColor;
   border-radius: 0.5rem;
-  background-color: #e8dccd;
+  background-color: variables.$brandMarkLightBg;
 }
 
 .post-body .about-social-mark-weibo {
-  color: #8f463d;
-  background-color: #f2d8d2;
+  color: variables.$brandWeiboLightColor;
+  background-color: variables.$brandWeiboLightBg;
 }
 
 .post-body .about-social-mark-zhihu {
-  color: #375786;
-  background-color: #dbe8f7;
+  color: variables.$brandZhihuLightColor;
+  background-color: variables.$brandZhihuLightBg;
 }
 
 .post-body .about-social-mark-github {
-  color: #24292f;
-  background-color: #e8eaed;
+  color: variables.$brandGithubLightColor;
+  background-color: variables.$brandGithubLightBg;
 }
 
 .post-body .about-social-copy {
@@ -99,13 +99,13 @@
 
 @mixin about-socials-dark {
   .post-body .about-social-showcase {
-    border-color: rgba(255, 255, 255, 0.08);
+    border-color: variables.$brandDarkHairline;
     background-color: var(--color-contrast-lower);
   }
 
   .post-body .about-social-card {
-    border-color: rgba(255, 255, 255, 0.08);
-    background-color: rgba(255, 255, 255, 0.03);
+    border-color: variables.$brandDarkHairline;
+    background-color: variables.$brandDarkCardBg;
   }
 
   .post-body .about-social-card:hover {
@@ -117,23 +117,23 @@
   }
 
   .post-body .about-social-mark {
-    color: #e7d6c0;
-    background-color: #514335;
+    color: variables.$brandMarkDarkColor;
+    background-color: variables.$brandMarkDarkBg;
   }
 
   .post-body .about-social-mark-weibo {
-    color: #ffd5ce;
-    background-color: #603b35;
+    color: variables.$brandWeiboDarkColor;
+    background-color: variables.$brandWeiboDarkBg;
   }
 
   .post-body .about-social-mark-zhihu {
-    color: #d8e7ff;
-    background-color: #2b456a;
+    color: variables.$brandZhihuDarkColor;
+    background-color: variables.$brandZhihuDarkBg;
   }
 
   .post-body .about-social-mark-github {
-    color: #e6edf3;
-    background-color: #2f353c;
+    color: variables.$brandGithubDarkColor;
+    background-color: variables.$brandGithubDarkBg;
   }
 }
 

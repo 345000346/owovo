@@ -16,7 +16,8 @@
   }
 
   .icon {
-    margin-right: 0 !important;
+    // components 层高于 layout 层，压过 .menu-item .icon 的右外边距。
+    margin-right: 0;
   }
 
   // 以 preference 为唯一真相，决定显示哪枚图标。
