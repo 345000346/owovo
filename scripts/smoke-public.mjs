@@ -11,8 +11,10 @@ import { stat } from "node:fs/promises";
 import { resolve } from "node:path";
 
 import { createContext } from "./checks/context.mjs";
+import * as a11y from "./checks/a11y.mjs";
 import * as assets from "./checks/assets.mjs";
 import * as home from "./checks/home.mjs";
+import * as links from "./checks/links.mjs";
 import * as notFound from "./checks/not-found.mjs";
 import * as pagefind from "./checks/pagefind.mjs";
 import * as post from "./checks/post.mjs";
@@ -37,8 +39,10 @@ const CHECKS = [
   home,
   notFound,
   assets,
+  a11y,
   tags,
   rss,
+  links,
   pagefind,
   post,
 ];

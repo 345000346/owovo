@@ -125,7 +125,7 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 - 图标一律装饰性：`aria-hidden="true"`，可读文本由相邻节点或 `aria-label` 提供（`utils/icon.html` 已统一处理）。
 - 跳转链接（skip link）保留在 `baseof.html` 首位，勿删。
 - 语义元素优先：`<nav>` 带 `aria-label`，阅读进度用 `role="progressbar"` + `aria-valuemin/max/now`，折叠用原生 `<details>/<summary>`。
-- 每页恰一个 `<h1>`；`<html lang>` 不可缺。二者由 smoke 部分断言，新增页仍须自查。
+- 每页恰一个 `<h1>`；`<html lang>` 不可缺。二者由 smoke 的 `a11y` 模块全站断言（连同 `<main>` 地标、跳转链接目标存在、`<img alt>`、`<nav aria-label>`、`<button>` 可访问名）。
 - 动效尊重 `prefers-reduced-motion`（`theme.js` / `search-highlight.js` 已有判断）。
 - 焦点可见：交互元素保留 `:focus-visible` 样式，勿用 `outline: none` 抹掉。
 
@@ -138,7 +138,7 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 
 ### static/love/（豁免区）
 
-`static/love.html` 与 `static/love/*` 是独立纪念页（约 1900 行，自带 IIFE 与 !important），**原样发布、不参与本文件的代码约定**，也不进 Hugo 构建与 Pagefind 索引。改动它们只需保证 robots 仍 `Disallow`（由 smoke 断言）。
+`static/love.html` 与 `static/love/*` 是独立纪念页（约 1900 行，自带 IIFE 与 !important），**原样发布、不参与本文件的代码写法约定**，也不进 Hugo 构建与 Pagefind 索引。改动它们只需保证 robots 仍 `Disallow`（由 smoke 断言）；同时它们仍在 smoke 的 `a11y` / `links` 全站扫描范围内（`<h1>`、`<main>`、skip link、`<nav aria-label>`、无站内断链），这两项已通过，别改坏。
 
 ### Front matter（文章）
 
@@ -216,6 +216,11 @@ npm run build     # site + search + smoke
 `npm run dev` 仅启动 Hugo server，不会生成或更新 Pagefind 索引；需要验证搜索时使用 `npm run build` 或 `npm run preview`。
 
 `smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 三级兜底；校验跨文件契约的**关系**而非具体数字（`:root` 是否导出 `--max-width` / `--content-width-px` / `--nav-close-timeout` / `--toc-side-breakpoint`，媒体查询是否用同一变量，JS 是否只读变量而不再写回退字面量，`render-image.html` 的 `sizes` 是否等于 `--content-width-px`）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
+
+`smoke` 另有两组全站扫描，都属于「文档规则 → 构建后断言」的固化，加新页时自动生效：
+
+- `a11y`：每个非跳转桩页都必须有 `<html lang>`、恰一个 `<h1>`、`<main>` 地标、跳转链接（且 `href` 指向的 id 真实存在）、`<img>` 有 `alt`、`<nav>` 有 `aria-label`、`<button>` 有 `aria-label` 或可见文本。
+- `links`：产物里所有以 `/` 开头的 `href` / `src` 必须能在 `public/` 里找到对应文件（目录式链接按 `index.html` 解析，锚点与查询串先剥掉）。断链在本地构建就能拦住，不必等线上 404。
 
 跨文件契约数字的唯一真源是 SCSS token（`$fontSize` / `$contentWidth` / `$duration` / `$tocSideBreakpoint`），经 `assets/scss/base/_responsive.scss` 与 `assets/scss/layout/_single.scss` 的 `:root` 导出为 CSS 变量；JS 与模板只读不写回退值，读不到变量就不启用对应功能。改 token 只动这两处，`smoke` 会兜住下游漂移。
 
