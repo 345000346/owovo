@@ -3,8 +3,7 @@
  * 这些规则原本只写在文档里，靠人肉自查；此模块把它们变成构建后断言。
  *
  * 断言前先剥掉 HTML 注释，避免注释里举例的标签被误计数。
- */
-import { readFile } from "node:fs/promises";
+ */import { readFile } from "node:fs/promises";
 import { relative } from "node:path";
 
 export const name = "a11y";
@@ -86,6 +85,23 @@ export async function run(ctx) {
         );
       }
     }
+
+    // id 必须全页唯一：重复时 aria-labelledby / aria-controls / 锚点会指向错误节点。
+    const ids = [
+      ...html.matchAll(/\sid=(?:"([^"]+)"|'([^']+)'|([^\s>]+))/g),
+    ].map((match) => match[1] ?? match[2] ?? match[3]);
+    const seen = new Set();
+    const duplicated = new Set();
+    for (const id of ids) {
+      if (seen.has(id)) {
+        duplicated.add(id);
+      }
+      seen.add(id);
+    }
+    ctx.assert(
+      duplicated.size === 0,
+      `${rel} has duplicate id(s): ${[...duplicated].join(", ")}`,
+    );
 
     for (const tag of html.match(/<img\b[^>]*>/gi) || []) {
       ctx.assert(
