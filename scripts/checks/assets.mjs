@@ -54,6 +54,22 @@ export async function run(ctx) {
     "main CSS must keep mobile navigation visible when JavaScript is unavailable",
   );
 
+  // 0. 级联层必须存在且顺序固定：层序即全站优先级，静默改变会打乱所有覆盖关系。
+  ctx.assert(
+    /@layer\s+base\s*,\s*themes\s*,\s*layout\s*,\s*components\s*,\s*pages\s*,\s*utilities\s*;/.test(
+      css,
+    ),
+    "main CSS must declare the cascade layer order base → themes → layout → components → pages → utilities",
+  );
+
+  // 0b. !important 预算：只剩「必须压过一切」的几类（visually-hidden / reduced-motion /
+  //     print / 主题切换期禁用过渡）。新增 !important 会撞上这个上限，逼人先想层序。
+  const importantCount = (css.match(/!important/g) ?? []).length;
+  ctx.assert(
+    importantCount <= 30,
+    `main CSS has ${importantCount} !important declarations (budget 30); prefer fixing the layer order or moving the rule to utils/_layer-overrides.scss`,
+  );
+
   // 1. :root 必须导出全部契约变量（JS / 模板都从这里取值）。
   const maxWidth = readCustomProperty(css, "--max-width");
   const contentWidthPx = readCustomProperty(css, "--content-width-px");
