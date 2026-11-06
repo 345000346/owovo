@@ -17,3 +17,9 @@ h6 {
     color: var(--color-contrast-higher);
   }
 }
+
+// 代码块的语言徽标自带下边框，紧贴下方的 .highlight 不该再有上外边距。
+// 竞争者是 components 层的 .highlight{margin:2rem 0}，靠层序压不过，故置此。
+.code-block[data-lang] .highlight {
+  margin-top: 0;
+}

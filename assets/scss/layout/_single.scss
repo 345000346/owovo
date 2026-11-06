@@ -334,9 +334,6 @@ pre {
     border-bottom: 1px solid
       functions.alpha(var(--color-contrast-low), 0.3);
   }
-  &[data-lang] .highlight {
-    margin-top: 0;
-  }
 }
 .code-block-status {
   @include mixins.visuallyHidden;

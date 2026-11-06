@@ -5,10 +5,12 @@
   margin: 0;
   list-style: none;
   margin-top: 5em;
-  padding: 0.5em 1em;
+  // 左边距沿用正文列表的 2em：此前由 layout 层的 .post ul 决定（特异性更高），
+  // 分层后组件层胜出，若不写死会变成 1em，属无意的视觉变化。
+  padding: 0.5em 1em 0.5em 2em;
   background-color: functions.alpha(var(--color-contrast-lower), 0.5);
   border-left: 3px solid functions.alpha(var(--color-primary), 0.5);
-  line-height: 2;
+  line-height: 1.8;
 }
 
 .copyright-item {
