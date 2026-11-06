@@ -128,12 +128,24 @@ function checkScripts() {
   }
 }
 
-/** index.js 导入的模块：作用域已由 ESM 隔离，它们只准导出，不准自启动。 */
-const IMPORTED_MODULES = [
-  "assets/js/theme.js",
-  "assets/js/navigation.js",
-  "assets/js/scroll-ui.js",
-];
+/** site.js 的入口。它自己的顶层调用是启动代码，不参与「不得自启动」检查。 */
+const SITE_ENTRY = "assets/js/index.js";
+
+/**
+ * 被入口 import 的模块清单：直接从 index.js 的 import 语句解析。
+ *
+ * 原先这里是第二份手写名单。名单会漂：往 index.js 加一行 import 而漏登记名单时，
+ * 那个模块就绕过了「不得顶层自启动」检查，而它偏偏会被入口再调用一次——
+ * 双重启动正是本条规则要拦的事，却因名单漂移静默失守。改为现场解析后不会漂移。
+ * @returns {string[]} 相对仓库根的模块路径（正斜杠）
+ */
+function importedModules() {
+  const entryDir = SITE_ENTRY.slice(0, SITE_ENTRY.lastIndexOf("/") + 1);
+  const entry = read(SITE_ENTRY);
+  return [...entry.matchAll(/from\s+"(\.\/[^"]+)"/g)].map(
+    (match) => entryDir + match[1].slice(2),
+  );
+}
 
 /**
  * 打包改成 ESM 后，只剩一条必须守住的约束：
@@ -142,16 +154,16 @@ const IMPORTED_MODULES = [
  * 独立入口（article.js / search-dialog.js / search-highlight.js）各自成包，允许顶层自调用。
  */
 function checkModuleEntries() {
-  for (const rel of IMPORTED_MODULES) {
+  for (const rel of importedModules()) {
     const text = read(rel);
     const topLevelCall = /^(?!\s)[A-Za-z_$][\w$]*\(\);\s*$/m.exec(text);
     assert(
       !topLevelCall,
-      `${rel}: 顶层不应自调用（${topLevelCall?.[0].trim()}）；被 index.js import 后会启动两次`,
+      `${rel}: 顶层不应自调用（${topLevelCall?.[0].trim()}）；被 ${SITE_ENTRY} import 后会启动两次`,
     );
     assert(
       /\bexport\s+(?:function|const|let|class)\s/.test(text),
-      `${rel}: 应 export 出 init 函数供 index.js 调用`,
+      `${rel}: 应 export 出 init 函数供 ${SITE_ENTRY} 调用`,
     );
   }
 }
