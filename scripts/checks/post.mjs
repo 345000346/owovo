@@ -8,7 +8,7 @@ export const name = "post";
 export async function run(ctx) {
   const postRel = await ctx.findSamplePostHtml();
   if (!postRel) {
-    ctx.failures.push("no post/*/index.html found to spot-check");
+    ctx.assert(false, "no post/*/index.html found to spot-check");
     return;
   }
 

@@ -3,25 +3,33 @@
  * 这些规则原本只写在文档里，靠人肉自查；此模块把它们变成构建后断言。
  *
  * 断言前先剥掉 HTML 注释，避免注释里举例的标签被误计数。
- */import { readFile } from "node:fs/promises";
+ */
+import { readFile } from "node:fs/promises";
 import { relative } from "node:path";
 
 export const name = "a11y";
 
-/** 去掉 HTML 注释，注释中出现的标签不计入统计。 */
-/** @param {string} html */
+/**
+ * 去掉 HTML 注释，注释中出现的标签不计入统计。
+ * @param {string} html
+ */
 function stripComments(html) {
   return html.replace(/<!--[\s\S]*?-->/g, "");
 }
 
-/** 是否是 Hugo 的刷新跳转桩页（page/1 之类），这类页面没有壳，不参与断言。 */
-/** @param {string} html */
+/**
+ * 是否是 Hugo 的刷新跳转桩页（page/1 之类），这类页面没有壳，不参与断言。
+ * @param {string} html
+ */
 function isRedirect(html) {
   return /<meta\b[^>]*http-equiv=(?:"refresh"|'refresh'|refresh)/i.test(html);
 }
 
-/** 取标签上某个属性的值（兼容带引号与不带引号）。 */
-/** @param {string} tag @param {string} attr */
+/**
+ * 取标签上某个属性的值（兼容带引号与不带引号）。
+ * @param {string} tag
+ * @param {string} attr
+ */
 function attrValue(tag, attr) {
   const match = tag.match(
     new RegExp(`\\s${attr}=(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i"),
@@ -29,8 +37,10 @@ function attrValue(tag, attr) {
   return match ? (match[1] ?? match[2] ?? match[3]) : null;
 }
 
-/** 去掉标签后剩下的可见文本。 */
-/** @param {string} html */
+/**
+ * 去掉标签后剩下的可见文本。
+ * @param {string} html
+ */
 function textOf(html) {
   return html
     .replace(/<[^>]*>/g, "")
@@ -118,12 +128,21 @@ export async function run(ctx) {
     }
 
     // 按钮的可访问名：要么 aria-label，要么自身可见文本。
-    for (const element of html.match(/<button\b[\s\S]*?<\/button>/gi) || []) {
-      const openTag = (element.match(/<button\b[^>]*>/i) || [""])[0];
+    //
+    // 边界取「最近一个 </button>」与「下一个 <button 开标签」之中更近的那个：
+    // 前者保证不漏判闭合，后者保证把一个按钮的文本永远算不到另一个头上
+    // （成对匹配正则的老毛病：少写闭合标签时会把后面按钮的文本吞进来）。
+    const buttonTags = [...html.matchAll(/<button\b[^>]*>/gi)];
+    for (const [index, match] of buttonTags.entries()) {
+      const openTag = match[0];
+      const start = match.index + openTag.length;
+      const closeIndex = html.indexOf("</button>", start);
+      const nextOpen = buttonTags[index + 1]?.index ?? html.length;
+      const endCandidates = [closeIndex === -1 ? html.length : closeIndex, nextOpen];
+      const end = Math.min(...endCandidates);
       const hasLabel = attrValue(openTag, "aria-label") !== null;
-      const inner = textOf(element.slice(openTag.length));
       ctx.assert(
-        hasLabel || inner.length > 0,
+        hasLabel || textOf(html.slice(start, end)).length > 0,
         `${rel} has a <button> with neither aria-label nor text: ${openTag.slice(0, 90)}`,
       );
     }

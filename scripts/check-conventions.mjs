@@ -93,7 +93,7 @@ function checkFileHygiene() {
   const files = TEXT_DIRS.flatMap(listFiles);
   for (const rel of files) {
     const text = read(rel);
-    assert(!text.includes("\r"),`${rel}: 含 CRLF，应为 LF`);
+    assert(!text.includes("\r"), `${rel}: 含 CRLF，应为 LF`);
     assert(!text.includes("\t"), `${rel}: 含制表符，应使用空格`);
     assert(text.endsWith("\n"), `${rel}: 文件末缺换行`);
     if (!rel.endsWith(".md")) {
