@@ -19,7 +19,7 @@
 {{- $images := slice -}}
 {{- $hasContentImage := false -}}
 {{- if $.Params.images -}}
-    {{- range . -}}
+    {{- range $.Params.images -}}
         {{- $images = $images | append (. | absURL) -}}
     {{- end -}}
 {{- else if $isPost -}}

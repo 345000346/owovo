@@ -6,6 +6,8 @@
 // 就应该放在这里而不是给组件加 !important。
 // 标题内的锚点链接不显示下划线：正文链接的下划线来自 layout 层的 .post-body a，
 // 而这一条写在 base 层，层序低于 layout，故必须上提到本层。
+// hover 回到主色同理：base 层的 a:hover{color:var(--color-primary)} 会被本层
+// 的固定 color 压过（层序高于 base），hover 反馈消失，故一并写在这里。
 h1,
 h2,
 h3,
@@ -15,6 +17,10 @@ h6 {
   a {
     text-decoration: none;
     color: var(--color-contrast-higher);
+
+    &:hover {
+      color: var(--color-primary);
+    }
   }
 }
 
