@@ -1,0 +1,55 @@
+{{- /* JSON-LD 结构化数据。dict：$ / title / description / pageURL / pubDate / images / person / hasPerson / publisher / license。 */ -}}
+{{- $ := index . "$" -}}
+{{- $title := .title -}}
+{{- $description := .description -}}
+{{- $pageURL := .pageURL -}}
+{{- $pubDate := .pubDate -}}
+{{- $images := .images -}}
+{{- $person := .person -}}
+{{- $hasPerson := .hasPerson -}}
+{{- $publisher := .publisher -}}
+{{- $license := .license -}}
+{{- $isPost := partial "utils/is-post.html" $ -}}
+{{- /* 三个分支各自的必填字段，共用 description 与可选尾巴。 */ -}}
+{{- $ld := dict
+    "@context" "https://schema.org"
+    "description" $description
+-}}
+{{- if $.IsHome -}}
+    {{- $ld = merge $ld (dict "@type" "WebSite" "url" $pageURL "name" $title) -}}
+    {{- with $images -}}
+        {{- $ld = merge $ld (dict "image" (index . 0)) -}}
+    {{- end -}}
+{{- else if $isPost -}}
+    {{- $ld = merge $ld (dict
+        "@type" "BlogPosting"
+        "datePublished" $pubDate
+        "url" $pageURL
+        "headline" $title
+        "inLanguage" $.Site.Language.Locale
+        "articleSection" $.Section
+        "wordCount" $.WordCount
+        "publisher" $publisher
+        "mainEntityOfPage" (dict "@type" "WebPage" "@id" $pageURL)
+    ) -}}
+{{- else -}}
+    {{- $ld = merge $ld (dict
+        "@type" "WebPage"
+        "url" $pageURL
+        "name" $title
+        "publisher" $publisher
+        "mainEntityOfPage" (dict "@type" "WebPage" "@id" $pageURL)
+    ) -}}
+{{- end -}}
+{{- /* 首页只取首图（单值）；文章与普通页输出全部图（数组）。 */ -}}
+{{- if and $images (not $.IsHome) -}}
+    {{- $ld = merge $ld (dict "image" $images) -}}
+{{- end -}}
+{{- if and $hasPerson (or $.IsHome $isPost) -}}
+    {{- $ld = merge $ld (dict "author" $person) -}}
+{{- end -}}
+{{- with $license -}}
+    {{- $ld = merge $ld (dict "license" .) -}}
+{{- end -}}
+{{- /* jsonify 默认转义 <>&（防 script breakout），返回 template.HTML；safeJS 防 <script> 上下文双重编码。 */ -}}
+<script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
