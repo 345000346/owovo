@@ -1,7 +1,8 @@
 // 移动端导航：开合、焦点陷阱、背景 inert、滚动锁定。
 //
 // 契约：.nav-toggle / .header / .nav-curtain / .nav；
-// --max-width 与 _responsive.scss $maxWidth 同步；关闭兜底 ≥ $duration（0.5s）；
+// --max-width / --nav-close-timeout 由 base/_responsive.scss 的 :root 导出，
+// 本文件只读不写回退值；变量缺失时不接管导航，交回 CSS 的纯展示态。
 // 监听 site:close-navigation（搜索打开时关菜单）。
 // 背景遮蔽只写 inert + aria-hidden（3 处固定元素）：inert 自 2022 起已包含
 // 移出 Tab 序与 AT 可达性语义，不再逐元素记账 tabindex。
@@ -24,13 +25,18 @@ function initNavigation() {
   let restoreFocusOnClose = false;
   let lockedScrollY = 0;
 
-  const maxWidthRaw = window
-    .getComputedStyle(document.documentElement, null)
-    .getPropertyValue("--max-width")
-    .trim();
-  // 与 _responsive.scss $maxWidth 同步（fontSize * ($contentWidth + 5)）。
-  const maxWidth = maxWidthRaw || "846px";
+  const rootStyle = window.getComputedStyle(document.documentElement, null);
+  const readVariable = (name) => rootStyle.getPropertyValue(name).trim();
+  // 断点与关闭兜底均来自 SCSS 的 :root 变量（见 base/_responsive.scss），
+  // 这里不写回退字面量：读不到就不接管移动导航，交回 CSS 的纯展示态。
+  const maxWidth = readVariable("--max-width");
+  if (!maxWidth) {
+    console.error("navigation: --max-width missing, mobile navigation disabled");
+    return;
+  }
   const navMediaQuery = window.matchMedia(`(max-width: ${maxWidth})`);
+  // 单位毫秒的纯数字；NaN 表示变量缺失，closeNav 会跳过兜底计时器。
+  const navCloseTimeout = Number.parseInt(readVariable("--nav-close-timeout"), 10);
 
   function isOpen() {
     return navToggle.getAttribute("aria-expanded") === "true";
@@ -226,8 +232,11 @@ function initNavigation() {
 
     header.classList.add("fade");
     window.clearTimeout(closeTimer);
-    // 须 ≥ $duration（0.5s）；幕布 transitionend 也会 finishClose。
-    closeTimer = window.setTimeout(finishClose, 600);
+    // 兜底时长来自 SCSS（$duration × 1.2），幕布 transitionend 通常会先 finishClose；
+    // 变量缺失时退化为只等 transitionend，不写死数值。
+    if (Number.isFinite(navCloseTimeout)) {
+      closeTimer = window.setTimeout(finishClose, navCloseTimeout);
+    }
   }
 
   function handleViewportChange(event) {

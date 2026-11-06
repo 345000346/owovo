@@ -129,15 +129,18 @@ function initTocSpy() {
   }
 
   // 折叠默认：移动端（<断点）折叠，桌面端由模板 open 默认展开；
-  // 跨断点（旋转/分屏）恢复默认。断点同源自 SCSS --toc-side-breakpoint。
-  // 无记忆（用户要求）；无 JS 时维持模板默认（全部展开）。
+  // 跨断点（旋转/分屏）恢复默认。断点唯一真源是 _single.scss $tocSideBreakpoint，
+  // 经 :root --toc-side-breakpoint 导出；变量缺失时不动 DOM，维持模板默认（展开）。
   function initTocCollapse() {
     const breakpointRaw = window
       .getComputedStyle(document.documentElement, null)
       .getPropertyValue("--toc-side-breakpoint")
       .trim();
-    // 与 _single.scss $tocSideBreakpoint 同源；CSS 变量缺失时回退。
-    const wide = window.matchMedia(`(min-width: ${breakpointRaw || "68em"})`);
+    if (!breakpointRaw) {
+      console.error("article: --toc-side-breakpoint missing, TOC stays expanded");
+      return;
+    }
+    const wide = window.matchMedia(`(min-width: ${breakpointRaw})`);
     function applyDefault() {
       contents.open = wide.matches;
     }

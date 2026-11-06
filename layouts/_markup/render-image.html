@@ -18,8 +18,10 @@
         {{- end -}}
         {{- $webp := $image.Resize (printf "%dx webp q75" $targetWidth) -}}
         {{- $srcset = $srcset | append (printf "%s %dw" $webp.RelPermalink $webp.Width) -}}
-        {{- /* sizes：断点与取值均 = $contentWidth(42em) × 根字号 18px = 756px；改 $contentWidth/$fontSize 需同步。
+        {{- /* sizes：断点与取值均 = $contentWidth(42em) × 根字号 18px = 756px。
              不用 em：媒体查询中的 em 基于 UA 默认字号（≈16px）而非根字号，会偏离实际内容宽。
+             构建期常量读不到 SCSS token：改 $contentWidth/$fontSize 时由 smoke 对账
+              :root --content-width-px（scripts/checks/assets.mjs）兜住。
              仅多候选时输出：单候选（原图窄于 640）下 sizes 不参与选择。 */ -}}
         <picture>
             <source type="image/webp" srcset="{{ delimit $srcset ", " }}"{{ if gt (len $srcset) 1 }} sizes="(max-width: 756px) 100vw, 756px"{{ end }} />

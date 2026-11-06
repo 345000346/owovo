@@ -1,12 +1,26 @@
-// 响应式与移动导航；$maxWidth / --max-width 与 navigation.js 同步。
+// 响应式与移动导航。
+//
+// 跨文件契约数字的**唯一真源**在本文件 + _variables.scss，全部经 :root 变量向下游导出：
+//   --max-width        ← $maxWidth（$fontSize × ($contentWidth + 5)）   navigation.js 读
+//   --content-width-px ← $contentWidth × $fontSize（正文实际像素宽）    render-image.html 的 sizes 由 smoke 对账
+//   --nav-close-timeout ← $duration × 1.2（毫秒）                        navigation.js 读
+// 下游（JS / 模板）不再写回退字面量，读不到变量就不启用对应功能；
+// 改 token 只需动这里与 _variables.scss，smoke 校验的是「关系」而非具体数值。
+@use "sass:math";
 @use "../utils/functions";
 @use "../utils/variables";
 
 // 内容宽再加 5em 作为「桌面 → 移动」切换阈值。
 $maxWidth: variables.$fontSize * (functions.strip-unit(variables.$contentWidth) + 5);
 
+// 导航关闭兜底（毫秒）：须 ≥ transition 时长（$duration），留 20% 余量，
+// 用于幕布 transitionend 未触发时（如后台标签页）仍能收尾。
+$navCloseTimeout: math.div(variables.$duration, 1s) * 1200;
+
 :root {
   --max-width: #{$maxWidth};
+  --content-width-px: #{functions.strip-unit(variables.$contentWidth) * variables.$fontSize};
+  --nav-close-timeout: #{$navCloseTimeout};
 }
 
 @media (max-width: $maxWidth) {
