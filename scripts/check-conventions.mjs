@@ -111,8 +111,16 @@ function checkScripts() {
     if (!rel.endsWith(".js")) {
       continue;
     }
-    assertNoLineMatch(rel, /^\s+var\s/, "使用了 var，应为 const / let");
+    assertNoLineMatch(rel, /^\s*var\s/, "使用了 var，应为 const / let");
     assertNoLineMatch(rel, /["']use strict["']/, "module 已 strict，不应写 use strict");
+  }
+
+  // 归属文件必须真实存在：文件被改名/删除时这条规则要立刻显形，
+  // 否则「唯一落点」名存实亡，其余模块的 import 全部悬空。
+  if (!jsFiles.includes(MEDIA_QUERY_OWNER)) {
+    failures.push(
+      `${MEDIA_QUERY_OWNER} 不存在：系统偏好查询的唯一落点被移动或删除，请同步更新本文件与各 import`,
+    );
   }
 
   // 同一份偏好重复探测会漂移（导航用自建查询、主题用变量，reduced motion 曾三处不同实现）。
@@ -142,9 +150,11 @@ const SITE_ENTRY = "assets/js/index.js";
 function importedModules() {
   const entryDir = SITE_ENTRY.slice(0, SITE_ENTRY.lastIndexOf("/") + 1);
   const entry = read(SITE_ENTRY);
-  return [...entry.matchAll(/from\s+"(\.\/[^"]+)"/g)].map(
-    (match) => entryDir + match[1].slice(2),
-  );
+  // 单引号与双引号都是合法 ESM 写法，只认双引号会让单引号 import 绕过检查。
+  const specs = [
+    ...entry.matchAll(/from\s+["'](\.[^"']+)["']/g).map((m) => m[1]),
+  ];
+  return specs.map((spec) => entryDir + spec.slice(2));
 }
 
 /**
@@ -156,13 +166,18 @@ function importedModules() {
 function checkModuleEntries() {
   for (const rel of importedModules()) {
     const text = read(rel);
-    const topLevelCall = /^(?!\s)[A-Za-z_$][\w$]*\(\);\s*$/m.exec(text);
+    // 顶层自调用的判定：非缩进行、以标识符开头、整行就是一次调用。
+    // `(?!\s)` 排除函数体内的缩进调用；`\w+\.init()` / `await init()` 这类
+    // 复合形态同样算自启动，一并拦下（模块顶层没有等待的意义）。
+    const topLevelCall =
+      /^(?!\s)[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*\(\);\s*$/m.exec(text) ??
+      /^(?!\s)(?:await\s+|void\s+)[A-Za-z_$][\w$]*\(\);\s*$/m.exec(text);
     assert(
       !topLevelCall,
       `${rel}: 顶层不应自调用（${topLevelCall?.[0].trim()}）；被 ${SITE_ENTRY} import 后会启动两次`,
     );
     assert(
-      /\bexport\s+(?:function|const|let|class)\s/.test(text),
+      /\bexport\s+(?:function|const|let|class|\{|\*)/.test(text),
       `${rel}: 应 export 出 init 函数供 ${SITE_ENTRY} 调用`,
     );
   }
@@ -207,9 +222,14 @@ function checkContent() {
       assert(new RegExp(`^${field}:`, "m").test(fm), `${rel}: 缺少必填字段 ${field}`);
     }
     assert(!/^toc:\s*true\s*$/m.test(fm), `${rel}: 文章 TOC 默认开，勿写 toc: true`);
-    const slug = fm.match(/^slug:\s*"([^"]*)"/m)?.[1];
+    // slug 允许带引号或不带引号（YAML 标量两种写法都合法）。
+    const slug = fm.match(/^slug:\s*(?:"([^"]*)"|'([^']*)'|(\S+))/m);
+    const slugValue = slug ? (slug[1] ?? slug[2] ?? slug[3]) : undefined;
     const dir = rel.split("/")[2];
-    assert(slug === dir, `${rel}: slug "${slug}" 与目录名 "${dir}" 不一致`);
+    assert(
+      slugValue === dir,
+      `${rel}: slug "${slugValue}" 与目录名 "${dir}" 不一致`,
+    );
   }
 }
 
