@@ -11,15 +11,16 @@ import { join, relative } from "node:path";
 export const name = "links";
 
 /**
- * 取出可扫描的标签属性区：剥掉 HTML 注释与 <script> / <style> 的内容，
+ * 取出可扫描的标签属性区：剥掉 HTML 注释与 <script> / <style> 的**内容**，
  * 避免把 JS 字符串里的 `x.src = "…"` 当成真实链接（内联脚本里出现同名赋值时会误报）。
+ * 开标签本身保留——`<script src=…>` 的 src 正是要扫的引用。
  * @param {string} html
  */
 function attrScope(html) {
   return html
     .replace(/<!--[\s\S]*?-->/g, "")
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
-    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "");
+    .replace(/(<script\b[^>]*>)[\s\S]*?<\/script>/gi, "$1")
+    .replace(/(<style\b[^>]*>)[\s\S]*?<\/style>/gi, "$1");
 }
 
 /**
@@ -76,6 +77,11 @@ function toPublicPath(ref) {
   } catch {
     decoded = clean;
   }
+  // URL 规范对 http(s) 这类特殊 scheme 把反斜杠当正斜杠解析：
+  // `/..\secret.html` 在浏览器里就是 `/../secret.html`，归一化后是 `/secret.html`。
+  // 若不先归一化，`..\secret.html` 会被当成一个完整段名 join 进 public，
+  // 摸到 public 之外的真实文件而误判「存在」（路径穿越假绿）。
+  decoded = decoded.replaceAll("\\", "/");
   const segments = [];
   for (const part of decoded.split("/")) {
     if (!part || part === ".") {

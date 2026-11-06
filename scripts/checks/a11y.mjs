@@ -89,8 +89,13 @@ export async function run(ctx) {
       );
       if (href !== null && href.startsWith("#") && href.length > 1) {
         const id = href.slice(1);
+        // id 直接拼进 RegExp 会把 `a[b` 之类畸形值变成非法正则并炸掉整个模块，
+        // 所以用与下方 id 清单一致的匹配集合做字符串判断。
+        const existingIds = [
+          ...html.matchAll(/\sid=(?:"([^"]+)"|'([^']+)'|([^\s>]+))/g),
+        ].map((match) => match[1] ?? match[2] ?? match[3]);
         ctx.assert(
-          new RegExp(`\\sid=(?:"${id}"|'${id}'|${id})(?:\\s|>)`).test(html),
+          existingIds.includes(id),
           `${rel} skip link targets #${id} but no such id exists`,
         );
       }
