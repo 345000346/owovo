@@ -108,13 +108,15 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 - 被 `index.js` import 的模块（`theme.js` / `navigation.js` / `scroll-ui.js`）**必须 export 且不得顶层自启动**——自启动会被启动两次。
 - 媒体查询单点：`prefers-color-scheme` / `prefers-reduced-motion` 只允许出现在 `assets/js/lib/env.js`，其余模块必须 import。
 - `assets/scss`：只用 `@use` / `@forward`，禁 `@import`；自有 class 禁 `__` BEM（第三方 `pagefind-ui__*` 除外）。
+- 级联层顺序固定为 `base → themes → layout → components → pages → utilities`（`main.scss` 顶部的 `@layer` 声明，smoke 断言）。新增 partial 只需 `@include meta.load-css(...)` 放进对应层。
+- `!important` 只允许出现在四类「必须压过一切」的地方：`.visually-hidden`、`prefers-reduced-motion` 兜底、`@media print`、主题切换期禁用过渡。其余覆盖一律靠层序或提到 `utils/_layer-overrides.scss`；产物里的 `!important` 总数受 smoke 预算（≤ 30）约束。
 - `content`：必填 `title` `date` `slug` `description` `tags`；禁 `categories` / `lastmod`；文章不写 `toc: true`；`slug` 必须等于目录名。
 
 ### 软约定（人工遵守）
 
 - 缩进：JS / SCSS / YAML / `scripts` 用 2 空格，`layouts/**` 用 4 空格（模板内 `<script>` 体内的 JS 用 2 空格）。
 - JS：双引号优先；语句带分号；文件头写明职责与跨文件契约；结构为 常量/选择器 → 纯函数 → `init…()` → 文件末调用；DOM 缺失静默 `return`，仅失败路径 `console.error`。不要用脚本级 `{ … }` / IIFE 包一层（独立 module 天然隔离）。
-- SCSS：partial 以 `_` 开头；入口只有 `main.scss`（按 base → themes → layout → components → pages → responsive 分组）；token 放 `utils/_variables.scss` 与主题 CSS 变量；嵌套建议 ≤ 3；新组件 = partial + `components/_*.scss`（+ 必要时 JS）并在 `main.scss` `@use`。
+- SCSS：partial 以 `_` 开头；入口只有 `main.scss`（六层归组：base / themes / layout / components / pages / utilities）；token 放 `utils/_variables.scss` 与主题 CSS 变量；`z-index` 只用 `$z*` token；嵌套建议 ≤ 3；新组件 = partial + `components/_*.scss`（+ 必要时 JS）并在 `main.scss` 对应层的 `meta.load-css` 里登记。
 - 与模板的 `id` / `class` / `data-*` 是契约，改名必须两侧同改。
 - 提交信息：`type(scope): 一句话摘要` + 空行 + 正文；摘要与正文都用简单直白的中文说清改了什么、为什么改；按变更类型拆分提交。
 
