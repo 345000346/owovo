@@ -210,7 +210,9 @@ npm run build     # site + search + smoke
 
 `npm run dev` 仅启动 Hugo server，不会生成或更新 Pagefind 索引；需要验证搜索时使用 `npm run build` 或 `npm run preview`。
 
-`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 三级兜底；校验跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 68em、导航关闭兜底 600ms ≥ 过渡时长）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
+`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 三级兜底；校验跨文件契约的**关系**而非具体数字（`:root` 是否导出 `--max-width` / `--content-width-px` / `--nav-close-timeout` / `--toc-side-breakpoint`，媒体查询是否用同一变量，JS 是否只读变量而不再写回退字面量，`render-image.html` 的 `sizes` 是否等于 `--content-width-px`）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
+
+跨文件契约数字的唯一真源是 SCSS token（`$fontSize` / `$contentWidth` / `$duration` / `$tocSideBreakpoint`），经 `assets/scss/base/_responsive.scss` 与 `assets/scss/layout/_single.scss` 的 `:root` 导出为 CSS 变量；JS 与模板只读不写回退值，读不到变量就不启用对应功能。改 token 只动这两处，`smoke` 会兜住下游漂移。
 
 模板改动建议：
 
