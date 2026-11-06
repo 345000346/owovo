@@ -30,6 +30,6 @@
     "@fontsource-variable/noto-serif-sc": "5.3.1",
     "@fontsource/source-code-pro": "5.3.1",
     "pagefind": "1.5.2",
-    "sass-embedded": "1.105.2"
+    "sass-embedded": "1.107.0"
   }
 }
