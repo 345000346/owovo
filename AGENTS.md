@@ -56,7 +56,7 @@ layouts/                  # 站点模板（Hugo 新模板系统；已压平，�
   post/                   # 文章 single
   archives/               # 文章归档普通页（type: archives）
 assets/
-  js/                     # 见下文「JS 拆分与 Concat」
+  js/                     # 见下文「JS 打包（ESM + js.Build）」
   scss/                   # Dart Sass：main.scss 入口；token 在 utils/_variables.scss
   css/fonts.css           # sync-fonts 生成（gitignore）
 data/                     # Socials.toml、SVG.toml；font_preload.json 由 sync-fonts 生成
@@ -81,11 +81,13 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 - **单语（简体中文）**：无 i18n；UI 文案写在模板里。`defaultContentLanguage: zh-cn` 与 `locale` 用于 `lang` / SEO / Pagefind。
 - **配置最小化**：视觉进 SCSS；功能默认写死在模板；`params` 只留作者、描述、主题色等。`themeColor` / `themeColorDark` **必填**。
 - **Dart Sass**：`css.Sass`（`dartsass` + `sass-embedded`）；只允许 `@use` / `@forward`。
-- **JS 拆分与 Concat**（`layouts/_partials/script.html`）：
-  - **全站一包**：`theme.js` + `navigation.js` + `scroll-ui.js` → `resources.Concat` 为 `js/site.js` → Minify + Fingerprint（一个请求、源码分文件）。
-  - **Concat 作用域**：三文件拼成**同一个** `type="module"`，顶层 `const` / `function` **共用作用域**。标识符必须在三文件间**全局唯一**（禁止两个文件都导出顶层 `init` / 同名 helper）。实现尽量收进各自 `init…()` 内部。由 `npm run lint` 断言。
-  - **独立模块**（各一请求）：`search-dialog.js`（全站）；`article.js`（文章页，以及 `toc: true` 的普通页）；`search-highlight.js`（仅 `?hl=`，由 loader 注入）。
-- **FOUC**：内联脚本在 `layouts/_partials/head.html`，与 `theme.js` 契约必须同步（见 `theme.js` 文件头）；同时给 `<html>` 标记 `.js`，移动导航只在该标记存在时折叠。
+- **JS 打包（ESM + `js.Build`）**（`layouts/_partials/script.html`）：
+  - **全站一包**：`assets/js/index.js` 是唯一入口，`import` 三个模块（`theme.js` / `navigation.js` / `scroll-ui.js`）后按序调用各自 `init…()`；`js.Build` 打平成 `js/site.js`，再 Fingerprint（一个请求、源码分文件、作用域天然隔离）。
+  - **模块只准导出，不准自启动**：被 `index.js` import 的三个文件不得在顶层调用 `init…()`，否则启动两次；由 `npm run lint` 断言。
+  - **独立模块**（各一入口）：`search-dialog.js`（全站）；`article.js`（文章页，以及 `toc: true` 的普通页）；`search-highlight.js`（仅 `?hl=`，由 loader 注入）。这三个各自成包，允许顶层自启动。
+  - **共用工具**：`assets/js/lib/env.js` 独占 `prefers-color-scheme` / `prefers-reduced-motion` 查询，其它模块一律 import，不得自建；由 `npm run lint` 断言。
+  - **内联脚本**：`<head>` 的 FOUC、TOC 首帧折叠、`?hl=` loader 的源码放在 `assets/js/inline/`，模板里用 `js.Build (format "iife")` + `.Content | safeJS` 内联，不在模板中手写 JS。
+- **FOUC**：`assets/js/inline/fouc.js`，与 `theme.js` 契约必须同步（见两文件文件头）；同时给 `<html>` 标记 `.js`，移动导航只在该标记存在时折叠。
 - **SEO**：`_partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）；OG/Twitter 图优先级：页级 `images` → 文章 bundle 首图 → `siteLogo` 兜底（头像）。
 - **taxonomy**：仅 `tags`。
 - **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 拷贝官方 index **全部分片**（不做站点用字扫描）。`data/font_preload.json` = latin + 固定 CJK 白名单（缺文件则跳过）；其余 CJK 靠 `unicode-range`。调试：`npm run sync:fonts:stats`。
@@ -103,7 +105,8 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 
 - 文件层：UTF-8、LF、文件末换行、无制表符、无行尾空白（markdown 除外，行尾两空格是硬换行语义）。
 - `assets/js`：禁用 `var`（module 内一律 `const` / `let`）；不写 `"use strict"`（`type="module"` 已严格）。
-- Concat 三文件（`theme.js` / `navigation.js` / `scroll-ui.js`）顶层 `const` / `let` / `function` / `class` **不得重名**——三文件拼成同一个作用域，重名即运行时报错。
+- 被 `index.js` import 的模块（`theme.js` / `navigation.js` / `scroll-ui.js`）**必须 export 且不得顶层自启动**——自启动会被启动两次。
+- 媒体查询单点：`prefers-color-scheme` / `prefers-reduced-motion` 只允许出现在 `assets/js/lib/env.js`，其余模块必须 import。
 - `assets/scss`：只用 `@use` / `@forward`，禁 `@import`；自有 class 禁 `__` BEM（第三方 `pagefind-ui__*` 除外）。
 - `content`：必填 `title` `date` `slug` `description` `tags`；禁 `categories` / `lastmod`；文章不写 `toc: true`；`slug` 必须等于目录名。
 
