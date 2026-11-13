@@ -22,24 +22,6 @@ article.content.post.home {
       -webkit-line-clamp: 3;
     }
   }
-
-  .read-more-link {
-    color: var(--color-primary);
-    font-weight: 600;
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.25em;
-
-    &:hover {
-      text-decoration-thickness: 3px;
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--color-primary);
-      outline-offset: 4px;
-      border-radius: 2px;
-    }
-  }
 }
 
 .summary-title-link {
@@ -56,6 +38,21 @@ article.content.post.home {
 }
 .read-more-link {
   display: inline-block;
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+
+  &:hover {
+    text-decoration-thickness: 3px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
 }
 
 .pagination {
