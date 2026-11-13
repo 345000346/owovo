@@ -27,14 +27,17 @@ tags: ["V2ex", "油猴", "脚本"]
 点击这个
 
 ![Tampermonkey 扩展安装页面](tampermonkey-install.png)
+{data-no-dark-filter=true}
 
 或者
 
 ![Tampermonkey 安装确认界面](tampermonkey-confirm.png)
+{data-no-dark-filter=true}
 
 进入新建脚本
 
 ![Tampermonkey 新建脚本界面](tampermonkey-script-editor.png)
+{data-no-dark-filter=true}
 
 将下面一段代码复制进去
 

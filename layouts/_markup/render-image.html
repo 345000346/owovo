@@ -1,4 +1,10 @@
-{{/* 页内图：资源目录图出响应式 WebP；外链原样。 */}}
+{{/* 页内图：资源目录图出响应式 WebP；外链原样。
+    首图 eager/high 以改善 LCP；其余 lazy。
+    data-no-dark-filter 由 Markdown 块属性提供（如 `{data-no-dark-filter=true}`；markup.yaml 已开启 attribute.block）。 */}}
+{{- $isFirst := eq .Ordinal 0 -}}
+{{- $loading := cond $isFirst "eager" "lazy" -}}
+{{- $attributes := .Attributes | default dict -}}
+{{- $noDarkFilter := isset $attributes "data-no-dark-filter" -}}
 {{- $destination := .Destination -}}
 {{- $path := strings.TrimPrefix "./" $destination -}}
 {{- with .Page.Resources.GetMatch $path -}}
@@ -23,17 +29,17 @@
              仅多候选时输出：单候选（原图窄于 640）下 sizes 不参与选择。 */ -}}
         <picture>
             <source type="image/webp" srcset="{{ delimit $srcset ", " }}"{{ if gt (len $srcset) 1 }} sizes="(max-width: 756px) 100vw, 756px"{{ end }} />
-            <img src="{{ $fallback.RelPermalink }}" alt="{{ $.Text }}" width="{{ $fallback.Width }}" height="{{ $fallback.Height }}" decoding="async" loading="lazy"
+            <img src="{{ $fallback.RelPermalink }}" alt="{{ $.Text }}" width="{{ $fallback.Width }}" height="{{ $fallback.Height }}" decoding="async" loading="{{ $loading }}"{{ if $isFirst }} fetchpriority="high"{{ end }}{{ if $noDarkFilter }} data-no-dark-filter{{ end }}
             {{- with $.Title }} title="{{ . }}"{{ end -}}
             />
         </picture>
     {{- else -}}
-        <img src="{{ $image.RelPermalink }}" alt="{{ $.Text }}" decoding="async" loading="lazy"
+        <img src="{{ $image.RelPermalink }}" alt="{{ $.Text }}" decoding="async" loading="{{ $loading }}"{{ if $isFirst }} fetchpriority="high"{{ end }}{{ if $noDarkFilter }} data-no-dark-filter{{ end }}
         {{- with $.Title }} title="{{ . }}"{{ end -}}
         />
     {{- end -}}
 {{- else -}}
-    <img src="{{ $destination }}" alt="{{ .Text }}" decoding="async" loading="lazy"
+    <img src="{{ $destination }}" alt="{{ .Text }}" decoding="async" loading="{{ $loading }}"{{ if $isFirst }} fetchpriority="high"{{ end }}{{ if $noDarkFilter }} data-no-dark-filter{{ end }}
     {{- with .Title }} title="{{ . }}"{{ end -}}
     />
 {{- end -}}

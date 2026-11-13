@@ -186,6 +186,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 - 转载：`source`（可选 `author`）；过时：`outdated` + 建议 `outdatedNote`
 - 关于页：`type: page` + `toc: true`（无专壳，走通用单页）
 - 图片放文章目录内引用（Hugo 可出响应式 WebP）
+- 深色模式不压暗截图：在独立图片下一行写 `{data-no-dark-filter=true}`（需独占一行；`markup.yaml` 已开启 block attributes）
 - permalink：`/post/:slug/`
 
 ## 验证

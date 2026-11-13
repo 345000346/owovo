@@ -3,6 +3,11 @@ goldmark:
   renderer:
     # 禁止 Markdown 中未经审查的原始 HTML
     unsafe: false
+  parser:
+    # 允许独立图片使用 {data-no-dark-filter=true} 等块属性（render-image.html 读取）
+    wrapStandAloneImageWithinParagraph: false
+    attribute:
+      block: true
 
 # 目录（TOC）配置
 # 显式声明，避免依赖 Hugo 默认值导致行为漂移
