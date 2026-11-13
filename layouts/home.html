@@ -13,7 +13,7 @@
                     <div class="summary">
                         {{ .Summary | plainify | htmlUnescape | strings.TrimSpace }}
                     </div>
-                    {{ if or .Truncated .Params.summary }}
+                    {{ if .Truncated }}
                         <div class="read-more-container">
                             <a href="{{ .RelPermalink }}" class="read-more-link">阅读更多 »</a>
                         </div>
