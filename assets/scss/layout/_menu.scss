@@ -38,6 +38,12 @@
   }
 }
 
+// 无 JS 时主题切换与搜索都不可用，菜单项隐藏（移动端改为 3 列排满）。
+:root:not(.js) .menu-item-theme,
+:root:not(.js) .menu-item-search {
+  display: none;
+}
+
 .active {
   a {
     color: var(--color-primary);

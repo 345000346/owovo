@@ -49,6 +49,10 @@ $maxWidth: variables.$fontSize * (functions.strip-unit(variables.$contentWidth) 
     grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: stretch;
   }
+  // 无 JS 时隐藏主题/搜索后剩 6 项，3 列正好排满。
+  :root:not(.js) .menu {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
   .menu-item {
     margin: 0;
     padding: 0.85em 0.35em;

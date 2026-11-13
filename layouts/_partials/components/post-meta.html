@@ -13,7 +13,7 @@
     {{ end }}
     {{- if $isHome -}}
         {{- with $.Params.tags -}}
-            <div class="post-meta-item post-meta-tags" aria-label="标签">
+            <div class="post-meta-item post-meta-tags" role="group" aria-label="标签">
                 {{- $tagIcon := partial "utils/icon.html" (dict "$" $ "name" "tag" "class" "post-meta-icon") -}}
                 <span class="post-meta-tags-icon">{{- $tagIcon -}}</span>
                 {{- partial "utils/taxonomy-links.html" (dict "$" $ "taxonomy" "tags" "terms" . "class" "post-meta-tag-link") -}}

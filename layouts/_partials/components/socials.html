@@ -1,12 +1,12 @@
 {{/* 页脚社交图标：data/Socials.toml 中 footer=true 的项。 */}}
 {{ with hugo.Data.Socials }}
-    {{- $items := .items | default .socials -}}
+    {{- $items := .items | default slice -}}
     <ul class="socials">
         {{- range where (sort $items "weight") "footer" true -}}
             {{- $url := .url | safeURL -}}
             {{- $isExternal := or (strings.HasPrefix $url "http://") (strings.HasPrefix $url "https://") -}}
             <li class="socials-item">
-                <a href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="external noopener noreferrer"{{ end }} title="{{ .title }}">
+                <a href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="external noopener noreferrer"{{ end }} title="{{ .title }}" aria-label="{{ .title }}">
                     {{- $icon := partial "utils/icon.html" (dict "$" $ "name" .icon "class" "social-icon") -}}
                     {{- if $icon -}}
                         {{- $icon -}}
