@@ -1,8 +1,10 @@
 {{- /* 代码块外壳（复制按钮）；高亮默认见 config/_default/markup.yaml。 */ -}}
 {{- $lang := .Type | default "" -}}
 {{- $result := transform.HighlightCodeBlock . -}}
+{{- /* 复制按钮与行号不是正文，排除出 Pagefind 索引。 */ -}}
+{{- $code := replaceRE `<span class="lnt">` `<span class="lnt" data-pagefind-ignore>` (string $result.Wrapped) -}}
 <div class="code-block"{{ with $lang }} data-lang="{{ . }}"{{ end }}>
-    {{ $result.Wrapped | safeHTML }}
-    <button type="button" class="copy-button">复制</button>
-    <span class="code-block-status" aria-live="polite"></span>
+    {{ $code | safeHTML }}
+    <button type="button" class="copy-button" data-pagefind-ignore>复制</button>
+    <span class="code-block-status" aria-live="polite" data-pagefind-ignore></span>
 </div>
