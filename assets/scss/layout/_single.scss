@@ -45,7 +45,7 @@ $tocSideBreakpoint: 68em;
 }
 
 .post-body {
-  margin-top: 5em !important;
+  margin-top: 5em;
   a {
     text-decoration: underline;
     text-decoration-color: var(--color-contrast-low);
@@ -67,6 +67,8 @@ $tocSideBreakpoint: 68em;
     display: block;
     margin: 2em auto;
     max-width: 100%;
+    height: auto;
+    box-sizing: border-box;
     border: 1px solid var(--color-contrast-lower);
     clear: both;
   }
@@ -306,6 +308,7 @@ pre {
     opacity variables.$duration;
   cursor: pointer;
   opacity: 0;
+  pointer-events: none;
   // 实心主色底：前景沿用 --color-bg，明暗主题均 ≥4.5:1（半透明混合曾低至 2.19:1）。
   &:hover,
   &:focus-visible {
@@ -319,6 +322,7 @@ pre {
   &:focus-within .copy-button,
   .copy-button:focus-visible {
     opacity: 1;
+    pointer-events: auto;
   }
   // 语言徽标：render-codeblock.html 已写 data-lang，这里用伪元素展示。
   &[data-lang]::before {
@@ -349,5 +353,6 @@ pre {
 @media (hover: none), (pointer: coarse) {
   .code-block .copy-button {
     opacity: 0.85;
+    pointer-events: auto;
   }
 }
