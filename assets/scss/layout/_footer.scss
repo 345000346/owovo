@@ -2,9 +2,9 @@
 @use "../utils/variables";
 
 .footer {
-  position: absolute;
-  bottom: 0;
+  flex: 0 0 auto;
   width: 100%;
+  margin-top: auto;
   font-size: 90%;
   color: var(--color-contrast-medium);
   a {

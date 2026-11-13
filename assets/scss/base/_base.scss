@@ -94,6 +94,8 @@ body {
 
 body {
   @include mixins.tabSize;
+  display: flex;
+  flex-direction: column;
   color: var(--color-contrast-high);
   background-color: var(--color-bg);
   overflow-wrap: break-word;
@@ -105,20 +107,24 @@ body {
 }
 
 .container {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
   min-height: 100%;
   min-width: 100%;
   position: relative;
 }
 
 .main {
-  padding: 7em 1em 15em;
+  flex: 1 0 auto;
+  padding: 7em 1em 3em;
   display: block;
 }
 
 @media (max-width: variables.$breakpoint-sm) {
   .main {
     padding-top: 5em;
-    padding-bottom: 10em;
+    padding-bottom: 2em;
   }
 }
 
@@ -200,12 +206,6 @@ a {
   background-color: functions.alpha(var(--color-primary), 0.3);
 }
 
-@supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
-  .header-wrapper {
-    background-color: var(--color-bg);
-  }
-}
-
 :where(a, button, summary, input, select, textarea):focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
@@ -224,6 +224,11 @@ a {
 
 // 打印：固定定位界面构件不进纸面，避免渐变顶栏逐页重复。
 @media print {
+  body,
+  .container {
+    display: block;
+  }
+
   .header,
   .nav-curtain,
   #reading-progress,
