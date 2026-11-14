@@ -1,38 +1,50 @@
-{{/* 首页：Section==post 摘要列表 + 分页。权威完整列表见 /archives/。 */}}
+{{/* 首页：首篇为导语式头条，其余为目录式清单；分页。权威完整列表见 /archives/。 */}}
 {{ define "main" }}
-    <main class="main single" id="main">
+    <main class="main" id="main">
         <div class="main-inner">
             {{ $paginator := partial "utils/home-paginator.html" . }}
+            {{- $firstPage := eq $paginator.PageNumber 1 }}
             <h1 class="visually-hidden">{{ (partial "utils/title.html" (dict "$" . "title" .Title "pageNumber" $paginator.PageNumber)).htmlTitle }}</h1>
-            {{ range $paginator.Pages }}
-                <article class="content post home">
-                    <h2 class="post-title">
-                        <a href="{{ .RelPermalink }}" class="summary-title-link">{{ (partial "utils/title.html" (dict "$" . "title" .LinkTitle)).htmlTitle }}</a>
-                    </h2>
-                    {{ partial "components/post-meta.html" (dict "$" . "isHome" true) }}
-                    <div class="summary">
-                        {{ .Summary | plainify | htmlUnescape | strings.TrimSpace }}
-                    </div>
-                    {{ if .Truncated }}
-                        <div class="read-more-container">
-                            <a href="{{ .RelPermalink }}" class="read-more-link">阅读更多 »</a>
+            {{- if $firstPage -}}
+                <p class="home-intro">{{ .Site.Params.siteDescription }}</p>
+            {{- end }}
+            {{ $pages := $paginator.Pages }}
+            {{ range $index, $_ := $pages }}
+                {{ if and $firstPage (eq $index 0) }}
+                    <article class="content post home-lead">
+                        <h2 class="home-lead-title">
+                            <a href="{{ .RelPermalink }}">{{ (partial "utils/title.html" (dict "$" . "title" .LinkTitle)).htmlTitle }}</a>
+                        </h2>
+                        {{ partial "components/post-meta.html" (dict "$" . "isHome" true) }}
+                        <p class="home-lead-summary">
+                            {{ .Summary | plainify | htmlUnescape | strings.TrimSpace }}
+                        </p>
+                        <a href="{{ .RelPermalink }}" class="home-lead-link">读全文</a>
+                    </article>
+                {{ else }}
+                    <article class="content post home-row">
+                        <time class="home-row-date" datetime="{{ .Date.Format "2006-01-02T15:04:05-07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
+                        <div class="home-row-body">
+                            <h2 class="home-row-title">
+                                <a href="{{ .RelPermalink }}">{{ (partial "utils/title.html" (dict "$" . "title" .LinkTitle)).htmlTitle }}</a>
+                            </h2>
+                            <p class="home-row-summary">
+                                {{ .Summary | plainify | htmlUnescape | strings.TrimSpace }}
+                            </p>
                         </div>
-                    {{ end }}
-                </article>
+                    </article>
+                {{ end }}
             {{ end }}
             {{ if or $paginator.HasPrev $paginator.HasNext }}
-                <ul class="pagination">
+                <nav class="pagination" aria-label="分页">
                     {{ if $paginator.HasPrev }}
-                        <li class="pagination-prev">
-                            <a href="{{ $paginator.Prev.URL }}" rel="prev">&lt; 上一页</a>
-                        </li>
+                        <a class="pagination-prev" href="{{ $paginator.Prev.URL }}" rel="prev">更新的文章</a>
                     {{ end }}
+                    <span class="pagination-status">第 {{ $paginator.PageNumber }} 页 / 共 {{ $paginator.TotalPages }} 页</span>
                     {{ if $paginator.HasNext }}
-                        <li class="pagination-next">
-                            <a href="{{ $paginator.Next.URL }}" rel="next">下一页 &gt;</a>
-                        </li>
+                        <a class="pagination-next" href="{{ $paginator.Next.URL }}" rel="next">更早的文章</a>
                     {{ end }}
-                </ul>
+                </nav>
             {{ end }}
         </div>
     </main>
