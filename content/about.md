@@ -6,8 +6,6 @@ type: page
 toc: true
 ---
 
-<!--more-->
-
 ## 🧑‍💻 个人简介
 
 我是 LIGT，一名热爱技术的数码爱好者。从2014年开始接触博客搭建，经历了WordPress、Hexo、Typecho，最终选择了Hugo作为我的博客平台。
