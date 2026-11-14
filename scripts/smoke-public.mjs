@@ -265,6 +265,10 @@ async function main() {
     "index.html missing SRI integrity on assets",
   );
   assert(
+    /crossorigin="?anonymous"?/.test(indexHtml),
+    "index.html assets must carry crossorigin=anonymous",
+  );
+  assert(
     !indexHtml.includes("localhost:"),
     "index.html must not embed localhost URLs (non-production baseURL)",
   );
@@ -364,6 +368,11 @@ async function main() {
         /\(min-width:\s*78em\)/.test(css),
       "main CSS contract literals drifted (--max-width: 846px / --toc-side-breakpoint: 78em / min-width: 78em)",
     );
+    // $duration 的落点是过渡时长；minifier 会去掉前导 0（.35s）。
+    assert(
+      /(?:^|[^\d.])0?\.35s(?![\d.])/.test(css),
+      "main CSS transition duration drifted (SCSS $duration must stay 0.35s and stay below the 600ms nav close fallback)",
+    );
     // JS 侧：site.js（concat）持导航关闭兜底；article.js（独立模块）持 TOC 断点回退。
     const siteJs = await findFirstFile(publicPath("js"), (n) =>
       n.startsWith("site."),
@@ -426,6 +435,17 @@ async function main() {
   assert(
     !/<copyright>\[[^\]]+\]\([^)]+\)<\/copyright>/.test(rss),
     "rss.xml copyright must not contain raw Markdown link syntax",
+  );
+  const rssLinks = [...rss.matchAll(/<item>[\s\S]*?<link>([^<]+)<\/link>/g)].map(
+    (match) => match[1],
+  );
+  assert(
+    rssLinks.length === 20,
+    `rss.xml must list the 20 newest posts (services.rss.limit), got ${rssLinks.length}`,
+  );
+  assert(
+    rssLinks.every((link) => /\/post\/[^/]+\/$/.test(link)),
+    "rss.xml items must point at post pages only",
   );
 
   // Pagefind
