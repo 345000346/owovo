@@ -1,21 +1,37 @@
-// 文章版权与转载信息块。
-@use "../utils/functions";
-
+// 版权信息：文末注释式，无卡片。
+// 选择器带 .post 前缀：正文的 .post ul / .post li 是 1 类 1 元素，会压掉这里的
+// margin 与 padding，导致缩进与贴顶。
 .post .post-copyright {
-  margin: 0;
   list-style: none;
-  margin-top: 5em;
-  padding: 0.5em 1em;
-  background-color: functions.alpha(var(--color-contrast-lower), 0.5);
-  border-left: 3px solid functions.alpha(var(--color-primary), 0.5);
-  line-height: 2;
+  margin: 2.6em 0 0;
+  padding: 1.1em 0 0;
+  border-top: 1px solid var(--color-contrast-low);
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: var(--color-contrast-high);
 }
 
-.copyright-item {
-  line-height: 1.5;
-  margin: 0.5em 0;
+.post .copyright-item {
+  display: flex;
+  margin: 0.15em 0;
+
+  a {
+    // 长链接（/post/<slug>/）在窄屏不得撑破 42em 栏。
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--color-contrast-high);
+    text-decoration: underline;
+    text-decoration-color: var(--color-contrast-low);
+    text-underline-offset: 0.18em;
+
+    &:hover {
+      color: var(--color-primary);
+      text-decoration-color: var(--color-primary);
+    }
+  }
 }
 
-.copyright-item-text {
-  font-weight: 500;
+.post .copyright-item-text {
+  flex: 0 0 4em;
+  color: var(--color-contrast-medium);
 }

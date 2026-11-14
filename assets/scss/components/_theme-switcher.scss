@@ -1,51 +1,31 @@
-// 主题切换按钮图标（由 data-theme-preference 驱动）。
+// 主题切换按钮：菜单里的一个文字项。
 @use "../utils/variables";
 
 #theme-switcher {
-  border: none;
+  border: 0;
   padding: 0;
   background: transparent;
-  font-size: inherit;
-  cursor: pointer;
-
+  font: inherit;
+  line-height: 1.5;
   color: var(--color-contrast-medium);
+  cursor: pointer;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.45em;
   transition: color variables.$duration;
 
   &:hover {
-    color: var(--color-primary);
-  }
-
-  .icon {
-    margin-right: 0 !important;
-  }
-
-  // 以 preference 为唯一真相，决定显示哪枚图标。
-  .theme-icon-light,
-  .theme-icon-dark,
-  .theme-icon-system {
-    display: none;
+    color: var(--color-contrast-higher);
+    text-decoration-color: var(--color-primary);
   }
 }
 
-// 文字：显示当前偏好（浅色/深色/跟随系统，theme.js 更新），桌面与移动端均可见。
 .theme-switcher-label {
-  margin-left: 0.2em;
+  // 三种状态字数不同（跟随系统 / 深色 / 浅色）；按最长的「跟随系统」定量宽，
+  // 否则每次切换菜单整体宽度变化 2em，右对齐时整条菜单会横向跳动。
+  display: inline-block;
+  min-width: 4em;
+  text-align: right;
   white-space: nowrap;
-}
-
-// 尚无 data-theme-preference 时默认浅色图标。
-html:not([data-theme-preference]) #theme-switcher .theme-icon-light {
-  display: inline-block;
-}
-
-html[data-theme-preference="light"] #theme-switcher .theme-icon-light {
-  display: inline-block;
-}
-
-html[data-theme-preference="dark"] #theme-switcher .theme-icon-dark {
-  display: inline-block;
-}
-
-html[data-theme-preference="system"] #theme-switcher .theme-icon-system {
-  display: inline-block;
 }

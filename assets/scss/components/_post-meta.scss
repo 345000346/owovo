@@ -1,63 +1,35 @@
-// 文章元信息（日期、作者、标签摘要等）。
-@use "../utils/functions";
-
+// 文章元信息（日期 / 阅读时长 / 首页标签）。
 .post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4em 1.3em;
+  margin: 0;
   color: var(--color-contrast-medium);
-  font-size: 80%;
-  text-align: center;
-  margin: 1rem 0;
-  a {
-    color: var(--color-contrast-medium);
-    &:hover {
-      color: var(--color-primary);
-    }
-  }
-
-  .post-meta-tag-link {
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-
-    &:hover {
-      border-bottom-color: currentColor;
-    }
-  }
-
-  // 标签：全部展示；放不下就换行
-  .post-meta-item.post-meta-tags {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.15em 0.55em;
-  }
-
-  .post-meta-tags-icon {
-    display: inline-flex;
-    align-items: center;
-
-    .post-meta-icon {
-      margin-bottom: 0;
-    }
-  }
-
-  .post-meta-item.post-meta-tags .post-meta-tag-link {
-    white-space: nowrap;
-  }
-
-  a.post-meta-tag-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 2.5em;
-    padding: 0.15em 0.1em;
-  }
+  font-size: 0.76rem;
+  line-height: 1.7;
 }
 
 .post-meta-item {
-  margin: 0.5em;
-  display: inline-block;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  margin: 0;
 }
 
-.post-meta-icon {
-  fill: functions.alpha(var(--color-contrast-medium), 0.5);
-  margin-bottom: 0.3em;
+time.post-meta-item {
+  font-variant-numeric: tabular-nums;
+}
+
+.post-meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2em 0.85em;
+}
+
+.post-meta-tag-link {
+  color: var(--color-contrast-medium);
+  &:hover {
+    color: var(--color-primary);
+  }
 }

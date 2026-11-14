@@ -1,20 +1,23 @@
-// 文末标签列表。
-@use "../utils/functions";
-
+// 文末标签（左对齐，随正文）。
 .post-tags {
-  margin-top: 5rem;
-  text-align: center;
-  font-size: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35em 1em;
+  margin-top: 2.6em;
+  padding-top: 1.1em;
+  border-top: 1px solid var(--color-contrast-low);
+}
+
+// taxonomy-links 的 # 前缀（post-tags 与 post-meta 共用，标记在模板里以便读屏器忽略）。
+.taxonomy-hash {
+  margin-right: 0.1em;
 }
 
 .post-tags-link {
-  color: functions.alpha(var(--color-contrast-medium), 0.9);
-  margin: 0 0.5em;
-  line-height: 2;
-  display: inline-block;
-}
-
-.tag-icon {
-  margin-right: 0.3em;
-  font-size: 80%;
+  font-size: 0.8rem;
+  color: var(--color-contrast-medium);
+  &:hover {
+    color: var(--color-primary);
+  }
 }

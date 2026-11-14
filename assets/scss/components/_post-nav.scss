@@ -1,43 +1,61 @@
-// 上一篇 / 下一篇导航。
+// 上一篇 / 下一篇。
 @use "../utils/variables";
 
 .post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2em 2em;
   list-style: none;
-  padding: 0;
-  display: flex;
-  justify-content: space-between;
-  gap: 1em;
-  border-top: 1px solid var(--color-contrast-lower);
-  font-weight: 700;
-  margin-top: 5em;
-  padding-top: 0.618em;
-}
-.post-nav-prev {
-  margin-right: auto;
-  max-width: 42%;
-  min-width: 0;
-}
-.post-nav-next {
-  margin-left: auto;
-  text-align: right;
-  max-width: 42%;
-  min-width: 0;
+  margin: 2.4em 0 0;
+  padding: 1.4em 0 0;
+  border-top: 1px solid var(--color-contrast-low);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  a {
+    display: block;
+    color: var(--color-contrast-high);
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
 }
 
-.post-nav a {
-  display: inline-block;
+.post-nav-prev {
+  text-align: left;
+}
+
+.post-nav-next {
+  grid-column: 2;
+  text-align: right;
+}
+
+// 只有一侧时不要留半栏空白：单独一项回到左栏、左对齐。
+.post-nav li:only-child {
+  grid-column: 1;
+  text-align: left;
+}
+
+.post-nav-label {
+  display: block;
+  margin-bottom: 0.25em;
+  color: var(--color-contrast-medium);
+  font-size: 0.72rem;
+}
+
+.post-nav-title {
+  display: block;
   overflow-wrap: anywhere;
 }
 
 @media (max-width: variables.$breakpoint-sm) {
   .post-nav {
-    flex-direction: column;
-    gap: 0.85em;
+    display: block;
   }
-  .post-nav-prev,
   .post-nav-next {
-    max-width: none;
-    margin: 0;
+    margin-top: 1.2em;
     text-align: left;
+  }
+  .post-nav li:only-child {
+    margin-top: 0;
   }
 }

@@ -1,33 +1,23 @@
-// 页脚等处的社交图标列表。
-@use "../utils/variables";
-
+// 页脚社交链接：一行文字，无图标。
 .socials {
-  padding: 0;
-  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.4em 1.1em;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .socials-item {
-  display: inline-block;
-  margin: 0.5em;
-  border-radius: 50%;
-  background-color: var(--color-contrast-medium);
-  transition: background-color variables.$duration;
-
   a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 2.75em;
-    min-height: 2.75em;
+    color: var(--color-contrast-medium);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.25em;
+    &:hover {
+      color: var(--color-primary);
+      text-decoration-color: var(--color-primary);
+    }
   }
-
-  &:hover {
-    background-color: var(--color-primary);
-  }
-}
-
-.social-icon {
-  fill: var(--color-bg);
-  padding: 0.5em;
 }

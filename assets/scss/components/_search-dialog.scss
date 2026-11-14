@@ -2,18 +2,16 @@
 @use "../utils/variables";
 
 .search-dialog {
-  width: min(42rem, calc(100% - 2rem));
-  max-height: min(44rem, calc(100dvh - 2rem));
+  width: min(40rem, calc(100% - 2rem));
+  max-height: min(42rem, calc(100dvh - 2rem));
   padding: 0;
   border: 1px solid var(--color-contrast-low);
-  border-radius: 0.5rem;
+  border-radius: 2px;
   color: var(--color-contrast-high);
   background: var(--color-bg);
-  box-shadow: 0 1.25rem 4rem rgba(0, 0, 0, 0.25);
 
   &::backdrop {
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(0.2rem);
+    background: rgba(0, 0, 0, 0.45);
   }
 
   .pagefind-ui {
@@ -22,18 +20,32 @@
     --pagefind-ui-background: var(--color-bg);
     --pagefind-ui-border: var(--color-contrast-low);
     --pagefind-ui-border-width: 1px;
-    --pagefind-ui-border-radius: 0.4rem;
+    --pagefind-ui-border-radius: 0;
     --pagefind-ui-font: inherit;
   }
 
-  .pagefind-ui__form::before {
-    top: 1.15rem;
+  // 放大镜位置：Pagefind 用 .pagefind-ui__form.svelte-x:before（同权重），
+  // 且其样式表在本文之后注入，故须再加一层 .pagefind-ui 提权。
+  // 图标 18px × scale(.8) = 14.4px，输入行 3.4rem = 61.2px。
+  .pagefind-ui .pagefind-ui__form::before {
+    top: 1.3rem;
   }
 
-  .pagefind-ui__search-input {
-    height: 3.2rem;
+  // Pagefind UI 自带同权重边框样式，这里用更高优先级改回纸面输入行。
+  .pagefind-ui .pagefind-ui__search-input {
+    height: 3.4rem;
+    padding-left: 2rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
     font-family: inherit;
     font-size: 1rem;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
   }
 
   .pagefind-ui__drawer {
@@ -41,8 +53,10 @@
     overflow-y: auto;
   }
 
+  // 结果分隔线由 Pagefind 自带（每条 border-top，末条 border-bottom），不再重复声明。
   .pagefind-ui__result-link {
     color: var(--color-contrast-high);
+    font-weight: 500;
   }
 
   .pagefind-ui__message,
@@ -53,13 +67,13 @@
   .pagefind-ui mark {
     color: var(--color-primary);
     background: transparent;
-    font-weight: 700;
+    font-weight: 600;
   }
 }
 
 .search-dialog-shell {
   display: flex;
-  max-height: min(44rem, calc(100dvh - 2rem));
+  max-height: min(42rem, calc(100dvh - 2rem));
   flex-direction: column;
 }
 
@@ -72,11 +86,12 @@
 
 .search-dialog-header {
   justify-content: space-between;
-  border-bottom: 1px solid var(--color-contrast-lower);
+  border-bottom: 1px solid var(--color-contrast-low);
 
   h2 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 0.92rem;
+    font-weight: 600;
   }
 }
 
@@ -88,7 +103,7 @@
   color: var(--color-contrast-medium);
   background: transparent;
   font: inherit;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   line-height: 1;
   cursor: pointer;
 
@@ -106,17 +121,17 @@
 .search-dialog-footer {
   flex-wrap: wrap;
   gap: 0.75rem 1rem;
-  border-top: 1px solid var(--color-contrast-lower);
+  border-top: 1px solid var(--color-contrast-low);
   color: var(--color-contrast-medium);
   font-size: 0.72rem;
 }
 
 .search-dialog kbd {
-  padding: 0.12rem 0.3rem;
+  padding: 0.1rem 0.28rem;
   border: 1px solid var(--color-contrast-low);
-  border-radius: 0.2rem;
+  border-radius: 2px;
   color: var(--color-contrast-medium);
-  background: var(--color-contrast-lower);
+  background: transparent;
   font-family: variables.$fontFamilyCode;
   font-size: 0.68rem;
 }
