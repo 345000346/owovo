@@ -2,6 +2,11 @@
 {{- $ := index . "$" -}}
 {{- $content := .content -}}
 {{- $baseURL := "" | absLangURL | strings.TrimSuffix "/" -}}
-{{- $content = $content | replaceRE `((href|src)=["'])/` (printf `$1%s/` $baseURL) -}}
-{{- $content = $content | replaceRE `(href="?)#` (printf `$1%s#` $.Permalink) -}}
+{{- $content = $content | replaceRE `((href|src)=["'])/` (printf `${1}%s/` $baseURL) -}}
+{{- /* srcset 是多候选列表（"/a.webp 640w, /b.webp 960w"），上面那条只够处理首项；
+       逐个取属性值改写后放回。 */ -}}
+{{- range findRE `srcset="[^"]*"` $content -}}
+    {{- $content = replace $content . (. | replaceRE `(^srcset="|, )/` (printf `${1}%s/` $baseURL)) -}}
+{{- end -}}
+{{- $content = $content | replaceRE `(href="?)#` (printf `${1}%s#` $.Permalink) -}}
 {{- $content | safeHTML -}}
