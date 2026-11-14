@@ -1,9 +1,8 @@
-// 响应式与移动导航；$maxWidth / --max-width 与 navigation.js 同步。
-@use "../utils/functions";
+// 断点与移动端布局。$maxWidth 与 navigation.js 默认值、smoke 断言须一致。
 @use "../utils/variables";
 
-// 内容宽再加 5em 作为「桌面 → 移动」切换阈值。
-$maxWidth: variables.$fontSize * (functions.strip-unit(variables.$contentWidth) + 5);
+// 内容宽 42 + 两侧留白 5，按根字号换算为 846px；navigation.js 读取 --max-width。
+$maxWidth: variables.$fontSize * (variables.$contentWidthValue + 5);
 
 :root {
   --max-width: #{$maxWidth};
@@ -11,124 +10,146 @@ $maxWidth: variables.$fontSize * (functions.strip-unit(variables.$contentWidth) 
 
 @media (max-width: $maxWidth) {
   .main-inner {
-    width: auto !important;
+    width: auto;
   }
-  #back-to-top {
-    display: none;
-  }
+
+  // 顶栏在窄屏改为块级：品牌一行，菜单折叠。
+  // 宽度跟随视口，否则 756–846px 之间顶栏仍按 42em 收窄，与流式正文错位。
   .header-inner {
-    width: 100%;
     display: block;
-    margin: 0;
+    width: 100%;
     max-width: none;
+    margin: 0;
   }
+
+  // 与 .main 的 1.25em 横向留白对齐（同用 rem，避免 .nav 的 0.82rem 参与换算）。
   .site-brand {
-    margin-left: 1em;
+    padding-left: 1.25rem;
   }
+
   .js .nav-toggle {
     display: block;
   }
-  // 保持 display:block 以便开合过渡；用 max-height/opacity/visibility 隐藏。
+
+  // 无 JS 时菜单常开（.js 缺失即不进入折叠分支）。
   .js .nav {
-    display: block;
-    visibility: hidden;
-    text-align: center;
-    margin: 0;
-    overflow: hidden;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 2;
     max-height: 0;
+    overflow: hidden;
     opacity: 0;
-    pointer-events: none;
+    visibility: hidden;
+    text-align: left;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-contrast-low);
     transition:
       max-height variables.$duration ease,
       opacity variables.$duration ease,
-      margin variables.$duration ease,
       visibility 0s linear variables.$duration;
   }
+
+  .js .header.open .nav {
+    max-height: 26rem;
+    overflow-y: auto;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
   .menu {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    align-items: stretch;
+    gap: 0 0.75em;
+    padding: 0.5rem 1.25rem 1rem;
+    text-align: left;
   }
-  // 无 JS 时隐藏主题/搜索后剩 6 项，3 列正好排满。
-  :root:not(.js) .menu {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+
   .menu-item {
-    margin: 0;
-    padding: 0.85em 0.35em;
-    .icon {
-      margin: 0;
-    }
-    // 分组分隔线仅桌面端；移动端网格中隐藏。
-    &.tools-start::before {
-      display: none;
+    padding: 0.5em 0;
+    a {
+      display: block;
     }
   }
-  .menu-item-name {
-    display: block;
-  }
+
+  // 窄屏菜单是等宽网格，单元宽度不随文字变化；定宽与右对齐只服务于桌面右对齐菜单。
   .theme-switcher-label {
-    display: block;
+    min-width: 0;
+    text-align: left;
   }
-  // 真正的滚动锁由 JS 负责（拦截 touch/wheel + 钉住 scrollY）。
-  body.nav-open {
-    overscroll-behavior: none;
+
+  .menu-item.tools-start {
+    border-left: 0;
+    padding-left: 0;
+    margin-left: 0;
   }
-  .js .header.open {
-    .nav {
-      visibility: visible;
-      max-height: min(70vh, 24em);
-      margin: 0.75em 0 0;
-      opacity: 1;
-      pointer-events: auto;
-      // 与 JS isScrollAllowedTarget 一致：面板溢出时允许内部滚动。
-      overflow-x: hidden;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      -webkit-overflow-scrolling: touch;
-      transition:
-        max-height variables.$duration ease,
-        opacity variables.$duration ease,
-        margin variables.$duration ease,
-        visibility 0s linear 0s;
-    }
-    .nav-curtain {
-      visibility: visible;
-      opacity: 1;
-      pointer-events: auto;
-      transition:
-        opacity variables.$duration ease,
-        visibility 0s linear 0s;
-    }
+
+  // 幕布盖住顶栏以下内容，点按关闭。
+  .header.open .nav-curtain {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
   }
-  .js .header.fade {
-    .nav {
-      visibility: hidden;
-      max-height: 0;
-      margin: 0;
-      opacity: 0;
-      pointer-events: none;
-    }
-    .nav-curtain {
-      visibility: hidden;
-      opacity: 0;
-      pointer-events: none;
-      transition:
-        opacity variables.$duration ease,
-        visibility 0s linear variables.$duration;
-    }
+
+  .header.fade .nav-curtain {
+    opacity: 0;
   }
+
+  .header.open .header-wrapper {
+    border-bottom-color: transparent;
+  }
+
+  #back-to-top {
+    display: none;
+  }
+
+  .footer-inner {
+    max-width: calc(100% - 2.5rem);
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .footer-end {
+    text-align: left;
+  }
+
+  .socials {
+    justify-content: flex-start;
+  }
+
+  .single .contents-title {
+    font-size: 0.78rem;
+  }
+
+  // 无 JS：顶栏回到文档流、菜单常开，正文不再为 fixed 顶栏预留高度。
+  // 必须留在本断点内：宽屏无 JS 时顶栏仍是 fixed，正文照样要留出位置。
   :root:not(.js) .header {
     position: static;
   }
+
+  :root:not(.js) .nav {
+    max-height: none;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  :root:not(.js) .main {
+    padding-top: 3em;
+  }
+
+  // 无 JS 时主题与搜索项被隐藏，只剩 6 项；4 列会留出两个空位。
+  :root:not(.js) .menu {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
-@media (max-width: $maxWidth) and (prefers-reduced-motion: reduce) {
-  .js .nav,
-  .js .header.open .nav,
-  .js .header.fade .nav,
-  .js .header.open .nav-curtain,
-  .js .header.fade .nav-curtain {
-    transition: none !important;
+// 窄屏标题收敛：42em 单栏在手机上仍显过大，缩到与 345px 正文匹配的层级。
+@media (max-width: variables.$breakpoint-sm) {
+  .post-title {
+    font-size: 1.8rem;
+    line-height: 1.38;
   }
 }

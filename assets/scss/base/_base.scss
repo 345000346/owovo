@@ -5,6 +5,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 .visually-hidden {
@@ -44,7 +45,7 @@ html {
   }
 }
 
-// VT 切换期间禁用元素过渡，避免 CSS 变量变化触发 0.5s 过渡、
+// VT 切换期间禁用元素过渡，避免 CSS 变量变化触发过渡、
 // 让新快照拍到中间值（theme.js 添加/移除该类）。
 :root.theme-transitioning *,
 :root.theme-transitioning *::before,
@@ -58,15 +59,13 @@ html {
   top: 0.75rem;
   left: 0.75rem;
   z-index: 1000;
-  padding: 0.55rem 0.9rem;
-  border: 1px solid var(--color-contrast-low);
-  border-radius: 999px;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 2px;
   background: var(--color-bg);
-  color: var(--color-contrast-high);
-  font-size: 0.85rem;
+  color: var(--color-primary);
+  font-size: 0.82rem;
   text-decoration: none;
-  box-shadow: 0 0.25rem 0.75rem
-    functions.alpha(var(--color-contrast-higher), 0.12);
   transform: translateY(-160%);
   transition: transform 0.2s ease;
 }
@@ -117,20 +116,18 @@ body {
 
 .main {
   flex: 1 0 auto;
-  padding: 7em 1em 3em;
-  display: block;
+  padding: variables.$mainPaddingTop 1.25em 4em;
 }
 
 @media (max-width: variables.$breakpoint-sm) {
   .main {
-    padding-top: 5em;
-    padding-bottom: 2em;
+    padding-top: 7em;
+    padding-bottom: 2.8em;
   }
 }
 
 .main-inner {
   margin: 0 auto;
-  display: block;
   width: variables.$contentWidth;
 }
 
@@ -144,71 +141,81 @@ svg {
   vertical-align: middle;
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  margin: 1.618em 0 1em;
+  margin: 2.2em 0 0.85em;
   color: var(--color-contrast-higher);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
   a {
-    text-decoration: none !important;
-    color: var(--color-contrast-higher);
+    text-decoration: none;
+    color: inherit;
   }
 }
 h1 {
-  font-size: 2em;
+  font-size: 2.2rem;
 }
 h2 {
-  font-size: 1.8em;
+  font-size: 1.6rem;
 }
 h3 {
-  font-size: 1.6em;
+  font-size: 1.28rem;
 }
 h4 {
-  font-size: 1.4em;
+  font-size: 1.1rem;
 }
 h5 {
-  font-size: 1.2em;
+  font-size: 1rem;
 }
 h6 {
-  font-size: 1em;
+  font-size: 0.92rem;
 }
 
 @media (max-width: variables.$breakpoint-sm) {
   h1 {
-    font-size: 1.55em;
+    font-size: 1.9rem;
   }
   h2 {
-    font-size: 1.4em;
+    font-size: 1.42rem;
   }
   h3 {
-    font-size: 1.25em;
+    font-size: 1.2rem;
   }
   h4 {
-    font-size: 1.15em;
+    font-size: 1.06rem;
   }
 }
 
 a {
-  color: var(--color-contrast-high);
+  color: inherit;
   text-decoration: none;
-  transition:
-    color variables.$duration,
-    background-color variables.$duration;
+  transition: color variables.$duration;
   &:hover {
     color: var(--color-primary);
   }
 }
 
+strong {
+  font-weight: 600;
+}
+
 ::selection {
-  background-color: functions.alpha(var(--color-primary), 0.3);
+  background-color: functions.alpha(var(--color-primary), 0.22);
 }
 
 :where(a, button, summary, input, select, textarea):focus-visible {
   outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -222,7 +229,7 @@ a {
   }
 }
 
-// 打印：固定定位界面构件不进纸面，避免渐变顶栏逐页重复。
+// 打印：固定定位界面构件不进纸面。
 @media print {
   body,
   .container {
