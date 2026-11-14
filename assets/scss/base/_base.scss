@@ -91,6 +91,19 @@ body {
   font-size: variables.$fontSize;
 }
 
+html {
+  // 短页面（想法、标签页等）装得进一屏就没有滚动条，长页面有：不预留竖槽时
+  // 居中正文与固定头部会在两者之间左右各跳半个滚动条宽（约 7.5px），点菜单
+  // 跨过这条边界时整页横向闪一下。预留竖槽让「可滚区域」宽度恒定。
+  scrollbar-gutter: stable;
+
+  // 不支持该属性的引擎：常显滚动条换取同样的恒定宽度（overlay 滚动条不占位，
+  // 本来也不会有跳动，因此这条只在经典滚动条的老引擎上生效）。
+  @supports not (scrollbar-gutter: stable) {
+    overflow-y: scroll;
+  }
+}
+
 body {
   @include mixins.tabSize;
   display: flex;

@@ -359,6 +359,12 @@ async function main() {
         css.includes(":root:not(.js) .header{position:static}"),
       "main CSS must keep mobile navigation visible when JavaScript is unavailable",
     );
+    // 短于视口一屏的页面（标签页、想法页等）没有滚动条；不预留竖槽时，整站会
+    // 在它们与长页面之间横向移动半个滚动条宽。
+    assert(
+      /scrollbar-gutter:\s*stable/.test(css),
+      "main CSS must reserve the scrollbar gutter (html { scrollbar-gutter: stable }); without it short pages shift the whole layout sideways",
+    );
     // 跨文件契约数字（改动须三处同步：SCSS token ↔ JS 回退 ↔ 此处断言）：
     // 导航断点 --max-width(846px)、TOC 悬浮/折叠断点 78em、导航过渡 $duration 0.35s。
     assert(

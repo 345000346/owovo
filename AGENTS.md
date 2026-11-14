@@ -201,7 +201,7 @@ npm run build
 
 `npm run dev` 仅启动 Hugo server，不会生成或更新 Pagefind 索引；需要验证搜索时使用 `npm run build` 或 `npm run preview`。
 
-`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 为绝对地址且指向图片；校验资源 `integrity` + `crossorigin="anonymous"`、RSS 恰为 20 条且全部指向文章、跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 78em、过渡时长 `$duration` 0.35s、导航关闭兜底 600ms ≥ 该时长）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
+`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 为绝对地址且指向图片；校验资源 `integrity` + `crossorigin="anonymous"`、RSS 恰为 20 条且全部指向文章、跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 78em、过渡时长 `$duration` 0.35s、导航关闭兜底 600ms ≥ 该时长），并断言 `html` 保留滚动条竖槽（`scrollbar-gutter: stable`：短于一屏的页面否则会让整站横向跳动）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
 
 模板改动建议：
 
