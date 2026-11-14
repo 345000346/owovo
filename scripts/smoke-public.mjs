@@ -273,9 +273,14 @@ async function main() {
       /fonts\/noto-serif-sc-latin-/.test(indexHtml),
     "index.html missing latin font preload (run sync:fonts before build)",
   );
+  const cjkPreloaded = new Set(
+    [...indexHtml.matchAll(/fonts\/noto-serif-sc-(11[6789])-/g)].map(
+      (match) => match[1],
+    ),
+  );
   assert(
-    /fonts\/noto-serif-sc-11[789]-/.test(indexHtml),
-    "index.html missing fixed CJK font preload whitelist (117/118/119)",
+    cjkPreloaded.size === 4,
+    `index.html must preload all four whitelisted CJK subsets (116/117/118/119), got ${[...cjkPreloaded].sort().join("/") || "none"}`,
   );
   assert(
     /id="?search-dialog"?/.test(indexHtml) &&
@@ -440,9 +445,12 @@ async function main() {
   const rssLinks = [...rss.matchAll(/<item>[\s\S]*?<link>([^<]+)<\/link>/g)].map(
     (match) => match[1],
   );
+  // services.rss.limit 封顶 20，但不要求文章至少 20 篇。
+  const postHtmlCount = (await listPostHtml()).length;
+  const expectedRssCount = Math.min(20, postHtmlCount);
   assert(
-    rssLinks.length === 20,
-    `rss.xml must list the 20 newest posts (services.rss.limit), got ${rssLinks.length}`,
+    rssLinks.length === expectedRssCount,
+    `rss.xml must list the newest ${expectedRssCount} posts (min of services.rss.limit and post count), got ${rssLinks.length}`,
   );
   assert(
     rssLinks.every((link) => /\/post\/[^/]+\/$/.test(link)),
