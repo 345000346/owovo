@@ -14,7 +14,7 @@
                 {{- $toolsStart := eq .Identifier "rss" -}}
                 <li class="menu-item{{ if $isCurrent }} active{{ end }}{{ if $toolsStart }} tools-start{{ end }}{{ if $isSearch }} menu-item-search{{ end }}">
                     {{- $isExternal := strings.HasPrefix .URL "http" -}}
-                    <a href="{{ .URL }}"{{ if eq .Identifier "search" }} data-search-trigger{{ end }}{{ if $isExternal }} target="_blank" rel="external noopener noreferrer"{{ end }}{{ if and $isCurrent (ne .Identifier "search") }} aria-current="page"{{ end }}>{{ .Name }}</a>
+                    <a href="{{ .URL }}"{{ if $isSearch }} data-search-trigger aria-haspopup="dialog" aria-controls="search-dialog"{{ end }}{{ if $isExternal }} target="_blank" rel="external noopener noreferrer"{{ end }}{{ if and $isCurrent (ne .Identifier "search") }} aria-current="page"{{ end }}>{{ .Name }}</a>
                 </li>
             {{ end }}
         {{ end }}

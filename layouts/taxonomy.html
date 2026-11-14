@@ -4,7 +4,8 @@
         <div class="main-inner">
             <div class="tag-index">
                 <h1 class="list-title">{{ (partial "utils/title.html" (dict "$" .)).htmlTitle }}</h1>
-                {{- $tags := .Site.Taxonomies.tags.ByCount -}}
+                {{- /* .Data.Terms 即本站当前 taxonomy（仅 tags）的 term 集合。 */ -}}
+                {{- $tags := .Data.Terms.ByCount -}}
                 {{ if ne (len $tags) 0 }}
                     <ul class="tag-index-list">
                         {{ range $tags }}
