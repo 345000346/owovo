@@ -166,6 +166,30 @@ async function findSamplePostHtml() {
   return null;
 }
 
+// 找到第一篇文章 HTML 里真正带 TOC 的那一篇（toc: false 的文章没有内联断点脚本）。
+async function findPostHtmlWithToc() {
+  let entries;
+  try {
+    entries = await readdir(publicPath("post"), { withFileTypes: true });
+  } catch {
+    return null;
+  }
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const rel = join("post", entry.name, "index.html");
+    if (!(await exists(rel))) {
+      continue;
+    }
+    const html = await readPublic(rel);
+    if (/class="?contents"?/.test(html)) {
+      return rel;
+    }
+  }
+  return null;
+}
+
 async function main() {
   console.log(`smoke-public: checking ${publicDir}`);
 
@@ -339,12 +363,12 @@ async function main() {
       "main CSS must keep mobile navigation visible when JavaScript is unavailable",
     );
     // 跨文件契约数字（改动须三处同步：SCSS token ↔ JS 回退 ↔ 此处断言）：
-    // 导航断点 --max-width(846px)、TOC 悬浮/折叠断点 68em、导航过渡 $duration 0.5s。
+    // 导航断点 --max-width(846px)、TOC 悬浮/折叠断点 78em、导航过渡 $duration 0.35s。
     assert(
       /--max-width:\s*846px/.test(css) &&
-        /--toc-side-breakpoint:\s*68em/.test(css) &&
-        /\(min-width:\s*68em\)/.test(css),
-      "main CSS contract literals drifted (--max-width: 846px / --toc-side-breakpoint: 68em / min-width: 68em)",
+        /--toc-side-breakpoint:\s*78em/.test(css) &&
+        /\(min-width:\s*78em\)/.test(css),
+      "main CSS contract literals drifted (--max-width: 846px / --toc-side-breakpoint: 78em / min-width: 78em)",
     );
     // JS 侧：site.js（concat）持导航关闭兜底；article.js（独立模块）持 TOC 断点回退。
     const siteJs = await findFirstFile(publicPath("js"), (n) =>
@@ -359,14 +383,14 @@ async function main() {
       const js = await readFile(siteJs, "utf8");
       assert(
         /\b600\b/.test(js),
-        "site JS contract literal drifted (nav close fallback 600ms >= SCSS $duration 0.5s)",
+        "site JS contract literal drifted (nav close fallback 600ms >= SCSS $duration 0.35s)",
       );
     }
     if (articleJs) {
       const js = await readFile(articleJs, "utf8");
       assert(
-        js.includes("68em") && js.includes("--toc-side-breakpoint"),
-        "article JS contract literals drifted (TOC breakpoint fallback 68em read from --toc-side-breakpoint)",
+        js.includes("78em") && js.includes("--toc-side-breakpoint"),
+        "article JS contract literals drifted (TOC breakpoint fallback 78em read from --toc-side-breakpoint)",
       );
     }
   }
@@ -482,6 +506,16 @@ async function main() {
       /id="?search-highlight-config"?/.test(postHtml),
       `post page missing search-highlight-config (hl= loader): ${postRel}`,
     );
+    // TOC 内联脚本自带断点回退，须与 SCSS token / article.js 同值（只查真正输出目录的文章）。
+    const tocPost = await findPostHtmlWithToc();
+    assert(tocPost, "no post/*/index.html with TOC found to verify the 78em template fallback");
+    if (tocPost) {
+      const tocHtml = await readPublic(tocPost);
+      assert(
+        tocHtml.includes("78em"),
+        `TOC fallback breakpoint drifted from 78em: ${tocPost}`,
+      );
+    }
   }
 
   exitIfFailed();
