@@ -97,6 +97,7 @@ function initNavigation() {
         return;
       }
       lockedScrollY = window.scrollY || window.pageYOffset || 0;
+      // body.nav-open 是纯状态位（无对应 CSS 规则），只用于幂等判断与调试观察。
       body.classList.add("nav-open");
       // 勿用 body overflow:hidden / position:fixed（会跳滚动或顶栏错位）；
       // 拦截背景 touch/wheel，并钉住 scrollY。

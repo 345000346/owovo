@@ -4,6 +4,14 @@
 // 契约：#search-dialog、#search-dialog-config 的 data-pagefind-*；
 // 结果加 ?hl=；打开时派发 site:close-navigation；路径只放 data-*（防 --minify）。
 
+/** 元素是否真的渲染出来（display: none 与 visibility: hidden 都算否）。 */
+function isRendered(element) {
+  return (
+    element.offsetParent !== null &&
+    window.getComputedStyle(element).visibility !== "hidden"
+  );
+}
+
 function initSearchDialog() {
   const dialog = document.getElementById("search-dialog");
   const config = document.getElementById("search-dialog-config");
@@ -12,7 +20,6 @@ function initSearchDialog() {
   if (
     !dialog ||
     !config ||
-    !searchLink ||
     typeof dialog.showModal !== "function"
   ) {
     return;
@@ -185,22 +192,25 @@ function initSearchDialog() {
       });
   }
 
-  searchLink.setAttribute("aria-haspopup", "dialog");
-  searchLink.setAttribute("aria-controls", "search-dialog");
+  // 菜单项缺失只影响这一处点击绑定；Ctrl/Cmd+K、/ 与 #search 仍可用。
+  if (searchLink) {
+    searchLink.setAttribute("aria-haspopup", "dialog");
+    searchLink.setAttribute("aria-controls", "search-dialog");
 
-  searchLink.addEventListener("click", (event) => {
-    if (
-      event.button !== 0 ||
-      event.ctrlKey ||
-      event.metaKey ||
-      event.shiftKey ||
-      event.altKey
-    ) {
-      return;
-    }
-    event.preventDefault();
-    openDialog();
-  });
+    searchLink.addEventListener("click", (event) => {
+      if (
+        event.button !== 0 ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+      event.preventDefault();
+      openDialog();
+    });
+  }
 
   if (closeButton) {
     closeButton.addEventListener("click", () => {
@@ -216,10 +226,25 @@ function initSearchDialog() {
 
   dialog.addEventListener("close", () => {
     clearSearchHash();
-    // 原生关闭后焦点可能落回 body，显式归还到触发元素供键盘用户继续操作。
-    if (opener && document.activeElement === document.body) {
-      opener.focus();
+    // close 事件触发时焦点通常还在 Dialog 内（输入框），浏览器稍后才把它丢回 body：
+    // 只看「焦点是否已在 Dialog 外的可用元素上」来决定是否手动归还。
+    const active = document.activeElement;
+    const focusElsewhere =
+      active instanceof HTMLElement &&
+      active !== document.body &&
+      !dialog.contains(active);
+    if (focusElsewhere) {
+      return;
     }
+    // 打开时菜单已收起（site:close-navigation）：窄屏触发项所在的 .nav 现在是
+    // visibility: hidden，聚焦它等于交给不可见元素，改为归还给菜单开关。
+    const navToggle = document.querySelector(".nav-toggle");
+    const target = opener && isRendered(opener)
+      ? opener
+      : navToggle && isRendered(navToggle)
+        ? navToggle
+        : null;
+    target?.focus();
   });
 
   document.addEventListener("keydown", (event) => {

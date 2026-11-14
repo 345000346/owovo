@@ -10,8 +10,8 @@
 // 状态（成功/失败）统一在 1s 后复位。
 
 function getCopyLabels(root) {
-  const scope =
-    root?.closest?.(".post-body") || document.querySelector(".post-body");
+  // 按钮总在 .post-body 内（render-codeblock 只用于正文），root 是 .code-block。
+  const scope = root.closest(".post-body");
   return {
     copy: scope?.dataset.copyLabel || "复制",
     copied: scope?.dataset.copiedLabel || "已复制",
@@ -200,6 +200,8 @@ function initTocSpy() {
   }
 
   // fixed 悬浮时：文章区底部进入视口即淡出让位（footer 区域）。
+  // 未滚动前一律保留：整篇文章装得下一屏时底部早已在视口内，首帧就命中条件
+  // 会把边注直接藏掉（TOC 从打开页面起就不可见）。
   const mainEl = document.querySelector("main.single");
   function updateTocExit() {
     if (!mainEl) {
@@ -207,7 +209,8 @@ function initTocSpy() {
     }
     contents.classList.toggle(
       "bottom",
-      mainEl.getBoundingClientRect().bottom <= window.innerHeight,
+      window.scrollY > 0 &&
+        mainEl.getBoundingClientRect().bottom <= window.innerHeight,
     );
   }
 
