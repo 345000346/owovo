@@ -28,7 +28,7 @@ function initScrollUi() {
   updateHeaderHeight();
 
   // 进度分母缓存：每帧读 scrollHeight 会强制同步布局。字体、图片、展开折叠都会改变
-  // 文档高度，用 ResizeObserver（body 内容盒）与 load/resize 重算。
+  // 文档高度，用 ResizeObserver（.container 尺寸）与 load/resize 重算。
   let progressRange = 0;
   function updateProgressRange() {
     if (!hasScrollUi) {
@@ -110,7 +110,12 @@ function initScrollUi() {
         updateProgressRange();
         updateScrollUI();
       });
-      observer.observe(document.body);
+      // 观察 .container 而非 body：html/body 是 height:100% 的定高 flex 容器，
+      // 正文变高（展开目录、字体回流、图片解码）只让 .container 溢出，body 盒子
+      // 尺寸不变，回调不会来。宽度变化另有 resize 兜底。
+      observer.observe(
+        document.querySelector(".container") || document.documentElement,
+      );
     }
   }
 }
