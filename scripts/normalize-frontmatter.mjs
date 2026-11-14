@@ -170,10 +170,25 @@ function rebuild(blocks, order, isPost) {
       continue;
     }
     if (isPost && block.key === "toc") {
-      const value = block.raw.split(":").slice(1).join(":").trim().toLowerCase();
-      if (value === "true" || value === "yes" || value === "1") {
+      // 先剥掉行内注释与引号再比对：否则 toc: "true" / toc: true  # 说明 会漏网。
+      const value = block.raw
+        .replace(/^[^:]*:/, "")
+        .replace(/\s+#.*$/, "")
+        .trim()
+        .replace(/^["']|["']$/g, "")
+        .toLowerCase();
+      if (
+        value === "true" ||
+        value === "yes" ||
+        value === "on" ||
+        value === "1"
+      ) {
         continue;
       }
+    }
+    if (byKey.has(block.key)) {
+      // Hugo 对重复键直接构建失败；这里提前拦住，避免静默丢一份内容。
+      throw new Error(`顶层键 "${block.key}" 重复`);
     }
     byKey.set(
       block.key,
