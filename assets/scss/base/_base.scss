@@ -111,7 +111,6 @@ body {
   color: var(--color-contrast-high);
   background-color: var(--color-bg);
   overflow-wrap: break-word;
-  word-wrap: break-word;
   line-height: variables.$lineHeightBase;
   transition:
     color variables.$duration,
