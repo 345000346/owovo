@@ -19,14 +19,6 @@
       content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai"
     />
     <meta name="theme-color" content="#140e10" />
-    <meta
-      name="googlebot"
-      content="noindex, nofollow, noarchive, nosnippet, noimageindex"
-    />
-    <meta
-      name="bingbot"
-      content="noindex, nofollow, noarchive, nosnippet, noimageindex"
-    />
     <title>我们的纪念册</title>
     <link
       rel="icon"
@@ -52,7 +44,7 @@
   <body data-pagefind-ignore>
     <a class="skip-link" href="#letter">跳到正文</a>
 
-    <main class="memorial-page" data-love-start-at="2021-08-13T00:00:00+08:00">
+    <main class="memorial-page">
       <section class="cover" id="top" aria-labelledby="coverTitle">
         <div class="cover-frame" aria-hidden="true"></div>
         <div class="cover-inner">
@@ -69,7 +61,7 @@
             <span class="timer-label" id="loveTimerLabel"
               >我们已经相爱了多久</span
             >
-            <div id="loveTimer" class="love-timer" role="timer" aria-live="off">
+            <div id="loveTimer" class="love-timer" role="timer">
               <p class="timer-primary">
                 <span class="timer-primary-years">
                   <span data-timer="years" class="timer-value">—</span>
@@ -80,7 +72,7 @@
                   <span class="timer-unit">天</span>
                 </span>
               </p>
-              <p class="timer-secondary" data-timer-secondary>
+              <p class="timer-secondary">
                 <span data-timer="hours" class="timer-value">—</span>
                 <span class="timer-unit">时</span>
                 <span class="timer-sep" aria-hidden="true">:</span>
@@ -133,7 +125,7 @@
             <p>
               我愿意和你一起慢慢长大，也愿意和你一起偶尔幼稚。比起轰轰烈烈，我更想和你把日子安安静静地过成一起慢慢变老的样子。
             </p>
-            <p class="prose-sign" aria-hidden="true">写给你的人</p>
+            <p class="prose-sign">写给你的人</p>
           </div>
         </div>
       </section>
@@ -208,13 +200,13 @@
             </p>
           </header>
           <ol class="timeline" data-timeline>
-            <noscript>
-              <li class="timeline-fallback">
+            <li class="timeline-fallback">
+              <noscript>
                 请启用 JavaScript
                 以查看完整时间线。关键节点仍写在我们共同的日子里：始于
                 2021.08.13，领证于 2023.09.06。
-              </li>
-            </noscript>
+              </noscript>
+            </li>
           </ol>
         </div>
       </section>
@@ -236,7 +228,7 @@
           <p>
             这本纪念册还没有写完——等新的日子到来，我们会回来，把更多值得记住的瞬间，继续写进这里。
           </p>
-          <p class="epilogue-endmark" aria-hidden="true">未完待续</p>
+          <p class="epilogue-endmark">未完待续</p>
           <p class="back-to-cover-wrap">
             <a class="back-to-cover" href="#top">回到封面</a>
           </p>
@@ -253,6 +245,6 @@
       <p>写给你，也写给我们的以后。</p>
     </footer>
 
-    <script data-cfasync="false" type="module" src="/love/love.js"></script>
+    <script type="module" src="/love/love.js"></script>
   </body>
 </html>

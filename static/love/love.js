@@ -13,8 +13,7 @@ import { love } from "./data.js";
   const pageRoot = document.querySelector(".memorial-page");
   if (!pageRoot) return;
 
-  const startAt =
-    pageRoot.getAttribute("data-love-start-at") || love.startAt || "";
+  const startAt = love.startAt || "";
   const startDate = startAt ? new Date(startAt) : null;
   const startDisplay = formatStartDisplay(startAt);
 
@@ -178,7 +177,8 @@ import { love } from "./data.js";
     if (!timerRoot || !isValidDate(startDate)) return;
     startTimer();
     document.addEventListener("visibilitychange", () => {
-      if (!document.hidden) updateTimer();
+      if (document.hidden) stopTimer();
+      else startTimer();
     });
   }
 
@@ -267,7 +267,7 @@ import { love } from "./data.js";
     ];
 
     const revealElements = [];
-    const observedElements = new Set(document.querySelectorAll(".timeline"));
+    const railElements = Array.from(document.querySelectorAll(".timeline"));
 
     revealGroups.forEach(({ selector, baseDelay, step }) => {
       document.querySelectorAll(selector).forEach((element, index) => {
@@ -277,36 +277,43 @@ import { love } from "./data.js";
           `${baseDelay + index * step}ms`,
         );
         revealElements.push(element);
-        observedElements.add(element);
       });
     });
 
-    if (!observedElements.size) return;
+    if (!revealElements.length && !railElements.length) return;
+
+    const show = (el) => {
+      el.classList.add("is-visible");
+      el.classList.remove("reveal-pending");
+    };
 
     if (prefersReducedMotion() || typeof IntersectionObserver !== "function") {
-      revealElements.forEach((el) => el.classList.remove("reveal-pending"));
-      observedElements.forEach((el) => el.classList.add("is-visible"));
+      revealElements.forEach(show);
+      railElements.forEach(show);
       return;
     }
 
     revealElements.forEach((el) => el.classList.add("reveal-pending"));
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-visible");
-          entry.target.classList.remove("reveal-pending");
-          observer.unobserve(entry.target);
-        });
-      },
-      {
-        threshold: 0.16,
-        rootMargin: "0px 0px -12% 0px",
-      },
-    );
+    const onEnter = (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        show(entry.target);
+        observer.unobserve(entry.target);
+      });
+    };
 
-    observedElements.forEach((el) => observer.observe(el));
+    const revealObserver = new IntersectionObserver(onEnter, {
+      threshold: 0.16,
+      rootMargin: "0px 0px -12% 0px",
+    });
+    revealElements.forEach((el) => revealObserver.observe(el));
+
+    // 时间线整条远高于视口，比例阈值在窄屏永远达不到，竖线单独按 0 阈值观察
+    if (railElements.length) {
+      const railObserver = new IntersectionObserver(onEnter, { threshold: 0 });
+      railElements.forEach((el) => railObserver.observe(el));
+    }
   }
 
   function setupTocSpy() {
@@ -336,7 +343,7 @@ import { love } from "./data.js";
       if (!entries.length) return;
 
       const offset = Math.min(140, window.innerHeight * 0.22);
-      let current = entries[0];
+      let current = null;
 
       entries.forEach((entry) => {
         if (entry.section.getBoundingClientRect().top <= offset) {
@@ -350,7 +357,7 @@ import { love } from "./data.js";
         document.documentElement.scrollHeight - 4;
       if (reachBottom) current = entries[entries.length - 1];
 
-      setActive(current.link);
+      setActive(current ? current.link : null);
     };
 
     sync();

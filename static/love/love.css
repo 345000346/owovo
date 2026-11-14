@@ -1,5 +1,9 @@
 /* 纪念册：书式深色长页 — tokens / base / cover / toc / sections / timeline / print */
 
+/* 两个子集按 love.html + love.js + data.js 的现用文案生成（含 ASCII 与常用标点）。
+   Noto 覆盖全部正文汉字；Cormorant 只含数字与标点，汉字回退 Noto。
+   改文案后需重新生成，否则缺字回退系统字体。 */
+
 @font-face {
   font-family: "Noto Serif SC";
   font-style: normal;
@@ -17,6 +21,8 @@
 }
 
 :root {
+  color-scheme: dark;
+
   /* color */
   --bg-0: #140e10;
   --bg-1: #1c1316;
@@ -24,7 +30,7 @@
   --text-bright: #fff8f1;
   --text-main: #f0e4d6;
   --text-soft: rgba(240, 228, 214, 0.64);
-  --text-faint: rgba(240, 228, 214, 0.42);
+  --text-faint: rgba(240, 228, 214, 0.55);
   --accent: #d9a59c;
   --accent-soft: #c48982;
   --accent-rgb: 217, 165, 156;
@@ -39,8 +45,7 @@
   --accent-muted: rgba(var(--accent-rgb), 0.45);
   --accent-mid: rgba(var(--accent-rgb), 0.55);
   --accent-strong: rgba(var(--accent-rgb), 0.7);
-  --gilt-faint: rgba(var(--gilt-rgb), 0.14);
-  --gilt-soft: rgba(var(--gilt-rgb), 0.55);
+  --gilt-soft: rgba(var(--gilt-rgb), 0.74);
   --hairline: linear-gradient(
     180deg,
     transparent,
@@ -141,22 +146,16 @@ body {
 }
 
 p,
-blockquote,
 h1,
 h2,
 h3,
-ol,
-ul {
+ol {
   margin: 0;
 }
 
 a {
   color: inherit;
   text-decoration: none;
-}
-
-strong {
-  font-weight: 700;
 }
 
 .skip-link {
@@ -357,7 +356,6 @@ strong {
   gap: 0.2rem 0.35rem;
   color: var(--text-faint);
   font-variant-numeric: tabular-nums lining-nums;
-  opacity: 0.9;
 }
 
 .timer-secondary .timer-value {
@@ -756,10 +754,6 @@ strong {
   box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0.14);
 }
 
-.timeline-item--quiet {
-  opacity: 1;
-}
-
 .timeline-item--quiet .timeline-date,
 .timeline-item--quiet .timeline-days {
   color: var(--quiet);
@@ -1016,6 +1010,13 @@ strong {
   }
 }
 
+/* 触屏把侧栏条目抬到 44px 触达下限；鼠标仍保持 32px 的紧凑节奏 */
+@media (pointer: coarse) {
+  .toc-list a {
+    min-height: 2.75rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1048,6 +1049,7 @@ strong {
 @media print {
   html {
     scroll-behavior: auto;
+    color-scheme: light;
   }
 
   body {
