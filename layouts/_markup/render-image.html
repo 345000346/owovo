@@ -14,7 +14,11 @@
         {{- if gt $targetWidth 1600 -}}
             {{- $targetWidth = 1600 -}}
         {{- end -}}
-        {{- $fallback := $image.Resize (printf "%dx q82" $targetWidth) -}}
+        {{- /* PNG/WebP 的 q 参数无效：仅在需要缩小时重编码，避免同尺寸重压一遍。 */ -}}
+        {{- $fallback := $image -}}
+        {{- if or (gt $image.Width $targetWidth) (eq $image.MediaType.SubType "jpeg") -}}
+            {{- $fallback = $image.Resize (printf "%dx q82" $targetWidth) -}}
+        {{- end -}}
         {{- $srcset := slice -}}
         {{- range slice 640 960 1440 -}}
             {{- if lt . $targetWidth -}}
@@ -39,7 +43,21 @@
         />
     {{- end -}}
 {{- else -}}
-    <img src="{{ $destination }}" alt="{{ .Text }}" decoding="async" loading="{{ $loading }}"{{ if $isFirst }} fetchpriority="high"{{ end }}{{ if $noDarkFilter }} data-no-dark-filter{{ end }}
+    {{- /* 非资源图：static 下的文件补 width/height 以稳住 CLS；外链无法探测尺寸，原样输出。 */ -}}
+    {{- $width := 0 -}}
+    {{- $height := 0 -}}
+    {{- if hasPrefix $destination "/" -}}
+        {{- $staticPath := printf "/static%s" $destination -}}
+        {{- if fileExists $staticPath -}}
+            {{- with try (images.Config $staticPath) -}}
+                {{- with .Value -}}
+                    {{- $width = .Width -}}
+                    {{- $height = .Height -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+    <img src="{{ $destination }}" alt="{{ .Text }}"{{ if gt $width 0 }} width="{{ $width }}" height="{{ $height }}"{{ end }} decoding="async" loading="{{ $loading }}"{{ if $isFirst }} fetchpriority="high"{{ end }}{{ if $noDarkFilter }} data-no-dark-filter{{ end }}
     {{- with .Title }} title="{{ . }}"{{ end -}}
     />
 {{- end -}}
