@@ -71,6 +71,19 @@ function splitFrontMatter(text) {
     return null;
   }
   const fm = text.slice(start, start + endMatch.index);
+  // 正文里常出现 `---` 分隔线：若把正文首段误当 front matter，重排会覆盖源文件。
+  // 因此 FM 区每行必须像 YAML 顶层键、缩进续行、注释或空行，否则判为无法解析。
+  for (const line of fm.split(/\r?\n/)) {
+    if (line.trim() === "" || line.trimStart().startsWith("#")) {
+      continue;
+    }
+    if (line.startsWith(" ") || line.startsWith("\t")) {
+      continue;
+    }
+    if (!/^[A-Za-z0-9_.-]+\s*:/.test(line)) {
+      return null;
+    }
+  }
   const body = text.slice(start + endMatch.index + endMatch[0].length);
   return { fm, body };
 }
@@ -92,11 +105,10 @@ function parseBlocks(fmBody) {
       i += 1;
       continue;
     }
-    const km = line.match(/^([A-Za-z0-9_]+)\s*:/);
+    const km = line.match(/^([A-Za-z0-9_.-]+)\s*:(?:\s|$)/);
     if (!km) {
-      blocks.push({ key: null, raw: line });
-      i += 1;
-      continue;
+      // 静默丢弃会让字段消失，宁可中止让维护者手工处理。
+      throw new Error(`无法解析的 front matter 行：${JSON.stringify(line)}`);
     }
     const key = km[1];
     /** @type {string[]} */
@@ -196,26 +208,46 @@ function isPostFile(filePath) {
 async function main() {
   const files = await listMarkdownFiles(contentRoot);
   let changed = 0;
+  /** @type {string[]} */
+  const problems = [];
 
   for (const filePath of files) {
+    const rel = relative(root, filePath);
     const text = await readFile(filePath, "utf8");
     const split = splitFrontMatter(text);
     if (!split) {
+      if (text.startsWith("---")) {
+        problems.push(`${rel}: front matter 未闭合或不合法，已跳过`);
+      }
       continue;
     }
 
     const post = isPostFile(filePath);
     const order = post ? POST_ORDER : PAGE_ORDER;
-    const newFm = rebuild(parseBlocks(split.fm), order, post);
+    /** @type {string} */
+    let newFm;
+    try {
+      newFm = rebuild(parseBlocks(split.fm), order, post);
+    } catch (error) {
+      problems.push(`${rel}: ${error.message}`);
+      continue;
+    }
     const next = `---\n${newFm}---\n${split.body}`;
     if (next !== text) {
       await writeFile(filePath, next, "utf8");
       changed += 1;
-      console.log(`updated ${relative(root, filePath)}`);
+      console.log(`updated ${rel}`);
     }
   }
 
   console.log(`normalize-frontmatter: ${changed} file(s) changed`);
+  if (problems.length > 0) {
+    console.error(`normalize-frontmatter: ${problems.length} file(s) need manual attention`);
+    for (const problem of problems) {
+      console.error(`  ${problem}`);
+    }
+    process.exitCode = 1;
+  }
 }
 
 main().catch((error) => {
