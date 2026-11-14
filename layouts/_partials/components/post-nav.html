@@ -1,18 +1,25 @@
 {{/* 同 section 上下篇；从 post/single 调用，调用方无需 is-post。
-     Hugo 按日期升序排：PrevInSection 指向更旧文章（上一篇）、NextInSection 指向更新文章（下一篇）。
-     本站设计：左侧 prev 槽放「上一篇」（更旧，rel=prev）、右侧 next 槽放「下一篇」（更新，rel=next）。 */}}
+     Hugo 默认排序为日期降序（新 → 旧），映射到本模板：.PrevInSection 更旧（上一篇），
+     .NextInSection 更新（下一篇）——由构建产物核对过：最新一篇只出 .PrevInSection。
+     左侧 prev 槽放「上一篇」（rel=prev），右侧 next 槽放「下一篇」（rel=next），与阅读顺序同向。 */}}
 {{ $prev := .PrevInSection }}
 {{ $next := .NextInSection }}
 {{ if or $prev $next }}
     <ul class="post-nav">
         {{ if $prev }}
             <li class="post-nav-prev">
-                <a href="{{ $prev.RelPermalink }}" rel="prev">&lt; {{ (partial "utils/title.html" (dict "$" $prev "title" $prev.LinkTitle)).htmlTitle }}</a>
+                <a href="{{ $prev.RelPermalink }}" rel="prev">
+                    <span class="post-nav-label">上一篇</span>
+                    <span class="post-nav-title">{{ (partial "utils/title.html" (dict "$" $prev "title" $prev.LinkTitle)).htmlTitle }}</span>
+                </a>
             </li>
         {{ end }}
         {{ if $next }}
             <li class="post-nav-next">
-                <a href="{{ $next.RelPermalink }}" rel="next">{{ (partial "utils/title.html" (dict "$" $next "title" $next.LinkTitle)).htmlTitle }} &gt;</a>
+                <a href="{{ $next.RelPermalink }}" rel="next">
+                    <span class="post-nav-label">下一篇</span>
+                    <span class="post-nav-title">{{ (partial "utils/title.html" (dict "$" $next "title" $next.LinkTitle)).htmlTitle }}</span>
+                </a>
             </li>
         {{ end }}
     </ul>

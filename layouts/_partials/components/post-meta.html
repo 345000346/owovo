@@ -1,21 +1,17 @@
-{{/* 元信息（日期/阅读时长；首页可出标签）。dict "$" isHome。 */}}
+{{/* 文章元信息：日期 / 阅读时长（首页另出标签）。dict "$" isHome。 */}}
 {{- $ := index . "$" -}}
 {{- $isHome := .isHome -}}
 {{- $isPost := partial "utils/is-post.html" $ -}}
 <div class="post-meta">
     {{ if not $.Date.IsZero }}
-        {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "calendar-alt" "class" "post-meta-icon") }}
-        <time datetime="{{ $.Date.Format "2006-01-02T15:04:05-07:00" }}" class="post-meta-item">{{ $icon }}&nbsp;{{ $.Date.Format $.Site.Params.postMetaDateFormat }}</time>
+        <time datetime="{{ $.Date.Format "2006-01-02T15:04:05-07:00" }}" class="post-meta-item">{{ $.Date.Format $.Site.Params.postMetaDateFormat }}</time>
     {{ end }}
     {{ if $isPost }}
-        {{ $icon := partial "utils/icon.html" (dict "$" $ "name" "clock" "class" "post-meta-icon") }}
-        <span class="post-meta-item reading-time">{{ $icon }}&nbsp;{{ $.ReadingTime }}&nbsp;分钟</span>
+        <span class="post-meta-item reading-time">约 {{ $.ReadingTime }} 分钟</span>
     {{ end }}
     {{- if $isHome -}}
         {{- with $.Params.tags -}}
             <div class="post-meta-item post-meta-tags" role="group" aria-label="标签">
-                {{- $tagIcon := partial "utils/icon.html" (dict "$" $ "name" "tag" "class" "post-meta-icon") -}}
-                <span class="post-meta-tags-icon">{{- $tagIcon -}}</span>
                 {{- partial "utils/taxonomy-links.html" (dict "$" $ "taxonomy" "tags" "terms" . "class" "post-meta-tag-link") -}}
             </div>
         {{- end -}}

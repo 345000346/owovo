@@ -1,14 +1,13 @@
-{{/* taxonomy 词链接列表。dict: "$" taxonomy terms class [icon]。 */}}
+{{/* taxonomy 词链接列表。dict: "$" taxonomy terms class。 */}}
 {{- $ := index . "$" -}}
 {{- $taxonomy := .taxonomy -}}
 {{- $terms := .terms -}}
 {{- $class := .class -}}
-{{- $icon := .icon -}}
 {{- range $term := $terms -}}
     {{- $path := (urls.Parse ($term | urlize)).Path -}}
     {{- with $.Site.GetPage (printf `/%s/%s` $taxonomy $path) -}}
-        <a href="{{- .RelPermalink -}}"{{ with $class }} class="{{ . }}"{{ end }}>{{ with $icon }}{{ partial "utils/icon.html" (dict "$" $ "name" . "class" "tag-icon") }}{{ end }}{{- .LinkTitle | default $path -}}</a>
+        <a href="{{- .RelPermalink -}}"{{ with $class }} class="{{ . }}"{{ end }}><span class="taxonomy-hash" aria-hidden="true">#</span>{{- .LinkTitle | default $path -}}</a>
     {{- else -}}
-        <span{{ with $class }} class="{{ . }}"{{ end }}>{{- $term -}}</span>
+        <span{{ with $class }} class="{{ . }}"{{ end }}><span class="taxonomy-hash" aria-hidden="true">#</span>{{- $term -}}</span>
     {{- end -}}
 {{- end -}}
