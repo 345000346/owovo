@@ -146,42 +146,36 @@ function isArticleHtml(rel) {
   return /^post\/[^/]+\/index\.html$/.test(rel);
 }
 
-/** 任选一篇 post 的 index.html 做抽样检查。 */
-async function findSamplePostHtml() {
+/** post/<slug>/index.html 的相对路径，按 slug 排序（抽样不依赖 readdir 顺序）。 */
+async function listPostHtml() {
   let entries;
   try {
     entries = await readdir(publicPath("post"), { withFileTypes: true });
   } catch {
-    return null;
+    return [];
   }
-  for (const entry of entries) {
-    if (!entry.isDirectory()) {
-      continue;
-    }
-    const rel = join("post", entry.name, "index.html");
+  const rels = [];
+  for (const name of entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort()) {
+    const rel = join("post", name, "index.html");
     if (await exists(rel)) {
-      return rel;
+      rels.push(rel);
     }
   }
-  return null;
+  return rels;
+}
+
+/** 任选一篇 post 的 index.html 做抽样检查。 */
+async function findSamplePostHtml() {
+  const rels = await listPostHtml();
+  return rels[0] ?? null;
 }
 
 // 找到第一篇文章 HTML 里真正带 TOC 的那一篇（toc: false 的文章没有内联断点脚本）。
 async function findPostHtmlWithToc() {
-  let entries;
-  try {
-    entries = await readdir(publicPath("post"), { withFileTypes: true });
-  } catch {
-    return null;
-  }
-  for (const entry of entries) {
-    if (!entry.isDirectory()) {
-      continue;
-    }
-    const rel = join("post", entry.name, "index.html");
-    if (!(await exists(rel))) {
-      continue;
-    }
+  for (const rel of await listPostHtml()) {
     const html = await readPublic(rel);
     if (/class="?contents"?/.test(html)) {
       return rel;
@@ -381,9 +375,14 @@ async function main() {
     assert(articleJs, "js/article.*.js missing");
     if (siteJs) {
       const js = await readFile(siteJs, "utf8");
+      // navigation.js：关闭定时器 600ms（≥ SCSS $duration 0.35s）与 --max-width 回退值。
       assert(
-        /\b600\b/.test(js),
-        "site JS contract literal drifted (nav close fallback 600ms >= SCSS $duration 0.35s)",
+        js.includes(", 600)") || js.includes(",600)"),
+        "site JS contract literal drifted (nav close fallback must stay 600ms, >= SCSS $duration 0.35s)",
+      );
+      assert(
+        js.includes("846px"),
+        "site JS contract literal drifted (nav --max-width fallback must stay 846px, synced with $maxWidth)",
       );
     }
     if (articleJs) {
@@ -396,10 +395,19 @@ async function main() {
   }
 
   // 标签页使用中文标题和标签专属描述。
-  const tagEntries = await readdir(publicPath("tags"), { withFileTypes: true });
-  const sampleTag = tagEntries.find((entry) => entry.isDirectory());
-  if (sampleTag) {
-    const rel = join("tags", sampleTag.name, "index.html");
+  let tagEntries = [];
+  try {
+    tagEntries = await readdir(publicPath("tags"), { withFileTypes: true });
+  } catch (error) {
+    assert(false, `tags/ directory missing: ${error.message}`);
+  }
+  const tagDirs = tagEntries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  assert(tagDirs.length > 0, "tags/ has no term pages");
+  for (const tagDir of tagDirs) {
+    const rel = join("tags", tagDir, "index.html");
     const html = await readPublic(rel);
     assert(/<title>标签：/.test(html), `${rel} title must start with 标签：`);
     assert(
@@ -413,13 +421,12 @@ async function main() {
   }
 
   // RSS 版权必须是纯文本，不能泄露 Markdown 链接语法。
-  if (await exists("rss.xml")) {
-    const rss = await readPublic("rss.xml");
-    assert(
-      !/<copyright>\[[^\]]+\]\([^)]+\)<\/copyright>/.test(rss),
-      "rss.xml copyright must not contain raw Markdown link syntax",
-    );
-  }
+  assert(await exists("rss.xml"), "rss.xml missing (home RSS output is required)");
+  const rss = await readPublic("rss.xml");
+  assert(
+    !/<copyright>\[[^\]]+\]\([^)]+\)<\/copyright>/.test(rss),
+    "rss.xml copyright must not contain raw Markdown link syntax",
+  );
 
   // Pagefind
   assert(
@@ -487,17 +494,31 @@ async function main() {
       postHtml.includes("data-pagefind-body"),
       `post page missing data-pagefind-body: ${postRel}`,
     );
-    // og:image 三级兜底（页级 images / 文章 bundle 首图 / siteLogo）必须至少落一级。
-    assert(
-      /property="?og:image"?/.test(postHtml),
-      `post page missing og:image: ${postRel}`,
+    // og:image 三级兜底（页级 images / 文章 bundle 首图 / siteLogo）必须至少落一级，
+    // 且落下的值必须是本博客可访问的绝对图片 URL（audit 曾出现 markdown 路径混入）。
+    const ogImage = postHtml.match(
+      /property="?og:image"?[^>]*?content="?([^"\s>]+)/i,
     );
-    // minify 可能去掉 rel 引号
-    assert(
-      /rel="?external noopener noreferrer"?/.test(postHtml) ||
-        !/target="?_blank"?/.test(postHtml),
-      `post external links should use noopener noreferrer when target=_blank: ${postRel}`,
-    );
+    assert(ogImage, `post page missing og:image: ${postRel}`);
+    if (ogImage) {
+      const ogImageUrl = ogImage[1];
+      assert(
+        /^https?:\/\//.test(ogImageUrl),
+        `og:image must be an absolute URL: ${postRel} -> ${ogImageUrl}`,
+      );
+      assert(
+        /\.(?:avif|gif|jpe?g|png|svg|webp)(?:[?#]|$)/i.test(ogImageUrl),
+        `og:image must point at an image file: ${postRel} -> ${ogImageUrl}`,
+      );
+    }
+    // 外链 render hook：每个 target=_blank 的锚都必须带 rel=noopener。
+    const blankLinks = postHtml.match(/<a\b[^>]*target="?_blank"?[^>]*>/gi) || [];
+    for (const tag of blankLinks) {
+      assert(
+        /rel="?[^"]*noopener/i.test(tag),
+        `external link with target=_blank must carry rel=noopener: ${postRel} -> ${tag.slice(0, 120)}`,
+      );
+    }
     assert(
       /id="?search-dialog"?/.test(postHtml),
       `post page missing search dialog: ${postRel}`,
