@@ -1,4 +1,6 @@
 {{/* 解析作者 dict（name / avatar / copyright）：页级 author 覆盖站点 params。 */}}
+{{- /* 转载（front matter 写 author:）刻意只取名字，不继承站点的 avatar/copyright：
+       别人的文章不能署本站的 CC 许可，所以那类页面不会输出「许可：」一行。 */ -}}
 {{- $author := dict -}}
 {{- with .Params.author -}}
     {{- $author = merge $author (dict "name" .) -}}
