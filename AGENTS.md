@@ -59,7 +59,7 @@ assets/
   css/fonts.css           # sync-fonts 生成（gitignore）
 data/                     # Socials.toml（文字链接）、SVG.toml（仅回顶箭头）；font_preload.json 由 sync-fonts 生成
 content/                  # 内容（文章、关于、想法、普通归档页等）
-static/                   # 原样发布；fonts/ 由构建生成
+static/                   # 原样发布；fonts/ 由构建生成；love.html 与 love/ 由作者单独维护，勿随主站改动
 scripts/
   sync-fonts.mjs          # 字体全量分片 + latin/CJK 白名单 preload（manifest 增量）
   smoke-public.mjs        # 构建后 public/ 断言
@@ -175,6 +175,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 - 404：只 `define "main"`，共用 `baseof`（有搜索 Dialog；无 `?hl=` loader）
 - 高亮 loader：`_partials/components/search-highlight-loader.html`；仅文章页在 head 调用
 - 菜单搜索：`identifier: search`、`url: "#search"`、`data-search-trigger`；支持 `/#search` 与 hashchange
+- 日期格式两处：`listDateFormat`（归档/term 右列）、`postMetaDateFormat`（文章元信息与首页行条目左栏共用）；首页日期列按本页最长的日期取宽（`.home-list` 网格 + subgrid），改格式不会错位
 - 不要新增 `/search/` 页或 `categories` taxonomy
 
 ## 文章操作
