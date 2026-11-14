@@ -223,8 +223,7 @@ async function main() {
     `sitemap.xml must use host ${siteHost}`,
   );
   assert(
-    !sitemap.includes(`${siteHost}/post/</loc>`) &&
-      !sitemap.includes(`${siteHost}/post<`),
+    !/\/post\/?<\/loc>/.test(sitemap),
     "sitemap.xml must not list section root /post/ (section output disabled; use /archives/)",
   );
   assert(
@@ -292,6 +291,10 @@ async function main() {
     indexHtml.includes('.classList.add("js")'),
     "index.html must enable JS-only navigation styles before first paint",
   );
+  assert(
+    !/themed-badge|shields\.io|substats/.test(indexHtml),
+    "index.html must not reference removed shields/themed badges",
+  );
   assertJsonLdSafe(indexHtml, "index.html");
 
   // 首页分页必须使用当前页 URL 和页码，避免 canonical / OG 折叠回首页。
@@ -331,10 +334,6 @@ async function main() {
   assert(
     !/id="?search-highlight-config"?/.test(notFound),
     "404.html should not include search-highlight-config",
-  );
-  assert(
-    !/themed-badge|shields\.io|substats/.test(indexHtml),
-    "index.html must not reference removed shields/themed badges",
   );
 
   // 样式产物
