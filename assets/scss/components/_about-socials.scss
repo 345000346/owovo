@@ -12,7 +12,8 @@
 
 .post-body .about-social-intro {
   margin: 0 0 1rem;
-  color: functions.alpha(var(--color-contrast-medium), 0.92);
+  // 不叠 alpha：medium 压在 lower 底上 0.92 透明度只剩 3.99:1，低于 AA 4.5。
+  color: var(--color-contrast-medium);
   font-size: 0.96rem;
   line-height: 1.8;
 }
@@ -110,10 +111,6 @@
 
   .post-body .about-social-card:hover {
     border-color: functions.alpha(var(--color-primary), 0.28);
-  }
-
-  .post-body .about-social-intro {
-    color: functions.alpha(var(--color-contrast-medium), 0.96);
   }
 
   .post-body .about-social-mark {
