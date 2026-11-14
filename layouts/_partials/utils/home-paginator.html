@@ -1,7 +1,8 @@
 {{/* 首页文章分页：head 与 main 共用，确保分页 URL / 标题 / 列表使用同一 Paginator。 */}}
 {{- $paginator := false -}}
 {{- if .IsHome -}}
-    {{- $pages := partial "utils/post-pages.html" . -}}
+    {{- /* 文章集合是全站常量，缓存；.Paginate 由 Hugo 自身按页缓存，不能跨分页页共享。 */ -}}
+    {{- $pages := partialCached "utils/post-pages.html" . "post" -}}
     {{- $paginator = .Paginate $pages -}}
 {{- end -}}
 {{- return $paginator -}}

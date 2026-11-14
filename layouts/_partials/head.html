@@ -75,6 +75,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
 
+    {{- /* 分页器按页缓存：缓存的是 utils/post-pages.html 的文章集合（见 home-paginator）。 */ -}}
     {{- $paginator := partial "utils/home-paginator.html" . -}}
     {{- $pageNumber := 1 -}}
     {{- $pageURL := .Permalink -}}
@@ -112,7 +113,12 @@
     {{/* 含 404：主题/导航/搜索 Dialog 在错误页仍可用 */}}
     {{ partial "script.html" . }}
 
-    {{- $description := .Description | default (.Summary | plainify | htmlUnescape | strings.TrimSpace) | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
+    {{- /* 惰性求值：有 description 的文章不再渲染全文 Summary。 */ -}}
+    {{- $description := .Description -}}
+    {{- if not $description -}}
+        {{- $description = .Summary | plainify | htmlUnescape | strings.TrimSpace -}}
+    {{- end -}}
+    {{- $description = $description | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
     {{- if eq .Kind "term" -}}
         {{- $description = printf "“%s”标签下的文章，共 %d 篇。" .Data.Term (len .Pages) -}}
     {{- else if gt $pageNumber 1 -}}
