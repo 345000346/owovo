@@ -4,8 +4,8 @@ author:
   name: "LIGT"
 
 # 浏览器地址栏与系统 UI 的主题色
-themeColor: "#ffffff"
-themeColorDark: "#16171d"
+themeColor: "#edeee7"
+themeColorDark: "#131612"
 
 # 用于 head meta、RSS 提要
 siteDescription: "分享一些日常、没事无聊的瞎想、一些常用的工具等"
