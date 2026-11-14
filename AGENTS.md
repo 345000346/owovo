@@ -47,7 +47,7 @@ layouts/                  # 站点模板（Hugo 0.146+ 新模板系统；已压�
   home.rss.xml            # 首页 RSS（/rss.xml）
   single.html             # 通用单页（type: page）
   term.html               # 标签 term 列表
-  taxonomy.html           # 标签总览（词云）
+  taxonomy.html           # 标签索引（名称 + 计数，无词云）
   _markup/                # render hooks
   _partials/              # 组件与工具 partials
   _shortcodes/            # 自定义 shortcodes
@@ -57,7 +57,7 @@ assets/
   js/                     # 见下文「JS 拆分与 Concat」
   scss/                   # Dart Sass：main.scss 入口；token 在 utils/_variables.scss
   css/fonts.css           # sync-fonts 生成（gitignore）
-data/                     # Socials.toml、SVG.toml；font_preload.json 由 sync-fonts 生成
+data/                     # Socials.toml（文字链接）、SVG.toml（仅回顶箭头）；font_preload.json 由 sync-fonts 生成
 content/                  # 内容（文章、关于、想法、普通归档页等）
 static/                   # 原样发布；fonts/ 由构建生成
 scripts/
@@ -74,6 +74,7 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 - **单站点**：`layouts` / `assets` 在仓库根；不再使用 `theme: owovo` 边界。
 - **单语（简体中文）**：无 i18n；UI 文案写在模板里。`defaultContentLanguage: zh-cn` 与 `locale` 用于 `lang` / SEO / Pagefind。
 - **配置最小化**：视觉进 SCSS；功能默认写死在模板；`params` 只留作者、描述、主题色等。`themeColor` / `themeColorDark` **必填**。
+- **视觉基调**：纸面底色 + 宋体正文（Noto Serif SC，等宽仅代码），单一强调色为印泥朱红，靠细线与留白分区；**不用**渐变、卡片阴影、图标菜单、大写标签、装饰性编号。尺寸、行高、动效 token 在 `assets/scss/utils/_variables.scss`；底色与对比色阶是 `themes/_light.scss` / `_dark.scss` 里的 HSL 字面量，经 `utils/_mixins.scss` 的 `defineColorHSL` 生成 CSS 变量。顶部 `themeColor` 与明亮底色、`themeColorDark` 与暗色底一致。
 - **Dart Sass**：`css.Sass`（`dartsass` + `sass-embedded`）；只允许 `@use` / `@forward`。
 - **JS 拆分与 Concat**（`layouts/_partials/script.html`）：
   - **全站一包**：`theme.js` + `navigation.js` + `scroll-ui.js` → `resources.Concat` 为 `js/site.js` → Minify + Fingerprint（一个请求、源码分文件）。
@@ -167,7 +168,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 
 ## 模板约定
 
-- partial 字典传参：`{{ partial "utils/icon.html" (dict "$" . "name" "tag") }}`
+- partial 字典传参：`{{ partial "utils/icon.html" (dict "$" . "name" "arrow-up") }}`（图标只保留 SVG.toml 中登记的项；菜单、页脚、标签全部用文字）
 - 路径小写、连字符
 - 文章判断：`utils/is-post.html`；关于页无独立判断与专壳，按普通页（`type: page`）走 `layouts/single.html`
 - 文章壳只在 `layouts/post/single.html`；归档壳在 `layouts/archives/single.html`；通用页不要复制文章壳
@@ -199,7 +200,7 @@ npm run build
 
 `npm run dev` 仅启动 Hugo server，不会生成或更新 Pagefind 索引；需要验证搜索时使用 `npm run build` 或 `npm run preview`。
 
-`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 三级兜底；校验跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 68em、导航关闭兜底 600ms ≥ 过渡时长）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
+`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 三级兜底；校验跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 78em、导航关闭兜底 600ms ≥ 过渡时长）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
 
 模板改动建议：
 
