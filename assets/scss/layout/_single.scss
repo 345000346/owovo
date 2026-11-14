@@ -200,7 +200,9 @@ blockquote {
     padding-left: 0;
   }
 
-  .toc ul {
+  // 目录根节点是 <ol class="toc">（Hugo 的 TableOfContents），二级以下仍是 ol；
+  // 原来只写 .toc ul 从不命中，二级缩进实际吃 .post ol 的 1.5em。
+  .toc :is(ol, ul) {
     padding-left: 1em;
   }
 

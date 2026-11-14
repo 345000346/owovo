@@ -6,18 +6,13 @@
   font-size: 0.8rem;
   margin: 2rem 0;
   pre {
-    margin: 0 !important;
+    // 没有对手规则：.code-block pre 也已归零。
+    margin: 0;
     max-height: unset;
   }
   .lntd pre {
     background-color: unset;
     overflow: visible;
-  }
-  table > tbody > tr:nth-of-type(odd) {
-    background-color: inherit;
-  }
-  table > tbody > tr:hover {
-    background-color: inherit;
   }
 }
 span.lnt {
