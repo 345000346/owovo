@@ -1,24 +1,11 @@
-// 主题切换按钮：菜单里的一个文字项。
-@use "../utils/variables";
-
+// 主题切换按钮：菜单里的一个文字项；文字排版由 layout/_menu.scss 统一提供。
 #theme-switcher {
   border: 0;
   padding: 0;
   background: transparent;
   font: inherit;
   line-height: 1.5;
-  color: var(--color-contrast-medium);
   cursor: pointer;
-  text-decoration-line: underline;
-  text-decoration-color: transparent;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.45em;
-  transition: color variables.$duration;
-
-  &:hover {
-    color: var(--color-contrast-higher);
-    text-decoration-color: var(--color-primary);
-  }
 }
 
 .theme-switcher-label {
