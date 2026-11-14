@@ -2,7 +2,7 @@
 {{ define "main" }}
     <main class="main single" id="main">
         <div class="main-inner">
-            <article class="content post">
+            <article class="post">
                 <h1 class="post-title">{{ (partial "utils/title.html" (dict "$" $ "title" $.Title)).htmlTitle }}</h1>
                 {{ partial "components/post-meta.html" (dict "$" . "isHome" false) }}
                 {{ partial "components/post-outdated.html" . }}

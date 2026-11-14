@@ -2,7 +2,7 @@
 <footer id="footer" class="footer">
     <div class="footer-inner">
         <div class="footer-brand">
-            <p class="site-info">
+            <p>
                 © {{ dateFormat "2006" (time .Site.Params.siteCreatedTime) }}–{{ now.Format "2006" }}&nbsp;{{ .Site.Params.author.name }}
             </p>
             {{- with .Site.Copyright -}}

@@ -2,7 +2,7 @@
 {{ define "main" }}
     <main class="main list" id="main">
         <div class="main-inner">
-            <div class="content tag-index">
+            <div class="tag-index">
                 <h1 class="list-title">{{ (partial "utils/title.html" (dict "$" .)).htmlTitle }}</h1>
                 {{- $tags := .Site.Taxonomies.tags.ByCount -}}
                 {{ if ne (len $tags) 0 }}

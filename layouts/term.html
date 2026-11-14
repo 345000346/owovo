@@ -2,10 +2,8 @@
 {{ define "main" }}
     <main class="main list" id="main">
         <div class="main-inner">
-            <div class="content">
-                <h1 class="list-title">{{ (partial "utils/title.html" (dict "$" . "title" .Title)).htmlTitle }}</h1>
-                {{ partial "utils/year-grouped-list.html" (dict "pages" .Pages) }}
-            </div>
+            <h1 class="list-title">{{ (partial "utils/title.html" (dict "$" . "title" .Title)).htmlTitle }}</h1>
+            {{ partial "utils/year-grouped-list.html" (dict "pages" .Pages) }}
         </div>
     </main>
 {{ end }}

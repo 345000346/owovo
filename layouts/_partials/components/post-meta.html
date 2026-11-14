@@ -7,7 +7,7 @@
         <time datetime="{{ $.Date.Format "2006-01-02T15:04:05-07:00" }}" class="post-meta-item">{{ $.Date.Format $.Site.Params.postMetaDateFormat }}</time>
     {{ end }}
     {{ if $isPost }}
-        <span class="post-meta-item reading-time">约 {{ $.ReadingTime }} 分钟</span>
+        <span class="post-meta-item">约 {{ $.ReadingTime }} 分钟</span>
     {{ end }}
     {{- if $isHome -}}
         {{- with $.Params.tags -}}

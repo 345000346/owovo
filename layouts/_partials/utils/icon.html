@@ -1,16 +1,15 @@
-{{/* SVG 图标：dict "$" name [class]；数据来自 data/SVG.toml。 */}}
+{{/* SVG 图标：dict "$" name；数据来自 data/SVG.toml。 */}}
 {{- $ := index . "$" -}}
 {{- $name := .name | default "" -}}
 {{- $result := "" -}}
 {{- if not $name -}}
     {{- warnf "Missing icon name on %q" $.RelPermalink -}}
 {{- else -}}
-    {{- $class := .class | default $name -}}
     {{- $icon := index hugo.Data.SVG $name -}}
     {{- if not $icon -}}
         {{- warnf "Missing SVG icon %q on %q" $name $.RelPermalink -}}
     {{- else -}}
-        {{- $class := printf "icon %s" $class -}}
+        {{- $class := printf "icon %s" $name -}}
         {{- /* 仅精确替换占位 class="icon"；防止 SVG 数据中出现 "icon" 子串被误替换。
                全站图标均为装饰性（可读文本在相邻节点或按钮 aria-label 上），统一隐藏。 */ -}}
         {{- $result = replace $icon `class="icon"` (printf `class="%s" aria-hidden="true"` $class) | safeHTML -}}

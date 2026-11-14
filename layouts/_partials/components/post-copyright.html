@@ -4,16 +4,16 @@
 {{- $author := partial "utils/author.html" . -}}
 {{ with $author.name }}
     <ul class="post-copyright">
-        <li class="copyright-item author">
+        <li class="copyright-item">
             <span class="copyright-item-text">作者：</span>{{ . }}
         </li>
         {{ if $isHttpSource }}
-            <li class="copyright-item link"><span class="copyright-item-text">链接：</span><a href="{{ $source | safeURL }}" target="_blank" rel="external noopener noreferrer">{{ $source }}</a></li>
+            <li class="copyright-item"><span class="copyright-item-text">链接：</span><a href="{{ $source | safeURL }}" target="_blank" rel="external noopener noreferrer">{{ $source }}</a></li>
         {{ else }}
-            <li class="copyright-item link"><span class="copyright-item-text">链接：</span><a href="{{ $.RelPermalink }}">{{ $.Permalink }}</a></li>
+            <li class="copyright-item"><span class="copyright-item-text">链接：</span><a href="{{ $.RelPermalink }}">{{ $.Permalink }}</a></li>
         {{ end }}
         {{ with $author.copyright }}
-            <li class="copyright-item license"><span class="copyright-item-text">许可：</span>{{ . | markdownify }}</li>
+            <li class="copyright-item"><span class="copyright-item-text">许可：</span>{{ . | markdownify }}</li>
         {{ end }}
     </ul>
 {{ end }}

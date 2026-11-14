@@ -2,7 +2,7 @@
 {{ define "main" }}
     <main class="main single" id="main">
         <div class="main-inner">
-            <article class="content post">
+            <article class="post">
                 <h1 class="post-title">{{ (partial "utils/title.html" (dict "$" $ "title" $.Title)).htmlTitle }}</h1>
                 {{- /* 普通页（关于、想法）是常青内容：不输出日期与阅读时间。 */ -}}
                 {{- /* 普通页 toc: true 才开 TOC。 */ -}}
