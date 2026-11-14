@@ -20,7 +20,7 @@ npm run hugo:env          # 打印本机 Hugo 环境
 维护（不进默认 CI）：
 
 ```bash
-node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 lastmod/categories，文章侧丢掉 toc: true；字段间注释挂到其后键随排序搬运
+node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 lastmod/categories，文章侧丢掉 toc: true；字段间注释挂到其后键随排序搬运；FM 未闭合或顶层键重复时跳过该文件并以 exit 1 报错
 ```
 
 注意：
@@ -81,10 +81,10 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
   - **Concat 作用域**：三文件拼成**同一个** `type="module"`，顶层 `const` / `function` **共用作用域**。标识符必须在三文件间**全局唯一**（禁止两个文件都导出顶层 `init` / 同名 helper）。实现尽量收进各自 `init…()` 内部。
   - **独立模块**（各一请求）：`search-dialog.js`（全站）；`article.js`（文章页，以及 `toc: true` 的普通页）；`search-highlight.js`（仅 `?hl=`，由 loader 注入）。
   - FOUC 内联脚本在 `layouts/_partials/head.html`，与 `theme.js` 契约必须同步（见 `theme.js` 文件头）；同时给 `<html>` 标记 `.js`，移动导航只在该标记存在时折叠。
-  - SEO：`_partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）；OG/Twitter 图优先级：页级 `images` → 文章 bundle 首图 → `siteLogo` 兜底（头像）。
+  - SEO：`_partials/utils/seo.html`（author meta + OG + Twitter + JSON-LD）；OG/Twitter 图优先级：页级 `images` → 文章 bundle 内按文件名排序的首张图（不保证是正文第一张）→ `siteLogo` 兜底（头像）。
   - taxonomy **仅** `tags`。
-- **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 拷贝官方 index **全部分片**（不做站点用字扫描）。`data/font_preload.json` = latin + 固定 CJK 白名单（缺文件则跳过）；其余 CJK 靠 `unicode-range`。调试：`npm run sync:fonts:stats`。
-- **搜索**：构建后 `pagefind --site public`；UI 为全站 Dialog + Default UI，但索引范围仅为文章；文章正文使用 `data-pagefind-body`，其它 Hugo 页面在 `<body>` 使用 `data-pagefind-ignore`；**无**独立 `/search/` 页。
+- **字体**：`@fontsource-variable/noto-serif-sc` + `@fontsource/source-code-pro` 自托管；`sync-fonts` 拷贝官方 index **全部分片**（不做站点用字扫描）。`data/font_preload.json` = latin + 固定 CJK 白名单（缺文件则跳过）；其余 CJK 靠 `unicode-range`。写入 `static/fonts` 走「旧目录 → `.fonts-backup`、暂存目录 → 上位、删备份」三步，任一步失败自动回滚，不会出现旧字体已删、新字体未就位的空窗。调试：`npm run sync:fonts:stats`。
+- **搜索**：构建后 `pagefind --site public`；UI 为全站 Dialog + Default UI，但索引范围仅为文章；文章正文使用 `data-pagefind-body`，其它 Hugo 页面在 `<body>` 使用 `data-pagefind-ignore`；**无**独立 `/search/` 页。Default UI 虽是 legacy，仍刻意保留：Component UI（`pagefind-component-ui.js`）把结果渲染成带边框与 12px 内边距的卡片、对话框自带 12px 圆角与重阴影，且这些结构值写死在上游样式里（变量只覆盖颜色/字体/尺寸），要改回纸面细线名单只能用 `!important` 或多个 ID 叠特异性对抗其 `:is(*, #\#)` 提权；升级 Pagefind 时先确认上游是否提供平铺结果布局，再考虑迁移。
 - **RSS**：首页输出 `/rss.xml`；只收录 `Section == post` 的最近 20 篇摘要，`pubDate` 使用文章 `date`，不使用构建时钟或全文。
 - **section 输出**：`disableKinds: ["section"]` 全局关闭 section 列表页；当前内容模型只需要文章实体与普通归档页。将来新增 section 时，必须显式评估是否需要重新启用对应输出。
 - **CI/CD**：`main` 推送：`npm ci` → `build:site --panicOnWarning` → `build:search` → `smoke` → deploy Pages；PR 只构建不部署，`workflow_dispatch` 亦可手动触发。**无** format 步骤。
@@ -201,7 +201,7 @@ npm run build
 
 `npm run dev` 仅启动 Hugo server，不会生成或更新 Pagefind 索引；需要验证搜索时使用 `npm run build` 或 `npm run preview`。
 
-`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 三级兜底；校验跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 78em、导航关闭兜底 600ms ≥ 过渡时长）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
+`smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 为绝对地址且指向图片；校验资源 `integrity` + `crossorigin="anonymous"`、RSS 恰为 20 条且全部指向文章、跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 78em、过渡时长 `$duration` 0.35s、导航关闭兜底 600ms ≥ 该时长）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
 
 模板改动建议：
 
