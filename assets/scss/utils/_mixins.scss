@@ -7,13 +7,6 @@
   #{$color}-hsl: #{$hue} #{$saturation} #{$lightness};
 }
 
-// 背景层
-
-@mixin blur {
-  -webkit-backdrop-filter: saturate(180%) blur(1em);
-  backdrop-filter: saturate(180%) blur(1em);
-}
-
 // 制表宽度
 
 @mixin tabSize {

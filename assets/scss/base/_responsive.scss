@@ -94,10 +94,6 @@ $maxWidth: variables.$fontSize * (variables.$contentWidthValue + 5);
     transition-delay: 0s;
   }
 
-  .header.fade .nav-curtain {
-    opacity: 0;
-  }
-
   .header.open .header-wrapper {
     border-bottom-color: transparent;
   }

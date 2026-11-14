@@ -59,6 +59,7 @@ $tocSideBreakpoint: 78em;
   text-wrap: pretty;
 }
 
+// 无 TOC 时与 .post-body 的 margin-top 折叠，只有中间隔着 .contents 时才是真实间隔。
 .post .post-meta {
   margin-bottom: 2.2em;
 }
@@ -126,9 +127,6 @@ $tocSideBreakpoint: 78em;
     border: 0;
     border-top: 1px solid var(--color-contrast-low);
     background: none;
-    &::after {
-      content: none;
-    }
   }
 }
 
@@ -286,24 +284,6 @@ blockquote {
 @media (prefers-reduced-motion: reduce) {
   .post-body :target {
     animation: none;
-  }
-}
-
-.footnotes {
-  margin-top: 4rem;
-  font-size: 0.86rem;
-  hr {
-    margin: 0;
-    height: 1px;
-    border: none;
-    background-color: var(--color-contrast-low);
-    &::after {
-      content: none;
-    }
-  }
-  ol {
-    margin: 1.4rem 0 0 !important;
-    padding: 0 1rem 0 1.6rem !important;
   }
 }
 
