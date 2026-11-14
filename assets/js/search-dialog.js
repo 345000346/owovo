@@ -2,7 +2,8 @@
 // 打开：[data-search-trigger]、Ctrl/Cmd+K、/、#search（repeat 自动重放被忽略）。
 //
 // 契约：#search-dialog、#search-dialog-config 的 data-pagefind-*；
-// 结果加 ?hl=；打开时派发 site:close-navigation；路径只放 data-*（防 --minify）。
+// 结果加 ?hl=；打开时派发 site:close-navigation；路径只放 data-*（防 --minify）；
+// ↑/↓ 在结果链接之间移动（Pagefind Default UI 自身不提供）。
 
 /** 元素是否真的渲染出来（display: none 与 visibility: hidden 都算否）。 */
 function isRendered(element) {
@@ -159,6 +160,39 @@ function initSearchDialog() {
   }
 
   let opener = null;
+
+  // Pagefind Default UI 只处理 Enter/Escape，结果之间没有 ↑/↓ 导航；
+  // 面板底部写着的「↑ ↓ 选择」由这里兑现：输入框里按 ↓ 进到第一条结果，
+  // 结果之间上下移动，第一条再按 ↑ 回到输入框。
+  function moveResultFocus(step) {
+    const links = [...dialog.querySelectorAll(".pagefind-ui__result-link")];
+    if (!links.length) {
+      return false;
+    }
+    const input = dialog.querySelector(".pagefind-ui__search-input");
+    const current = links.indexOf(document.activeElement);
+    if (current === -1) {
+      links[step > 0 ? 0 : links.length - 1].focus();
+      return true;
+    }
+    if (step < 0 && current === 0) {
+      input?.focus();
+      return true;
+    }
+    links[Math.min(links.length - 1, current + step)].focus();
+    return true;
+  }
+
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") {
+      return;
+    }
+    if (!moveResultFocus(event.key === "ArrowDown" ? 1 : -1)) {
+      return;
+    }
+    event.preventDefault();
+  });
+
   function openDialog() {
     document.dispatchEvent(new CustomEvent("site:close-navigation"));
     if (location.hash !== "#search") {
