@@ -1,5 +1,5 @@
 // 浅色主题 CSS 变量（data-theme=light）。
-// 参考：https://codyhouse.co/ds/globals/colors
+// 冷灰绿纸面 + 墨色正文；主色为印泥朱红。
 @use "../utils/mixins";
 @use "../utils/variables";
 
@@ -11,32 +11,31 @@
     variables.$primaryColorLightS,
     variables.$primaryColorLightL
   );
-  @include mixins.defineColorHSL(--color-bg, 0, 0%, 100%);
-  @include mixins.defineColorHSL(--color-contrast-lower, 0, 0%, 95%);
-  @include mixins.defineColorHSL(--color-contrast-low, 240, 1%, 83%);
-  @include mixins.defineColorHSL(--color-contrast-medium, 240, 1%, 40%);
-  @include mixins.defineColorHSL(--color-contrast-high, 240, 4%, 20%);
-  @include mixins.defineColorHSL(--color-contrast-higher, 240, 8%, 12%);
+  @include mixins.defineColorHSL(--color-bg, 69, 16%, 92%);
+  @include mixins.defineColorHSL(--color-contrast-lower, 73, 15%, 88%);
+  @include mixins.defineColorHSL(--color-contrast-low, 80, 11%, 78%);
+  @include mixins.defineColorHSL(--color-contrast-medium, 90, 5%, 38%);
+  @include mixins.defineColorHSL(--color-contrast-high, 86, 10%, 14%);
+  @include mixins.defineColorHSL(--color-contrast-higher, 83, 21%, 7%);
   img {
     filter: none;
   }
 
   /* https://xyproto.github.io/splash/docs/all.html */
-  /* Color values matching manni style */
+  /* 色值对齐 manni，按代码底（bg 与 lower 半透明混合）重新校验 ≥4.5:1。 */
 
-  --chroma-line-numbers-background: #ffffcc;
-  // 行号/名称/数字/注释/输出为 manni 原值的高对比变体，按代码底 #f9f9f9 校验 ≥4.5:1。
-  --chroma-line-numbers-color: #6e6e6e;
+  --chroma-line-numbers-background: #e0e3d5;
+  --chroma-line-numbers-color: #5f5f5f;
   --chroma-keyword-color: #006699;
   --chroma-declaration-color: #006699;
-  --chroma-name-color: #5555cc;
+  --chroma-name-color: #4a4ab8;
   --chroma-attribute-color: #330099;
-  --chroma-literal-color: #cc3300;
-  --chroma-number-color: #b35000;
+  --chroma-literal-color: #b02a00;
+  --chroma-number-color: #9a4400;
   --chroma-comment-color: #0066aa;
-  // 删除行是前景色（manni 原值 #ffcccc 是背景色，不能直接当前景用）；#cc0000 对代码底 ≈5.6:1。
-  --chroma-deleted-color: #cc0000;
-  --chroma-output-color: #707070;
+  // 删除行是前景色（manni 原值 #ffcccc 是背景色，不能直接当前景用）。
+  --chroma-deleted-color: #b00000;
+  --chroma-output-color: #5f5f5f;
 }
 
 // FOUC 在绘制前写入 data-theme；此处覆盖显式 light 与无 JS 回退。

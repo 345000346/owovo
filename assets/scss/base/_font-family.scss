@@ -1,34 +1,13 @@
-// 标题与列表标题字族。
+// 字族：中文衬线承担全部排版（标题与正文同一族，靠字号/字重分层），等宽只留给代码。
 @use "../utils/variables";
 
-.list-title,
-.list-year,
-.post-title,
-.post-nav,
-thead,
-dt {
-  font-family: variables.$fontFamilyTitle;
-}
-
-.post-body {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: variables.$fontFamilyHeadings;
-  }
+body {
+  font-family: variables.$fontFamilyBody;
 }
 
 code,
 pre,
-sup,
-.post-meta,
+.chroma,
 .copy-button {
   font-family: variables.$fontFamilyCode;
-}
-
-body {
-  font-family: variables.$fontFamilyBody;
 }

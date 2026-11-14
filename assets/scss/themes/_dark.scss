@@ -1,5 +1,5 @@
 // 深色主题 CSS 变量（data-theme=dark）。
-// 参考：https://codyhouse.co/ds/globals/colors
+// 墨绿近黑的纸面，正文为暖灰；主色提亮为暗处的印泥朱红。
 // https://github.com/dracula/dracula-theme/
 @use "../utils/mixins";
 @use "../utils/variables";
@@ -12,12 +12,12 @@
     variables.$primaryColorDarkS,
     variables.$primaryColorDarkL
   );
-  @include mixins.defineColorHSL(--color-bg, 231, 14%, 10%);
-  @include mixins.defineColorHSL(--color-contrast-lower, 230, 12%, 18%);
-  @include mixins.defineColorHSL(--color-contrast-low, 240, 2%, 37%);
-  @include mixins.defineColorHSL(--color-contrast-medium, 80, 2%, 69%);
-  @include mixins.defineColorHSL(--color-contrast-high, 69, 9%, 84%);
-  @include mixins.defineColorHSL(--color-contrast-higher, 60, 6%, 90%);
+  @include mixins.defineColorHSL(--color-bg, 105, 10%, 8%);
+  @include mixins.defineColorHSL(--color-contrast-lower, 100, 10%, 11%);
+  @include mixins.defineColorHSL(--color-contrast-low, 100, 9%, 19%);
+  @include mixins.defineColorHSL(--color-contrast-medium, 84, 7%, 60%);
+  @include mixins.defineColorHSL(--color-contrast-high, 71, 15%, 86%);
+  @include mixins.defineColorHSL(--color-contrast-higher, 65, 20%, 93%);
   // 已为深色准备的图片/视频可加 data-no-dark-filter 跳过压暗（仅原生 video，
   // 外嵌 iframe 视频不适用滤镜）。
   img:not([data-no-dark-filter]),
@@ -36,7 +36,7 @@
   /* https://xyproto.github.io/splash/docs/all.html */
   /* 色值对齐 dracula 风格 */
 
-  --chroma-line-numbers-background: #44475a;
+  --chroma-line-numbers-background: #2b3027;
   // 行号与注释原 dracula 色 #6272a4 在代码底上仅 3.58:1，提亮至 ≥4.5:1；输出色近隐形改可读灰。
   --chroma-line-numbers-color: #8b9cd8;
   --chroma-keyword-color: #ff79c6;
@@ -46,7 +46,7 @@
   --chroma-literal-color: #f1fa8c;
   --chroma-number-color: #bd93f9;
   --chroma-comment-color: #8b9cd8;
-  // 删除行是前景色（dracula 原值 #8b080b 是背景色）；回归 dracula 前景红，对代码底 ≈5.1:1。
+  // 删除行是前景色（dracula 原值 #8b080b 是背景色）；回归 dracula 前景红。
   --chroma-deleted-color: #ff5555;
   --chroma-output-color: #c8cad4;
 }

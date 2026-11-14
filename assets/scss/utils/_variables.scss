@@ -2,47 +2,38 @@
 
 // 字号 / 行高
 $fontSize: 18px;
-// chrome 用 $lineHeightBase；正文用 $lineHeight。
-$lineHeightBase: 1.618;
-$lineHeight: 1.8;
+// chrome 用 $lineHeightBase；正文用 $lineHeight（中文长文更需要行距）。
+$lineHeightBase: 1.7;
+$lineHeight: 1.95;
 $maxHeight: 80em;
 
 // 顶栏与品牌
-$headerBackground: linear-gradient(
-  90deg,
-  #f795331a 0,
-  #f370551a 15%,
-  #ef4e7b1a 30%,
-  #a166ab1a 44%,
-  #5073b81a 58%,
-  #1098ad1a 72%,
-  #07b39b1a 86%,
-  #6dba821a 100%
-);
-$siteBrandFontSize: 1em;
-$siteBrandFontColor: var(--color-contrast-high);
-$iconColor: #f06292;
+$siteBrandFontSize: 0.95em;
 
 // 字体
-$fontFamilyTitle: "Noto Serif SC", serif;
-$fontFamilyHeadings: "Noto Serif SC", serif;
 $fontFamilyCode: "Source Code Pro", "Noto Serif SC", monospace;
 $fontFamilyBody: "Noto Serif SC", serif;
 
 // 宽度 / 断点 / 动效
 $tabSize: 4;
 // 正文/列表/顶栏共用内容宽；移动端切换阈值据此推导（base/_responsive.scss）。
-$contentWidth: 42em;
+// 根字号与 1em 同值，字号被缩小的上下文（页脚 0.82rem）用 rem 版本保持同一列宽。
+$contentWidthValue: 42;
+$contentWidth: #{$contentWidthValue}em;
+$contentWidthRem: #{$contentWidthValue}rem;
+// 正文顶部留白：供给 fixed 顶栏 + 首屏呼吸。宽屏 TOC 边注的下限 top 与之同源
+//（layout/_single.scss），否则边注会与文章标题错位。
+$mainPaddingTop: 8.4em;
 $breakpoint-sm: 600px;
 $breakpoint-md: 900px;
 $breakpoint-about-sm: 700px;
 // 导航过渡；navigation.js 关闭兜底须 ≥ 此值。
-$duration: 0.5s;
+$duration: 0.35s;
 
-// 主题主色 HSL（light / dark）
-$primaryColorLightH: 220;
-$primaryColorLightS: 90%;
-$primaryColorLightL: 56%;
-$primaryColorDarkH: 201;
-$primaryColorDarkS: 65%;
-$primaryColorDarkL: 62%;
+// 主题主色 HSL（light / dark）：印泥朱红，仅用于链接、当前页与焦点。
+$primaryColorLightH: 8;
+$primaryColorLightS: 58%;
+$primaryColorLightL: 40%;
+$primaryColorDarkH: 13;
+$primaryColorDarkS: 62%;
+$primaryColorDarkL: 66%;
