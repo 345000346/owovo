@@ -15,7 +15,8 @@
     {{- $pubDate = dateFormat "2006-01-02T15:04:05-07:00" $.Date -}}
 {{- end -}}
 
-{{- /* OG/Twitter 图优先级：页级 images → 文章 bundle 首图 → 站点 logo 兜底（头像）。 */ -}}
+{{- /* OG/Twitter 图优先级：页级 images → 文章 bundle 内的图片（.Resources 按文件名排序，取其首张，
+       不保证是正文出现的第一张）→ 站点 logo 兜底（头像）。 */ -}}
 {{- $images := slice -}}
 {{- $hasContentImage := false -}}
 {{- if $.Params.images -}}
