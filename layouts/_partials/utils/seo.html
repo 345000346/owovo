@@ -1,4 +1,4 @@
-{{- /* SEO：author / OG / Twitter / JSON-LD。dict "$" description；404 勿调。 */ -}}
+{{- /* SEO：author / OG / Twitter / JSON-LD。dict "$" / description / pageURL / title；404 勿调。 */ -}}
 {{- $ := index . "$" -}}
 {{- $description := .description -}}
 {{- $isPost := partial "utils/is-post.html" $ -}}
@@ -19,7 +19,7 @@
 {{- $images := slice -}}
 {{- $hasContentImage := false -}}
 {{- if $.Params.images -}}
-    {{- range . -}}
+    {{- range $.Params.images -}}
         {{- $images = $images | append (. | absURL) -}}
     {{- end -}}
 {{- else if $isPost -}}
@@ -61,7 +61,8 @@
 <meta property="og:description" content="{{ $description }}" />
 <meta property="og:url" content="{{ $pageURL }}" />
 <meta property="og:site_name" content="{{ $.Site.Title }}" />
-{{- $localeParts := split $.Site.Language.Lang "-" -}}
+{{- /* locale 只有 Locale 一个来源（baseof 的 lang 也用它），不再从 Lang 另派一条链。 */ -}}
+{{- $localeParts := split $.Site.Language.Locale "-" -}}
 {{- $ogLocale := lower (index $localeParts 0) -}}
 {{- if gt (len $localeParts) 1 -}}
     {{- $ogLocale = printf "%s_%s" $ogLocale (upper (index $localeParts 1)) -}}
@@ -101,7 +102,13 @@
     "description" $description
 -}}
 {{- if $.IsHome -}}
-    {{- $ld = merge $ld (dict "@type" "WebSite" "url" $pageURL "name" $title) -}}
+    {{- /* 分页首页共用同一 WebSite 节点：站点身份不随页码变化，/ 与 /page/2/ 输出一致。 */ -}}
+    {{- $ld = merge $ld (dict
+        "@type" "WebSite"
+        "url" $.Site.Home.Permalink
+        "name" $.Site.Title
+        "description" $.Site.Params.siteDescription
+    ) -}}
     {{- with $images -}}
         {{- $ld = merge $ld (dict "image" (index . 0)) -}}
     {{- end -}}
