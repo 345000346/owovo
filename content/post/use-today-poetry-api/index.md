@@ -17,9 +17,13 @@ tags: ["今日诗词", "API", "古诗词"]
 <span id="jinrishici-sentence">正在加载今日诗词....</span>
 <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
 ```
+
 SDK 会自动寻找 id 或者 class 为 `jinrishici-sentence` 的标签，将里面的内容替换为诗词
+
 如果需要在多个地方显示诗词，添加多个 `class=" jinrishici-sentence "` 的 span 即可
+
 ## 通用高级安装代码
+
 如果你有其他需求（如获取作者、朝代等），可以调用我们提供的加载函数`jinrishici.load` 并传入回调函数，每调用一次，会传入一个新的诗词
 
 ```html

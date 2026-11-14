@@ -203,7 +203,7 @@ jobs:
 Hugo 版本写在 `.hugo-version`：
 
 ```text
-0.164.0
+0.170.0
 ```
 
 工作流读取后传给 `peaceiris/actions-hugo`。升级 Hugo 只改这一处。

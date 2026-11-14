@@ -1,6 +1,6 @@
 ---
 title: "关于我"
-date: 2020-04-27T20:53:11+08:00
+date: 2026-11-14T00:00:00+08:00
 description: "LIGT 的个人简介：技术栈、兴趣、数码设备与博客历程。"
 type: page
 toc: true
