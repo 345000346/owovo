@@ -40,6 +40,7 @@ copyright: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/
 # 启用 CJK 支持（自动统计中文字数）
 hasCJKLanguage: true
 
+# 摘要长度：全部文章都用 <!--more--> 显式截断，此值只对漏写标记的文章生效
 summaryLength: 260
 
 # 首页分页：显式声明，避免依赖 Hugo 默认值导致行为漂移
