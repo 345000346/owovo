@@ -52,12 +52,28 @@
 }
 
 // 目录式条目：日期在左栏，标题与摘要在右。
-.home-row {
+// 日期列宽不由格式写死：postMetaDateFormat 是单一来源，清单容器按本页最长的日期取宽，
+// 行用 subgrid 复用这一列，任何长短不一的格式都逐行对齐。
+.home-list {
   display: grid;
-  grid-template-columns: 7.2em minmax(0, 1fr);
+  grid-template-columns: minmax(7.2em, max-content) minmax(0, 1fr);
+  column-gap: 1.6em;
+}
+
+.home-row {
+  grid-column: 1 / -1;
+  display: grid;
+  // 无 subgrid 时的退路：本行按自身日期取宽，至少 7.2em。
+  grid-template-columns: minmax(7.2em, auto) minmax(0, 1fr);
   column-gap: 1.6em;
   padding: 1.15em 0;
   border-bottom: 1px solid var(--color-contrast-low);
+}
+
+@supports (grid-template-columns: subgrid) {
+  .home-row {
+    grid-template-columns: subgrid;
+  }
 }
 
 .home-row-date {
@@ -69,6 +85,8 @@
 }
 
 .home-row-title {
+  // 条目是两栏网格：日期占左栏，标题与摘要都是右栏的独立网格项。
+  grid-column: 2;
   margin: 0 0 0.35em;
   font-size: 1.08rem;
   line-height: 1.55;
@@ -82,6 +100,7 @@
 }
 
 .post .home-row-summary {
+  grid-column: 2;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -133,6 +152,9 @@
   }
   .home-lead-title {
     font-size: 1.5rem;
+  }
+  .home-list {
+    display: block;
   }
   .home-row {
     display: block;

@@ -9,9 +9,10 @@
                 <p class="home-intro">{{ .Site.Params.siteDescription }}</p>
             {{- end }}
             {{ $pages := $paginator.Pages }}
-            {{ range $index, $_ := $pages }}
-                {{ if and $firstPage (eq $index 0) }}
-                    <article class="content post home-lead">
+            {{ $rows := $pages }}
+            {{- if and $firstPage $pages -}}
+                {{ with index $pages 0 }}
+                    <article class="post home-lead">
                         <h2 class="home-lead-title">
                             <a href="{{ .RelPermalink }}">{{ (partial "utils/title.html" (dict "$" . "title" .LinkTitle)).htmlTitle }}</a>
                         </h2>
@@ -21,20 +22,25 @@
                         </p>
                         <a href="{{ .RelPermalink }}" class="home-lead-link">读全文</a>
                     </article>
-                {{ else }}
-                    <article class="content post home-row">
-                        <time class="home-row-date" datetime="{{ .Date.Format "2006-01-02T15:04:05-07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
-                        <div class="home-row-body">
+                {{ end }}
+                {{ $rows = after 1 $pages }}
+            {{- end }}
+            {{- with $rows }}
+                {{/* 清单是一个网格：日期列宽取本页最长的日期，标题列因此逐行对齐。 */}}
+                <div class="home-list">
+                    {{ range . }}
+                        <article class="post home-row">
+                            <time class="home-row-date" datetime="{{ .Date.Format "2006-01-02T15:04:05-07:00" }}">{{ .Date.Format .Site.Params.postMetaDateFormat }}</time>
                             <h2 class="home-row-title">
                                 <a href="{{ .RelPermalink }}">{{ (partial "utils/title.html" (dict "$" . "title" .LinkTitle)).htmlTitle }}</a>
                             </h2>
                             <p class="home-row-summary">
                                 {{ .Summary | plainify | htmlUnescape | strings.TrimSpace }}
                             </p>
-                        </div>
-                    </article>
-                {{ end }}
-            {{ end }}
+                        </article>
+                    {{ end }}
+                </div>
+            {{- end }}
             {{ if or $paginator.HasPrev $paginator.HasNext }}
                 <nav class="pagination" aria-label="分页">
                     {{ if $paginator.HasPrev }}
