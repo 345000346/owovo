@@ -1,7 +1,7 @@
 // 移动端导航：开合、焦点陷阱、背景 inert、滚动锁定。
 //
 // 契约：.nav-toggle / .header / .nav-curtain / .nav；
-// --max-width 与 _responsive.scss $maxWidth 同步；关闭兜底 ≥ $duration（0.5s）；
+// --max-width 与 _responsive.scss $maxWidth 同步；关闭兜底 ≥ $duration（0.35s）；
 // 监听 site:close-navigation（搜索打开时关菜单）。
 // 背景遮蔽只写 inert + aria-hidden（3 处固定元素）：inert 自 2022 起已包含
 // 移出 Tab 序与 AT 可达性语义，不再逐元素记账 tabindex。
@@ -226,7 +226,7 @@ function initNavigation() {
 
     header.classList.add("fade");
     window.clearTimeout(closeTimer);
-    // 须 ≥ $duration（0.5s）；幕布 transitionend 也会 finishClose。
+    // 须 ≥ $duration（0.35s）；幕布 transitionend 也会 finishClose。
     closeTimer = window.setTimeout(finishClose, 600);
   }
 
