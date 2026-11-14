@@ -25,7 +25,7 @@ node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 
 
 注意：
 
-- `build:site` **必须**带 `--environment production`，以便 `layouts/robots.txt` 输出 `Allow: /`、正确 `baseURL` Sitemap 以及纪念页 `Disallow: /love.html` 与 `/love/`（三项均由 smoke 断言）。
+- `build:site` **必须**带 `--environment production`，以便 `layouts/robots.txt` 输出 `Allow: /` 与指向正式域名的 Sitemap（两项均由 smoke 断言）。
 - 若本机正在跑 `hugo server`，勿与 `build` 共用被污染的 `public/`（server 会写入 livereload）；构建前先停 server。
 - Windows / PowerShell：`build:search` 会向 stderr 打印 `Pagefind doesn't support stemming for the language zh-cn.`，可能令 npm/PS 管道伪报 `NativeCommandError` 或 exit 1；属已知噪音，最终以 `npm run smoke` 输出 `ok` 为准。
 - **不使用 Prettier** 或其它自动格式化；缩进/换行遵守 `.editorconfig`，其余按「代码写法约定」手写。

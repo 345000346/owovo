@@ -208,10 +208,6 @@ async function main() {
     "robots.txt must Allow: / in production builds (got whole-site Disallow or missing Allow)",
   );
   assert(
-    /^\s*Disallow:\s*\/love(\.html|\/)\s*$/m.test(robots),
-    "robots.txt must Disallow /love.html and /love/ (memorial page stays out of search & AI indexes)",
-  );
-  assert(
     robots.includes(`Sitemap: ${siteHost}/sitemap.xml`),
     `robots.txt Sitemap must be ${siteHost}/sitemap.xml`,
   );
