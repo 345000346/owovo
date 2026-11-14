@@ -26,7 +26,12 @@
 {{- else if $isPost -}}
     {{- with $.Resources.ByType "image" -}}
         {{- with index . 0 -}}
-            {{- $images = slice .Permalink -}}
+            {{- $ogImage := . -}}
+            {{- /* SVG/ICO/HEIC 不可处理，且 .Width 可能读不到：先按子类型放行再比较宽度。 */ -}}
+            {{- if and (in (slice "jpeg" "png" "webp" "gif" "tiff") $ogImage.MediaType.SubType) (gt $ogImage.Width 1200) -}}
+                {{- $ogImage = $ogImage.Resize "1200x webp q80" -}}
+            {{- end -}}
+            {{- $images = slice $ogImage.Permalink -}}
             {{- $hasContentImage = true -}}
         {{- end -}}
     {{- end -}}
