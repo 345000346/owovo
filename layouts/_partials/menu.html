@@ -15,8 +15,6 @@
                 <li class="menu-item{{ if $isCurrent }} active{{ end }}{{ if $toolsStart }} tools-start{{ end }}{{ if $isSearch }} menu-item-search{{ end }}">
                     {{- $isExternal := strings.HasPrefix .URL "http" -}}
                     <a href="{{ .URL }}"{{ if eq .Identifier "search" }} data-search-trigger{{ end }}{{ if $isExternal }} target="_blank" rel="external noopener noreferrer"{{ end }}{{ if and $isCurrent (ne .Identifier "search") }} aria-current="page"{{ end }}>
-                        {{- $iconName := (string .Post) -}}
-                        {{- partial "utils/icon.html" (dict "$" $ "name" $iconName "class" .Identifier) -}}
                         {{- with .Name -}}
                             <span class="menu-item-name">{{ . }}</span>
                         {{- end -}}

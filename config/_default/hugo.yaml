@@ -9,28 +9,22 @@ menu:
     - name: "首页"
       pageRef: "/"
       weight: 1
-      post: "home"
     - name: "文章"
       pageRef: "/archives/"
       weight: 2
-      post: "archive"
     - name: "标签"
       pageRef: "/tags/"
       weight: 3
-      post: "tag"
     - name: "想法"
       pageRef: "/ideas/"
       weight: 4
-      post: "edit"
     - name: "关于"
       pageRef: "/about/"
       weight: 5
-      post: "user-circle"
     - name: "RSS"
       url: "/rss.xml"
       identifier: "rss"
       weight: 6
-      post: "rss"
     - identifier: "theme-switcher"
       weight: 9
     # identifier=search + url=#search → 菜单触发搜索 Dialog（非独立 /search/ 页）
@@ -38,7 +32,6 @@ menu:
       url: "#search"
       identifier: "search"
       weight: 8
-      post: "search"
 
 title: "LIGT'S BLOG"
 

@@ -3,7 +3,7 @@
     <div class="header-wrapper">
         <div class="header-inner">
             <div class="site-brand">
-                <a href="{{ "" | relLangURL }}" class="brand">{{ .Site.Title }}</a>
+                <a href="{{ "" | relLangURL }}" class="brand"><span class="brand-seal" aria-hidden="true"></span>{{ .Site.Title }}</a>
             </div>
             {{ partial "menu.html" . }}
         </div>
