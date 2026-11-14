@@ -159,6 +159,20 @@ function computePreloadFiles(faces) {
 }
 
 /**
+ * 路径是否存在（文件或目录）。
+ * @param {string} path
+ * @returns {Promise<boolean>}
+ */
+async function pathExists(path) {
+  try {
+    await stat(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * 拷贝全部 woff2 到暂存目录；全部成功后由调用方原子替换正式目录。
  * @param {string} stagingDirectory
  * @param {{ block: string, file: string, isLatin: boolean }[]} faces
@@ -315,12 +329,26 @@ async function main() {
 
   // 先写仓库根暂存目录再整体替换：失败清理暂存且不破坏既有 static/fonts；
   // 暂存目录不在 static/ 下，Hugo 不会把它当静态文件发布。
+  //
+  // 换位三步走（旧目录改名让位 → 暂存上位 → 删旧目录），不能先 rm 再 rename：
+  // Windows 上 rename 常被刚写出的 woff2（杀软/索引器持有句柄）顶成 EPERM，
+  // 那时旧目录已删净、暂存也被下面的 catch 清掉，站点会带着空字体目录构建成功。
   const stagingDirectory = resolve(root, ".fonts-staging");
+  const backupDirectory = resolve(root, ".fonts-backup");
   let stageResult;
   try {
     stageResult = await stageFonts(stagingDirectory, faces);
-    await rm(fontDirectory, { force: true, recursive: true });
-    await rename(stagingDirectory, fontDirectory);
+    await rm(backupDirectory, { force: true, recursive: true });
+    const hadFonts = await pathExists(fontDirectory);
+    if (hadFonts) await rename(fontDirectory, backupDirectory);
+    try {
+      await rename(stagingDirectory, fontDirectory);
+    } catch (error) {
+      // 回滚：旧目录改回原名，暂存原样留给下面的清理。
+      if (hadFonts) await rename(backupDirectory, fontDirectory);
+      throw error;
+    }
+    await rm(backupDirectory, { force: true, recursive: true });
   } catch (error) {
     await rm(stagingDirectory, { force: true, recursive: true }).catch(() => {});
     throw error;
