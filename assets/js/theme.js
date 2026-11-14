@@ -7,7 +7,7 @@
 // - documentElement: data-theme、data-theme-preference
 // - meta[name=theme-color]: content + data-theme-color-light/dark
 // - meta[name=color-scheme]: content = "light" | "dark"
-// FOUC 只上色；本文件负责切换、存储、系统主题与 themechange。
+// FOUC 只上色；本文件负责切换、存储与系统主题。
 // 切换用 View Transition 做背景扩散渐变（reduced motion / 无 API 时直接应用）。
 // Concat：与 navigation.js / scroll-ui.js 同 module，顶层仅 initTheme。
 
@@ -107,12 +107,6 @@ function initTheme() {
       }
     }
     syncColorScheme(theme);
-
-    window.dispatchEvent(
-      new CustomEvent("themechange", {
-        detail: { preference: normalized, theme },
-      }),
-    );
   }
 
   function applyThemeFromPreference(
@@ -140,7 +134,9 @@ function initTheme() {
     // 切换用 View Transition 做扩散渐变；reduced motion 或 API 缺失时直接应用。
     // VT 期间临时禁用元素过渡（CSS 变量变化会触发 body/a 等的 $duration（0.35s）过渡），
     // 否则新快照拍到的是过渡中间值，扩散窗口内颜色会滞后。
-    // spreadFrom：真实点击事件（detail>0）时把坐标写入 --spread-x/y，扩散从点击处开始。
+    // spreadFrom：真实点击事件（detail>0）时把坐标写入 --spread-x/y，扩散从点击处开始；
+    // 其余来源（键盘、跨标签 storage、系统主题变化）没有坐标，清掉上一轮的原点，
+    // 让扩散回到 CSS 默认角。
     const apply = () => {
       if (
         spreadFrom &&
@@ -149,6 +145,9 @@ function initTheme() {
       ) {
         root.style.setProperty("--spread-x", `${spreadFrom.clientX}px`);
         root.style.setProperty("--spread-y", `${spreadFrom.clientY}px`);
+      } else {
+        root.style.removeProperty("--spread-x");
+        root.style.removeProperty("--spread-y");
       }
       writeThemeState(normalized, theme);
     };
