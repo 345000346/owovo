@@ -1,7 +1,9 @@
 {{/* 按年分组的文章列表（归档 / 标签 term 共用）。dict: pages。 */}}
 {{- with .pages -}}
     {{- range .GroupByDate "2006" }}
-        <h2 class="list-year">{{ .Key }}</h2>
-        {{ partial "utils/list-item.html" (dict "pages" .Pages) }}
+        <div class="year-group">
+            <h2 class="list-year">{{ .Key }}</h2>
+            {{ partial "utils/list-item.html" (dict "pages" .Pages) }}
+        </div>
     {{ end -}}
 {{- end -}}

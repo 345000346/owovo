@@ -1,21 +1,18 @@
-{{/* 页脚：年份、作者、Powered by、版权、社交图标。 */}}
+{{/* 页脚：版权与站点信息在左，社交与生成信息在右。 */}}
 <footer id="footer" class="footer">
     <div class="footer-inner">
-        <div class="site-info">
-            ©&nbsp;
-            {{- dateFormat "2006" (time .Site.Params.siteCreatedTime) -}}–{{- now.Format "2006" -}}
-
-            &nbsp;{{- partial "utils/icon.html" (dict "$" $ "name" "heart" "class" "footer-icon") -}}
-            &nbsp;{{- .Site.Params.author.name -}}
+        <div class="footer-brand">
+            <p class="site-info">
+                © {{ dateFormat "2006" (time .Site.Params.siteCreatedTime) }}–{{ now.Format "2006" }}&nbsp;{{ .Site.Params.author.name }}
+            </p>
+            {{- with .Site.Copyright -}}
+                <div class="site-copyright">{{ . | markdownify }}</div>
+            {{- end -}}
         </div>
-
-        {{- $raw := `Powered by [Hugo](https://github.com/gohugoio/hugo)` -}}
-        <div class="powered-by">{{ $raw | markdownify }}</div>
-
-        {{- with .Site.Copyright -}}
-            <div class="site-copyright">{{ . | markdownify }}</div>
-        {{- end }}
-
-        {{ partial "components/socials.html" . }}
+        <div class="footer-end">
+            {{ partial "components/socials.html" . }}
+            {{- $raw := `由 [Hugo](https://gohugo.io/) 生成` -}}
+            <div class="powered-by">{{ $raw | markdownify }}</div>
+        </div>
     </div>
 </footer>
