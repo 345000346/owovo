@@ -4,8 +4,9 @@
 .footer {
   flex: 0 0 auto;
   width: 100%;
-  margin-top: auto;
-  font-size: 90%;
+  // 底部留白由 .main 的 padding-bottom 统一负责；这里再加 margin 会变成双倍空白。
+  border-top: 1px solid var(--color-contrast-low);
+  font-size: 0.82rem;
   color: var(--color-contrast-medium);
   a {
     color: var(--color-contrast-medium);
@@ -16,31 +17,35 @@
 }
 
 .footer-inner {
-  padding: 1em;
-  text-align: center;
+  width: variables.$contentWidthRem;
+  max-width: calc(100% - 2.4rem);
+  margin: 0 auto;
+  padding: 2.2rem 0 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.6rem 2rem;
 }
 
-.footer-icon {
-  margin: 0 0.25em 0.3em;
-  fill: variables.$iconColor;
-  animation: heartbeat 1.33s ease-in-out infinite;
+.footer-brand,
+.footer-end {
+  p {
+    margin: 0.2em 0;
+    line-height: 1.7;
+  }
 }
 
-@keyframes heartbeat {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  10%,
-  30% {
-    transform: scale(0.9);
-  }
-  20%,
-  40%,
-  50%,
-  60%,
-  70%,
-  80% {
-    transform: scale(1.1);
-  }
+.footer-end {
+  text-align: right;
+}
+
+.powered-by {
+  margin-top: 0.6em;
+  color: var(--color-contrast-medium);
+  font-size: 0.76rem;
+}
+
+.site-copyright {
+  font-size: 0.78rem;
 }

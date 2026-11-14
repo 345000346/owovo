@@ -1,15 +1,5 @@
 // 站点顶栏（.header / .header-inner / 品牌区）。
-@use "../utils/functions";
-@use "../utils/mixins";
 @use "../utils/variables";
-
-/* 品牌字号（px）与品牌盒高；$brandMinHeight 与 .brand 的 min-height 同源 */
-$brandFontSize: variables.$fontSize *
-  functions.strip-unit(variables.$siteBrandFontSize);
-/* 品牌一行文字的高度 */
-$brandHeight: $brandFontSize * functions.strip-unit(variables.$lineHeightBase);
-/* .brand min-height：2.75 倍品牌字号 */
-$brandMinHeight: $brandFontSize * 2.75;
 
 // 层叠契约（全局有效值）：search-dialog 走原生 top layer > #reading-progress 4 >
 // .header 3 { .header-wrapper 2 > .nav-curtain/.back-to-top 1、.nav-toggle 3 }；
@@ -23,14 +13,16 @@ $brandMinHeight: $brandFontSize * 2.75;
   width: auto;
 }
 
+// 纸面不透明，仅以一条细线与正文分隔；不再使用渐变与毛玻璃。
 .header-wrapper {
   position: relative;
   z-index: 2;
-  padding: 1em 0;
-  @include mixins.blur;
+  padding: 1.05rem 0;
   background-color: var(--color-bg);
-  background-image: variables.$headerBackground;
-  transition: background variables.$duration;
+  border-bottom: 1px solid var(--color-contrast-low);
+  transition:
+    background-color variables.$duration,
+    border-color variables.$duration;
 }
 
 .header-inner {
@@ -42,35 +34,40 @@ $brandMinHeight: $brandFontSize * 2.75;
 }
 
 .site-brand {
-  margin-right: 1em;
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  min-height: $brandMinHeight;
+  gap: 0.6em;
   font-size: variables.$siteBrandFontSize;
-  color: variables.$siteBrandFontColor;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--color-contrast-higher);
   text-decoration: none;
+  white-space: nowrap;
   &:hover {
-    color: variables.$siteBrandFontColor;
+    color: var(--color-contrast-higher);
   }
 }
 
+// 品牌前的小印：唯一的实心色块，指向印泥主色。
+.brand-seal {
+  flex: 0 0 auto;
+  width: 0.52em;
+  height: 0.52em;
+  background-color: var(--color-primary);
+}
+
 :root {
-  /* 近似高度；运行时 scroll-ui 再写实测值 */
-  --header-height: calc(
-    max(
-        /* 品牌文字行高 */ #{$brandHeight},
-        /* 品牌 min-height */ #{$brandMinHeight},
-        /* 菜单 */ #{variables.$fontSize * 0.8 * 1.5}
-          /* {.nav font-size} * {.menu line-height} */
-      )
-      /* .header-wrapper 上下 margin */ + #{variables.$fontSize * 2}
-  );
+  /* 实测约 3.77rem（1.05rem×2 内边距 + 品牌行盒 + 1px 细线）；运行时 scroll-ui 再写实测值 */
+  --header-height: 3.8rem;
 }
 
 /* 锚点滚动时不被 fixed 顶栏挡住 */
 :where(h1, h2, h3, h4, h5, h6) {
-  scroll-margin-top: var(--header-height);
+  scroll-margin-top: calc(var(--header-height) + 0.75em);
 }

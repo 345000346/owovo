@@ -1,30 +1,42 @@
 // 单页/文章正文壳（.single / .post-body 等）。
-@use "sass:math";
 @use "../utils/functions";
 @use "../utils/mixins";
 @use "../utils/variables";
 
 // 桌面宽屏：TOC fixed 悬浮于正文右侧空白（正文始终 42em 居中，与无 TOC 文章一致）。
-// 断点 = 正文右缘 21em + 间隙 2em + TOC 20em + 余量；以下保持单栏顶部卡片。
+// 断点按“正文右缘 + 2em 间隙 + 12em 边注”反推：78em（媒体查询 em 基于 UA 16px → 1248px），
+// 此时右侧留白 246px，边注仍得 192px，不会被压成竖条；以下回到正文上方的折叠块。
 // 与 article.js 的折叠默认同步：断点经下方 --toc-side-breakpoint 同源输出，
 // article.js 运行时 getComputedStyle 读取；改值只动这里。
-// 注意：媒体查询中的 em 基于 UA 初始字号（默认 16px → 1088px），非站点根字号 18px。
-$tocSideBreakpoint: 68em;
+$tocSideBreakpoint: 78em;
 
 :root {
   --toc-side-breakpoint: #{$tocSideBreakpoint};
 }
 
 @media (min-width: $tocSideBreakpoint) {
-  // TOC 脱离文档流固定悬浮；宽度自适应：视口不足以放 20em 时压缩，不溢出。
+  // TOC 脱离文档流固定悬浮；宽度自适应：视口不足以放 14em 时压缩，不溢出。
+  // top 有下限（与正文首行齐平），max-height 必须复用同一值，否则面板底部越出视口，
+  // 长目录的最后几条永远滚不到。
   .single .contents {
+    --toc-side-top: max(
+      calc(var(--header-height) + 1.5em),
+      #{variables.$mainPaddingTop}
+    );
     margin-top: 0;
     position: fixed;
-    top: calc(var(--header-height) + 1.5em);
-    left: calc(50% + 21em + 2em);
-    width: min(20em, calc(50% - 24em));
-    max-height: calc(100vh - var(--header-height) - 3em);
+    top: var(--toc-side-top);
+    left: calc(50% + 23em);
+    width: min(14em, calc(50% - 24em));
+    // padding-left + border 计入宽度，否则 1248px 处右缘会超出 3.7px 被裁。
+    box-sizing: border-box;
+    max-height: calc(100vh - var(--toc-side-top) - 1.5em);
+    overflow-x: hidden;
     overflow-y: auto;
+    scrollbar-width: thin;
+    border: 0;
+    border-left: 1px solid var(--color-contrast-low);
+    padding: 0 0 0 1.15em;
     transition:
       opacity 0.3s ease,
       visibility 0s linear 0.3s;
@@ -39,25 +51,35 @@ $tocSideBreakpoint: 68em;
 }
 
 .post-title {
-  text-align: center;
+  text-align: left;
+  margin: 0 0 0.55em;
+  font-size: 2.35rem;
+  line-height: 1.42;
   overflow-wrap: anywhere;
   text-wrap: pretty;
 }
 
+.post .post-meta {
+  margin-bottom: 2.2em;
+}
+
 .post-body {
-  margin-top: 5em;
+  margin-top: 2.8em;
   a {
     text-decoration: underline;
+    text-decoration-thickness: 1px;
     text-decoration-color: var(--color-contrast-low);
+    text-underline-offset: 0.18em;
     &:hover {
-      text-decoration-color: functions.alpha(var(--color-primary), 0.5);
+      color: var(--color-primary);
+      text-decoration-color: var(--color-primary);
     }
   }
 }
 
 .post {
   p {
-    margin: 1em 0;
+    margin: 0 0 1.35em;
     line-height: variables.$lineHeight;
   }
   picture {
@@ -65,11 +87,11 @@ $tocSideBreakpoint: 68em;
   }
   img {
     display: block;
-    margin: 2em auto;
+    margin: 2.2em auto;
     max-width: 100%;
     height: auto;
     box-sizing: border-box;
-    border: 1px solid var(--color-contrast-lower);
+    border: 0;
     clear: both;
   }
   video {
@@ -88,27 +110,57 @@ $tocSideBreakpoint: 68em;
   }
   ol,
   ul {
-    margin: 0;
-    padding-left: 2em;
+    margin: 0 0 1.4em;
+    padding-left: 1.5em;
     line-height: variables.$lineHeight;
   }
+  li {
+    margin: 0.25em 0;
+  }
+  li::marker {
+    color: var(--color-contrast-medium);
+  }
   hr {
-    border: none;
-    margin: 2.427em 0 1.5em;
-    text-align: center;
+    margin: 3em 0;
+    height: 0;
+    border: 0;
+    border-top: 1px solid var(--color-contrast-low);
+    background: none;
     &::after {
-      content: "···";
-      letter-spacing: 2em;
-      padding-left: 2em;
+      content: none;
     }
+  }
+}
+
+.post-body {
+  h2 {
+    margin: 2.8em 0 1em;
+    font-size: 1.45rem;
+    line-height: 1.5;
+  }
+  h3 {
+    margin: 2.2em 0 0.8em;
+    font-size: 1.2rem;
+  }
+  h4 {
+    margin: 1.8em 0 0.7em;
+    font-size: 1.05rem;
+  }
+  > h2:first-child,
+  > h3:first-child {
+    margin-top: 0;
   }
 }
 
 blockquote {
   margin: 2em 0;
-  padding-left: 1em;
+  padding: 0.1em 0 0.1em 1.3em;
+  border-left: 1px solid var(--color-contrast-low);
   color: var(--color-contrast-medium);
-  border-left: 3px solid var(--color-contrast-low);
+  line-height: variables.$lineHeight;
+  p:last-child {
+    margin-bottom: 0;
+  }
   a {
     color: var(--color-contrast-medium);
     &:hover {
@@ -117,31 +169,58 @@ blockquote {
   }
 }
 
+// 目录：窄屏为上下细线之间的折叠块，宽屏为右侧无框边注。
+// 归档提示后紧跟目录时，提示底部的细线已足够分界，避免两条线并排。
+// 仅窄屏有效：宽屏边注本就无边框，这条复位会把它的标题顶上去。
+@media (max-width: $tocSideBreakpoint - 0.01em) {
+  .post-outdated + .contents {
+    border-top: 0;
+
+    > .contents-title {
+      padding-top: 0;
+    }
+  }
+}
+
 .contents {
-  margin-top: 4em;
-  border: 1px solid var(--color-contrast-lower);
-  border-radius: 0.5rem;
+  margin: 0 0 2.4em;
+  border-top: 1px solid var(--color-contrast-low);
+  border-bottom: 1px solid var(--color-contrast-low);
+  border-radius: 0;
 
   > nav {
-    padding: 0 1.25rem 1rem;
+    padding: 0.1em 0 0.9em;
   }
 
   ol,
   ul {
     list-style: none;
     margin: 0;
-    padding-left: 1.25rem;
+  }
+
+  .toc {
+    padding-left: 0;
+  }
+
+  .toc ul {
+    padding-left: 1em;
+  }
+
+  li {
+    margin: 0.3em 0;
   }
 
   a {
+    font-size: 0.82rem;
+    line-height: 1.7;
     text-decoration: none;
-    color: var(--color-contrast-high);
+    color: var(--color-contrast-medium);
 
     &:hover {
       color: var(--color-primary);
     }
 
-    // 当前章节（article.js scrollspy）：仅文字高亮，不加下划线。
+    // 当前章节（article.js scrollspy）：仅文字高亮。
     &.active {
       color: var(--color-primary);
     }
@@ -149,7 +228,6 @@ blockquote {
     &:focus-visible {
       outline: 2px solid var(--color-primary);
       outline-offset: 2px;
-      border-radius: 0.2rem;
     }
   }
 }
@@ -159,11 +237,13 @@ blockquote {
   display: flex;
   align-items: center;
   gap: 0.5em;
-  padding: 0.75rem 1.25rem;
+  padding: 0.7em 0;
   cursor: pointer;
   user-select: none;
-  font-weight: 700;
-  color: var(--color-contrast-high);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-contrast-medium);
   list-style: none;
   &::-webkit-details-marker {
     display: none;
@@ -173,27 +253,28 @@ blockquote {
   }
   &::after {
     content: "";
-    width: 0.45em;
-    height: 0.45em;
+    width: 0.4em;
+    height: 0.4em;
     margin-left: auto;
-    border-right: 2px solid var(--color-contrast-medium);
-    border-bottom: 2px solid var(--color-contrast-medium);
-    transform: rotate(45deg);
+    border-right: 1px solid var(--color-contrast-medium);
+    border-bottom: 1px solid var(--color-contrast-medium);
+    // 方块的边框角朝东南，-45° 后朝右（收起）。
+    transform: rotate(-45deg);
     transition: transform variables.$duration ease;
   }
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-contrast-high);
   }
 }
 
 .contents[open] > .contents-title::after {
-  transform: rotate(225deg);
+  transform: rotate(45deg);
 }
 
-// 锚点跳转后目标章节闪亮提示（纯 CSS）。
+// 锚点跳转后目标章节淡入提示（纯 CSS）。
 @keyframes target-flash {
   from {
-    background-color: functions.alpha(var(--color-primary), 0.16);
+    background-color: functions.alpha(var(--color-primary), 0.14);
   }
   to {
     background-color: transparent;
@@ -208,33 +289,21 @@ blockquote {
   }
 }
 
-ol,
-ul {
-  &.toc {
-    padding: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
-}
-
 .footnotes {
-  font-size: 90%;
-  margin-top: 5rem;
+  margin-top: 4rem;
+  font-size: 0.86rem;
   hr {
     margin: 0;
     height: 1px;
     border: none;
-    background-color: var(--color-contrast-medium);
+    background-color: var(--color-contrast-low);
     &::after {
       content: none;
     }
   }
   ol {
-    margin: 1.618rem 0 0 !important;
-    padding: 0 1rem 0 2rem !important;
+    margin: 1.4rem 0 0 !important;
+    padding: 0 1rem 0 1.6rem !important;
   }
 }
 
@@ -246,50 +315,87 @@ table {
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
-  border-color: var(--color-contrast-lower);
+  font-size: 0.92rem;
 }
 th {
-  font-weight: 700;
+  font-weight: 600;
+  text-align: left;
 }
 th,
 td {
-  font-size: 0.9em;
-  padding: 0.4em;
-  border: 1px solid var(--color-contrast-lower);
+  padding: 0.6em 0.8em 0.6em 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-contrast-low);
+  vertical-align: top;
 }
-table > tbody > tr:nth-of-type(odd) {
-  background-color: functions.alpha(var(--color-contrast-lower), 0.5);
+th {
+  border-bottom-color: var(--color-contrast-medium);
 }
-table > tbody > tr:hover {
-  background-color: var(--color-contrast-lower);
+tbody tr:last-child td {
+  border-bottom: 0;
 }
 
 dt {
-  font-weight: 700;
+  font-weight: 600;
 }
 dd {
   margin-left: 2em;
 }
 
 code {
-  padding: math.div(variables.$fontSize, 8) math.div(variables.$fontSize, 4);
-  background-color: functions.alpha(var(--color-contrast-lower), 0.5);
-  font-size: 80%;
+  padding: 0.12em 0.32em;
+  border-radius: 2px;
+  background-color: functions.alpha(var(--color-contrast-lower), 0.6);
+  font-size: 0.85em;
 }
 pre {
   overflow: auto;
   overflow-wrap: normal;
   word-wrap: normal;
+  margin: 2em 0;
+  padding: 1.1em 1.2em;
   font-size: 0.8rem;
-  margin: 2rem 0;
-  padding: 1em;
-  line-height: variables.$lineHeightBase;
-  background-color: functions.alpha(var(--color-contrast-lower), 0.5);
+  line-height: 1.7;
+  background-color: functions.alpha(var(--color-contrast-lower), 0.6);
   max-height: variables.$maxHeight;
   code {
     background-color: unset;
-    font-size: 0.8rem;
     padding: 0;
+    font-size: inherit;
+  }
+}
+
+.code-block {
+  position: relative;
+  margin: 2em 0;
+  border: 1px solid var(--color-contrast-low);
+  border-radius: 2px;
+  background-color: functions.alpha(var(--color-contrast-lower), 0.45);
+
+  .chroma {
+    background-color: transparent;
+  }
+
+  .highlight {
+    margin: 0;
+  }
+
+  pre {
+    margin: 0;
+    padding: 1.1em 1.2em;
+    max-height: unset;
+  }
+  // 语言标签：细线下的语言名，不是彩色徽标。
+  &[data-lang]::before {
+    content: attr(data-lang);
+    display: block;
+    padding: 0.45em 1.2em;
+    border-bottom: 1px solid var(--color-contrast-low);
+    font-family: variables.$fontFamilyCode;
+    font-size: 0.7rem;
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+    color: var(--color-contrast-medium);
   }
 }
 
@@ -298,49 +404,18 @@ pre {
   top: 0;
   right: 0;
   border: 0;
-  font-size: inherit;
-  color: var(--color-bg);
-  // 实心底色保证标签在明暗主题下均达 WCAG AA（半透明混合曾低至 2.19:1）。
-  background-color: var(--color-contrast-medium);
-  transition:
-    color variables.$duration,
-    background-color variables.$duration,
-    opacity variables.$duration;
+  padding: 0.5em 0.9em;
+  font-size: 0.7rem;
+  color: var(--color-contrast-medium);
+  background-color: transparent;
+  transition: color variables.$duration;
   cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  // 实心主色底：前景沿用 --color-bg，明暗主题均 ≥4.5:1（半透明混合曾低至 2.19:1）。
   &:hover,
   &:focus-visible {
-    background-color: var(--color-primary);
+    color: var(--color-primary);
   }
 }
 
-.code-block {
-  position: relative;
-  &:hover .copy-button,
-  &:focus-within .copy-button,
-  .copy-button:focus-visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  // 语言徽标：render-codeblock.html 已写 data-lang，这里用伪元素展示。
-  &[data-lang]::before {
-    content: attr(data-lang);
-    display: block;
-    padding: 0.3em 1em;
-    font-family: variables.$fontFamilyCode;
-    font-size: 0.8rem;
-    line-height: 1.4;
-    color: var(--color-contrast-medium);
-    background-color: functions.alpha(var(--color-contrast-lower), 0.5);
-    border-bottom: 1px solid
-      functions.alpha(var(--color-contrast-low), 0.3);
-  }
-  &[data-lang] .highlight {
-    margin-top: 0;
-  }
-}
 .code-block-status {
   @include mixins.visuallyHidden;
 }
@@ -350,9 +425,3 @@ pre {
   display: none;
 }
 
-@media (hover: none), (pointer: coarse) {
-  .code-block .copy-button {
-    opacity: 0.85;
-    pointer-events: auto;
-  }
-}

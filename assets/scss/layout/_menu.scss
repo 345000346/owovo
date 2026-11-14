@@ -1,51 +1,50 @@
-// 主导航菜单（桌面右对齐；移动样式见 base/responsive）。
+// 主导航菜单（桌面右对齐；移动样式见 base/_responsive）。
 .nav {
-  // 层叠契约见 _header.scss 顶部注释；.nav 处于 .header-wrapper 上下文内，z-index 不与外界比较。
+  // 层叠契约见 _header.scss 顶部注释。
   position: relative;
   text-align: right;
-  font-size: 80%;
+  font-size: 0.82rem;
 }
 
 .menu {
+  display: flex;
+  align-items: center;
+  gap: 1.4em;
   padding: 0;
   margin: 0;
   list-style: none;
   line-height: 1.5;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .menu-item {
-  display: inline-block;
-  margin-left: 0.5em;
+  margin: 0;
   a {
     color: var(--color-contrast-medium);
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.45em;
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-contrast-higher);
+      text-decoration-color: var(--color-primary);
     }
   }
-  .icon {
-    margin: 0 0.3em 0.2em 0;
-  }
-  // 工具组（RSS/搜索/主题）起点分隔线，与内容导航分组（移动端隐藏）。
-  &.tools-start::before {
-    content: "";
-    display: inline-block;
-    width: 1px;
-    height: 1em;
-    margin: 0 0.55em 0.2em;
-    vertical-align: middle;
-    background-color: var(--color-contrast-low);
+  // 工具组（RSS/搜索/主题）起点分隔线。
+  &.tools-start {
+    border-left: 1px solid var(--color-contrast-low);
+    padding-left: 1.4em;
+    margin-left: 0.1em;
   }
 }
 
-// 无 JS 时主题切换与搜索都不可用，菜单项隐藏（移动端改为 3 列排满）。
+// 无 JS 时主题切换与搜索都不可用，菜单项隐藏。
 :root:not(.js) .menu-item-theme,
 :root:not(.js) .menu-item-search {
   display: none;
 }
 
-.active {
-  a {
-    color: var(--color-primary);
-  }
+.menu-item.active > a {
+  color: var(--color-contrast-higher);
+  text-decoration-color: var(--color-primary);
 }
