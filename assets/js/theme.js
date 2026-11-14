@@ -200,11 +200,7 @@ function initTheme() {
   applyThemeFromPreference(safeGetTheme());
 
   if (mediaQuery) {
-    if (typeof mediaQuery.addEventListener === "function") {
-      mediaQuery.addEventListener("change", handleSystemThemeChange);
-    } else if (typeof mediaQuery.addListener === "function") {
-      mediaQuery.addListener(handleSystemThemeChange);
-    }
+    mediaQuery.addEventListener("change", handleSystemThemeChange);
   }
 
   window.addEventListener("storage", (event) => {

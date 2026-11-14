@@ -21,6 +21,7 @@ function initNavigation() {
   }
 
   let closeTimer = 0;
+  let closing = false; // 淡出收尾中：aria-expanded 仍 true，但界面已收起。
   let restoreFocusOnClose = false;
   let lockedScrollY = 0;
 
@@ -166,7 +167,7 @@ function initNavigation() {
 
   function openNav(focusFirstItem = true) {
     window.clearTimeout(closeTimer);
-    header.classList.remove("fade");
+    closing = false;
     navToggle.classList.add("open");
     // 开合与淡出全程保持 aria/inert/陷阱，避免动画中焦点被抽走。
     navToggle.setAttribute("aria-expanded", "true");
@@ -192,7 +193,7 @@ function initNavigation() {
   function finishClose() {
     window.clearTimeout(closeTimer);
     navCurtain.hidden = true;
-    header.classList.remove("fade");
+    closing = false;
     navToggle.classList.remove("open");
     navToggle.setAttribute("aria-expanded", "false");
     navToggle.setAttribute("aria-label", "打开菜单");
@@ -212,7 +213,7 @@ function initNavigation() {
   }
 
   function closeNav({ noFade = false, restoreFocus = false } = {}) {
-    if (!isOpen() && !header.classList.contains("fade")) {
+    if (!isOpen() && !closing) {
       return;
     }
     restoreFocusOnClose ||= restoreFocus;
@@ -225,7 +226,7 @@ function initNavigation() {
       return;
     }
 
-    header.classList.add("fade");
+    closing = true;
     window.clearTimeout(closeTimer);
     // 须 ≥ $duration（0.35s）；幕布 transitionend 也会 finishClose。
     closeTimer = window.setTimeout(finishClose, 600);
@@ -240,7 +241,7 @@ function initNavigation() {
 
   navToggle.addEventListener("click", (event) => {
     // 淡出中 aria-expanded 仍 true；中途点击视为重开。
-    if (header.classList.contains("fade")) {
+    if (closing) {
       openNav(event.detail === 0);
       return;
     }
@@ -255,8 +256,8 @@ function initNavigation() {
     if (event.target !== navCurtain || event.propertyName !== "opacity") {
       return;
     }
-    // 关闭中 aria-expanded 仍 true，用 fade 判断收尾。
-    if (header.classList.contains("fade")) {
+    // 关闭中 aria-expanded 仍 true，用 closing 判断收尾。
+    if (closing) {
       finishClose();
     }
   });
