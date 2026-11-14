@@ -1,64 +1,47 @@
-// 404 页布局。
+// 404 页：左对齐，404 作为版面元素而非徽标。
 @use "../utils/variables";
 
-.fof {
-  flex: 1 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.fof-title {
+  margin: 0;
+  font-size: 4.2rem;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-contrast-medium);
+  font-variant-numeric: tabular-nums;
+}
 
-  .main-inner {
-    width: min(variables.$contentWidth, calc(100% - 2rem));
-    text-align: center;
-    margin: 0 auto;
-    padding: 20vh 1rem;
-  }
+.fof-text {
+  max-width: 26em;
+  margin: 1.4em 0 0;
+  color: var(--color-contrast-medium);
+  font-size: 0.92rem;
+  line-height: 1.9;
+}
 
-  h1 {
-    font-size: 3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-contrast-high);
-    margin: 0.67em 0;
-  }
-
-  .fof-footer {
-    margin-top: 2rem;
-    font-size: 1.2rem;
-  }
-
+.fof-footer {
+  margin: 1.6em 0 0;
+  font-size: 0.9rem;
   a {
     color: var(--color-primary);
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
   }
 }
 
 .fof-recent {
-  margin-top: 3rem;
-  text-align: left;
+  margin-top: 4.5em;
 
   h2 {
-    font-size: 1.4em;
-    text-align: center;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    margin: 0 0 0.8em;
+    font-size: 0.9rem;
+    font-weight: 600;
   }
 }
 
 @media (max-width: variables.$breakpoint-sm) {
-  .fof {
-    h1 {
-      font-size: 2rem;
-    }
-    .fof-footer {
-      font-size: 1rem;
-    }
+  .fof-title {
+    font-size: 3.2rem;
   }
 }

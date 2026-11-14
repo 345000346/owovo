@@ -33,7 +33,7 @@
 
 // 页面
 @use "pages/home-posts";
-@use "pages/tag-cloud";
+@use "pages/tag-index";
 @use "pages/404" as page404;
 
 // 断点放最后，便于覆盖
