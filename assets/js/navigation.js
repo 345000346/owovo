@@ -194,7 +194,6 @@ function initNavigation() {
     window.clearTimeout(closeTimer);
     navCurtain.hidden = true;
     closing = false;
-    navToggle.classList.remove("open");
     navToggle.setAttribute("aria-expanded", "false");
     navToggle.setAttribute("aria-label", "打开菜单");
     navCurtain.tabIndex = -1;
