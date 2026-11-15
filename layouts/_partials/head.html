@@ -118,7 +118,7 @@
     {{- if not $description -}}
         {{- $description = .Summary | plainify | htmlUnescape | strings.TrimSpace -}}
     {{- end -}}
-    {{- $description = $description | default .Site.Params.siteDescription | plainify | htmlUnescape -}}
+    {{- $description = $description | default .Site.Params.siteDescription -}}
     {{- if eq .Kind "term" -}}
         {{- $description = printf "“%s”标签下的文章，共 %d 篇。" .Data.Term (len .Pages) -}}
     {{- else if gt $pageNumber 1 -}}
