@@ -43,21 +43,8 @@
         />
     {{- end -}}
 {{- else -}}
-    {{- /* 非资源图：static 下的文件补 width/height 以稳住 CLS；外链无法探测尺寸，原样输出。 */ -}}
-    {{- $width := 0 -}}
-    {{- $height := 0 -}}
-    {{- if hasPrefix $destination "/" -}}
-        {{- $staticPath := printf "/static%s" $destination -}}
-        {{- if fileExists $staticPath -}}
-            {{- with try (images.Config $staticPath) -}}
-                {{- with .Value -}}
-                    {{- $width = .Width -}}
-                    {{- $height = .Height -}}
-                {{- end -}}
-            {{- end -}}
-        {{- end -}}
-    {{- end -}}
-    <img src="{{ $destination }}" alt="{{ .Text }}"{{ if gt $width 0 }} width="{{ $width }}" height="{{ $height }}"{{ end }} decoding="async" loading="{{ $loading }}"{{ if $isFirst }} fetchpriority="high"{{ end }}{{ if $noDarkFilter }} data-no-dark-filter{{ end }}
+    {{- /* 外链/非资源图：无法探测尺寸，原样输出（资源目录图见上分支）。 */ -}}
+    <img src="{{ $destination }}" alt="{{ .Text }}" decoding="async" loading="{{ $loading }}"{{ if $isFirst }} fetchpriority="high"{{ end }}{{ if $noDarkFilter }} data-no-dark-filter{{ end }}
     {{- with .Title }} title="{{ . }}"{{ end -}}
     />
 {{- end -}}
