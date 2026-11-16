@@ -1,14 +1,12 @@
 ---
 title: "Windows 常用软件"
-date: 2019-08-23T10:05:47+08:00
+date: 2026-11-16T17:50:00+08:00
 slug: "windows-apps"
-description: "2019 年整理的个人 Windows 软件清单，涵盖视频播放、下载工具、压缩解压、系统优化等类别。"
+description: "个人 Windows 软件清单，涵盖视频播放、下载工具、压缩解压、系统优化等类别。"
 tags: ["Windows", "软件", "效率工具"]
-outdated: true
-outdatedNote: "这是一份 2019 年整理的软件清单。软件版本、价格、维护状态和官网地址都可能变化，请以各项目当前信息为准；本文仅作历史记录和选型线索。"
 ---
 
-这里是我在 2019 年常用的一些 Windows 软件，保留这份清单作为历史记录和选型线索。
+这里是我常用的一些 Windows 软件，按用途分类整理，方便查阅和选用。软件版本、价格与官网地址可能变化，请以各项目当前信息为准。
 
 <!--more-->
 
@@ -19,6 +17,8 @@ outdatedNote: "这是一份 2019 年整理的软件清单。软件版本、价�
 ## 杀毒软件
 
 [火绒](https://www.huorong.cn/)：强悍、轻巧、干净。
+
+[卡巴斯基](https://www.kaspersky.com.cn/)：老牌杀毒软件，防护能力强，免费版就够日常使用。
 
 ## 磁盘管理
 
@@ -46,7 +46,31 @@ outdatedNote: "这是一份 2019 年整理的软件清单。软件版本、价�
 
 [DISM++](https://www.chuyu.me/)：Windows 系统优化、清理、维护神器。
 
+[Wise Care 365](https://www.wisecleaner.com/)：集系统清理、注册表修复、隐私保护与性能优化于一体，有免费版。
+
 [DriverStore Explorer](https://github.com/lostindark/DriverStoreExplorer/releases)：删除无用驱动。
+
+## 启动器
+
+[Listary](https://www.listary.com/)：快速文件搜索与应用启动工具，双击 Ctrl 即可搜索文件、启动程序，还能在“打开/另存为”对话框中快速跳转目录，免费。
+
+[Win顺（WinShun）](https://gitcode.com/gh_mirrors/wi/WinShun)：开源免费的快速搜索启动器，双击 Ctrl 弹出搜索框，支持拼音/首字母搜文件、文档全文搜索、剪贴板历史等，无需账号、不上传数据。
+
+## 搜索软件
+
+[Everything](https://www.voidtools.com/)：按文件名搜索的极速工具，索引 NTFS 卷几乎瞬间完成，搜索结果实时更新，体积小巧，免费。追求纯粹的本地文件搜索选它。
+
+Listary 和 Win顺（WinShun）同样自带快速文件搜索，也能替代 Everything 的搜索功能，而且额外提供应用启动、拼音搜索等能力；如果除了搜文件还想顺手启动程序，用它们更省事。
+
+## AI Harness
+
+Harness（智能体框架）负责把大模型接进实际的编码工作流：提供工具调用、会话管理和运行环境，让模型不只是聊天，而是能读写文件、执行命令、完成任务。下面几个都是这类工具。
+
+[pi](https://github.com/badlogic/pi-mono)：极简的开源终端 AI 编码智能体，仅保留四个基础工具，支持多模型与会话分支，无云端依赖。
+
+[Codex](https://chatgpt.com/codex)：OpenAI 的 AI 编程智能体，可在沙箱中并行处理编码任务、提交 PR，也提供命令行与编辑器集成。
+
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)：DeepSeek 官方开源的智能体框架，“一切皆插件”，把模型接入终端与 Web 工作流，可自托管。
 
 ## 文件复制
 
@@ -55,6 +79,8 @@ outdatedNote: "这是一份 2019 年整理的软件清单。软件版本、价�
 ## 下载工具
 
 [IDM](https://www.internetdownloadmanager.com/download.html)：多线程下载工具，下载大文件很快。付费软件。
+
+[FluxDown](https://github.com/zerx-lab/FluxDown)：Rust 驱动的开源多协议下载器，支持 HTTP / FTP / BT / 磁力 / eD2K / HLS / DASH，动态分段加速、断点续传，免费无广告，是 IDM 的开源替代。
 
 ## 截图
 
@@ -78,7 +104,7 @@ outdatedNote: "这是一份 2019 年整理的软件清单。软件版本、价�
 
 [7-Zip](https://www.7-zip.org/)：支持 7z, XZ, BZIP2, GZIP, TAR, ZIP and WIM。
 
-[Bandizip](https://www.bandisoft.com/bandizip/)：支持 ZIP, 7Z, ZIPX, EXE, TAR, TGZ, LZH, ISO, GZ, XZ 等格式。Standard 版免费。（推荐）
+[Bandizip](https://www.bandisoft.com/bandizip/)：支持 ZIP, 7Z, ZIPX, EXE, TAR, TGZ, LZH, ISO, GZ, XZ 等格式。Standard 版免费。
 
 [WinRAR](https://www.rarlab.com/)：老牌压缩工具，付费软件。
 
