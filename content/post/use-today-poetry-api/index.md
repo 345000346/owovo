@@ -20,7 +20,7 @@ tags: ["今日诗词", "API", "古诗词"]
 
 SDK 会自动寻找 id 或者 class 为 `jinrishici-sentence` 的标签，将里面的内容替换为诗词
 
-如果需要在多个地方显示诗词，添加多个 `class=" jinrishici-sentence "` 的 span 即可
+如果需要在多个地方显示诗词，添加多个 `class="jinrishici-sentence"` 的 span 即可
 
 ## 通用高级安装代码
 

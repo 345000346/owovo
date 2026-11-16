@@ -24,7 +24,7 @@ tags: ["V2ex", "油猴", "脚本"]
 
 ### 2.2 本地安装
 
-点击这个
+点击油猴图标菜单中的“添加新脚本”，进入新建脚本界面：
 
 ![Tampermonkey 扩展安装页面](tampermonkey-install.png)
 {data-no-dark-filter=true}
