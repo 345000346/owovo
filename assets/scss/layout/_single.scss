@@ -33,13 +33,30 @@ $tocSideBreakpoint: 78em;
     max-height: calc(100vh - var(--toc-side-top) - 1.5em);
     overflow-x: hidden;
     overflow-y: auto;
+    // 长目录才出现的细滚动条：色阶随明暗主题走，thumb 用中对比灰、
+    // 轨道用低对比灰，贴合纸面细线；与正文的细线分隔同一套变量。
     scrollbar-width: thin;
+    scrollbar-color: var(--color-contrast-low) transparent;
+    // 在滚动条槽内常驻，目录变长/变短时文字不横向跳动。
+    scrollbar-gutter: stable;
     border: 0;
     border-left: 1px solid var(--color-contrast-low);
     padding: 0 0 0 1.15em;
     transition:
       opacity 0.3s ease,
       visibility 0s linear 0.3s;
+
+    // Chromium / Safari：同色阶的细滚动条，默认 Thumb 不带圆角和边框。
+    // Firefox 走上面的标准属性，不识别此伪元素，互不干扰。
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--color-contrast-low);
+    }
     // 文章区底部进入视口后淡出让位（footer；article.js 加 .bottom）。
     // visibility 延迟到淡出结束，避免键盘仍能聚焦不可见链接。
     &.bottom {
@@ -187,7 +204,7 @@ blockquote {
   border-radius: 0;
 
   > nav {
-    padding: 0.1em 0 0.9em;
+    padding: 0.1em 0 0.6em;
   }
 
   ol,
@@ -207,12 +224,16 @@ blockquote {
   }
 
   li {
-    margin: 0.3em 0;
+    margin: 0;
   }
 
   a {
+    // 左内边距是活动竖条的固定槽位：文字不随高亮切换横向抖动。
+    display: block;
+    position: relative;
+    padding: 0.16em 0 0.16em 0.7em;
     font-size: 0.82rem;
-    line-height: 1.7;
+    line-height: 1.5;
     text-decoration: none;
     color: var(--color-contrast-medium);
 
@@ -220,7 +241,7 @@ blockquote {
       color: var(--color-primary);
     }
 
-    // 当前章节（article.js scrollspy）：仅文字高亮。
+    // 当前章节（article.js scrollspy）：文字高亮为朱红。
     &.active {
       color: var(--color-primary);
     }
@@ -229,6 +250,18 @@ blockquote {
       outline: 2px solid var(--color-primary);
       outline-offset: 2px;
     }
+  }
+
+  // 当前项的左侧细竖条，落在 a 预留的槽内，与纸面细线基调一致。
+  a.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 2px;
+    height: 0.85em;
+    background: var(--color-primary);
+    transform: translateY(-50%);
   }
 }
 
