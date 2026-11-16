@@ -137,6 +137,12 @@
   font-size: 0.68rem;
 }
 
+// 触屏没有 Esc 键，也不存在点遮罩关闭（全屏 shell 铺满视口）；
+// 桌面只显示键盘提示，触屏只显示点按关闭提示，两处文案都必须可兑现。
+.search-hint-touch {
+  display: none;
+}
+
 @media (max-width: variables.$breakpoint-sm) {
   .search-dialog {
     width: 100%;
@@ -156,8 +162,13 @@
     max-height: 100dvh;
   }
 
-  // 小屏快捷键大多无用；只留 Esc 提示，避免 footer 空条
-  .search-dialog-footer span:not(:last-child) {
+  // 小屏快捷键大多无用；改用「点右上角 × 关闭」，避免 footer 空条。
+  // 用显式 class，不依赖 DOM 顺序。
+  .search-hint-desktop {
     display: none;
+  }
+
+  .search-hint-touch {
+    display: inline;
   }
 }
