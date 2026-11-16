@@ -100,11 +100,13 @@ SDK 会自动寻找 id 或者 class 为 `jinrishici-sentence` 的标签，将里
 }
 ```
 
-`errcode` 是错误码，目前只有以下几种错误码，您也简单判断 HTTP 头中的状态码，对于错误返回，我们总不会返回 200
+`errCode` 是错误码，目前只有以下几种错误码，您也可以简单判断 HTTP 头中的状态码，对于错误返回，我们总不会返回 200
 
 `1001` ：内部服务器错误，HTTP 状态码 500
 
 `1002` ：API 路径不对，HTTP 状态码 404
+
+`2001` ：无法匹配请求处理器（见上方错误返回示例）
 
 `2002` ：Token 不是服务器签发，HTTP 状态码 400
 
@@ -126,8 +128,8 @@ SDK 会自动寻找 id 或者 class 为 `jinrishici-sentence` 的标签，将里
   jinrishici.load(function(result) {
     var sentence = document.querySelector("#poem_sentence")
     var info = document.querySelector("#poem_info")
-    sentence.innerHTML = result.data.content
-    info.innerHTML = '【' + result.data.origin.dynasty + '】' + result.data.origin.author + '《' + result.data.origin.title + '》'
+    sentence.textContent = result.data.content
+    info.textContent = '【' + result.data.origin.dynasty + '】' + result.data.origin.author + '《' + result.data.origin.title + '》'
   });
 </script>
 ```

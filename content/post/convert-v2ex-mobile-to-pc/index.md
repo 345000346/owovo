@@ -12,7 +12,7 @@ tags: ["V2ex", "油猴", "脚本"]
 
 ## 1. 安装油猴插件
 
-安装 chromeJS 脚本之前，先给浏览器安装一个管理脚本的扩展程序：[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)。
+安装油猴脚本之前，先给浏览器安装一个管理脚本的扩展程序：[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)。
 
 ## 2. 安装脚本
 
