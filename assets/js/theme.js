@@ -11,6 +11,12 @@
 // 切换用 View Transition 做背景扩散渐变（reduced motion / 无 API 时直接应用）。
 // Concat：与 navigation.js / scroll-ui.js 同 module，顶层仅 initTheme。
 
+const THEME_CYCLE = {
+  light: "dark",
+  dark: "system",
+  system: "light",
+};
+
 function initTheme() {
   let transientPreference = null;
   let mediaQuery = null;
@@ -71,11 +77,15 @@ function initTheme() {
     if (!themeSwitcher) {
       return;
     }
-    const label = preferenceLabel(preference);
-    themeSwitcher.setAttribute("aria-label", `切换主题，当前：${label}`);
+    const next = THEME_CYCLE[preference] || "light";
+    themeSwitcher.setAttribute(
+      "aria-label",
+      `主题：${preferenceLabel(preference)}，点击切换到${preferenceLabel(next)}`,
+    );
     const text = themeSwitcher.querySelector(".theme-switcher-label");
-    if (text && text.textContent !== label) {
-      text.textContent = label;
+    const visibleLabel = preferenceLabel(preference);
+    if (text && text.textContent !== visibleLabel) {
+      text.textContent = visibleLabel;
     }
   }
 
@@ -180,12 +190,7 @@ function initTheme() {
   }
 
   function cycleTheme(event) {
-    const nextByPreference = {
-      light: "dark",
-      dark: "system",
-      system: "light",
-    };
-    const newPreference = nextByPreference[safeGetTheme()] || "light";
+    const newPreference = THEME_CYCLE[safeGetTheme()] || "light";
     safeSetTheme(newPreference);
     applyThemeFromPreference(newPreference, { force: true, spreadFrom: event });
   }
