@@ -14,6 +14,8 @@ tags: ["Windows", "软件", "效率工具"]
 
 [PotPlayer](https://potplayer.daum.net/?lang=zh_CN)：全格式，支持硬件加速。
 
+[mpv](https://mpv.io/)：开源免费的命令行播放器，脚本与滤镜生态强大，资源占用低，适合追求极致可控的玩法。
+
 ## 杀毒软件
 
 [火绒](https://www.huorong.cn/)：强悍、轻巧、干净。
@@ -27,6 +29,8 @@ tags: ["Windows", "软件", "效率工具"]
 ## 文本编辑器
 
 [Visual Studio Code](https://code.visualstudio.com/)：微软出品。
+
+[Zed](https://zed.dev/)：Rust 编写的代码编辑器，启动和响应都很快，原生支持协作编辑。
 
 ## 办公软件
 
@@ -49,6 +53,20 @@ tags: ["Windows", "软件", "效率工具"]
 [Wise Care 365](https://www.wisecleaner.com/)：集系统清理、注册表修复、隐私保护与性能优化于一体，有免费版。
 
 [DriverStore Explorer](https://github.com/lostindark/DriverStoreExplorer/releases)：删除无用驱动。
+
+## 系统增强
+
+[PowerToys](https://github.com/microsoft/PowerToys)：微软官方的实用工具集，包含 FancyZones 窗口分屏、Always On Top 置顶、颜色选择器、批量重命名、文本提取等，免费且持续维护。
+
+## 终端与包管理
+
+[Windows Terminal](https://aka.ms/terminal)：微软官方的现代终端，支持多标签、窗格和 GPU 加速渲染，可统一管理 PowerShell、CMD 与 WSL。
+
+[Scoop](https://scoop.sh/)：命令行包管理器，安装和升级常用命令行工具只需一条命令，默认装到用户目录、无需管理员权限。系统自带的 `winget` 也能完成大部分安装，两者按需取用。
+
+## 剪贴板管理
+
+[Ditto](https://ditto-cp.sourceforge.io/)：开源免费的剪贴板管理器，保存文本、图片等历史记录，支持快速搜索与固定常用片段，还能在多台电脑间同步。
 
 ## 启动器
 
@@ -76,23 +94,27 @@ Harness（智能体框架）负责把大模型接进实际的编码工作流：�
 
 [FastCopy](https://fastcopy.jp/)：复制大量小文件贼快。
 
+[FreeFileSync](https://www.freefilesync.org/)：文件夹双向同步与备份工具，可比较差异后再同步，开源免费。
+
 ## 下载工具
 
 [IDM](https://www.internetdownloadmanager.com/download.html)：多线程下载工具，下载大文件很快。付费软件。
 
 [FluxDown](https://github.com/zerx-lab/FluxDown)：Rust 驱动的开源多协议下载器，支持 HTTP / FTP / BT / 磁力 / eD2K / HLS / DASH，动态分段加速、断点续传，免费无广告，是 IDM 的开源替代。
 
+[Motrix](https://motrix.app/)：基于 aria2 的开源下载器，界面简洁，支持 HTTP / FTP / BT / 磁力，免费跨平台。
+
 ## 截图
 
 [Snipaste](https://zh.snipaste.com/)：截图神器。1.x 免费，2.x 专业版需购买授权。
 
+[PixPin](https://pixpin.cn/)：国产截图贴图工具，带 OCR 文字识别、长截图、标注与贴图，免费版功能已很实用。
+
 ## 图片放大
 
-[waifu2x-caffe (using CUDA)](https://github.com/lltcggie/waifu2x-caffe/releases)
+[Upscayl](https://www.upscayl.org/)：开源免费的图形界面图片放大工具，基于 Real-ESRGAN 等模型，可智能补齐细节、放大时不损失清晰度，支持批量处理，无需命令行。
 
-[waifu2x-converter (using OpenCL)](https://github.com/tanakamura/waifu2x-converter-cpp)
-
-使用深度卷积神经网络，将噪点和锯齿的部分进行补充，实现图片的低损放大。
+老的 waifu2x 系列（waifu2x-caffe / waifu2x-converter-cpp）已基本停止维护，效果也被新方法超越，这里改用 Upscayl。
 
 ## Markdown
 
