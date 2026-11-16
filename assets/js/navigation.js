@@ -130,7 +130,11 @@ function initNavigation() {
     const background = document.querySelectorAll("main, footer, #back-to-top");
     background.forEach((element) => {
       element.inert = inert;
-      element.setAttribute("aria-hidden", String(inert));
+      if (inert) {
+        element.setAttribute("aria-hidden", "true");
+      } else {
+        element.removeAttribute("aria-hidden");
+      }
     });
   }
 
@@ -183,6 +187,9 @@ function initNavigation() {
 
     if (focusFirstItem) {
       requestAnimationFrame(() => {
+        if (!isOpen() || closing) {
+          return;
+        }
         const firstMenuItem = header.querySelector(".nav a, .nav button");
         (firstMenuItem || navToggle).focus({ preventScroll: true });
         pinScrollPosition();

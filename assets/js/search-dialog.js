@@ -212,6 +212,9 @@ function initSearchDialog() {
 
     loadUI()
       .then(() => {
+        if (!dialog.open) {
+          return;
+        }
         dialog.querySelector(".pagefind-ui__search-input")?.focus();
       })
       .catch((error) => {
