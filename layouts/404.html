@@ -9,7 +9,7 @@
             {{- if $recent -}}
                 <section class="fof-recent" aria-labelledby="fof-recent-title">
                     <h2 id="fof-recent-title">最近文章</h2>
-                    {{ partial "utils/list-item.html" (dict "pages" $recent) }}
+                    {{ partial "utils/list-item.html" (dict "pages" $recent "headingLevel" "h3") }}
                 </section>
             {{- end -}}
         </div>

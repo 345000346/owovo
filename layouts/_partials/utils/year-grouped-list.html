@@ -3,7 +3,7 @@
     {{- range .GroupByDate "2006" }}
         <div class="year-group">
             <h2 class="list-year">{{ .Key }}</h2>
-            {{ partial "utils/list-item.html" (dict "pages" .Pages) }}
+            {{ partial "utils/list-item.html" (dict "pages" .Pages "headingLevel" "h3") }}
         </div>
     {{ end -}}
 {{- end -}}

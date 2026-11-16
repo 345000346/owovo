@@ -1,9 +1,15 @@
-{{- /* 列表项。dict: pages（显式文章集合）。 */ -}}
+{{- /* 列表项。dict: pages（显式文章集合）；可选 headingLevel（默认 h2，调用方已有 h2 时传 h3）。 */ -}}
+{{- $headingLevel := .headingLevel | default "h2" -}}
 {{- with .pages -}}
     <ul class="list-part">
         {{ range . }}
             <li class="list-item">
-                <a href="{{ .RelPermalink }}" class="list-item-title">{{ (partial "utils/title.html" (dict "$" . "title" .LinkTitle)).htmlTitle }}</a>
+                {{- $htmlTitle := (partial "utils/title.html" (dict "$" . "title" .LinkTitle)).htmlTitle -}}
+                {{- if eq $headingLevel "h3" -}}
+                    <h3 class="list-item-heading"><a href="{{ .RelPermalink }}" class="list-item-title">{{ $htmlTitle }}</a></h3>
+                {{- else -}}
+                    <h2 class="list-item-heading"><a href="{{ .RelPermalink }}" class="list-item-title">{{ $htmlTitle }}</a></h2>
+                {{- end -}}
                 <time datetime="{{ .Date.Format "2006-01-02T15:04:05-07:00" }}" class="list-item-time">{{ .Date.Format .Site.Params.listDateFormat }}</time>
             </li>
         {{ end }}
