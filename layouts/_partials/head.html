@@ -121,6 +121,8 @@
     {{- $description = $description | default .Site.Params.siteDescription -}}
     {{- if eq .Kind "term" -}}
         {{- $description = printf "“%s”标签下的文章，共 %d 篇。" .Data.Term (len .Pages) -}}
+    {{- else if eq .Kind "taxonomy" -}}
+        {{- $description = "按标签浏览站内全部文章。" -}}
     {{- else if gt $pageNumber 1 -}}
         {{- $description = printf "%s（第 %d 页）" $description $pageNumber -}}
     {{- end -}}
