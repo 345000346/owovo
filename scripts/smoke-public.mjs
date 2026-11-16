@@ -195,10 +195,23 @@ async function main() {
   }
 
   // 基础产物
-  for (const rel of ["index.html", "404.html", "robots.txt", "sitemap.xml"]) {
+  for (const rel of [
+    "index.html",
+    "404.html",
+    "robots.txt",
+    "sitemap.xml",
+    "CNAME",
+  ]) {
     assert(await exists(rel), `${rel} missing under ${publicDir}`);
   }
   exitIfFailed();
+
+  // Pages 自定义域名依赖 static/CNAME；被删时站点仍可构建，但正式域名会失效。
+  const cname = (await readPublic("CNAME")).trim();
+  assert(
+    cname === "owovo.xyz",
+    `CNAME must contain owovo.xyz (got ${JSON.stringify(cname)})`,
+  );
 
   // robots.txt（production：Allow + Sitemap 主机）
   const robots = await readPublic("robots.txt");
