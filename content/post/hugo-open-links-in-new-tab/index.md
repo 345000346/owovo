@@ -8,7 +8,8 @@ tags: ["Hugo", "Markdown", "Render Hook"]
 
 Hugo 使用 Markdown 编写文章，Markdown 语法本身不支持指定链接打开方式。本文介绍如何使用 Hugo 的 **render hook** 让外部链接自动在新标签页打开，无需 JavaScript。
 
-本文基于 Hugo 0.161.1，Hugo 0.62.0 及以上版本均可使用此方案。
+本文基于 Hugo 0.161.1。Hugo 0.146+ 使用新的模板目录；更早版本可把
+`layouts/_markup/render-link.html` 放到旧的 `layouts/_default/_markup/` 下。
 
 <!--more-->
 
@@ -16,13 +17,16 @@ Hugo 使用 Markdown 编写文章，Markdown 语法本身不支持指定链接�
 
 Hugo 支持为 Markdown 元素自定义渲染模板。在站点根目录的 `layouts/` 下创建链接的 render hook，即可控制所有 Markdown 链接的 `target` 属性。
 
-创建 `layouts/_default/_markup/render-link.html`：
+创建 `layouts/_markup/render-link.html`：
 
 ```html
-<a href="{{ .Destination | safeURL }}"
+{{- $href := .Destination -}}
+{{- $isRemote := or (strings.HasPrefix $href "http://") (strings.HasPrefix $href "https://") -}}
+{{- $trusted := or $isRemote (strings.HasPrefix $href "mailto:") -}}
+<a href="{{ cond $trusted ($href | safeURL) $href }}"
   {{ with .Title }} title="{{ . }}"{{ end }}
-  {{ if strings.HasPrefix .Destination "http" }}
-    target="_blank" rel="noopener noreferrer"
+  {{ if $isRemote }}
+    target="_blank" rel="external noopener noreferrer"
   {{ end }}>
   {{ .Text | safeHTML }}
 </a>
@@ -30,7 +34,8 @@ Hugo 支持为 Markdown 元素自定义渲染模板。在站点根目录的 `lay
 
 这段模板的逻辑：
 - 所有链接正常渲染 `href` 和 `title`
-- 当 `Destination` 以 `http` 开头时（即外部链接），自动加上 `target="_blank"` 和 `rel="noopener noreferrer"`
+- 只对 `http` / `https` 外链自动加上 `target="_blank"` 和 `rel="external noopener noreferrer"`
+- 只对 `http` / `https` / `mailto` 使用 `safeURL`；其它协议交给 Hugo 的 URL 过滤器处理，避免 `javascript:` 等链接绕过校验
 - 内部链接和锚点链接不受影响
 
 `rel="noopener noreferrer"` 是安全最佳实践，防止新页面通过 `window.opener` 访问原页面。
@@ -40,10 +45,12 @@ Hugo 支持为 Markdown 元素自定义渲染模板。在站点根目录的 `lay
 如果想给外部链接加一个小图标提示用户会跳转，可以在 render hook 中追加样式：
 
 ```html
-<a href="{{ .Destination | safeURL }}"
+{{- $href := .Destination -}}
+{{- $isRemote := or (strings.HasPrefix $href "http://") (strings.HasPrefix $href "https://") -}}
+<a href="{{ cond $isRemote ($href | safeURL) $href }}"
   {{ with .Title }} title="{{ . }}"{{ end }}
-  {{ if strings.HasPrefix .Destination "http" }}
-    target="_blank" rel="noopener noreferrer" class="external-link"
+  {{ if $isRemote }}
+    target="_blank" rel="external noopener noreferrer" class="external-link"
   {{ end }}>
   {{ .Text | safeHTML }}
 </a>

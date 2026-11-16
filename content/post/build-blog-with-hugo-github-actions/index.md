@@ -145,17 +145,17 @@ jobs:
       - name: Build search
         run: npm run build:search
 
-      - name: Verify Pagefind artifacts
-        run: test -f public/pagefind/pagefind.js && test -f public/pagefind/pagefind-entry.json
+      - name: Smoke public output
+        run: npm run smoke
 
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v5
         with:
           path: ./public
 
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     permissions:
       pages: write
       id-token: write
@@ -230,7 +230,8 @@ CI 使用 `npm run build:site -- --panicOnWarning --logLevel warn`：警告直�
 
 **6. PR 只验证、不上传**
 
-`pull_request` 仍跑完整构建；`Upload Pages artifact` 与 `deploy` 都带 `if: github.event_name != 'pull_request'`，避免 PR 占用 artifact 存储。
+`pull_request` 仍跑完整构建；`Upload Pages artifact` 与 `deploy` 都要求非 PR 且分支为
+`main`，避免 PR 或临时分支占用 Pages 发布。
 
 ### 按需裁剪
 
@@ -240,7 +241,7 @@ CI 使用 `npm run build:site -- --panicOnWarning --logLevel warn`：警告直�
 - `Setup Node.js`
 - `Install root dependencies`
 - `Build search`
-- `Verify Pagefind artifacts`
+- `Smoke public output`
 
 然后把工作流里的构建命令改成只执行 Hugo 构建即可。Hugo 版本仍然建议通过 `.hugo-version` 管理，而不是直接写在 `env` 里。
 
