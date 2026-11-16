@@ -8,8 +8,7 @@ tags: ["Hugo", "Markdown", "Render Hook"]
 
 Hugo 使用 Markdown 编写文章，Markdown 语法本身不支持指定链接打开方式。本文介绍如何使用 Hugo 的 **render hook** 让外部链接自动在新标签页打开，无需 JavaScript。
 
-本文基于 Hugo 0.161.1。Hugo 0.146+ 使用新的模板目录；更早版本可把
-`layouts/_markup/render-link.html` 放到旧的 `layouts/_default/_markup/` 下。
+本文基于 Hugo 0.170.0，放在 `layouts/_markup/render-link.html`（Hugo 0.146+ 的新模板目录）。
 
 <!--more-->
 
