@@ -2,6 +2,7 @@
 // TOC 滚动定位（.toc a.active + aria-current）与文末淡出（.contents.bottom）。
 //
 // 契约：.copy-button / .code-block-status；.post-body 的 data-copy-* 文案；
+// :root.copy-enabled：仅在 clipboard 可用且本脚本已接管时显示复制按钮；
 // details.contents / summary.contents-title；nav a[href^="#"]；
 // .contents.bottom：文章区底部进入视口后淡出让位（fixed 悬浮时）；
 // 移动端（<78em）默认折叠 TOC（桌面由模板 open 展开）。
@@ -45,6 +46,11 @@ function initCopyDelegation() {
     return;
   }
 
+  if (copyButtons.length > 0) {
+    // 复制按钮默认由 CSS 隐藏，避免普通页面的代码块渲染出没有脚本接管的死按钮。
+    document.documentElement.classList.add("copy-enabled");
+  }
+
   // 每个按钮一个复位计时器：连续点击时先清旧计时器，避免“已复制”被提前复位。
   const resetTimers = new WeakMap();
   // 每个按钮一个点击版本号：写入重叠时只有最后一次点击能写 UI 状态。
@@ -83,7 +89,12 @@ function initCopyDelegation() {
   }
 
   document.addEventListener("click", async (event) => {
-    const button = event.target.closest(".code-block .copy-button");
+    const target = event.target;
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    const button = target.closest(".code-block .copy-button");
     if (!button) {
       return;
     }

@@ -435,8 +435,9 @@ pre {
   @include mixins.visuallyHidden;
 }
 
-// 无 JS：复制依赖 navigator.clipboard，直接隐藏按钮（有 JS 时由 article.js 处理）。
-:root:not(.js) .copy-button {
+// 复制依赖 navigator.clipboard，由 article.js 检查后加 .copy-enabled；
+// 未加载 article.js 的页面（无 TOC 的普通页）也不会出现没有处理器的按钮。
+:root:not(.copy-enabled) .copy-button {
   display: none;
 }
 
