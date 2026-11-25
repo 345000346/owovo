@@ -11,9 +11,11 @@ menu:
       weight: 1
     - name: "文章"
       pageRef: "/archives/"
+      identifier: "posts"
       weight: 2
     - name: "标签"
       pageRef: "/tags/"
+      identifier: "tags"
       weight: 3
     - name: "想法"
       pageRef: "/ideas/"
