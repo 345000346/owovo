@@ -33,11 +33,20 @@ function initTheme() {
   }
   const themeSwitcher = document.getElementById("theme-switcher");
 
+  function normalizePreference(value) {
+    return value === "light" || value === "dark" || value === "system"
+      ? value
+      : "system";
+  }
+
   function safeGetTheme() {
+    if (transientPreference) {
+      return transientPreference;
+    }
     try {
-      return localStorage.getItem("theme") || transientPreference || "system";
+      return normalizePreference(localStorage.getItem("theme"));
     } catch {
-      return transientPreference || "system";
+      return "system";
     }
   }
 
@@ -123,14 +132,7 @@ function initTheme() {
     preference,
     { force = false, spreadFrom = null } = {},
   ) {
-    let normalized = "system";
-    if (
-      preference === "light" ||
-      preference === "dark" ||
-      preference === "system"
-    ) {
-      normalized = preference;
-    }
+    const normalized = normalizePreference(preference);
     const theme = resolveTheme(normalized);
     const root = document.documentElement;
 
