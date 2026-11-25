@@ -17,7 +17,7 @@
         {{- end -}}
         {{- /* PNG/WebP 的 q 参数无效：仅在需要缩小时重编码，避免同尺寸重压一遍。 */ -}}
         {{- $fallback := $image -}}
-        {{- if or (gt $image.Width $targetWidth) (eq $image.MediaType.SubType "jpeg") -}}
+        {{- if gt $image.Width $targetWidth -}}
             {{- $fallback = $image.Resize (printf "%dx q82" $targetWidth) -}}
         {{- end -}}
         {{- $srcset := slice -}}
