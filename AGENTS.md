@@ -10,6 +10,7 @@ npm run dev               # 本地 Hugo 开发服务器（含草稿，先同步�
 npm run build:site        # 仅 Hugo（--environment production --gc --minify --cleanDestinationDir）
 npm run build:search      # 仅 Pagefind 索引（--site public）
 npm run smoke             # 对 public/ 做构建后断言
+npm run test:e2e          # 浏览器 E2E：对 public/ 跑真实交互断言（需先 build）
 npm run build             # 生产全流程：site + search + smoke
 npm run sync:fonts        # Fontsource → static/fonts + assets/css/fonts.css + data/font_preload.json
 npm run sync:fonts:stats  # 同上并打印分片体积统计
@@ -200,6 +201,8 @@ npm run build
 ```
 
 `npm run dev` 仅启动 Hugo server，不会生成或更新 Pagefind 索引；需要验证搜索时使用 `npm run build` 或 `npm run preview`。
+
+浏览器 E2E 测试用 `npm run test:e2e`（前置 `npm run build`）。测试脚本自带静态服务器服务 `public/`，用 Playwright 标准供给机制解析浏览器：默认 `channel: msedge`（系统安装，无需下载）；`E2E_BROWSER=chromium|firefox|webkit` 切到 Playwright 托管引擎，须先 `npx playwright install chromium|firefox|webkit`（`npm ci` 不下载二进制）。另有 `HEADED=1` 显示窗口、`E2E_PUBLIC_DIR` 指定目录、`E2E_BASE_URL` 复用已运行站点（有无尾斜杠均可）。覆盖首页加载/主题切换与持久化/搜索 Dialog 与 Pagefind 结果/Ctrl+K 快捷打开/?hl= 高亮/文章 TOC 与页面导航/阅读进度与回顶/移动端导航。Playwright 仅作开发依赖，CI 默认 `build + smoke`，不跑 E2E。
 
 `smoke` 会按 HTML 路径检查文章与非文章的 Pagefind 标记、`/post/` 根不存在以及修改日期元数据不回流，文章抽样另断言 `og:image` 为绝对地址且指向图片；校验资源 `integrity` + `crossorigin="anonymous"`、RSS 条数为 min(20, 文章数) 且全部指向文章、跨文件契约数字（导航断点 `--max-width`、TOC 折叠断点 78em、过渡时长 `$duration` 0.35s、导航关闭兜底 600ms ≥ 该时长），并断言 `html` 保留滚动条竖槽（`scrollbar-gutter: stable`：短于一屏的页面否则会让整站横向跳动）并全站扫描产物无 `ZgotmplZ`（链接协议被过滤的标志；正文确需讨论该字样时请改写措辞避开全文匹配）；不要将文章数量或 Pagefind 页数写死。
 
