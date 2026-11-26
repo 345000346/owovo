@@ -1,7 +1,6 @@
 ---
 title: "LEDE下SmartDNS安装使用"
 date: 2019-12-10T19:32:10+08:00
-slug: "smartdns-on-lede"
 description: "在 LEDE/OpenWrt 路由器上安装配置 SmartDNS，实现 DNS 加速与广告过滤。"
 tags: ["路由器", "DNS", "SmartDNS", "LEDE", "OpenWrt"]
 ---

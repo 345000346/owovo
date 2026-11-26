@@ -50,7 +50,7 @@ pagination:
   pagerSize: 10
 
 permalinks:
-  post: "/post/:slug/"
+  post: "/post/:slugorcontentbasename/"
 
 # 仅 tags；禁止 categories taxonomy
 taxonomies:

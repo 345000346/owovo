@@ -1,7 +1,6 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
-slug: "{{ .File.ContentBaseName }}"
 description: ""
 tags: []
 draft: true

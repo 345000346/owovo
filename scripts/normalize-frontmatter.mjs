@@ -1,6 +1,6 @@
 /**
  * 规范化 content front matter 字段序。
- * 文章丢掉 toc: true / lastmod；去掉 categories；键序对齐 AGENTS / archetypes。
+ * 去掉 slug / categories / lastmod；文章丢掉 toc: true；键序对齐 AGENTS / archetypes。
  * 普通页不再使用 layout / sitemap 字段（旧专属模板与 /post/ 重定向页已删除），
  * 故不列入 PAGE_ORDER；万一仍出现，会原样保留在排序末尾。
  * 字段间注释挂到其后第一个键随排序搬运；尾随注释与块标量逐字保留。
@@ -16,7 +16,6 @@ const contentRoot = join(root, "content");
 const POST_ORDER = [
   "title",
   "date",
-  "slug",
   "description",
   "tags",
   "draft",
@@ -33,7 +32,6 @@ const PAGE_ORDER = [
   "description",
   "type",
   "toc",
-  "slug",
   "tags",
   "draft",
 ];
@@ -163,6 +161,9 @@ function rebuild(blocks, order, isPost) {
     }
     const attached = pendingComments;
     pendingComments = [];
+    if (block.key === "slug") {
+      continue; // URL 由目录名或文件名生成，不再保留第二份标识。
+    }
     if (block.key === "categories") {
       continue; // 被移除键上的注释随键一并丢弃。
     }

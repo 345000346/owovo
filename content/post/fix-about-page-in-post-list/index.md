@@ -1,7 +1,6 @@
 ---
 title: "解决 about 等自定义页面显示在文章列表中的问题"
 date: 2019-09-05T10:57:15+08:00
-slug: "fix-about-page-in-post-list"
 description: "Hugo 的普通页为什么会混入文章列表？本文说明 .Site.RegularPages 的范围，并给出按 section 明确筛选文章的模板写法。"
 tags: ["Hugo", "自定义页面"]
 ---

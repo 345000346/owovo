@@ -1,7 +1,6 @@
 ---
 title: "Windows 常用软件"
 date: 2026-11-16T17:50:00+08:00
-slug: "windows-apps"
 description: "个人 Windows 软件清单，涵盖视频播放、下载工具、压缩解压、系统优化等类别。"
 tags: ["Windows", "软件", "效率工具"]
 ---

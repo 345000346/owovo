@@ -1,7 +1,6 @@
 ---
 title: "Impeccable.style 使用指南：给 AI 一套设计 vocabulary"
 date: 2026-11-16T00:00:00+08:00
-slug: "impeccable-style-guide"
 description: "基于 impeccable 4.9.x 的 Impeccable.style 使用指南：用 PRODUCT.md / DESIGN.md 建立上下文，调用 24 个设计命令，靠设计 hook 与 62 条规则检测器拦住 AI 界面套路。"
 tags: ["AI", "前端设计", "Impeccable.style", "工具"]
 ---

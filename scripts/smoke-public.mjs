@@ -146,7 +146,7 @@ function isArticleHtml(rel) {
   return /^post\/[^/]+\/index\.html$/.test(rel);
 }
 
-/** post/<slug>/index.html 的相对路径，按 slug 排序（抽样不依赖 readdir 顺序）。 */
+/** post/<dir>/index.html 的相对路径，按目录名排序（抽样不依赖 readdir 顺序）。 */
 async function listPostHtml() {
   let entries;
   try {
@@ -248,7 +248,7 @@ async function main() {
     "sitemap.xml must not list removed /categories/ taxonomy",
   );
 
-  // /post/ 根不再生成；文章实体仍使用 /post/:slug/。
+  // /post/ 根不再生成；文章实体仍使用 /post/<dir>/。
   const postRootRel = "post/index.html";
   assert(!(await exists(postRootRel)), `${postRootRel} must not exist`);
 
@@ -509,6 +509,15 @@ async function main() {
       assert(
         bodyMarkers.length === 1,
         `${rel} must contain exactly one data-pagefind-body marker`,
+      );
+      const canonical = getTagAttribute(
+        html,
+        /<link\b[^>]*\brel=(?:"canonical"|'canonical'|canonical)[^>]*>/i,
+        "href",
+      );
+      assert(
+        canonical === `${siteHost}/${rel.replace(/index\.html$/, "")}`,
+        `${rel} canonical must match its bundle directory`,
       );
       continue;
     }
