@@ -1,6 +1,6 @@
 // 搜索结果页内 ?hl= 高亮标记（Pagefind Highlight）。
 mark.search-highlight {
-  background: none;
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
   color: inherit;
   font-weight: 700;
   text-decoration: underline;

@@ -145,7 +145,7 @@ function initSearchDialog() {
           element: "#search-dialog-search",
           bundlePath,
           excerptLength: 25,
-          pageSize: 5,
+          pageSize: 100,
           processResult,
           processTerm(term) {
             dialog.dataset.searchTerm = term.trim();
