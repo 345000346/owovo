@@ -10,7 +10,7 @@
  * - static/fonts/*.woff2
  * - assets/css/fonts.css
  * - data/font_preload.json
- * - .fonts-manifest.json（增量判断依据；依赖/源未变时跳过拷贝，--force 强制重拷）
+ * - .fonts-manifest.json（仅记录输入 key；生成物与字体体积直接校验）
  *
  * 用法：node scripts/sync-fonts.mjs [--force] [--stats]
  * 环境变量：SYNC_FONTS_STATS=1 等价于 --stats
@@ -37,6 +37,7 @@ const sourceCodeSource = resolve(
   root,
   "node_modules/@fontsource/source-code-pro/files",
 );
+const notoFilesDirectory = resolve(notoSource, "files");
 const fontDirectory = resolve(root, "static/fonts");
 const cssDirectory = resolve(root, "assets/css");
 const preloadDataPath = resolve(root, "data/font_preload.json");
@@ -185,10 +186,9 @@ async function stageFonts(stagingDirectory, faces) {
   /** @type {Map<string, number>} */
   const fileSizes = new Map();
   let copiedBytes = 0;
-  const notoFilesDir = resolve(notoSource, "files");
 
   for (const { file: name } of faces) {
-    const source = resolve(notoFilesDir, name);
+    const source = resolve(notoFilesDirectory, name);
     await cp(source, resolve(stagingDirectory, name));
     const size = (await stat(source)).size;
     fileSizes.set(name, size);
@@ -206,7 +206,7 @@ async function stageFonts(stagingDirectory, faces) {
   return { fileSizes, copiedBytes };
 }
 
-/** @returns {Promise<{ key?: string, cssHash?: string, preloadHash?: string, files?: { name: string, size: number }[] } | null>} */
+/** @returns {Promise<{ key?: string } | null>} */
 async function loadManifest() {
   try {
     return JSON.parse(await readFile(manifestPath, "utf8"));
@@ -216,24 +216,14 @@ async function loadManifest() {
 }
 
 /**
- * 现有产物与期望输入的一致性校验：manifest key、磁盘上的 fonts.css 与
- * preload JSON 字节摘要、每个字体文件存在且体积一致。全部通过返回文件
- * 清单（供 stats 复用），任何一项不满足返回 null。
- * @param {{ key?: string, cssHash?: string, preloadHash?: string, files?: { name: string, size: number }[] } | null} manifest
- * @param {{ key: string, cssHash: string, preloadHash: string, fileNames: string[] }} expected
+ * 现有产物与期望输入的一致性校验：manifest key、fonts.css / preload JSON
+ * 文本一致、每个字体文件存在且体积与源文件一致。通过时返回落盘字体体积。
+ * @param {{ key?: string } | null} manifest
+ * @param {{ key: string, css: string, preload: string, files: { name: string, source: string }[] }} expected
+ * @returns {Promise<Map<string, number> | null>}
  */
 async function matchManifest(manifest, expected) {
-  if (
-    !manifest ||
-    manifest.key !== expected.key ||
-    manifest.cssHash !== expected.cssHash ||
-    manifest.preloadHash !== expected.preloadHash ||
-    !Array.isArray(manifest.files) ||
-    manifest.files.length !== expected.fileNames.length ||
-    manifest.files.some(
-      (entry, index) => entry?.name !== expected.fileNames[index],
-    )
-  ) {
+  if (!manifest || manifest.key !== expected.key) {
     return null;
   }
 
@@ -243,7 +233,7 @@ async function matchManifest(manifest, expected) {
   } catch {
     return null;
   }
-  if (sha256(fontsCss) !== expected.cssHash) {
+  if (fontsCss !== expected.css) {
     return null;
   }
 
@@ -253,22 +243,26 @@ async function matchManifest(manifest, expected) {
   } catch {
     return null;
   }
-  if (sha256(preloadData) !== expected.preloadHash) {
+  if (preloadData !== expected.preload) {
     return null;
   }
 
-  for (const entry of manifest.files) {
+  /** @type {Map<string, number>} */
+  const fontSizes = new Map();
+  for (const entry of expected.files) {
     try {
       const actual = await stat(resolve(fontDirectory, entry.name));
-      if (actual.size !== entry.size) {
+      const source = await stat(entry.source);
+      if (actual.size !== source.size) {
         return null;
       }
+      fontSizes.set(entry.name, actual.size);
     } catch {
       return null;
     }
   }
 
-  return manifest.files;
+  return fontSizes;
 }
 
 /**
@@ -291,35 +285,44 @@ async function main() {
   const faces = collectNotoFaces(vendorCss);
   const preloadFiles = computePreloadFiles(faces);
   const expectedCss = `${rewriteNotoCss(faces.map((f) => f.block))}\n\n${buildSourceCodeCss()}\n`;
+  const expectedPreload = `${JSON.stringify({ files: preloadFiles }, null, 2)}\n`;
   const key = `${await readPackageVersions()}|${sha256(vendorCss)}`;
 
-  /** @type {{ key: string, cssHash: string, preloadHash: string, fileNames: string[] }} */
+  /** @type {{ key: string, css: string, preload: string, files: { name: string, source: string }[] }} */
   const expected = {
     key,
-    cssHash: sha256(expectedCss),
-    preloadHash: sha256(
-      `${JSON.stringify({ files: preloadFiles }, null, 2)}\n`,
-    ),
-    fileNames: [...faces.map((f) => f.file), ...SOURCE_CODE_FILES],
+    css: expectedCss,
+    preload: expectedPreload,
+    files: [
+      ...faces.map((f) => ({
+        name: f.file,
+        source: resolve(notoFilesDirectory, f.file),
+      })),
+      ...SOURCE_CODE_FILES.map((name) => ({
+        name,
+        source: resolve(sourceCodeSource, name),
+      })),
+    ],
   };
 
   // 增量跳过：manifest 缺失/被删产物/内容不一致时走完整重拷。
   const manifest = wantForce ? null : await loadManifest();
-  const matchedFiles = await matchManifest(manifest, expected);
-  if (matchedFiles) {
+  const fontSizes = await matchManifest(manifest, expected);
+  if (fontSizes) {
     const mb = (
-      matchedFiles.reduce((sum, f) => sum + (f.size || 0), 0) /
+      [...fontSizes.values()].reduce((sum, size) => sum + size, 0) /
       1024 /
       1024
     ).toFixed(2);
     console.log(
-      `sync-fonts: up to date (${matchedFiles.length} files, ${mb} MB); skipped (--force to redo)`,
+      `sync-fonts: up to date (${fontSizes.size} files, ${mb} MB); skipped (--force to redo)`,
     );
 
     if (wantStats) {
+      const files = [...fontSizes].map(([name, size]) => ({ name, size }));
       printStats(
-        matchedFiles.length,
-        matchedFiles.filter(
+        files.length,
+        files.filter(
           (f) => f.name.includes("noto-") && !f.name.includes("-latin-"),
         ),
       );
@@ -367,28 +370,10 @@ async function main() {
   );
 
   // 生成物 — 勿手改 data/font_preload.json。
-  await writeFile(
-    preloadDataPath,
-    `${JSON.stringify({ files: preloadFiles }, null, 2)}\n`,
-  );
+  await writeFile(preloadDataPath, expectedPreload);
 
   // manifest 最后写入：前置步骤失败时不会留下“看似新鲜”的清单。
-  const files = [...faces.map((f) => f.file), ...SOURCE_CODE_FILES].map(
-    (name) => ({ name, size: fileSizes.get(name) ?? 0 }),
-  );
-  await writeFile(
-    manifestPath,
-    `${JSON.stringify(
-      {
-        key,
-        cssHash: expected.cssHash,
-        preloadHash: expected.preloadHash,
-        files,
-      },
-      null,
-      2,
-    )}\n`,
-  );
+  await writeFile(manifestPath, `${JSON.stringify({ key }, null, 2)}\n`);
 
   const mb = (copiedBytes / 1024 / 1024).toFixed(2);
   const preloadMb = (preloadBytes / 1024 / 1024).toFixed(2);
