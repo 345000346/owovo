@@ -21,7 +21,7 @@ npm run hugo:env          # 打印本机 Hugo 环境
 维护（不进默认 CI）：
 
 ```bash
-node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 lastmod/categories，文章侧丢掉 toc: true；字段间注释挂到其后键随排序搬运；FM 未闭合或顶层键重复时跳过该文件并以 exit 1 报错
+node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 slug/lastmod/categories，文章侧丢掉 toc: true；字段间注释挂到其后键随排序搬运；FM 未闭合或顶层键重复时跳过该文件并以 exit 1 报错
 ```
 
 注意：
@@ -33,7 +33,7 @@ node scripts/normalize-frontmatter.mjs   # 重排 content front matter；移除 
 - **无** `cf:setup` / Cloudflare 一键脚本；Cloudflare 控制台配置不在仓库维护。
 - Node：`.node-version` 为**精确 pin**（CI / 本地按文件安装）；`package.json` `engines` 为最低线地板，本地由 `.npmrc` engine-strict 强制。两处分工不同，勿视为"一致"
 - Hugo：**extended**，版本见 `.hugo-version`（CI 动态读取；勿把具体版本号写进本文档）
-- 字体在每次 `dev` / `build:site` 前由 `scripts/sync-fonts.mjs` 同步：依赖/源码未变化时按 `.fonts-manifest.json`（gitignore）比对跳过拷贝，`--force` 强制重拷
+- 字体在每次 `dev` / `build:site` 前由 `scripts/sync-fonts.mjs` 同步：`.fonts-manifest.json`（gitignore）只存输入 key，生成物与字体体积仍逐项校验；一致时跳过拷贝，`--force` 强制重拷
 
 ## 项目结构
 
@@ -58,13 +58,13 @@ assets/
   js/                     # 见下文「JS 拆分与 Concat」
   scss/                   # Dart Sass：main.scss 入口；token 在 utils/_variables.scss
   css/fonts.css           # sync-fonts 生成（gitignore）
-data/                     # Socials.toml（文字链接）、SVG.toml（仅回顶箭头）；font_preload.json 由 sync-fonts 生成
+data/                     # Socials.toml（文字链接）；font_preload.json 由 sync-fonts 生成
 content/                  # 内容（文章、关于、想法、普通归档页等）
 static/                   # 原样发布；fonts/ 由构建生成；love.html 与 love/ 由作者单独维护，勿随主站改动
 scripts/
   sync-fonts.mjs          # 字体全量分片 + latin/CJK 白名单 preload（manifest 增量）
   smoke-public.mjs        # 构建后 public/ 断言
-  normalize-frontmatter.mjs  # 维护：FM 字段序、lastmod/categories 清理与 toc 默认
+  normalize-frontmatter.mjs  # 维护：FM 字段序、slug/lastmod/categories 清理与 toc 默认
 archetypes/default.md     # 新文章 front matter 模板
 .github/workflows/        # GitHub Pages：build →（非 PR）deploy
 LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
@@ -140,7 +140,6 @@ LICENSE.md                # 主站代码 MIT；内容与第三方资产例外
 ```yaml
 title: "..."
 date: YYYY-MM-DDTHH:mm:ss+08:00
-slug: "kebab-case"    # 与目录名一致
 description: "..."
 tags: ["..."]
 draft: true           # 仅脚手架新建时；发布前删除
@@ -149,7 +148,8 @@ draft: true           # 仅脚手架新建时；发布前删除
 # outdated / outdatedNote
 ```
 
-- 必填：`title` `date` `slug` `description` `tags`
+- 必填：`title` `date` `description` `tags`
+- 文章 URL 由目录名生成：`content/post/<kebab-case>/index.md` → `/post/<kebab-case>/`
 - 禁止 `categories`
 - 普通页 TOC 为 **opt-in**（如 about：`toc: true`）
 - 脚手架：`archetypes/default.md`；批量整理：`node scripts/normalize-frontmatter.mjs`
@@ -158,7 +158,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 
 | 角色         | 路径           | 说明                                                            |
 | ------------ | -------------- | --------------------------------------------------------------- |
-| 文章实体     | `/post/:slug/` | `content/post/<slug>/index.md`；`layouts/post/single.html`      |
+| 文章实体     | `/post/<dir>/` | `content/post/<dir>/index.md`；`layouts/post/single.html`        |
 | 权威文章列表 | `/archives/`   | `content/archives.md` + `type: archives`；按年分组             |
 | 首页         | `/`            | 同一批文章，摘要 + 分页                                         |
 | 文章内容目录 | `content/post/` | 仅作为内容组织目录；不生成 `/post/` section 根页面            |
@@ -169,7 +169,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 
 ## 模板约定
 
-- partial 字典传参：`{{ partial "utils/icon.html" (dict "$" . "name" "arrow-up") }}`（图标只保留 SVG.toml 中登记的项；菜单、页脚、标签全部用文字）
+- 回顶箭头直接内联在 `components/back-to-top.html`；菜单、页脚、标签全部用文字
 - 路径小写、连字符
 - 文章判断：`utils/is-post.html`；关于页无独立判断与专壳，按普通页（`type: page`）走 `layouts/single.html`
 - 文章壳只在 `layouts/post/single.html`；归档壳在 `layouts/archives/single.html`；通用页不要复制文章壳
@@ -181,8 +181,8 @@ draft: true           # 仅脚手架新建时；发布前删除
 
 ## 文章操作
 
-- 路径：`content/post/<slug>/index.md`
-- slug：全小写 kebab-case（与目录名一致）
+- 路径：`content/post/<kebab-case>/index.md`
+- 目录名即 URL 标识；不再维护 `slug` 字段
 - 日期只使用 front matter 的 `date`；不使用 `lastmod`、`.Lastmod` 或自动生成的修改日期（HTML 侧由 smoke 断言；例外：`sitemap.xml` 由 Hugo 默认模板输出 `<lastmod>`，值即 `date`，为爬虫调度保留，勿当修改日期回流处理）
 - 只用 `tags`
 - TOC 默认开；关闭写 `toc: false`
@@ -190,7 +190,7 @@ draft: true           # 仅脚手架新建时；发布前删除
 - 关于页：`type: page` + `toc: true`（无专壳，走通用单页）
 - 图片放文章目录内引用（Hugo 可出响应式 WebP）
 - 深色模式不压暗截图：在独立图片下一行写 `{data-no-dark-filter=true}`（需独占一行；`markup.yaml` 已开启 block attributes）
-- permalink：`/post/:slug/`
+- permalink：`/post/:slugorcontentbasename/`
 
 ## 验证
 
@@ -224,5 +224,5 @@ npm run build:site -- --panicOnWarning --logLevel warn
 - **字体**：全量分片 + 固定 preload 白名单，不用字扫描。
 - **Favicon**：仅 `icons/favicon.svg` + `icons/apple-touch-icon.png`。
 - **无** Microformats / 访问统计脚本 / i18n。
-- **列表入口唯一**：`/archives/`；不生成 `/post/` section 根兼容页，文章实体地址仍为 `/post/:slug/`。
+- **列表入口唯一**：`/archives/`；不生成 `/post/` section 根兼容页，文章实体地址仍为 `/post/<dir>/`。
 - **版本文件手动升级**：Hugo（`.hugo-version`）/ Node（`.node-version`）不在 Dependabot 覆盖内，升级靠手动改文件，CI 动态读取；本地 engines 由 `.npmrc` engine-strict 强制。
