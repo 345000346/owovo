@@ -1,11 +1,10 @@
-{{/* taxonomy 词链接列表。dict: "$" taxonomy terms class。 */}}
+{{/* tags 词链接列表。dict: "$" terms class。 */}}
 {{- $ := index . "$" -}}
-{{- $taxonomy := .taxonomy -}}
 {{- $terms := .terms -}}
 {{- $class := .class -}}
 {{- range $term := $terms -}}
     {{- $path := (urls.Parse ($term | urlize)).Path -}}
-    {{- with $.Site.GetPage (printf `/%s/%s` $taxonomy $path) -}}
+    {{- with $.Site.GetPage (printf `/tags/%s` $path) -}}
         <a href="{{- .RelPermalink -}}"{{ with $class }} class="{{ . }}"{{ end }}><span class="taxonomy-hash" aria-hidden="true">#</span>{{- .LinkTitle | default $path -}}</a>
     {{- else -}}
         <span{{ with $class }} class="{{ . }}"{{ end }}><span class="taxonomy-hash" aria-hidden="true">#</span>{{- $term -}}</span>

@@ -12,7 +12,7 @@
     {{- if $isHome -}}
         {{- with $.Params.tags -}}
             <div class="post-meta-item post-meta-tags" role="group" aria-label="标签">
-                {{- partial "utils/taxonomy-links.html" (dict "$" $ "taxonomy" "tags" "terms" . "class" "post-meta-tag-link") -}}
+                {{- partial "utils/taxonomy-links.html" (dict "$" $ "terms" . "class" "post-meta-tag-link") -}}
             </div>
         {{- end -}}
     {{- end -}}

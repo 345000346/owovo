@@ -23,6 +23,7 @@ function initNavigation() {
   let closeTimer = 0;
   let closing = false; // 淡出收尾中：aria-expanded 仍 true，但界面已收起。
   let restoreFocusOnClose = false;
+  let scrollLocked = false;
   let lockedScrollY = 0;
 
   const maxWidthRaw = window
@@ -91,15 +92,12 @@ function initNavigation() {
   }
 
   function setScrollLock(locked) {
-    const body = document.body;
-
     if (locked) {
-      if (body.classList.contains("nav-open")) {
+      if (scrollLocked) {
         return;
       }
+      scrollLocked = true;
       lockedScrollY = window.scrollY || window.pageYOffset || 0;
-      // body.nav-open 是纯状态位（无对应 CSS 规则），只用于幂等判断与调试观察。
-      body.classList.add("nav-open");
       // 勿用 body overflow:hidden / position:fixed（会跳滚动或顶栏错位）；
       // 拦截背景 touch/wheel，并钉住 scrollY。
       document.addEventListener("touchmove", preventBackgroundScroll, {
@@ -113,11 +111,11 @@ function initNavigation() {
       return;
     }
 
-    if (!body.classList.contains("nav-open")) {
+    if (!scrollLocked) {
       return;
     }
 
-    body.classList.remove("nav-open");
+    scrollLocked = false;
     document.removeEventListener("touchmove", preventBackgroundScroll);
     document.removeEventListener("wheel", preventBackgroundScroll);
     window.removeEventListener("scroll", pinScrollPosition);

@@ -35,21 +35,15 @@ function getCodeText(wrapper) {
 }
 
 function initCopyDelegation() {
-  const copyButtons = document.querySelectorAll(".code-block .copy-button");
   if (
     !navigator.clipboard ||
     typeof navigator.clipboard.writeText !== "function"
   ) {
-    copyButtons.forEach((button) => {
-      button.hidden = true;
-    });
     return;
   }
 
-  if (copyButtons.length > 0) {
-    // 复制按钮默认由 CSS 隐藏，避免普通页面的代码块渲染出没有脚本接管的死按钮。
-    document.documentElement.classList.add("copy-enabled");
-  }
+  // 复制按钮默认由 CSS 隐藏，避免普通页面的代码块渲染出没有脚本接管的死按钮。
+  document.documentElement.classList.add("copy-enabled");
 
   // 每个按钮一个复位计时器：连续点击时先清旧计时器，避免“已复制”被提前复位。
   const resetTimers = new WeakMap();

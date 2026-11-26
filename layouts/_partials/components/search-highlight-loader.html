@@ -20,9 +20,6 @@
       var pagefindPath = c.getAttribute("data-pagefind-highlight") || "";
       var moduleSrc = c.getAttribute("data-module") || "";
       var integrity = c.getAttribute("data-integrity") || "";
-      if (pagefindPath) {
-        document.documentElement.setAttribute("data-pagefind-highlight", pagefindPath);
-      }
       if (!moduleSrc) {
         return;
       }

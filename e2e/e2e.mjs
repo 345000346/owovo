@@ -261,10 +261,11 @@ async function main() {
       await toggle.click();
       await page.waitForFunction(() =>
         document.querySelector(".nav-toggle").getAttribute("aria-expanded") === "true");
-      assert.equal(await page.locator("body.nav-open").count(), 1);
+      assert.equal(await page.evaluate(() => document.querySelector("main").inert), true);
       await toggle.click();
       await page.waitForFunction(() =>
         document.querySelector(".nav-toggle").getAttribute("aria-expanded") === "false");
+      assert.equal(await page.evaluate(() => document.querySelector("main").inert), false);
       await page.close();
     });
   } finally {

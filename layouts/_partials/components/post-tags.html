@@ -1,6 +1,6 @@
 {{/* 文末标签列表。 */}}
 {{ with .Params.tags }}
     <div class="post-tags">
-        {{ partial "utils/taxonomy-links.html" (dict "$" $ "taxonomy" "tags" "terms" . "class" "post-tags-link") }}
+        {{ partial "utils/taxonomy-links.html" (dict "$" $ "terms" . "class" "post-tags-link") }}
     </div>
 {{ end }}

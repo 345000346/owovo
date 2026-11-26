@@ -231,9 +231,6 @@ function initSearchDialog() {
 
   // 菜单项缺失只影响这一处点击绑定；Ctrl/Cmd+K、/ 与 #search 仍可用。
   if (searchLink) {
-    searchLink.setAttribute("aria-haspopup", "dialog");
-    searchLink.setAttribute("aria-controls", "search-dialog");
-
     searchLink.addEventListener("click", (event) => {
       if (
         event.button !== 0 ||
