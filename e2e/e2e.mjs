@@ -209,6 +209,60 @@ async function main() {
       await page.close();
     });
 
+    await test("搜索 Dialog 点击背景关闭", async () => {
+      const page = await browser.newPage();
+      await page.goto(url("/"), { waitUntil: "networkidle" });
+      await page.keyboard.press("Control+k");
+      await page.waitForFunction(() => document.getElementById("search-dialog").open);
+      await page.mouse.click(5, 5);
+      await page.waitForFunction(() => !document.getElementById("search-dialog").open);
+      await page.close();
+    });
+
+    await test("搜索 Dialog 锁住背景滚动", async () => {
+      const page = await browser.newPage({ viewport: { width: 1200, height: 700 } });
+      await page.goto(url(sample.url), { waitUntil: "networkidle" });
+      await page.evaluate(() => {
+        const top = Math.min(1200, document.documentElement.scrollHeight - window.innerHeight);
+        window.scrollTo({ top, behavior: "instant" });
+      });
+      await page.waitForFunction(() => window.scrollY > 0);
+      const scrollBefore = await page.evaluate(() => window.scrollY);
+      assert.equal(scrollBefore > 0, true);
+      const widthBefore = await page.evaluate(() => document.documentElement.clientWidth);
+
+      await page.keyboard.press("Control+k");
+      await page.waitForFunction(() => document.getElementById("search-dialog").open);
+      assert.equal(
+        await page.evaluate(() => document.documentElement.classList.contains("search-dialog-open")),
+        true,
+      );
+      assert.equal(await page.evaluate(() => document.documentElement.clientWidth), widthBefore);
+
+      const header = await page.locator(".search-dialog-header").boundingBox();
+      for (const point of [
+        { x: 5, y: 5 },
+        { x: header.x + 20, y: header.y + 20 },
+      ]) {
+        await page.mouse.move(point.x, point.y);
+        await page.mouse.wheel(0, 600);
+        await page.waitForTimeout(100);
+        assert.equal(await page.evaluate(() => window.scrollY), scrollBefore);
+      }
+
+      await page.keyboard.press("Escape");
+      await page.waitForFunction(() => !document.getElementById("search-dialog").open);
+      await page.waitForFunction(
+        () => !document.documentElement.classList.contains("search-dialog-open"),
+      );
+      assert.equal(await page.evaluate(() => window.scrollY), scrollBefore);
+      assert.equal(
+        await page.evaluate(() => document.documentElement.classList.contains("search-dialog-open")),
+        false,
+      );
+      await page.close();
+    });
+
     await test("文章页 ?hl= 高亮命中", async () => {
       const page = await browser.newPage();
       const term = encodeURIComponent(sample.title.slice(0, 2));

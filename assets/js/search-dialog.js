@@ -1,7 +1,7 @@
 // 全站搜索 Dialog + 懒加载 Pagefind UI。
 // 打开：[data-search-trigger]、Ctrl/Cmd+K、/、#search（repeat 自动重放被忽略）。
 //
-// 契约：#search-dialog、#search-dialog-config 的 data-pagefind-*；
+// 契约：#search-dialog（closedby + 指针兜底）、#search-dialog-config 的 data-pagefind-*；
 // 结果加 ?hl=；打开时派发 site:close-navigation；路径只放 data-*（防 --minify）；
 // ↑/↓ 在结果链接之间移动（Pagefind Default UI 自身不提供）。
 
@@ -208,6 +208,7 @@ function initSearchDialog() {
           ? current
           : null;
       dialog.showModal();
+      document.documentElement.classList.add("search-dialog-open");
     }
 
     loadUI()
@@ -252,13 +253,32 @@ function initSearchDialog() {
     });
   }
 
-  dialog.addEventListener("click", (event) => {
-    if (event.target === dialog) {
-      dialog.close();
-    }
-  });
+  // closedby 在 Safari 尚未生效：只给缺少该能力的浏览器补背景点击关闭。
+  // 用指针坐标判断是否在框外，避免点在 Dialog 自身内边距或子元素间隙时误关。
+  if (!("closedBy" in HTMLDialogElement.prototype)) {
+    let pressedOutside = false;
+    const isOutsideDialog = (event) => {
+      const rect = dialog.getBoundingClientRect();
+      return (
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom
+      );
+    };
+    dialog.addEventListener("pointerdown", (event) => {
+      pressedOutside = isOutsideDialog(event);
+    });
+    dialog.addEventListener("pointerup", (event) => {
+      if (pressedOutside && isOutsideDialog(event)) {
+        dialog.close();
+      }
+      pressedOutside = false;
+    });
+  }
 
   dialog.addEventListener("close", () => {
+    document.documentElement.classList.remove("search-dialog-open");
     clearSearchHash();
     // close 事件触发时焦点通常还在 Dialog 内（输入框），浏览器稍后才把它丢回 body：
     // 只看「焦点是否已在 Dialog 外的可用元素上」来决定是否手动归还。

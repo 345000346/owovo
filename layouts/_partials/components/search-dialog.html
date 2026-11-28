@@ -2,7 +2,7 @@
 {{- $pagefindBundle := "pagefind/" | relURL -}}
 {{- $pagefindJS := "pagefind/pagefind-ui.js" | relURL -}}
 {{- $pagefindCSS := "pagefind/pagefind-ui.css" | relURL -}}
-<dialog class="search-dialog" id="search-dialog" aria-labelledby="search-dialog-title">
+<dialog class="search-dialog" id="search-dialog" aria-labelledby="search-dialog-title" closedby="any">
     <div class="search-dialog-shell">
         <header class="search-dialog-header">
             <h2 id="search-dialog-title">搜索文章</h2>

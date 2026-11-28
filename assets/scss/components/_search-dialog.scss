@@ -1,6 +1,12 @@
 // 全站搜索 Dialog 与 Pagefind UI 覆盖样式。
 @use "../utils/variables";
 
+// 模态期间锁住根滚动：overscroll-behavior 在 Firefox/WebKit 不能阻止
+// 背景与标题区域的滚轮滚动；scrollbar-gutter: stable 已预留槽位，不会横跳。
+html.search-dialog-open {
+  overflow: hidden;
+}
+
 .search-dialog {
   width: min(40rem, calc(100% - 2rem));
   max-height: min(42rem, calc(100dvh - 2rem));
@@ -51,6 +57,7 @@
   .pagefind-ui__drawer {
     max-height: calc(100dvh - 14rem);
     overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   // 结果分隔线由 Pagefind 自带（每条 border-top，末条 border-bottom），不再重复声明。
