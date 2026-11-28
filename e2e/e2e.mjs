@@ -245,7 +245,7 @@ async function main() {
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await page.waitForFunction(() => {
         const el = document.getElementById("reading-progress");
-        return el && Number(el.getAttribute("aria-valuenow")) > 0;
+        return el instanceof HTMLProgressElement && el.value > 0;
       });
       const backToTop = page.locator("#back-to-top");
       if (await backToTop.count()) {
