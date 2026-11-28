@@ -1,30 +1,32 @@
 {{/* 主导航：theme-switcher / search（data-search-trigger）为特殊 identifier；
     posts / tags 用于把文章实体与 tag term 归属到对应栏目高亮。 */}}
 <nav class="nav" aria-label="主导航">
-    <ul class="menu" id="menu">
-        {{ $currentPage := . }}
-        {{ range .Site.Menus.main }}
-            {{ if eq .Identifier "theme-switcher" }}
-                <li class="menu-item menu-item-theme">
-                    {{ partial "components/dark-mode.html" $currentPage }}
-                </li>
-            {{ else }}
-                {{- $isMenuPage := $currentPage.IsMenuCurrent .Menu . -}}
-                {{- $isCurrent := or $isMenuPage ($currentPage.HasMenuCurrent .Menu .) -}}
-                {{- if and (eq .Identifier "posts") (partial "utils/is-post.html" $currentPage) -}}
-                    {{- $isCurrent = true -}}
-                {{- end -}}
-                {{- if and (eq .Identifier "tags") (eq $currentPage.Kind "term") -}}
-                    {{- $isCurrent = true -}}
-                {{- end -}}
-                {{- $isSearch := eq .Identifier "search" -}}
-                {{- /* 工具组（RSS/搜索/主题）起点：RSS 前的 li 画分组分隔线（桌面端）。 */ -}}
-                {{- $toolsStart := eq .Identifier "rss" -}}
-                <li{{ if $isSearch }} id="search"{{ end }} class="menu-item{{ if $isCurrent }} active{{ end }}{{ if $toolsStart }} tools-start{{ end }}{{ if $isSearch }} menu-item-search{{ end }}">
-                    {{- $isExternal := strings.HasPrefix .URL "http" -}}
-                    <a href="{{ .URL }}"{{ if $isSearch }} data-search-trigger aria-haspopup="dialog" aria-controls="search-dialog"{{ end }}{{ if $isExternal }} target="_blank" rel="external noopener noreferrer"{{ end }}{{ if and $isCurrent (ne .Identifier "search") }} aria-current="{{ cond $isMenuPage "page" "true" }}"{{ end }}>{{ .Name }}</a>
-                </li>
+    <div class="nav-inner">
+        <ul class="menu" id="menu">
+            {{ $currentPage := . }}
+            {{ range .Site.Menus.main }}
+                {{ if eq .Identifier "theme-switcher" }}
+                    <li class="menu-item menu-item-theme">
+                        {{ partial "components/dark-mode.html" $currentPage }}
+                    </li>
+                {{ else }}
+                    {{- $isMenuPage := $currentPage.IsMenuCurrent .Menu . -}}
+                    {{- $isCurrent := or $isMenuPage ($currentPage.HasMenuCurrent .Menu .) -}}
+                    {{- if and (eq .Identifier "posts") (partial "utils/is-post.html" $currentPage) -}}
+                        {{- $isCurrent = true -}}
+                    {{- end -}}
+                    {{- if and (eq .Identifier "tags") (eq $currentPage.Kind "term") -}}
+                        {{- $isCurrent = true -}}
+                    {{- end -}}
+                    {{- $isSearch := eq .Identifier "search" -}}
+                    {{- /* 工具组（RSS/搜索/主题）起点：RSS 前的 li 画分组分隔线（桌面端）。 */ -}}
+                    {{- $toolsStart := eq .Identifier "rss" -}}
+                    <li{{ if $isSearch }} id="search"{{ end }} class="menu-item{{ if $isCurrent }} active{{ end }}{{ if $toolsStart }} tools-start{{ end }}{{ if $isSearch }} menu-item-search{{ end }}">
+                        {{- $isExternal := strings.HasPrefix .URL "http" -}}
+                        <a href="{{ .URL }}"{{ if $isSearch }} data-search-trigger aria-haspopup="dialog" aria-controls="search-dialog"{{ end }}{{ if $isExternal }} target="_blank" rel="external noopener noreferrer"{{ end }}{{ if and $isCurrent (ne .Identifier "search") }} aria-current="{{ cond $isMenuPage "page" "true" }}"{{ end }}>{{ .Name }}</a>
+                    </li>
+                {{ end }}
             {{ end }}
-        {{ end }}
-    </ul>
+        </ul>
+    </div>
 </nav>

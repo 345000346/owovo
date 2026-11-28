@@ -322,6 +322,33 @@ async function main() {
       assert.equal(await page.evaluate(() => document.querySelector("main").inert), false);
       await page.close();
     });
+
+    await test("移动端长菜单可滚动", async () => {
+      const page = await browser.newPage({ viewport: { width: 390, height: 500 } });
+      await page.goto(url("/"), { waitUntil: "networkidle" });
+      await page.evaluate(() => {
+        const menu = document.querySelector(".menu");
+        for (let index = 0; index < 60; index += 1) {
+          const item = document.createElement("li");
+          item.className = "menu-item";
+          item.innerHTML = `<a href="#">额外菜单 ${index}</a>`;
+          menu.append(item);
+        }
+      });
+      await page.locator(".nav-toggle").click();
+      await page.waitForFunction(() => {
+        const nav = document.querySelector(".nav");
+        return nav.getBoundingClientRect().height > 150 &&
+          nav.scrollHeight > nav.clientHeight;
+      });
+      const before = await page.evaluate(() => document.querySelector(".nav").scrollTop);
+      await page.mouse.move(195, 200);
+      await page.mouse.wheel(0, 400);
+      await page.waitForTimeout(150);
+      const after = await page.evaluate(() => document.querySelector(".nav").scrollTop);
+      assert.equal(after > before, true);
+      await page.close();
+    });
   } finally {
     await browser?.close();
     server?.close();

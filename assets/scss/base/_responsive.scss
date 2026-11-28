@@ -32,13 +32,16 @@ $maxWidth: variables.$fontSize * (variables.$contentWidthValue + 5);
   }
 
   // 无 JS 时菜单常开（.js 缺失即不进入折叠分支）。
+  // 用 grid 行高 0fr → 1fr 展开：height: auto 在 WebKit 的绝对定位元素上不插值。
   .js .nav {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
     z-index: 2;
-    max-height: 0;
+    display: grid;
+    grid-template-rows: 0fr;
+    max-height: 26rem;
     overflow: hidden;
     opacity: 0;
     visibility: hidden;
@@ -46,13 +49,13 @@ $maxWidth: variables.$fontSize * (variables.$contentWidthValue + 5);
     background-color: var(--color-bg);
     border-bottom: 1px solid var(--color-contrast-low);
     transition:
-      max-height variables.$duration ease,
+      grid-template-rows variables.$duration ease,
       opacity variables.$duration ease,
       visibility 0s linear variables.$duration;
   }
 
   .js .header.open .nav {
-    max-height: 26rem;
+    grid-template-rows: 1fr;
     overflow-y: auto;
     opacity: 1;
     visibility: visible;
@@ -65,6 +68,11 @@ $maxWidth: variables.$fontSize * (variables.$contentWidthValue + 5);
     gap: 0 0.75em;
     padding: 0.5rem 1.25rem 1rem;
     text-align: left;
+  }
+
+  // 允许菜单在 0fr 行内收缩；行高本身负责展开动画，展开后的滚动交给 .nav。
+  .js .nav-inner {
+    min-height: 0;
   }
 
   .menu-item {
